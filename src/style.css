@@ -670,3 +670,74 @@ body {
     bottom: 150px;
   }
 }
+
+/* ── 설정 ── */
+#settings-btn {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 8px 14px;
+  border: 2px solid #cbd5e1;
+  border-radius: var(--radius);
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+#settings-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+#settings-panel {
+  position: absolute;
+  left: 12px;
+  bottom: 56px;
+  min-width: 220px;
+  padding: 14px 16px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: pop-in 0.25s ease;
+  z-index: 30;
+}
+#settings-panel h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #1e293b;
+}
+#settings-panel .settings-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#settings-panel .settings-row small {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  min-width: 44px;
+}
+#settings-panel .settings-opt {
+  padding: 6px 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  color: #475569;
+  cursor: pointer;
+}
+#settings-panel .settings-opt:hover {
+  border-color: var(--accent);
+}
+#settings-panel .settings-opt.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}

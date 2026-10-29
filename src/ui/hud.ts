@@ -4,12 +4,14 @@ import { CATEGORIES, PARTS, getCategory, type PartDef } from '../data/elements';
 import { MACHINES } from '../data/machines';
 import type { MachineDisplayItem } from '../machines/types';
 import { ThumbnailFactory } from '../models/thumbnails';
+import { saveSettings, type AppSettings, type Difficulty } from '../state/settings';
 
 export interface HudCallbacks {
   onSelectPart: (id: string) => void;
   onHint: () => void;
   onReset: () => void;
   onSwitchMachine: (id: string) => void;
+  onSettingsChange: (s: AppSettings) => void;
 }
 
 export class HUD {
@@ -26,7 +28,8 @@ export class HUD {
 
   constructor(
     private callbacks: HudCallbacks,
-    private thumbs: ThumbnailFactory
+    private thumbs: ThumbnailFactory,
+    private settings: AppSettings
   ) {
     this.machineBar = this.require('#machine-bar');
     this.categoryBar = this.require('#category-bar');
@@ -39,6 +42,7 @@ export class HUD {
 
     this.buildMachineBar();
     this.buildCategoryBar();
+    this.buildSettingsPanel();
     this.require('#hint-btn').addEventListener('click', () => this.callbacks.onHint());
     this.require('#reset-btn').addEventListener('click', () => this.callbacks.onReset());
     this.require('#gear-name-btn').addEventListener('click', () => {
@@ -51,6 +55,68 @@ export class HUD {
     const el = document.querySelector(selector);
     if (!(el instanceof HTMLElement)) throw new Error(`Missing element: ${selector}`);
     return el;
+  }
+
+  private buildSettingsPanel(): void {
+    const btn = this.require('#settings-btn');
+    const panel = this.require('#settings-panel');
+    btn.addEventListener('click', () => panel.classList.toggle('hidden'));
+
+    const difficultyOptions: { id: Difficulty; label: string; desc: string }[] = [
+      { id: 'low', label: '하', desc: '기계요소 이름 표시' },
+      { id: 'medium', label: '중', desc: '이름 대신 설명 표시' },
+      { id: 'high', label: '상', desc: '이름·설명 모두 숨김' }
+    ];
+
+    const render = (): void => {
+      panel.innerHTML = '';
+      const title = document.createElement('h3');
+      title.textContent = '⚙️ 설정';
+      panel.appendChild(title);
+
+      const diffRow = document.createElement('div');
+      diffRow.className = 'settings-row';
+      const diffLabel = document.createElement('small');
+      diffLabel.textContent = '난이도';
+      diffRow.appendChild(diffLabel);
+      for (const opt of difficultyOptions) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'settings-opt';
+        b.textContent = opt.label;
+        b.title = opt.desc;
+        b.classList.toggle('active', this.settings.difficulty === opt.id);
+        b.addEventListener('click', () => {
+          this.settings.difficulty = opt.id;
+          saveSettings(this.settings);
+          render();
+          this.callbacks.onSettingsChange(this.settings);
+        });
+        diffRow.appendChild(b);
+      }
+      panel.appendChild(diffRow);
+
+      const soundRow = document.createElement('div');
+      soundRow.className = 'settings-row';
+      const soundLabel = document.createElement('small');
+      soundLabel.textContent = '효과음';
+      soundRow.appendChild(soundLabel);
+      const soundBtn = document.createElement('button');
+      soundBtn.type = 'button';
+      soundBtn.className = 'settings-opt';
+      soundBtn.textContent = this.settings.sound ? '🔊 켜기' : '🔇 끄기';
+      soundBtn.title = '정답 효과음';
+      soundBtn.classList.toggle('active', this.settings.sound);
+      soundBtn.addEventListener('click', () => {
+        this.settings.sound = !this.settings.sound;
+        saveSettings(this.settings);
+        render();
+        this.callbacks.onSettingsChange(this.settings);
+      });
+      soundRow.appendChild(soundBtn);
+      panel.appendChild(soundRow);
+    };
+    render();
   }
 
   private buildMachineBar(): void {

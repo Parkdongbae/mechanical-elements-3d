@@ -11,6 +11,8 @@ import { MACHINES, getMachineDef } from './data/machines';
 import { getPart, getCategory } from './data/elements';
 import { HUD } from './ui/hud';
 import { loadProgress, saveProgress, clearMachineProgress, type ProgressData } from './state/progress';
+import { loadSettings, type AppSettings } from './state/settings';
+import { playCorrectSound } from './ui/sound';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#scene');
 if (!canvas) throw new Error('#scene canvas not found');
@@ -18,14 +20,20 @@ if (!canvas) throw new Error('#scene canvas not found');
 const sceneMgr = new SceneManager(canvas);
 const thumbs = new ThumbnailFactory();
 const physics = new PhysicsFX(sceneMgr.scene);
+let settings: AppSettings = loadSettings();
 const hud = new HUD(
   {
     onSelectPart: handleSelect,
     onHint: showHint,
     onReset: resetMission,
-    onSwitchMachine: switchMachine
+    onSwitchMachine: switchMachine,
+    onSettingsChange: (s) => {
+      settings = s;
+      syncMission();
+    }
   },
-  thumbs
+  thumbs,
+  settings
 );
 
 const SPAWN = new THREE.Vector3(1.7, 2.3, 4.2);
@@ -109,7 +117,7 @@ function switchMachine(id: string): void {
   const def = currentDef();
   hud.setMachineActive(id);
   hud.setGearNameButton(id === 'gearhunt');
-  hud.setMission(def.missionText, count, def.steps.map((s) => s.label));
+  hud.setMission(missionHeading(def), count, def.steps.map((s) => stepDisplayLabel(s.partId)));
   if (count >= def.steps.length) {
     startSim();
     const machine = current;
@@ -125,9 +133,22 @@ function switchMachine(id: string): void {
   }
 }
 
+function stepDisplayLabel(partId: string): string {
+  const part = getPart(partId);
+  if (settings.difficulty === 'low') return part.name;
+  if (settings.difficulty === 'medium') return part.role.length > 20 ? `${part.role.slice(0, 20)}…` : part.role;
+  return '???';
+}
+
+function missionHeading(def: ReturnType<typeof currentDef>): string {
+  if (settings.difficulty === 'low') return def.missionText;
+  if (settings.difficulty === 'medium') return '미션 칩의 설명에 맞는 기계요소를 찾아 조립하세요!';
+  return '힌트 없이 알맞은 기계요소를 찾아 조립하세요!';
+}
+
 function syncMission(): void {
   const def = currentDef();
-  hud.setMission(def.missionText, installedCount(), def.steps.map((s) => s.label));
+  hud.setMission(missionHeading(def), installedCount(), def.steps.map((s) => stepDisplayLabel(s.partId)));
 }
 
 function startSim(): void {
@@ -217,13 +238,15 @@ function flyAndInstall(partId: string, step: number): void {
       const def = currentDef();
       if (newCount >= def.steps.length) {
         hud.toast(`완성! ${def.completeText}`, 'ok', 4200);
+        if (settings.sound) playCorrectSound();
         startSim();
         if (isHuntMachine(machine)) {
           machine.beginHunt(0);
           hud.setHunt(0, machine.huntStats().total, machine.huntPrompt());
         }
       } else {
-        hud.toast(`정답! '${def.steps[step]!.label}'이(가) 장착되었어요 ✅`, 'ok');
+        hud.toast(settings.difficulty === 'low' ? `정답! '${def.steps[step]!.label}'이(가) 장착되었어요 ✅` : '정답! 알맞은 기계요소가 장착되었어요 ✅', 'ok');
+        if (settings.sound) playCorrectSound();
       }
     });
   });
