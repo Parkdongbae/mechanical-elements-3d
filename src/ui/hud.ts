@@ -194,13 +194,15 @@ export class HUD {
     }
   }
 
-  setMission(text: string, installed: number, labels: string[]): void {
+  setMission(text: string, installed: number, labels: (string | { text: string; tip: string })[]): void {
     this.missionText.textContent = text;
     this.missionChips.innerHTML = '';
     labels.forEach((label, i) => {
       const chip = document.createElement('span');
       chip.className = `chip${i < installed ? ' done' : ''}`;
-      chip.textContent = `${i + 1}. ${label}${i < installed ? ' ✔' : ''}`;
+      const display = typeof label === 'string' ? label : label.text;
+      chip.textContent = `${i + 1}. ${display}${i < installed ? ' ✔' : ''}`;
+      if (typeof label !== 'string') chip.title = label.tip;
       this.missionChips.appendChild(chip);
     });
   }

@@ -117,7 +117,7 @@ function switchMachine(id: string): void {
   const def = currentDef();
   hud.setMachineActive(id);
   hud.setGearNameButton(id === 'gearhunt');
-  hud.setMission(missionHeading(def), count, def.steps.map((s) => stepDisplayLabel(s.partId)));
+  hud.setMission(missionHeading(def), count, def.steps.map((s) => stepDisplay(s.partId)));
   if (count >= def.steps.length) {
     startSim();
     const machine = current;
@@ -133,11 +133,14 @@ function switchMachine(id: string): void {
   }
 }
 
-function stepDisplayLabel(partId: string): string {
+function stepDisplay(partId: string): { text: string; tip: string } {
   const part = getPart(partId);
-  if (settings.difficulty === 'low') return part.name;
-  if (settings.difficulty === 'medium') return part.role.length > 20 ? `${part.role.slice(0, 20)}…` : part.role;
-  return '???';
+  if (settings.difficulty === 'low') return { text: part.name, tip: part.role };
+  if (settings.difficulty === 'medium') {
+    const desc = part.role.length > 20 ? `${part.role.slice(0, 20)}…` : part.role;
+    return { text: desc, tip: part.role };
+  }
+  return { text: '???', tip: '' };
 }
 
 function missionHeading(def: ReturnType<typeof currentDef>): string {
@@ -148,7 +151,7 @@ function missionHeading(def: ReturnType<typeof currentDef>): string {
 
 function syncMission(): void {
   const def = currentDef();
-  hud.setMission(missionHeading(def), installedCount(), def.steps.map((s) => stepDisplayLabel(s.partId)));
+  hud.setMission(missionHeading(def), installedCount(), def.steps.map((s) => stepDisplay(s.partId)));
 }
 
 function startSim(): void {
