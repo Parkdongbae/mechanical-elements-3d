@@ -96,7 +96,12 @@ function switchMachine(id: string): void {
 
   const count = Math.min(installedCount(), current.stepCount);
   for (let i = 0; i < count; i++) {
-    if (!current.isInstalled(i)) current.installStep(i, current.buildStepModel(i));
+    if (!current.isInstalled(i)) {
+      current.installStep(i, current.buildStepModel(i));
+      // 완료된 단계의 후속 부품(바퀴·앞 스프로킷)도 즉시 복원
+      const ups = current.getFollowUps?.(i) ?? [];
+      ups.forEach((u, idx) => current!.installFollowUp?.(i, idx, u.model));
+    }
   }
   progress.last = id;
   saveProgress(progress);
@@ -176,23 +181,39 @@ function wrongAnswer(part: ReturnType<typeof getPart>, required: ReturnType<type
   }
 }
 
+function flyModel(model: THREE.Group, to: THREE.Vector3, dur: number, onDone: (m: THREE.Group) => void): void {
+  flyTask = { model, from: SPAWN.clone(), to, t: 0, dur, onDone };
+  model.position.copy(SPAWN);
+  sceneMgr.scene.add(model);
+}
+
+// 후속 자동 장착(바퀴·앞 스프로킷 등)을 순서대로 날아와 장착 — 모두 끝나면 done 콜백
+function runFollowUps(machine: Machine, step: number, done: () => void): void {
+  const ups = machine.getFollowUps?.(step) ?? [];
+  const runNext = (i: number): void => {
+    const up = ups[i];
+    if (!up) {
+      done();
+      return;
+    }
+    flyModel(up.model, up.to, 0.6, (m) => {
+      machine.installFollowUp?.(step, i, m);
+      runNext(i + 1);
+    });
+  };
+  runNext(0);
+}
+
 function flyAndInstall(partId: string, step: number): void {
   const machine = current!;
   const model = machine.buildStepModel(step);
-  const from = SPAWN.clone();
-  const to = machine.getFlyTarget(step);
-  flyTask = {
-    model,
-    from,
-    to,
-    t: 0,
-    dur: 0.85,
-    onDone: (m) => {
-      machine.installStep(step, m);
-      const newCount = step + 1;
-      setInstalledCount(newCount);
-      syncMission();
-      hud.showInfoCard(getPart(partId));
+  flyModel(model, machine.getFlyTarget(step), 0.85, (m) => {
+    machine.installStep(step, m);
+    const newCount = step + 1;
+    setInstalledCount(newCount);
+    syncMission();
+    hud.showInfoCard(getPart(partId));
+    runFollowUps(machine, step, () => {
       const def = currentDef();
       if (newCount >= def.steps.length) {
         hud.toast(`완성! ${def.completeText}`, 'ok', 4200);
@@ -204,10 +225,8 @@ function flyAndInstall(partId: string, step: number): void {
       } else {
         hud.toast(`정답! '${def.steps[step]!.label}'이(가) 장착되었어요 ✅`, 'ok');
       }
-    }
-  };
-  model.position.copy(from);
-  sceneMgr.scene.add(model);
+    });
+  });
 }
 
 function showHint(): void {
