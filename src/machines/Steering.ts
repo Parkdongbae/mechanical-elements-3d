@@ -118,7 +118,7 @@ export class Steering extends BaseMachine {
       update(dt: number) {
         t += dt;
         self.theta = 0.96 * Math.sin(1.1 * t);
-        self.steeringWheel.rotation.y = -self.theta;
+        self.steeringWheel.rotation.y = self.theta; // 핸들 회전 방향 (요청: 반대 방향)
         if (self.pinionMesh) self.pinionMesh.rotation.z = -self.theta;
         const rackX = -self.theta * RACK_TRAVEL;
         self.rackGroup.position.x = rackX;
