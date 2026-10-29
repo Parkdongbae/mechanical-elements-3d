@@ -34,7 +34,7 @@ npm run preview    # 빌드 결과 미리보기
 | 물리(오답 연출) | Cannon-es 0.20 |
 | 3D 에셋 | **전부 절차적 생성** (GLB 파일 없음) + 기어 장치·철골 구조물은 parts/ STL 로드 |
 
-## 4. 미션(머신) 5종 — 화면 좌상단에서 전환
+## 4. 미션(머신) 7종 — 화면 좌상단에서 전환
 
 | 머신 id | 이름 | 미션 단계 (순서 강제) | 완료 시 애니메이션 |
 |---|---|---|---|
@@ -44,6 +44,7 @@ npm run preview    # 빌드 결과 미리보기
 | steering | 🚗 자동차 핸들 | 래크와 피니언 → 링크 (전동용) | 핸들 ±55° → 래크 ±29cm → 바퀴 조향 |
 | gearhunt | 🔍 기어의 종류 | 조립 단계 없음 — **개별 STL 부품을 동력 전달 순서대로 드래그 조립** (7단계) | 전 기어가 맞물려 회전, 슬라이더로 속도 제어(0~10x) |
 | steelframe | 🏗️ 철골공사 | 정답 1단계 — 하부/상부 기둥·이음칼라·H형 들보가 인트로 애니메이션으로 순차 조립 등장, **하단 패널에서 결합용 나사(볼트와 너트)를 찾아 선택** | bolts_nuts.stl이 비행해 접합부에 체결(에미시브 플래시), 정보 패널 표시 |
+| merryround | 🎠 회전놀이기구 | 정답 1단계 — base → shaft → hub_cap → turntable → handles 순서 인트로 조립, **하단 패널에서 축용 볼 베어링을 찾아 선택** | ball_bearing.stl이 비행해 축에 체결(플래시) 후 회전부(회전판·허브캡·핸들·베어링 볼)가 램프업하며 회전(≈8.1rpm), 정보 패널 표시 |
 
 ## 5. 파일 구조와 역할
 
@@ -52,7 +53,7 @@ src/
 ├── main.ts              # 게임 컨트롤러: 머신 전환, 미션 진행, 드래그/클릭 판정, 메인 루프
 ├── data/
 │   ├── elements.ts      # 기계요소 4대분류 + 22종 데이터 (교과서 검증됨)
-│   └── machines.ts      # 6개 머신 정의 (단계·라벨·힌트·완료문구)
+│   └── machines.ts      # 7개 머신 정의 (단계·라벨·힌트·완료문구)
 ├── machines/
 │   ├── types.ts         # Machine / HuntMachine / DragMachine 인터페이스 + BaseMachine
 │   ├── Bicycle.ts       # 자전거 (프레임 절차 생성, 4슬롯, 체인 경로 ChainPath2D)
@@ -60,9 +61,14 @@ src/
 │   ├── Treadmill.ts     # 러닝머신 (벨트 ChainPath2D 재사용, 그루브 풀리)
 │   ├── Steering.ts      # 자동차 조향장치 (기울어진 컬럼, 타이로드 동기화)
 │   ├── GearHunt.ts      # STL 드래그 조립 (parts/ 개별 부품 10종 로드)
-│   └── SteelFrame.ts    # 철골공사 — parts/bolt_nut STL 5종 로드, 인트로 조립, 볼트 체결
+│   ├── SteelFrame.ts    # 철골공사 — parts/bolt_nut STL 5종 로드, 인트로 조립, 볼트 체결
+│   └── MerryGoRound.ts  # 회전놀이기구 — parts/회전 놀이 기구 STL 6종 로드, 인트로 조립,
+│                        #   볼 베어링 체결 후 회전. 삼각형 무게중심으로 재질 분할(핸들 빨강/파랑,
+│                        #   베어링 링/볼) — splitByMaterial + geometry groups
 ├── models/
 │   ├── factory.ts       # 22종 부품 절차 생성 팩토리 + ChainPath2D(외접접선 경로) + normalizePart
+│   ├── surfaces.ts      # 공용: 브러시드 메탈 그레인 맵(getGrainMaps) + 플래너 UV(generatePlanarUVs)
+│   │                    #   — SteelFrame/MerryGoRound 등 STL 파트 머신 공용 (SteelFrame에서 추출)
 │   └── thumbnails.ts    # 오프스크린 렌더러로 부품 썸네일 PNG 생성
 ├── scene/SceneSetup.ts  # 렌더러/카메라/조명/바닥/OrbitControls (add/remove 래퍼 포함)
 │                        # + 스튜디오 환경맵(PMREM): 하늘 그라데이션+HDR 소프트박스 — 금속 PBR 반사용
@@ -72,7 +78,9 @@ src/
 └── style.css            # 반응형 스타일 (PC + 태블릿)
 public/models/           # parts/ 에서 복사한 STL (빌드 포함용) — parts 수정 시 재복사
 public/models/bolt_nut/  # 철골공사 STL 5종 (parts/bolt_nut 에서 복사)
-parts/                   # 원본 STL (OpenSCAD 기어 장치 개별 부품 + total, bolt_nut 철골 부재)
+public/models/merry_round/ # 회전놀이기구 STL 6종 (parts/회전 놀이 기구 에서 복사)
+parts/                   # 원본 STL (OpenSCAD 기어 장치 개별 부품 + total, bolt_nut 철골 부재,
+                         #   회전 놀이 기구 6종 + .scad 원본)
 3d.md                    # 기획 문서
 HANDOFF.md               # 이 문서
 ```
@@ -105,10 +113,11 @@ HANDOFF.md               # 이 문서
 `BaseMachine.addSlot(step, radius, position)` → 초록색 토러스가 펄스. 순차 미션에서는
 이전 단계 설치 시 `hideSlot(n) / showSlot(n+1)` 호출 필요
 
-## 7. STL 파이프라인 (기어의 종류 / 철골공사)
+## 7. STL 파이프라인 (기어의 종류 / 철골공사 / 회전놀이기구)
 
-1. 원본: `parts/*.stl`, `parts/bolt_nut/*.stl` (OpenSCAD로 생성, Z-up, mm, **조립 좌표계 유지**)
-2. `public/models/`, `public/models/bolt_nut/` 로 복사 (빌드 포함) — parts 수정 시 반드시 재복사
+1. 원본: `parts/*.stl`, `parts/bolt_nut/*.stl`, `parts/회전 놀이 기구/*.stl`
+   (OpenSCAD로 생성, Z-up, mm, **조립 좌표계 유지**)
+2. `public/models/`, `public/models/bolt_nut/`, `public/models/merry_round/` 로 복사 (빌드 포함) — parts 수정 시 반드시 재복사
 3. GearHunt.ts가 STLLoader로 로드: `rotateX(-π/2)` (Z-up→Y-up) → bbox 중심 `center` 빼기
    → scale `k` = 2.6/maxDim → 회전축은 `toThree(axisPoint) - center` 기준
 4. **각 부품 STL은 조립 좌표 그대로 export 되어야 함** (OpenSCAD render_part 위치 유지)
@@ -118,6 +127,14 @@ HANDOFF.md               # 이 문서
 6. 금속 PBR 사실감: SceneSetup의 스튜디오 환경맵(하늘 그라데이션 + HDR 소프트박스)이 필수 —
    환경맵 없이는 metalness 높은 재질이 어둡고 평면하게 보임. 평면 위주 STL 면은 환경을
    단일색으로 반사하므로 그레인 맵으로 미세 변화를 준다
+7. **재질 분할 패턴 (MerryGoRound.ts 참조)**: STL은 재질이 1개뿐이라 단색으로 보인다.
+   삼각형 **무게중심**을 분류해 `geometry.addGroup()`으로 재질 배열을 나눈다.
+   - 핸들: 무게중심 각도(atan2) → 45° 간격 8개 섹터 → 홀짝으로 빨강/파랑 교차 (참조 사진과 동일)
+   - 베어링: 무게중심 반지름 → 볼 중심 70mm 근처(68~71.5)만 볼(금색), 나머지 링(은색).
+     링 표면 삼각형의 무게중심 반지름은 정확히 65/75이므로 경계를 넓게 잡으면 링이 금색으로 오분류됨
+   - **주의: 분할하면 새 BufferGeometry가 만들어지므로 반드시 prepareGeometry가 분할된
+     지오메트리를 반환하고 호출부가 그것을 Mesh에 쓰게 할 것.** 원본을 재사용하면
+     회전/UV/그룹이 모두 빠진 채 렌더되고 재질 배열도 무시된다(전부 material[0] 색으로 보임)
 
 ## 8. 검증 패턴 (수정 후 반드시)
 
@@ -155,3 +172,14 @@ HANDOFF.md               # 이 문서
   headless 저FPS(4fps) 환경에서는 dt cap 0.05s 때문에 busy 해제에 최대 10s 소요. 실기기(60fps)는 무관
 - 철골공사 복원: 진행도 installed=1인데 bolts_nuts.stl이 아직 로드 전이면 `pendingInstall` 플래그로
   로드 완료 시점에 자동 체결됨 (인트로는 재생되지 않음)
+- 회전놀이기구(merryround): 축(shaft)·베이스는 고정부, 회전판·허브캡·핸들·베어링은 `spinGroup`이
+  rotation.y로 회전(램프업 1.8s → ≈8.1rpm). 인트로 등장 순서는 사용자 지정으로
+  base(0s) → shaft(0.5s) → hub_cap(1.0s) → turntable(1.5s) → handles(2.0s) — 허브 캡이 회전판보다
+  먼저 떠 있다 판 위에 안착하는 연출이 의도된 것
+- 회전놀이기구 베어링 가시성: 회전판(지름 2000mm)이 베어링(r95mm) 위를 덮어 **체결 후에는
+  회전판 아래로 가려진다**. 베어링이 잘 보이는 순간은 하단 패널 썸네일 → 비행(체결 전) → 플래시.
+  정밀하게 보려면 우클릭 팬으로 시점을 회전판 아래로 내린 뒤 확대
+- playwright는 devDependencies에 추가됨 (`npx playwright install chromium` 필요 없음 —
+  %LOCALAPPDATA%\ms-playwright에 chromium-1248 있음). E2E 시 headless는 저FPS(4fps)라
+  dt cap 0.05s 때문에 비행/물리/busy 해제가 수 초 걸림 — 대기 시간 넉넉히
+- 검증용 스크린샷 픽셀 비교는 `frameA.equals(frameB)` (Buffer)로 충분 — 회전 중이면 바이트 불일치

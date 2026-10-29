@@ -63,12 +63,6 @@ export function isDragMachine(m: Machine): m is Machine & DragMachine {
   return 'beginDrag' in m;
 }
 
-export interface FollowUpPart {
-  model: THREE.Group;
-  to: THREE.Vector3;
-  noSpin?: boolean;
-}
-
 export interface Machine {
   readonly id: string;
   readonly group: THREE.Group;
@@ -78,8 +72,6 @@ export interface Machine {
   slotTarget(step: number): THREE.Vector3;
   buildStepModel(step: number): THREE.Group;
   installStep(step: number, model: THREE.Group): void;
-  getFollowUps?(step: number): FollowUpPart[];
-  installFollowUp?(step: number, index: number, model: THREE.Group): void;
   reset(): void;
   update(t: number): void;
   boostHint(seconds: number): void;

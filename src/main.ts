@@ -96,12 +96,7 @@ function switchMachine(id: string): void {
 
   const count = Math.min(installedCount(), current.stepCount);
   for (let i = 0; i < count; i++) {
-    if (!current.isInstalled(i)) {
-      current.installStep(i, current.buildStepModel(i));
-      const machine = current;
-      const ups = machine.getFollowUps?.(i) ?? [];
-      ups.forEach((up, idx) => machine.installFollowUp?.(i, idx, up.model));
-    }
+    if (!current.isInstalled(i)) current.installStep(i, current.buildStepModel(i));
   }
   progress.last = id;
   saveProgress(progress);
@@ -181,45 +176,19 @@ function wrongAnswer(part: ReturnType<typeof getPart>, required: ReturnType<type
   }
 }
 
-function startFly(model: THREE.Group, from: THREE.Vector3, to: THREE.Vector3, noSpin: boolean, onDone: (m: THREE.Group) => void): void {
+function flyAndInstall(partId: string, step: number): void {
+  const machine = current!;
+  const model = machine.buildStepModel(step);
+  const from = SPAWN.clone();
+  const to = machine.getFlyTarget(step);
   flyTask = {
     model,
     from,
     to,
     t: 0,
     dur: 0.85,
-    onDone
-  };
-  model.userData.noSpin = noSpin;
-  model.position.copy(from);
-  sceneMgr.scene.add(model);
-}
-
-function runFollowUps(machine: Machine, step: number, done: () => void): void {
-  const ups = machine.getFollowUps?.(step) ?? [];
-  let index = 0;
-  const next = (): void => {
-    if (index >= ups.length) {
-      done();
-      return;
-    }
-    const up = ups[index]!;
-    const slot = index;
-    index += 1;
-    startFly(up.model, SPAWN.clone(), up.to, up.noSpin === true, (m) => {
-      machine.installFollowUp?.(step, slot, m);
-      next();
-    });
-  };
-  next();
-}
-
-function flyAndInstall(partId: string, step: number): void {
-  const machine = current!;
-  const model = machine.buildStepModel(step);
-  startFly(model, SPAWN.clone(), machine.getFlyTarget(step), model.userData.noSpin === true, (m) => {
-    machine.installStep(step, m);
-    runFollowUps(machine, step, () => {
+    onDone: (m) => {
+      machine.installStep(step, m);
       const newCount = step + 1;
       setInstalledCount(newCount);
       syncMission();
@@ -235,8 +204,10 @@ function flyAndInstall(partId: string, step: number): void {
       } else {
         hud.toast(`정답! '${def.steps[step]!.label}'이(가) 장착되었어요 ✅`, 'ok');
       }
-    });
-  });
+    }
+  };
+  model.position.copy(from);
+  sceneMgr.scene.add(model);
 }
 
 function showHint(): void {
@@ -432,7 +403,7 @@ function tick(): void {
     const k = Math.min(1, flyTask.t / flyTask.dur);
     const e = easeInOutCubic(k);
     flyTask.model.position.lerpVectors(flyTask.from, flyTask.to, e);
-    if (flyTask.model.userData.noSpin !== true) flyTask.model.rotation.z = (1 - e) * Math.PI * 0.9;
+    flyTask.model.rotation.z = (1 - e) * Math.PI * 0.9;
     if (k >= 1) {
       const task = flyTask;
       flyTask = null;

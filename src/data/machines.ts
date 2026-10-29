@@ -7,6 +7,7 @@ import { Treadmill } from '../machines/Treadmill';
 import { Steering } from '../machines/Steering';
 import { GearHunt } from '../machines/GearHunt';
 import { SteelFrame } from '../machines/SteelFrame';
+import { MerryGoRound } from '../machines/MerryGoRound';
 
 export interface StepDef {
   partId: string;
@@ -29,16 +30,14 @@ export const MACHINES: MachineDef[] = [
     id: 'bicycle',
     name: '자전거',
     icon: '🚲',
-    missionText: '차축 → 크랭크축 → 스프로킷 → 체인 → 평행 핀 → 스프링 순서로 자전거를 조립하세요!',
-    hint: '축용 차축을 양쪽 바퀴 자리에 장착하면 바퀴가 자동으로 올라가요! 크랭크축을 장착하면 앞 스프로킷도 함께 장착되고, 이어서 전동용 스프로킷·체인, 평행 핀, 마지막엔 안장 밑 스프링(제어용)이 들어가요!',
+    missionText: '크랭크축 → 스프로킷 → 체인 → 평행 핀 순서로 자전거를 조립하세요!',
+    hint: '축용 크랭크축으로 시작해요. 동력은 전동용 스프로킷·체인으로 전달되고, 평행 핀으로 체인을 고정해요!',
     completeText: '페달을 밟으면 동력이 전달돼요 🚲💨',
     steps: [
-      { partId: 'axle', label: '차축' },
       { partId: 'crankShaft', label: '크랭크축' },
       { partId: 'sprocket', label: '스프로킷' },
       { partId: 'chain', label: '체인' },
-      { partId: 'pinParallel', label: '평행 핀' },
-      { partId: 'spring', label: '스프링' }
+      { partId: 'pinParallel', label: '평행 핀' }
     ],
     create: () => new Bicycle()
   },
@@ -100,6 +99,16 @@ export const MACHINES: MachineDef[] = [
     completeText: '볼트와 너트로 기둥과 들보가 튼튼하게 체결됐어요 🏗️',
     steps: [{ partId: 'bolt', label: '나사(볼트와 너트)' }],
     create: () => new SteelFrame()
+  },
+  {
+    id: 'merryround',
+    name: '회전놀이기구',
+    icon: '🎠',
+    missionText: '회전 놀이기구가 빙글빙글 돌아가려면 축을 부드럽게 받쳐 주는 기계요소가 필요해요! 아래에서 찾아 선택하세요!',
+    hint: '회전판과 축 사이에서 구슬(볼)이 굴러가며 마찰을 줄이는 축용 기계요소가 필요해요!',
+    completeText: '볼 베어링 덕분에 회전 놀이기구가 부드럽게 돌아가요 🎠',
+    steps: [{ partId: 'bearing', label: '볼 베어링' }],
+    create: () => new MerryGoRound()
   }
 ];
 
