@@ -136,8 +136,10 @@ export class Steering extends BaseMachine {
   private updateTieRods(): void {
     for (const rod of this.tieRods) {
       const side = rod.userData.side === -1 ? -1 : 1;
+      // 한쪽 끝: 래크 끝단(래크 이동 따라감), 다른 쪽 끝: 바퀴 허브 '중심'.
+      // 허브 중심은 조향 회전축이라 바퀴가 돌아도 연결점이 그대로 — 링크가 따로 놀지 않는다.
       const a = new THREE.Vector3(0.85 * side + this.rackGroup.position.x, 0.6, 0.35);
-      const b = new THREE.Vector3(1.1 * side, 0.42, 0.8);
+      const b = new THREE.Vector3(1.1 * side, 0.35, 0.9);
       const dir = b.clone().sub(a);
       const len = dir.length();
       rod.position.copy(a).addScaledVector(dir, 0.5);
@@ -169,7 +171,8 @@ export class Steering extends BaseMachine {
   }
 
   private buildColumn(): void {
-    const bottom = new THREE.Vector3(0, 0.92, 0.35);
+    // 축 하단은 피니언 기어 '중심'에 연결 (핸들 → 축 → 피니언 중심)
+    const bottom = PINION_POS.clone();
     const top = new THREE.Vector3(0, 1.62, -0.14);
     const dir = top.clone().sub(bottom);
     const len = dir.length();
