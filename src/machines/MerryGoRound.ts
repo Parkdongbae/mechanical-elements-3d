@@ -41,6 +41,7 @@ interface PartRecipe {
   mats: MatSpec[];
   split?: (cx: number, cy: number, cz: number) => number; // 삼각형 무게중심 → 재질 번호
   bumpScale?: number;
+  ghost?: { opacity: number }; // 반투명 처리 — 판 아래 부품(베어링·축·베이스)이 보이게
 }
 
 // 사실적 재질 스펙 (참조 사진 + OpenSCAD 색상 기준)
@@ -60,8 +61,10 @@ const PART_RECIPES: PartRecipe[] = [
   },
   {
     file: 'turntable.stl', delay: 1.5, spin: true,
+    // 반투명 유리판 — 판 아래의 볼 베어링·축·베이스가 판 위에서도 보이게 한다
     mats: [{ color: 0x1d4fae, metalness: 0.32, roughness: 0.52, env: 0.95 }], // 로얄 블루 회전판
-    bumpScale: 0.03 // 다이아몬드 tread plate 느낌
+    bumpScale: 0.03, // 다이아몬드 tread plate 느낌
+    ghost: { opacity: 0.45 }
   },
   {
     file: 'handles.stl', delay: 2.0, spin: true,
@@ -259,10 +262,6 @@ export class MerryGoRound extends BaseMachine {
     for (const part of this.parts) {
       if (part.mesh) {
         part.mesh.visible = false;
-        part.materials.forEach((m) => {
-          m.transparent = true;
-          m.opacity = 0;
-        });
       }
     }
   }
@@ -340,6 +339,9 @@ export class MerryGoRound extends BaseMachine {
 
   private makeMaterials(recipe: PartRecipe): THREE.MeshStandardMaterial[] {
     const grain = getGrainMaps();
+    // 기본은 항상 불투명. recipe.ghost가 있으면 반투명 유리처럼 처리해 판 아래 부품이 보이게 한다
+    // (depthWrite=false — 반투명 판이 아래 부품 깊이를 가리지 않도록)
+    const ghost = recipe.ghost;
     return recipe.mats.map((spec) => new THREE.MeshStandardMaterial({
       color: spec.color,
       metalness: spec.metalness,
@@ -350,8 +352,9 @@ export class MerryGoRound extends BaseMachine {
       envMapIntensity: spec.env ?? 1.0,
       emissive: spec.emissive ?? 0x000000,
       emissiveIntensity: 0.08,
-      transparent: true,
-      opacity: 0
+      transparent: !!ghost,
+      opacity: ghost ? ghost.opacity : 1,
+      depthWrite: !ghost
     }));
   }
 
@@ -368,12 +371,6 @@ export class MerryGoRound extends BaseMachine {
     mesh.position.set(center.x * K, homeY, center.z * K);
     // 진행도 복원(체결 완료 상태)이면 인트로 없이 바로 표시
     mesh.visible = this.installedFlag;
-    if (mesh.visible) {
-      materials.forEach((m) => {
-        m.opacity = 1;
-        m.transparent = false;
-      });
-    }
     (recipe.spin ? this.spinGroup : this.root).add(mesh);
     this.parts.push({ recipe, mesh, homeY, materials });
     this.loadedCount += 1;
@@ -431,9 +428,6 @@ export class MerryGoRound extends BaseMachine {
       const k = easeOutCubic(e);
       mesh.visible = e > 0;
       mesh.position.y = part.homeY + (1 - k) * INTRO_DROP;
-      part.materials.forEach((m) => {
-        m.opacity = k;
-      });
       if (e < 1) allDone = false;
     }
     if (allDone && this.parts.length === PART_RECIPES.length) this.finishIntro();
@@ -446,10 +440,6 @@ export class MerryGoRound extends BaseMachine {
       if (!mesh) continue;
       mesh.visible = true;
       mesh.position.y = part.homeY;
-      part.materials.forEach((m) => {
-        m.opacity = 1;
-        m.transparent = false; // 축 등 고정부는 불투명 유지 — 베어링이 잘 보이게
-      });
     }
   }
 
