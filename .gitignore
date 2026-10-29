@@ -1,0 +1,16 @@
+# 의존성 / 빌드 결과물
+node_modules/
+dist/
+
+# 로그 / 로컬 도구 산출물
+*.log
+.playwright-mcp/
+.omo/
+verify-*.png
+seq-*.png
+
+# 교사용 교재 PDF (저작물 — 저장소 제외)
+교과서및지도서/
+
+# 교재 참조 이미지
+gears.jpg

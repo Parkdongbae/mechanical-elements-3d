@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>기계요소 3D 조립 실험실</title>
+</head>
+<body>
+  <div id="app">
+    <canvas id="scene"></canvas>
+    <div id="hud">
+      <nav id="machine-bar" aria-label="기계 선택"></nav>
+      <header id="topbar">
+        <h1 id="title">🔧 기계요소 3D 조립 실험실</h1>
+        <div id="mission">
+          <span id="mission-text">크랭크축 → 스프로킷 → 체인 → 평행 핀 순서로 자전거를 조립하세요!</span>
+          <span id="mission-chips"></span>
+        </div>
+        <div id="topbar-actions">
+          <button id="hint-btn" type="button">💡 힌트</button>
+          <button id="reset-btn" type="button">↺ 다시하기</button>
+        </div>
+      </header>
+      <div id="category-bar" aria-label="기계요소 대분류"></div>
+      <div id="part-panel" class="hidden" aria-label="기계요소 소분류"></div>
+      <div id="rpm-display" class="hidden" aria-label="회전수 표시"></div>
+      <div id="speed-control" class="hidden" aria-label="회전 속도 조절"></div>
+      <div id="info-card" class="hidden" role="dialog"></div>
+      <div id="toast" class="hidden"></div>
+      <button id="gear-name-btn" class="hidden" type="button">🏷️<span>기어<br />이름 보기</span></button>
+      <div id="control-hint">
+        🖱️ 좌클릭 드래그: 회전 &nbsp;·&nbsp; 휠: 확대/축소 &nbsp;·&nbsp; 우클릭 드래그: 이동 &nbsp;·&nbsp; 📱 한 손가락: 회전, 두 손가락: 확대/이동
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
