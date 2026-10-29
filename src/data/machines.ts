@@ -30,14 +30,16 @@ export const MACHINES: MachineDef[] = [
     id: 'bicycle',
     name: '자전거',
     icon: '🚲',
-    missionText: '크랭크축 → 스프로킷 → 체인 → 평행 핀 순서로 자전거를 조립하세요!',
-    hint: '축용 크랭크축으로 시작해요. 동력은 전동용 스프로킷·체인으로 전달되고, 평행 핀으로 체인을 고정해요!',
+    missionText: '차축 → 크랭크축 → 스프로킷 → 체인 → 평행 핀 → 스프링 순서로 자전거를 조립하세요!',
+    hint: '축용 차축을 양쪽 바퀴 자리에 장착하면 바퀴가 자동으로 올라가요! 크랭크축을 장착하면 앞 스프로킷도 함께 장착되고, 이어서 전동용 스프로킷·체인, 평행 핀, 마지막엔 안장 밑 스프링(제어용)이 들어가요!',
     completeText: '페달을 밟으면 동력이 전달돼요 🚲💨',
     steps: [
+      { partId: 'axle', label: '차축' },
       { partId: 'crankShaft', label: '크랭크축' },
       { partId: 'sprocket', label: '스프로킷' },
       { partId: 'chain', label: '체인' },
-      { partId: 'pinParallel', label: '평행 핀' }
+      { partId: 'pinParallel', label: '평행 핀' },
+      { partId: 'spring', label: '스프링' }
     ],
     create: () => new Bicycle()
   },
