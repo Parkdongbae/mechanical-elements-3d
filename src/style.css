@@ -1,0 +1,672 @@
+/* 기계요소 3D 조립 실험실 - 반응형 스타일 (PC + 태블릿/모바일) */
+
+:root {
+  --bg-glass: rgba(255, 255, 255, 0.92);
+  --shadow: 0 4px 18px rgba(30, 50, 80, 0.16);
+  --radius: 14px;
+  --accent: #2563eb;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  background: #e9f1f8;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+}
+
+#scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+#hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+}
+
+#hud > * {
+  pointer-events: auto;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ── 머신 선택 바 ── */
+#machine-bar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.machine-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #f1f5f9;
+  padding: 7px 12px;
+  min-height: 40px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.machine-btn .machine-icon {
+  font-size: 17px;
+}
+
+.machine-btn:hover {
+  border-color: var(--accent);
+  background: #fff;
+}
+
+.machine-btn.active {
+  border-color: var(--accent);
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* ── 상단 바 ── */
+#topbar {
+  margin: 12px 12px 12px 170px;
+  padding: 10px 16px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+#title {
+  font-size: 18px;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+#mission {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+#mission-text {
+  font-size: 14px;
+  color: #475569;
+}
+
+#mission-chips {
+  display: flex;
+  gap: 6px;
+}
+
+.chip {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #64748b;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.chip.done {
+  background: #16a34a;
+  color: #fff;
+}
+
+#topbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+#topbar-actions button {
+  border: none;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 40px;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+#topbar-actions button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+#hint-btn {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+#reset-btn {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+/* ── RPM 표시 ── */
+#rpm-display {
+  position: absolute;
+  top: 76px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  animation: pop-in 0.35s ease;
+}
+
+.rpm-item {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex-direction: column;
+  text-align: center;
+}
+
+.rpm-item small {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.rpm-item strong {
+  font-size: 22px;
+  color: #1e293b;
+  font-variant-numeric: tabular-nums;
+}
+
+.rpm-item.wheel strong {
+  color: #dc2626;
+}
+
+.rpm-item.ratio strong {
+  color: #2563eb;
+  font-size: 18px;
+}
+
+.rpm-arrow {
+  font-size: 18px;
+  color: #94a3b8;
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ── 회전 속도 조절 ── */
+#speed-control {
+  position: absolute;
+  top: 76px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  animation: pop-in 0.3s ease;
+}
+
+#speed-control small {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+}
+
+#speed-control input[type='range'] {
+  width: 130px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+#speed-control strong {
+  font-size: 14px;
+  color: #1d4ed8;
+  min-width: 42px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 기어 이름 보기 버튼 ── */
+#gear-name-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1d4ed8;
+  line-height: 1.3;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+#gear-name-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-50%) scale(1.04);
+}
+
+#gear-name-btn span {
+  font-size: 12px;
+}
+
+/* ── 조작법 안내 ── */
+#control-hint {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 14px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  border-radius: 8px;
+  font-size: 12px;
+  color: #64748b;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ── 대분류 바 ── */
+#category-bar {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: calc(100% - 24px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+#category-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.cat-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #f1f5f9;
+  padding: 8px 14px;
+  min-width: 68px;
+  min-height: 58px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.cat-btn .cat-icon {
+  font-size: 20px;
+}
+
+.cat-btn .cat-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.cat-btn:hover {
+  border-color: var(--cat-color);
+  background: #fff;
+}
+
+.cat-btn.active {
+  border-color: var(--cat-color);
+  background: color-mix(in srgb, var(--cat-color) 12%, white);
+}
+
+.cat-btn.active .cat-name {
+  color: var(--cat-color);
+}
+
+/* ── 소분류 패널 ── */
+#part-panel {
+  position: absolute;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(680px, calc(100% - 24px));
+  max-height: 44vh;
+  overflow-y: auto;
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px;
+  animation: slide-up 0.25s ease;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translate(-50%, 20px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.back-btn {
+  border: none;
+  background: #e2e8f0;
+  color: #334155;
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  font-size: 15px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.panel-title {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.panel-title strong {
+  font-size: 16px;
+}
+
+.panel-title small {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.part-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.part-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.part-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
+}
+
+.part-card img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.part-card span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* ── 학습 카드 ── */
+#info-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(400px, calc(100% - 32px));
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(20, 40, 80, 0.3);
+  padding: 22px;
+  text-align: center;
+  animation: pop-in 0.3s ease;
+  z-index: 20;
+}
+
+.info-chip {
+  display: inline-block;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+#info-card h2 {
+  font-size: 20px;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+#info-card p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #475569;
+  margin-bottom: 16px;
+}
+
+.info-close {
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 10px 32px;
+  cursor: pointer;
+}
+
+.info-close:hover {
+  filter: brightness(1.1);
+}
+
+/* ── 토스트 ── */
+#toast {
+  position: absolute;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  box-shadow: var(--shadow);
+  animation: pop-in 0.25s ease;
+  z-index: 30;
+  text-align: center;
+}
+
+#toast.toast-ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+#toast.toast-warn {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+#toast.toast-info {
+  background: var(--bg-glass);
+  color: #334155;
+}
+
+/* ── 모바일/태블릿 ── */
+@media (max-width: 720px) {
+  #machine-bar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    right: 12px;
+    padding: 6px;
+    gap: 4px;
+  }
+
+  .machine-btn {
+    padding: 5px 8px;
+    min-height: 34px;
+    font-size: 11px;
+  }
+
+  .machine-btn .machine-icon {
+    font-size: 14px;
+  }
+
+  #topbar {
+    margin: 58px 8px 8px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  #title {
+    font-size: 15px;
+  }
+
+  #mission-text {
+    font-size: 12px;
+  }
+
+  #topbar-actions button {
+    padding: 7px 10px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+
+  #rpm-display {
+    top: auto;
+    bottom: 96px;
+    right: 8px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .rpm-item strong {
+    font-size: 17px;
+  }
+
+  .cat-btn {
+    min-width: 58px;
+    min-height: 52px;
+    padding: 6px 10px;
+  }
+
+  #control-hint {
+    font-size: 10px;
+    padding: 4px 8px;
+    white-space: normal;
+    text-align: center;
+    max-width: calc(100% - 16px);
+  }
+
+  .cat-btn .cat-name {
+    font-size: 11px;
+  }
+
+  #part-panel {
+    bottom: 82px;
+    max-height: 40vh;
+  }
+
+  .part-card img {
+    width: 60px;
+    height: 60px;
+  }
+
+  #toast {
+    top: auto;
+    bottom: 150px;
+  }
+}
