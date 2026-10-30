@@ -58,6 +58,11 @@ function currentDef() {
   return getMachineDef(current!.id);
 }
 
+/** 현재 머신의 이름 오버라이드가 적용된 부품 표시 이름 (이 머신에서만 전동축→구동축) */
+function partDisplayName(part: ReturnType<typeof getPart>): string {
+  return currentDef().nameOverrides?.[part.id] ?? part.name;
+}
+
 function installedCount(): number {
   return progress.machines[current!.id]?.installed ?? 0;
 }
@@ -116,6 +121,7 @@ function switchMachine(id: string): void {
 
   const def = currentDef();
   hud.setMachineActive(id);
+  hud.setPartNameOverrides(def.nameOverrides ?? {});
   hud.setGearNameButton(id === 'gearhunt');
   hud.setMission(missionHeading(def), count, def.steps.map((s) => stepDisplay(s.partId)));
   if (count >= def.steps.length) {
@@ -135,7 +141,8 @@ function switchMachine(id: string): void {
 
 function stepDisplay(partId: string): { text: string; tip: string } {
   const part = getPart(partId);
-  if (settings.difficulty === 'low') return { text: part.name, tip: part.role };
+  const name = partDisplayName(part);
+  if (settings.difficulty === 'low') return { text: name, tip: part.role };
   if (settings.difficulty === 'medium') {
     const desc = part.role.length > 20 ? `${part.role.slice(0, 20)}…` : part.role;
     return { text: desc, tip: part.role };
@@ -186,7 +193,7 @@ function handleSelect(id: string): void {
 
   const laterStep = def.steps.findIndex((s, i) => i > count && s.partId === part.id);
   if (laterStep >= 0) {
-    hud.toast(`${part.name}은(는) '${def.steps[count]!.label}'을(를) 먼저 장착해야 해요!`, 'info');
+    hud.toast(`${partDisplayName(part)}은(는) '${def.steps[count]!.label}'을(를) 먼저 장착해야 해요!`, 'info');
     return;
   }
 
@@ -198,10 +205,11 @@ function wrongAnswer(part: ReturnType<typeof getPart>, required: ReturnType<type
   physics.throwPart(model, SPAWN.clone(), current!.slotTarget(installedCount()));
 
   const reqCat = getCategory(required.category).name;
+  const reqName = currentDef().nameOverrides?.[required.id] ?? required.name;
   if (part.category !== required.category) {
-    hud.toast(`${part.name}은(는) ${getCategory(part.category).name} 기계요소예요. 이 슬롯에는 ${reqCat} 부품이 필요해요!`, 'warn');
+    hud.toast(`${partDisplayName(part)}은(는) ${getCategory(part.category).name} 기계요소예요. 이 슬롯에는 ${reqCat} 부품이 필요해요!`, 'warn');
   } else {
-    hud.toast(`${part.name}도 ${reqCat} 기계요소지만, 이 자리에는 '${required.name}'이(가) 필요해요! 💡 힌트를 눌러 보세요.`, 'warn');
+    hud.toast(`${partDisplayName(part)}도 ${reqCat} 기계요소지만, 이 자리에는 '${reqName}'이(가) 필요해요! 💡 힌트를 눌러 보세요.`, 'warn');
   }
 }
 

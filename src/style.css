@@ -100,6 +100,68 @@ body {
   color: #1d4ed8;
 }
 
+/* ── 자동차 구동방식 중첩 메뉴 ── */
+.machine-group {
+  position: relative;
+}
+
+.machine-group > .machine-btn {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.machine-btn .menu-arrow {
+  margin-left: auto;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.machine-submenu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  min-width: 172px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  z-index: 60;
+}
+
+.machine-group:hover > .machine-submenu,
+.machine-subitem:hover > .machine-submenu {
+  display: block;
+}
+
+.machine-subitem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.machine-subitem:hover {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.machine-leaf:hover {
+  background: #eff6ff;
+}
+
 /* ── 상단 바 ── */
 #topbar {
   margin: 12px 12px 12px 170px;

@@ -26,6 +26,7 @@ export class HUD {
   private toastTimer: number | null = null;
   private hoverCloseTimer: number | null = null;
   private speedChange: ((v: number) => void) | null = null;
+  private partNameOverrides: Record<string, string> = {};
 
   constructor(
     private callbacks: HudCallbacks,
@@ -129,6 +130,10 @@ export class HUD {
 
   private buildMachineBar(): void {
     for (const def of MACHINES) {
+      if (def.id === 'drivetrain-ff') {
+        this.buildDrivetrainGroup();
+        continue;
+      }
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'machine-btn';
@@ -139,10 +144,74 @@ export class HUD {
     }
   }
 
+  /** '자동차 구동방식' 중첩 호버 메뉴: 1단 내연기관/전기, 2단 각 구동방식. FF만 구현됨. */
+  private buildDrivetrainGroup(): void {
+    const group = document.createElement('div');
+    group.className = 'machine-group';
+    group.dataset.machine = 'drivetrain-ff';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'machine-btn';
+    btn.innerHTML = `<span class="machine-icon">🚗</span><span>자동차 구동방식</span><span class="menu-arrow">▸</span>`;
+    group.appendChild(btn);
+
+    const submenu = document.createElement('div');
+    submenu.className = 'machine-submenu';
+
+    const branch = (label: string, icon: string, items: { label: string; id: string | null }[]): void => {
+      const item = document.createElement('div');
+      item.className = 'machine-subitem has-children';
+      item.innerHTML = `<span class="machine-icon">${icon}</span><span>${label}</span><span class="menu-arrow">▸</span>`;
+      const sub = document.createElement('div');
+      sub.className = 'machine-submenu machine-submenu2';
+      for (const it of items) {
+        const leaf = document.createElement('button');
+        leaf.type = 'button';
+        leaf.className = 'machine-subitem machine-leaf';
+        leaf.innerHTML = `<span>${it.label}</span>`;
+        leaf.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (it.id) {
+            this.callbacks.onSwitchMachine(it.id);
+          } else {
+            this.toast(`${it.label} 미션은 준비 중이에요! 🔧`, 'info');
+          }
+        });
+        sub.appendChild(leaf);
+      }
+      item.appendChild(sub);
+      submenu.appendChild(item);
+    };
+
+    branch('내연기관 자동차', '⛽', [
+      { label: 'FF 전륜구동', id: 'drivetrain-ff' },
+      { label: 'FR 후륜구동', id: null },
+      { label: 'AWD 사륜구동', id: null }
+    ]);
+    branch('전기 자동차', '🔌', [
+      { label: '싱글 모터(2WD)', id: null },
+      { label: '듀얼 모터(AWD)', id: null }
+    ]);
+
+    group.appendChild(submenu);
+    this.machineBar.appendChild(group);
+  }
+
   setMachineActive(id: string): void {
     for (const btn of Array.from(this.machineBar.children)) {
-      btn.classList.toggle('active', (btn as HTMLElement).dataset.machine === id);
+      const el = btn as HTMLElement;
+      btn.classList.toggle('active', el.dataset.machine === id);
     }
+  }
+
+  /** 현재 머신에서만 적용되는 부품 표시 이름 (예: 전동축 → 구동축) */
+  setPartNameOverrides(map: Record<string, string>): void {
+    this.partNameOverrides = map;
+  }
+
+  private displayName(part: PartDef): string {
+    return this.partNameOverrides[part.id] ?? part.name;
   }
 
   private buildCategoryBar(): void {
@@ -184,7 +253,7 @@ export class HUD {
       card.type = 'button';
       card.className = 'part-card';
       card.innerHTML = `<img src="${this.thumbs.get(part)}" alt="${part.name}" loading="lazy" draggable="false" />
-        <span>${part.name}</span>`;
+        <span>${this.displayName(part)}</span>`;
       card.addEventListener('click', () => this.callbacks.onSelectPart(part.id));
       grid.appendChild(card);
     }
@@ -284,9 +353,10 @@ export class HUD {
 
   showInfoCard(part: PartDef): void {
     const cat = getCategory(part.category);
+    const name = this.displayName(part);
     this.infoCard.innerHTML = `
       <div class="info-chip" style="background:${cat.color}">${cat.icon} ${cat.name}</div>
-      <h2>${part.name}</h2>
+      <h2>${name}</h2>
       <p>${part.role}</p>
       <button type="button" class="info-close">확인</button>
     `;

@@ -8,6 +8,7 @@ import { Steering } from '../machines/Steering';
 import { GearHunt } from '../machines/GearHunt';
 import { SteelFrame } from '../machines/SteelFrame';
 import { MerryGoRound } from '../machines/MerryGoRound';
+import { DrivetrainFF } from '../machines/DrivetrainFF';
 
 export interface StepDef {
   partId: string;
@@ -22,6 +23,8 @@ export interface MachineDef {
   hint: string;
   completeText: string;
   steps: StepDef[];
+  /** 이 머신에서만 부품 표시 이름을 바꿈 (예: 전동축 → 구동축) */
+  nameOverrides?: Record<string, string>;
   create(): Machine;
 }
 
@@ -101,6 +104,20 @@ export const MACHINES: MachineDef[] = [
     completeText: '볼트와 너트로 기둥과 들보가 튼튼하게 체결됐어요 🏗️',
     steps: [{ partId: 'bolt', label: '나사(볼트와 너트)' }],
     create: () => new SteelFrame()
+  },
+  {
+    id: 'drivetrain-ff',
+    name: 'FF 전륜구동',
+    icon: '🚙',
+    missionText: '전륜구동(FF) 자동차예요! 엔진의 동력을 앞바퀴에 전달하는 축과, 바퀴를 받쳐 주는 축을 순서대로 찾아 선택하세요!',
+    hint: '모터(엔진)와 맞물려 회전하며 동력을 전달하는 축은 구동축, 바퀴의 회전 중심을 받쳐 주는 축은 차축이에요! 구동축을 먼저 찾으세요.',
+    completeText: '구동축과 모든 바퀴가 함께 회전해요 🚙💨',
+    nameOverrides: { driveShaft: '구동축' },
+    steps: [
+      { partId: 'driveShaft', label: '구동축' },
+      { partId: 'axle', label: '차축' }
+    ],
+    create: () => new DrivetrainFF()
   },
   {
     id: 'merryround',
