@@ -131,6 +131,7 @@ export class DrivetrainFF extends BaseMachine {
     const part = step === 0 ? this.drive : this.axle;
     part.installed = true;
     this.hideSlot(step);
+    if (step === 0) this.showSlot(1); // 다음 정답(차축) 슬롯 표시
     const flown = model.children[0] as THREE.Mesh | undefined;
     if (flown && part.geometry) {
       flown.position.copy(part.center);
@@ -158,11 +159,12 @@ export class DrivetrainFF extends BaseMachine {
       part.material?.emissive.setScalar(0);
     }
     this.showSlot(0);
-    this.showSlot(1);
+    this.hideSlot(1);
     this.introStart = -1;
     this.introDone = false;
     this.spinning = false;
     this.theta = 0;
+    for (const w of this.wheelPivots) w.pivot.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), 0);
     for (const p of this.intro) {
       if (p.mesh && p.material) {
         p.mesh.visible = false;
@@ -211,6 +213,7 @@ export class DrivetrainFF extends BaseMachine {
       const slot = this.slots[step];
       if (slot) slot.rotation.x = -Math.PI / 2; // 축을 감싸는 수평 펄스 링
     }
+    this.hideSlot(1); // 현재 정답(구동축) 슬롯만 표시 — 차축은 구동축 정답 후 표시
   }
 
   /** 앞·뒤 표시: 바닥에 세운 캔버스 텍스트 스프라이트 */
@@ -301,15 +304,15 @@ export class DrivetrainFF extends BaseMachine {
 
     // 바퀴는 완성 후 회전해야 하므로 즉시 피벗에 물려둔다(회전은 spinning 이후)
     if (recipe.file.startsWith('wheel_')) {
-      const axis = recipe.file.startsWith('wheel_f') ? FRONT_AXIS_MM : REAR_AXIS_MM;
-      this.attachWheelPivot(mesh, toThree(axis).multiplyScalar(K), recipe.file.endsWith('rl') || recipe.file.endsWith('rr') ? 1 : -1);
+      // 바퀴는 축 가운데(자기 중심)에서 제자리 회전 — 피벗을 바퀴 중심에 둔다
+      this.attachWheelPivot(mesh, mesh.position.clone(), recipe.file.endsWith('rl') || recipe.file.endsWith('rr') ? 1 : -1);
     }
   }
 
-  private attachWheelPivot(mesh: THREE.Mesh, axisLocal: THREE.Vector3, sign: number): void {
+  private attachWheelPivot(mesh: THREE.Mesh, center: THREE.Vector3, sign: number): void {
     const pivot = new THREE.Group();
-    pivot.position.copy(axisLocal);
-    mesh.position.sub(axisLocal);
+    pivot.position.copy(center);
+    mesh.position.set(0, 0, 0);
     pivot.add(mesh);
     this.root.add(pivot);
     this.wheelPivots.push({ pivot, sign });
@@ -319,6 +322,8 @@ export class DrivetrainFF extends BaseMachine {
     const { center } = this.prepareGeometry(geo);
     part.geometry = geo;
     const material = this.makeMaterial(part.recipe);
+    material.opacity = 1;          // 정답 부품은 인트로 페이드 대상이 아니다 — 즉시 표시
+    material.transparent = false;
     material.emissive = new THREE.Color(part.recipe.color);
     material.emissiveIntensity = 0.08;
     part.material = material;
