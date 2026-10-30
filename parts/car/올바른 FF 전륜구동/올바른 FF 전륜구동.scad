@@ -92,7 +92,6 @@ module raw_rear_axle() {
     color([0.15, 0.45, 0.85]) {
         rotate([0, 90, 0])
             cylinder(r=4, h=car_width - wheel_w*2, center=true);
-        cube([14, 10, 10], center=true);
     }
 }
 

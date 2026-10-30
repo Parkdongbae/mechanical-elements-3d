@@ -244,8 +244,20 @@ export class DrivetrainFF extends BaseMachine {
   private buildFrontRearLabels(): void {
     this.makeLabel('앞 FRONT', '#7fd1ff', new THREE.Vector3(0, 0.28, -1.65));
     this.makeLabel('뒤 REAR', '#ffd479', new THREE.Vector3(0, 0.28, 1.65));
-    this.makeLabel('엔진', '#7fd1ff', new THREE.Vector3(-0.22, 0.42, -0.57), 0.6, 0.24, 56);
-    this.makeLabel('변속기', '#ffb37a', new THREE.Vector3(0.11, 0.52, -0.61), 0.6, 0.24, 56);
+    // 부품 라벨은 부품에서 띄우고 지시선으로 연결 — 겹침 방지
+    this.makeCallout('엔진', '#7fd1ff', new THREE.Vector3(-0.22, 0.18, -0.57), new THREE.Vector3(-0.85, 0.62, -0.55));
+    this.makeCallout('변속기', '#ffb37a', new THREE.Vector3(0.13, 0.26, -0.61), new THREE.Vector3(0.62, 0.62, -0.4));
+    this.makeCallout('디퍼렌셜', '#8ee08e', new THREE.Vector3(0.0, 0.14, -0.65), new THREE.Vector3(-0.55, 0.5, -0.95));
+  }
+
+  /** 부품 → 라벨 지시선 */
+  private makeCallout(text: string, color: string, partPoint: THREE.Vector3, labelPos: THREE.Vector3): void {
+    this.makeLabel(text, color, labelPos, 0.6, 0.24, 56);
+    const line = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints([partPoint, labelPos]),
+      new THREE.LineBasicMaterial({ color } as THREE.LineBasicMaterialParameters)
+    );
+    this.root.add(line);
   }
 
   private loadModels(): void {
@@ -309,21 +321,16 @@ export class DrivetrainFF extends BaseMachine {
 
     // 바퀴는 완성 후 회전해야 하므로 즉시 피벗에 물려둔다(회전은 spinning 이후)
     if (recipe.file.startsWith('wheel_')) {
-      // 바퀴는 축 가운데(자기 중심)에서 제자리 회전 — 피벗을 바퀴 중심에 둔다
-      this.attachWheelPivot(mesh, mesh.position.clone(), recipe.file.endsWith('rl') || recipe.file.endsWith('rr') ? 1 : -1);
+      // 바퀴는 반드시 차축선 위에서 회전 — Y·Z는 축 값으로 강제 스냅해 중심을 맞춘다
+      const axis = recipe.file.startsWith('wheel_f') ? FRONT_AXIS_MM : REAR_AXIS_MM;
+      this.attachWheelPivot(mesh, toThree(axis).multiplyScalar(K), recipe.file.endsWith('rl') || recipe.file.endsWith('rr') ? 1 : -1);
     }
   }
 
-  private attachWheelPivot(mesh: THREE.Mesh, center: THREE.Vector3, sign: number): void {
+  private attachWheelPivot(mesh: THREE.Mesh, axisLocal: THREE.Vector3, sign: number): void {
     const pivot = new THREE.Group();
-    pivot.position.copy(center);
+    pivot.position.set(mesh.position.x, axisLocal.y, axisLocal.z); // 바퀴 중심을 차축선(X축) 위로 스냅
     mesh.position.set(0, 0, 0);
-    // 회전 가시화용 스포크 마커 — 대칭 원통은 회전이 눈에 보이지 않는다
-    const spoke = new THREE.Mesh(
-      new THREE.BoxGeometry(0.03, 0.46, 0.03),
-      new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
-    );
-    pivot.add(spoke);
     pivot.add(mesh);
     this.root.add(pivot);
     this.wheelPivots.push({ pivot, sign });
@@ -360,7 +367,7 @@ export class DrivetrainFF extends BaseMachine {
     mesh.rotation.set(0, 0, 0);
     pivot.add(mesh);
     if (part === this.drive) {
-      // 구동축 회전 가시화용 마커 — 축 대칭이라 회전이 눈에 보이지 않는다
+      // 구동축 회전 가시화용 마커(유지) — 디퍼렌셜 회전을 보여준다
       const marker = new THREE.Mesh(
         new THREE.BoxGeometry(0.045, 0.17, 0.045),
         new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
