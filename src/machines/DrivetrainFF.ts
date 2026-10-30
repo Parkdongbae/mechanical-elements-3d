@@ -216,31 +216,36 @@ export class DrivetrainFF extends BaseMachine {
     this.hideSlot(1); // 현재 정답(구동축) 슬롯만 표시 — 차축은 구동축 정답 후 표시
   }
 
-  /** 앞·뒤 표시: 바닥에 세운 캔버스 텍스트 스프라이트 */
-  private buildFrontRearLabels(): void {
-    const make = (text: string, color: string, z: number): void => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 256;
-      canvas.height = 96;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+  /** 캔버스 텍스트 스프라이트 (부품 라벨·앞뒤 표시 공용) */
+  private makeLabel(text: string, color: string, position: THREE.Vector3, w = 0.9, h = 0.34, fontPx = 44): THREE.Sprite {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 96;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
       ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
       ctx.beginPath();
       ctx.roundRect(8, 8, 240, 80, 18);
       ctx.fill();
-      ctx.font = '700 44px "Noto Sans KR", sans-serif';
+      ctx.font = `700 ${fontPx}px "Noto Sans KR", sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = color;
       ctx.fillText(text, 128, 50);
-      const texture = new THREE.CanvasTexture(canvas);
-      const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
-      sprite.scale.set(0.9, 0.34, 1);
-      sprite.position.set(0, 0.28, z);
-      this.group.add(sprite);
-    };
-    make('앞 FRONT', '#7fd1ff', -1.65);
-    make('뒤 REAR', '#ffd479', 1.65);
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
+    sprite.scale.set(w, h, 1);
+    sprite.position.copy(position);
+    this.group.add(sprite);
+    return sprite;
+  }
+
+  private buildFrontRearLabels(): void {
+    this.makeLabel('앞 FRONT', '#7fd1ff', new THREE.Vector3(0, 0.28, -1.65));
+    this.makeLabel('뒤 REAR', '#ffd479', new THREE.Vector3(0, 0.28, 1.65));
+    this.makeLabel('엔진', '#7fd1ff', new THREE.Vector3(-0.22, 0.42, -0.57), 0.6, 0.24, 56);
+    this.makeLabel('변속기', '#ffb37a', new THREE.Vector3(0.11, 0.52, -0.61), 0.6, 0.24, 56);
   }
 
   private loadModels(): void {
@@ -313,6 +318,12 @@ export class DrivetrainFF extends BaseMachine {
     const pivot = new THREE.Group();
     pivot.position.copy(center);
     mesh.position.set(0, 0, 0);
+    // 회전 가시화용 스포크 마커 — 대칭 원통은 회전이 눈에 보이지 않는다
+    const spoke = new THREE.Mesh(
+      new THREE.BoxGeometry(0.03, 0.46, 0.03),
+      new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
+    );
+    pivot.add(spoke);
     pivot.add(mesh);
     this.root.add(pivot);
     this.wheelPivots.push({ pivot, sign });
@@ -348,6 +359,14 @@ export class DrivetrainFF extends BaseMachine {
     mesh.position.copy(part.center).sub(axisLocal);
     mesh.rotation.set(0, 0, 0);
     pivot.add(mesh);
+    if (part === this.drive) {
+      // 구동축 회전 가시화용 마커 — 축 대칭이라 회전이 눈에 보이지 않는다
+      const marker = new THREE.Mesh(
+        new THREE.BoxGeometry(0.045, 0.17, 0.045),
+        new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
+      );
+      pivot.add(marker);
+    }
     this.root.add(pivot);
     part.pivot = pivot;
     part.mesh = mesh;

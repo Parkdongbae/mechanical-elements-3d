@@ -120,7 +120,7 @@ module part_engine() {
 }
 
 module part_transaxle() {
-    translate([18, car_length*0.25, 22]) 
+    translate([11, car_length*0.25, 22]) 
         raw_transaxle();
 }
 
