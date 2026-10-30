@@ -27,42 +27,42 @@ solid OpenSCAD_Model
       vertex -88 -112.708 27.7277
     endloop
   endfacet
-  facet normal 0 0.935005 -0.354635
+  facet normal 1.40602e-19 0.935005 -0.354635
     outer loop
       vertex 88 -112.708 27.7277
       vertex -88 -112.029 29.5179
       vertex 88 -112.029 29.5179
     endloop
   endfacet
-  facet normal 0 0.935005 -0.354635
+  facet normal 1.40602e-19 0.935005 -0.354635
     outer loop
       vertex -88 -112.029 29.5179
       vertex 88 -112.708 27.7277
       vertex -88 -112.708 27.7277
     endloop
   endfacet
-  facet normal 0 0.992694 0.120659
+  facet normal -1.8904e-20 0.992694 0.120659
     outer loop
       vertex 88 -112.029 29.5179
       vertex -88 -112.26 31.4184
       vertex 88 -112.26 31.4184
     endloop
   endfacet
-  facet normal 0 0.992694 0.120659
+  facet normal -1.8904e-20 0.992694 0.120659
     outer loop
       vertex -88 -112.26 31.4184
       vertex 88 -112.029 29.5179
       vertex -88 -112.029 29.5179
     endloop
   endfacet
-  facet normal 0 0.822876 0.568221
+  facet normal -5.40499e-20 0.822876 0.568221
     outer loop
       vertex 88 -112.26 31.4184
       vertex -88 -113.348 32.994
       vertex 88 -113.348 32.994
     endloop
   endfacet
-  facet normal 0 0.822876 0.568221
+  facet normal -5.40499e-20 0.822876 0.568221
     outer loop
       vertex -88 -113.348 32.994
       vertex 88 -112.26 31.4184
@@ -111,42 +111,42 @@ solid OpenSCAD_Model
       vertex -88 -118.652 32.994
     endloop
   endfacet
-  facet normal 0 -0.822876 0.568221
+  facet normal 5.40499e-20 -0.822876 0.568221
     outer loop
       vertex -88 -119.74 31.4184
       vertex 88 -118.652 32.994
       vertex -88 -118.652 32.994
     endloop
   endfacet
-  facet normal 0 -0.822876 0.568221
+  facet normal 5.40499e-20 -0.822876 0.568221
     outer loop
       vertex 88 -118.652 32.994
       vertex -88 -119.74 31.4184
       vertex 88 -119.74 31.4184
     endloop
   endfacet
-  facet normal 0 -0.992694 0.120659
+  facet normal 1.8904e-20 -0.992694 0.120659
     outer loop
       vertex -88 -119.971 29.5179
       vertex 88 -119.74 31.4184
       vertex -88 -119.74 31.4184
     endloop
   endfacet
-  facet normal 0 -0.992694 0.120659
+  facet normal 1.8904e-20 -0.992694 0.120659
     outer loop
       vertex 88 -119.74 31.4184
       vertex -88 -119.971 29.5179
       vertex 88 -119.971 29.5179
     endloop
   endfacet
-  facet normal 0 -0.935005 -0.354635
+  facet normal -1.40602e-19 -0.935005 -0.354635
     outer loop
       vertex -88 -119.292 27.7277
       vertex 88 -119.971 29.5179
       vertex -88 -119.971 29.5179
     endloop
   endfacet
-  facet normal 0 -0.935005 -0.354635
+  facet normal -1.40602e-19 -0.935005 -0.354635
     outer loop
       vertex 88 -119.971 29.5179
       vertex -88 -119.292 27.7277
