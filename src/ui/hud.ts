@@ -24,6 +24,7 @@ export class HUD {
   private missionChips: HTMLElement;
   private missionText: HTMLElement;
   private toastTimer: number | null = null;
+  private hoverCloseTimer: number | null = null;
   private speedChange: ((v: number) => void) | null = null;
 
   constructor(
@@ -43,6 +44,13 @@ export class HUD {
     this.buildMachineBar();
     this.buildCategoryBar();
     this.buildSettingsPanel();
+
+    // 호버 하위 메뉴: 카테고리 바 ↔ 소분류 패널 영역을 벗어나면 자동으로 닫힘
+    this.categoryBar.addEventListener('mouseenter', () => this.cancelHoverClose());
+    this.categoryBar.addEventListener('mouseleave', () => this.scheduleHoverClose());
+    this.partPanel.addEventListener('mouseenter', () => this.cancelHoverClose());
+    this.partPanel.addEventListener('mouseleave', () => this.scheduleHoverClose());
+
     this.require('#hint-btn').addEventListener('click', () => this.callbacks.onHint());
     this.require('#reset-btn').addEventListener('click', () => this.callbacks.onReset());
     this.require('#gear-name-btn').addEventListener('click', () => {
@@ -147,6 +155,7 @@ export class HUD {
       btn.innerHTML = `<span class="cat-icon">${cat.icon}</span><span class="cat-name">${cat.name}</span>`;
       btn.title = cat.desc;
       btn.addEventListener('click', () => this.openCategory(cat.id));
+      btn.addEventListener('mouseenter', () => this.openCategory(cat.id));
       this.categoryBar.appendChild(btn);
     }
   }
@@ -188,9 +197,22 @@ export class HUD {
   }
 
   closePanel(): void {
+    this.cancelHoverClose();
     this.partPanel.classList.add('hidden');
     for (const btn of Array.from(this.categoryBar.children)) {
       btn.classList.remove('active');
+    }
+  }
+
+  private scheduleHoverClose(): void {
+    if (this.hoverCloseTimer !== null) window.clearTimeout(this.hoverCloseTimer);
+    this.hoverCloseTimer = window.setTimeout(() => this.closePanel(), 200);
+  }
+
+  private cancelHoverClose(): void {
+    if (this.hoverCloseTimer !== null) {
+      window.clearTimeout(this.hoverCloseTimer);
+      this.hoverCloseTimer = null;
     }
   }
 
