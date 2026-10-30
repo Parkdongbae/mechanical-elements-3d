@@ -26,3 +26,4 @@ buildPart()가 데이터(elements.ts의 PartDef)를 받아 Three.js 메시를 �
 - 핫스팟: factory.ts 651줄, 전체 프로젝트에서 가장 많이 참조되는 모듈(main·모든 기계·thumbnails·physics).
 - gearShape()는 ExtrudeGeometry용 2D 단면 생성기 — 기어 수정 시 여기서부터.
 - surfaces.ts의 그레인맵은 캔버스 기반 절차 생성 — 외부 텍스처 파일 없음.
+- thumbnails.ts는 ThumbnailFactory로 미리보기 메시를 생성 — UI 표시 전용.
