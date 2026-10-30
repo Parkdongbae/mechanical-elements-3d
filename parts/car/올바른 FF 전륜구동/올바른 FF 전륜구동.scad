@@ -77,14 +77,15 @@ module raw_transaxle() {
 // 앞 구동축 단품
 module raw_front_driveshafts() {
     color([0.2, 0.65, 0.25]) {
+        // 바퀴를 관통해 바깥면까지 빠져나가는 축 — 바퀴 중심을 관통함이 보이도록
         rotate([0, 90, 0])
-            cylinder(r=3.8, h=car_width - wheel_w*2, center=true);
+            cylinder(r=3.8, h=car_width, center=true);
         sphere(r=11.5);
-        // 바퀴 허브 쪽 두꺼운 조인트 — 실제 바퀴 위치에 맞춰 축과 바퀴를 연결
+        // 바퀴 허브 쪽 두꺼운 조인트 — 바퀴 위치에 맞춰 축과 바퀴를 연결
         for(x = [-(car_width/2 - wheel_w/2), (car_width/2 - wheel_w/2)]) {
             translate([x, 0, 0])
                 rotate([0, 90, 0])
-                    cylinder(r=6, h=8, center=true);
+                    cylinder(r=6, h=wheel_w + 2, center=true);
         }
     }
 }
@@ -92,8 +93,9 @@ module raw_front_driveshafts() {
 // 뒤 차축 단품
 module raw_rear_axle() {
     color([0.15, 0.45, 0.85]) {
+        // 바퀴를 관통하는 차축
         rotate([0, 90, 0])
-            cylinder(r=4, h=car_width - wheel_w*2, center=true);
+            cylinder(r=4, h=car_width, center=true);
     }
 }
 

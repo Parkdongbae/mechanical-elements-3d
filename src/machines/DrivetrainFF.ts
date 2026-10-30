@@ -58,6 +58,7 @@ interface IntroPart {
   mesh: THREE.Mesh | null;
   material: THREE.MeshStandardMaterial | null;
   center: THREE.Vector3; // root 기준 최종 위치(K 적용)
+  inPivot: boolean; // 바퀴 여부 — 피벗에 물린 경우 인트로 낙하도 피벗 로컬 좌표로
 }
 
 class AnswerPart {
@@ -331,7 +332,8 @@ export class DrivetrainFF extends BaseMachine {
     mesh.position.set(center.x * K, center.y * K, center.z * K);
     mesh.visible = false;
     this.root.add(mesh);
-    this.intro.push({ recipe, mesh, material, center: center.clone().multiplyScalar(K) });
+    const inPivot = recipe.file.startsWith('wheel_');
+    this.intro.push({ recipe, mesh, material, center: center.clone().multiplyScalar(K), inPivot });
     this.loadedCount += 1;
     this.enableShadows();
 
@@ -415,7 +417,8 @@ export class DrivetrainFF extends BaseMachine {
       const e = Math.min(1, Math.max(0, (t - this.introStart - part.recipe.delay) / INTRO_DUR));
       const k = easeOutCubic(e);
       mesh.visible = e > 0;
-      mesh.position.y = part.center.y + (1 - k) * INTRO_DROP;
+      // 피벗에 물린 바퀴는 로컬 원점(축 중심) 기준 상대 낙하, 루트 직속 부품은 루트 좌표 낙하
+      mesh.position.y = (part.inPivot ? 0 : part.center.y) + (1 - k) * INTRO_DROP;
       part.material!.opacity = k;
       if (e < 1) allDone = false;
     }
@@ -428,7 +431,7 @@ export class DrivetrainFF extends BaseMachine {
       const mesh = part.mesh;
       if (!mesh) continue;
       mesh.visible = true;
-      mesh.position.y = part.center.y;
+      mesh.position.y = part.inPivot ? 0 : part.center.y;
       part.material!.opacity = 1;
       part.material!.transparent = false;
     }
