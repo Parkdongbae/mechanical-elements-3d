@@ -25,6 +25,7 @@ car_width  = 160;
 car_length = 260;
 wheel_r    = 25;
 wheel_w    = 14;
+shaft_z    = 12; // 축·바퀴 공통 높이 — 축 중심 = 바퀴 중심
 
 // ================================================
 // 단품 기본 형상 (로컬 원점 기준)
@@ -79,7 +80,8 @@ module raw_front_driveshafts() {
         rotate([0, 90, 0])
             cylinder(r=3.8, h=car_width - wheel_w*2, center=true);
         sphere(r=11.5);
-        for(x = [-45, 45]) {
+        // 바퀴 허브 쪽 두꺼운 조인트 — 실제 바퀴 위치에 맞춰 축과 바퀴를 연결
+        for(x = [-(car_width/2 - wheel_w/2), (car_width/2 - wheel_w/2)]) {
             translate([x, 0, 0])
                 rotate([0, 90, 0])
                     cylinder(r=6, h=8, center=true);
@@ -114,42 +116,42 @@ module raw_car_frame() {
 // ================================================
 
 module part_engine() {
-    translate([-22, car_length*0.25 - 8, 24]) 
+    translate([-22, car_length*0.25 - 8, shaft_z + 12]) 
         raw_engine();
 }
 
 module part_transaxle() {
-    translate([11, car_length*0.25, 22]) 
+    translate([11, car_length*0.25, shaft_z + 10]) 
         raw_transaxle();
 }
 
 module part_front_driveshaft() {
-    translate([0, car_length*0.25, 12]) 
+    translate([0, car_length*0.25, shaft_z]) 
         raw_front_driveshafts();
 }
 
 module part_rear_axle() {
-    translate([0, -car_length*0.25, 12]) 
+    translate([0, -car_length*0.25, shaft_z]) 
         raw_rear_axle();
 }
 
 module part_wheel_fl() {
-    translate([-car_width/2 + wheel_w/2, car_length*0.25, 12]) 
+    translate([-car_width/2 + wheel_w/2, car_length*0.25, shaft_z]) 
         raw_wheel();
 }
 
 module part_wheel_fr() {
-    translate([car_width/2 - wheel_w/2, car_length*0.25, 12]) 
+    translate([car_width/2 - wheel_w/2, car_length*0.25, shaft_z]) 
         raw_wheel();
 }
 
 module part_wheel_rl() {
-    translate([-car_width/2 + wheel_w/2, -car_length*0.25, 12]) 
+    translate([-car_width/2 + wheel_w/2, -car_length*0.25, shaft_z]) 
         raw_wheel();
 }
 
 module part_wheel_rr() {
-    translate([car_width/2 - wheel_w/2, -car_length*0.25, 12]) 
+    translate([car_width/2 - wheel_w/2, -car_length*0.25, shaft_z]) 
         raw_wheel();
 }
 

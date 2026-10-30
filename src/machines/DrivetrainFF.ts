@@ -131,7 +131,13 @@ export class DrivetrainFF extends BaseMachine {
     const part = step === 0 ? this.drive : this.axle;
     part.installed = true;
     this.hideSlot(step);
-    if (step === 0) this.showSlot(1); // 다음 정답(차축) 슬롯 표시
+    if (step === 0) {
+      this.showSlot(1); // 다음 정답(차축) 슬롯 표시
+      if (this.diffCallout) { // 구동축이 등장한 후 디퍼렌셜 라벨 표시
+        this.diffCallout.sprite.visible = true;
+        this.diffCallout.line.visible = true;
+      }
+    }
     const flown = model.children[0] as THREE.Mesh | undefined;
     if (flown && part.geometry) {
       flown.position.copy(part.center);
@@ -160,6 +166,10 @@ export class DrivetrainFF extends BaseMachine {
     }
     this.showSlot(0);
     this.hideSlot(1);
+    if (this.diffCallout) {
+      this.diffCallout.sprite.visible = false;
+      this.diffCallout.line.visible = false;
+    }
     this.introStart = -1;
     this.introDone = false;
     this.spinning = false;
@@ -241,23 +251,29 @@ export class DrivetrainFF extends BaseMachine {
     return sprite;
   }
 
+  private diffCallout: { sprite: THREE.Sprite; line: THREE.Line } | null = null;
+
   private buildFrontRearLabels(): void {
     this.makeLabel('앞 FRONT', '#7fd1ff', new THREE.Vector3(0, 0.28, -1.65));
     this.makeLabel('뒤 REAR', '#ffd479', new THREE.Vector3(0, 0.28, 1.65));
     // 부품 라벨은 부품에서 띄우고 지시선으로 연결 — 겹침 방지
     this.makeCallout('엔진', '#7fd1ff', new THREE.Vector3(-0.22, 0.18, -0.57), new THREE.Vector3(-0.85, 0.62, -0.55));
     this.makeCallout('변속기', '#ffb37a', new THREE.Vector3(0.13, 0.26, -0.61), new THREE.Vector3(0.62, 0.62, -0.4));
-    this.makeCallout('디퍼렌셜', '#8ee08e', new THREE.Vector3(0.0, 0.14, -0.65), new THREE.Vector3(-0.55, 0.5, -0.95));
+    // 디퍼렌셜은 구동축이 등장한 후에 표시
+    this.diffCallout = this.makeCallout('디퍼렌셜', '#8ee08e', new THREE.Vector3(0.0, 0.14, -0.65), new THREE.Vector3(-0.55, 0.5, -0.95));
+    this.diffCallout.sprite.visible = false;
+    this.diffCallout.line.visible = false;
   }
 
   /** 부품 → 라벨 지시선 */
-  private makeCallout(text: string, color: string, partPoint: THREE.Vector3, labelPos: THREE.Vector3): void {
-    this.makeLabel(text, color, labelPos, 0.6, 0.24, 56);
+  private makeCallout(text: string, color: string, partPoint: THREE.Vector3, labelPos: THREE.Vector3): { sprite: THREE.Sprite; line: THREE.Line } {
+    const sprite = this.makeLabel(text, color, labelPos, 0.6, 0.24, 56);
     const line = new THREE.Line(
       new THREE.BufferGeometry().setFromPoints([partPoint, labelPos]),
       new THREE.LineBasicMaterial({ color } as THREE.LineBasicMaterialParameters)
     );
     this.root.add(line);
+    return { sprite, line };
   }
 
   private loadModels(): void {
