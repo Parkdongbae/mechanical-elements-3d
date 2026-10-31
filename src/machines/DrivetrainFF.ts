@@ -345,7 +345,7 @@ export class DrivetrainFF extends BaseMachine {
       // 바퀴는 반드시 차축선 위에서 회전 — Y·Z는 축 값으로 강제 스냅해 중심을 맞춘다
       const front = recipe.file.startsWith('wheel_f');
       const axis = front ? FRONT_AXIS_MM : REAR_AXIS_MM;
-      this.attachWheelPivot(mesh, toThree(axis).multiplyScalar(K), front ? 1 : -1, front);
+      this.attachWheelPivot(mesh, toThree(axis).multiplyScalar(K), front ? -1 : 1, front);
     }
   }
 
@@ -396,15 +396,6 @@ export class DrivetrainFF extends BaseMachine {
     mesh.position.copy(part.center).sub(axisLocal);
     mesh.rotation.set(0, 0, 0);
     pivot.add(mesh);
-    if (part === this.drive) {
-      // 구동축 회전 가시화용 마커 — 축 중심에서 벗어나 배치해 회전이 눈에 보인다
-      const marker = new THREE.Mesh(
-        new THREE.BoxGeometry(0.045, 0.17, 0.045),
-        new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
-      );
-      marker.position.set(0, 0.08, 0);
-      pivot.add(marker);
-    }
     this.root.add(pivot);
     part.pivot = pivot;
     part.mesh = mesh;

@@ -164,6 +164,8 @@ export class GearHunt extends BaseMachine implements DragMachine {
       item.flash = 0;
       item.material.emissiveIntensity = 0.1;
     }
+    for (const obj of this.gearLabels) obj.removeFromParent();
+    this.gearLabels = [];
     this.animated = [];
     this.placed = 0;
     this.placedOrder = [];
@@ -242,6 +244,7 @@ export class GearHunt extends BaseMachine implements DragMachine {
     item.placed = true;
     this.placed += 1;
     this.placedOrder.push(item.id);
+    this.showGearLabel(item.id);
     return { correct: true, partId: INFO_PART[item.id] };
   }
 
@@ -278,7 +281,72 @@ export class GearHunt extends BaseMachine implements DragMachine {
       item.placed = true;
       this.placed += 1;
       this.placedOrder.push(id);
+      this.showGearLabel(id);
     }
+  }
+
+  // ── 단계별 성공 라벨 (지시선 + 부품 이름) ──
+
+  private gearLabels: THREE.Object3D[] = [];
+
+  /** 라벨을 부품 좌우로 교대 배치해 겹침을 줄인다 */
+  private static readonly LABEL_SIDE: Record<RoundId, number> = {
+    spur_gear1: -0.65,
+    bevel_gear1: 0.65,
+    bevel_gear2: -0.65,
+    worm_screw: 0.65,
+    worm_wheel: -0.65,
+    pinion_gear: 0.65,
+    rack_gear: 0.78
+  };
+
+  /** 설치된 부품 옆에 지시선과 부품 이름 라벨을 만들어 표시한다 */
+  private showGearLabel(id: RoundId): void {
+    const item = this.items.find((p) => p.id === id);
+    if (!item?.pivot) return;
+    const center = item.pivot.position;
+    const side = GearHunt.LABEL_SIDE[id] ?? 0.65;
+    const labelPos = center.clone().add(new THREE.Vector3(side, 0.25, 0));
+    this.gearLabels.push(...this.makeGearLabelCallout(LABELS[id], '#ffe08a', center.clone(), labelPos));
+  }
+
+  private makeGearLabelCallout(text: string, color: string, partPoint: THREE.Vector3, labelPos: THREE.Vector3): THREE.Object3D[] {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 96;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
+      ctx.beginPath();
+      ctx.roundRect(8, 8, 240, 80, 18);
+      ctx.fill();
+      let font = 60;
+      ctx.font = `700 ${font}px "Noto Sans KR", sans-serif`;
+      const textW = ctx.measureText(text).width;
+      if (textW > 232) {
+        font = Math.max(20, Math.floor((60 * 232) / textW));
+        ctx.font = `700 ${font}px "Noto Sans KR", sans-serif`;
+      }
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = color;
+      ctx.fillText(text, 128, 50);
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, depthTest: false }));
+    sprite.renderOrder = 10;
+    sprite.layers.set(1);
+    sprite.scale.set(0.75, 0.3, 1);
+    sprite.position.copy(labelPos);
+    this.group.add(sprite);
+    const line = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints([partPoint, labelPos]),
+      new THREE.LineBasicMaterial({ color, depthTest: false } as THREE.LineBasicMaterialParameters)
+    );
+    line.renderOrder = 9;
+    line.layers.set(1);
+    this.group.add(line);
+    return [sprite, line];
   }
 
   private createPivot(item: PartItem, def: DragDef): void {

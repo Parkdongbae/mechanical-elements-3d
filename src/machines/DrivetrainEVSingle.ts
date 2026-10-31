@@ -366,7 +366,7 @@ export class DrivetrainEVSingle extends BaseMachine {
       new THREE.BoxGeometry(0.05, 0.055, 0.055),
       new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
     );
-    marker.position.set(side * 0.078, 0.24, 0);
+    marker.position.set(side * 0.115, 0.24, 0);
     pivot.add(marker);
   }
 
