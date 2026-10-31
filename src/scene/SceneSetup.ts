@@ -85,6 +85,12 @@ export class SceneManager {
     window.addEventListener('resize', this.resize);
   }
 
+  /** 부품 이름 라벨(스프라이트·지시선)은 레이어 1에 두고 카메라 레이어로 표시/숨김을 전환한다 */
+  setLabelsVisible(visible: boolean): void {
+    if (visible) this.camera.layers.enable(1);
+    else this.camera.layers.disable(1);
+  }
+
   private setupLights(): void {
     // 금속 PBR 재질이 반사할 환경맵 — 환경맵이 없으면 금속이 어둡고 평면하게 보인다
     const pmrem = new THREE.PMREMGenerator(this.renderer);

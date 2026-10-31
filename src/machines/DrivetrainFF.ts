@@ -247,6 +247,7 @@ export class DrivetrainFF extends BaseMachine {
     }
     const texture = new THREE.CanvasTexture(canvas);
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
+    sprite.layers.set(1);
     sprite.scale.set(w, h, 1);
     sprite.position.copy(position);
     this.group.add(sprite);
@@ -274,6 +275,7 @@ export class DrivetrainFF extends BaseMachine {
       new THREE.BufferGeometry().setFromPoints([partPoint, labelPos]),
       new THREE.LineBasicMaterial({ color } as THREE.LineBasicMaterialParameters)
     );
+    line.layers.set(1);
     this.root.add(line);
     return { sprite, line };
   }

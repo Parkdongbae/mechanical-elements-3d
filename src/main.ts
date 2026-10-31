@@ -10,8 +10,8 @@ import { isDragMachine, isHuntMachine, type DraggableItem, type Machine, type Ma
 import { MACHINES, getMachineDef } from './data/machines';
 import { getPart, getCategory } from './data/elements';
 import { HUD } from './ui/hud';
-import { loadProgress, saveProgress, clearMachineProgress, type ProgressData } from './state/progress';
-import { loadSettings, type AppSettings } from './state/settings';
+import { loadProgress, saveProgress, clearMachineProgress, clearAllProgress, allMachinesCompleted, type ProgressData } from './state/progress';
+import { loadSettings, saveSettings, type AppSettings } from './state/settings';
 import { playCorrectSound } from './ui/sound';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#scene');
@@ -30,11 +30,43 @@ const hud = new HUD(
     onSettingsChange: (s) => {
       settings = s;
       syncMission();
+    },
+    onResetAll: resetAllProgress,
+    onToggleLabels: (visible) => {
+      settings.showLabels = visible;
+      saveSettings(settings);
+      sceneMgr.setLabelsVisible(visible);
     }
   },
   thumbs,
   settings
 );
+sceneMgr.setLabelsVisible(settings.showLabels);
+
+let allCompleteShown = false;
+
+/** 모든 기계의 진행도를 지우고 현재 화면을 초기 상태로 되돌린다 */
+function resetAllProgress(): void {
+  if (flyTask) {
+    sceneMgr.scene.remove(flyTask.model);
+    disposeObject(flyTask.model);
+    flyTask = null;
+  }
+  current?.reset();
+  clearAllProgress(progress);
+  allCompleteShown = false;
+  syncMission();
+  hud.showRestartModal();
+}
+
+/** 모든 기계를 클리어했는지 확인해 축하 모달을 1회 표시한다 */
+function checkAllComplete(): void {
+  if (allCompleteShown || !current) return;
+  if (allMachinesCompleted(progress, MACHINES.map((m) => m.id))) {
+    allCompleteShown = true;
+    hud.showCongratsModal();
+  }
+}
 
 const SPAWN = new THREE.Vector3(1.7, 2.3, 4.2);
 const progress: ProgressData = loadProgress();
@@ -244,6 +276,7 @@ function flyAndInstall(partId: string, step: number): void {
     const newCount = step + 1;
     setInstalledCount(newCount);
     syncMission();
+    checkAllComplete();
     hud.showInfoCard(getPart(partId));
     runFollowUps(machine, step, () => {
       const def = currentDef();
@@ -382,6 +415,7 @@ canvas.addEventListener('pointerup', (e) => {
         hud.toast(`완성! ${currentDef().completeText}`, 'ok', 4200);
         startSim();
         setSpeedSlider(true); // 복원 진입(switchMachine)과 동일 처리 — 최초 완료에도 회전·속도 슬라이더 즉시 시작
+        checkAllComplete();
       }
     } else if (result.hint) {
       hud.toast(result.hint, 'warn', 3600);

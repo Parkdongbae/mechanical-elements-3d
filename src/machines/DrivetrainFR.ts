@@ -264,6 +264,7 @@ export class DrivetrainFR extends BaseMachine {
     // depthTest off — 라벨은 차체 뒤에 숨지 않고 항상 표시(앞 FRONT 등 가림 방지)
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, depthTest: false }));
     sprite.renderOrder = 10;
+    sprite.layers.set(1);
     sprite.scale.set(w, h, 1);
     sprite.position.copy(position);
     this.group.add(sprite);
@@ -293,6 +294,7 @@ export class DrivetrainFR extends BaseMachine {
       new THREE.LineBasicMaterial({ color, depthTest: false } as THREE.LineBasicMaterialParameters)
     );
     line.renderOrder = 9;
+    line.layers.set(1);
     this.root.add(line);
     return { sprite, line };
   }

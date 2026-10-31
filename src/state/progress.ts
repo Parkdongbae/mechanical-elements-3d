@@ -40,3 +40,13 @@ export function clearMachineProgress(data: ProgressData, machineId: string): voi
   delete data.machines[machineId];
   saveProgress(data);
 }
+
+export function clearAllProgress(data: ProgressData): void {
+  data.machines = {};
+  data.last = 'bicycle';
+  saveProgress(data);
+}
+
+export function allMachinesCompleted(data: ProgressData, machineIds: string[]): boolean {
+  return machineIds.every((id) => data.machines[id]?.completedOnce === true);
+}

@@ -3,9 +3,10 @@ export type Difficulty = 'low' | 'medium' | 'high';
 export interface AppSettings {
   difficulty: Difficulty;
   sound: boolean;
+  showLabels: boolean;
 }
 
-export const DEFAULT_SETTINGS: AppSettings = { difficulty: 'medium', sound: false };
+export const DEFAULT_SETTINGS: AppSettings = { difficulty: 'medium', sound: false, showLabels: true };
 
 const KEY = 'mech3d-settings-v1';
 
@@ -15,7 +16,7 @@ export function loadSettings(): AppSettings {
     if (raw) {
       const s = JSON.parse(raw) as Partial<AppSettings>;
       const difficulty: Difficulty = s.difficulty === 'low' || s.difficulty === 'high' ? s.difficulty : 'medium';
-      return { difficulty, sound: s.sound === true };
+      return { difficulty, sound: s.sound === true, showLabels: s.showLabels !== false };
     }
   } catch {
     void 0;
