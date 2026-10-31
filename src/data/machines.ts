@@ -9,6 +9,7 @@ import { GearHunt } from '../machines/GearHunt';
 import { SteelFrame } from '../machines/SteelFrame';
 import { MerryGoRound } from '../machines/MerryGoRound';
 import { DrivetrainFF } from '../machines/DrivetrainFF';
+import { DrivetrainFR } from '../machines/DrivetrainFR';
 
 export interface StepDef {
   partId: string;
@@ -118,6 +119,21 @@ export const MACHINES: MachineDef[] = [
       { partId: 'axle', label: '차축' }
     ],
     create: () => new DrivetrainFF()
+  },
+  {
+    id: 'drivetrain-fr',
+    name: 'FR 후륜구동',
+    icon: '🚗',
+    missionText: '후륜구동(FR) 자동차예요! 엔진의 동력이 지나가는 축과, 바퀴를 받쳐 주는 축을 순서대로 찾아 선택하세요!',
+    hint: '모터(엔진)와 맞물려 회전하며 동력을 전달하는 축은 구동축, 바퀴의 회전 중심을 받쳐 주는 축은 차축이에요! 앞 차축(차축)을 먼저 찾으세요.',
+    completeText: '프로펠러 샤프트와 반축을 타고 뒷바퀴가 힘차게 회전해요 🚗💨',
+    nameOverrides: { driveShaft: '구동축' },
+    steps: [
+      { partId: 'axle', label: '차축' },
+      { partId: 'driveShaft', label: '구동축' },
+      { partId: 'axle', label: '차축' }
+    ],
+    create: () => new DrivetrainFR()
   },
   {
     id: 'merryround',

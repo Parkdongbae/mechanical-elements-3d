@@ -144,11 +144,11 @@ export class HUD {
     }
   }
 
-  /** '자동차 구동방식' 중첩 호버 메뉴: 1단 내연기관/전기, 2단 각 구동방식. FF만 구현됨. */
+  /** '자동차 구동방식' 중첩 호버 메뉴: 1단 내연기관/전기, 2단 각 구동방식. FF·FR 구현됨. */
   private buildDrivetrainGroup(): void {
     const group = document.createElement('div');
     group.className = 'machine-group';
-    group.dataset.machine = 'drivetrain-ff';
+    group.dataset.machine = 'drivetrain';
 
     const btn = document.createElement('button');
     btn.type = 'button';
@@ -186,7 +186,7 @@ export class HUD {
 
     branch('내연기관 자동차', '⛽', [
       { label: 'FF 전륜구동', id: 'drivetrain-ff' },
-      { label: 'FR 후륜구동', id: null },
+      { label: 'FR 후륜구동', id: 'drivetrain-fr' },
       { label: 'AWD 사륜구동', id: null }
     ]);
     branch('전기 자동차', '🔌', [
@@ -201,7 +201,9 @@ export class HUD {
   setMachineActive(id: string): void {
     for (const btn of Array.from(this.machineBar.children)) {
       const el = btn as HTMLElement;
-      btn.classList.toggle('active', el.dataset.machine === id);
+      const dm = el.dataset.machine;
+      // '자동차 구동방식' 그룹(drivetrain)은 FF/FR 어느 쪽이든 활성 표시
+      btn.classList.toggle('active', dm === id || (dm !== undefined && id.startsWith(dm)));
     }
   }
 
