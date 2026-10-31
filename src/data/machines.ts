@@ -10,6 +10,7 @@ import { SteelFrame } from '../machines/SteelFrame';
 import { MerryGoRound } from '../machines/MerryGoRound';
 import { DrivetrainFF } from '../machines/DrivetrainFF';
 import { DrivetrainFR } from '../machines/DrivetrainFR';
+import { DrivetrainAWD } from '../machines/DrivetrainAWD';
 
 export interface StepDef {
   partId: string;
@@ -134,6 +135,21 @@ export const MACHINES: MachineDef[] = [
       { partId: 'driveShaft', label: '구동축' }
     ],
     create: () => new DrivetrainFR()
+  },
+  {
+    id: 'drivetrain-awd',
+    name: 'AWD 사륜구동',
+    icon: '🚘',
+    missionText: '사륜구동(AWD) 자동차예요! 엔진의 동력이 네 바퀴까지 전달되는 구동축들을 순서대로 찾아 선택하세요!',
+    hint: '엔진의 동력을 전달하는 축은 모두 구동축이에요! 센터 디퍼렌셜에서 갈라져 앞바퀴로 가는 전동축을 먼저 찾으세요!',
+    completeText: '센터 디퍼렌셜을 거쳐 네 바퀴가 힘차게 회전해요 🚘💨',
+    nameOverrides: { driveShaft: '구동축' },
+    steps: [
+      { partId: 'driveShaft', label: '구동축' },
+      { partId: 'driveShaft', label: '구동축' },
+      { partId: 'driveShaft', label: '구동축' }
+    ],
+    create: () => new DrivetrainAWD()
   },
   {
     id: 'merryround',

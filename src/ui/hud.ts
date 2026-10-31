@@ -130,12 +130,12 @@ export class HUD {
 
   private buildMachineBar(): void {
     for (const def of MACHINES) {
-      // 구동방식(FF·FR)은 '자동차 구동방식' 중첩 메뉴로만 노출 — 최상단 버튼 중복 방지
+      // 구동방식(FF·FR·AWD)은 '자동차 구동방식' 중첩 메뉴로만 노출 — 최상단 버튼 중복 방지
       if (def.id === 'drivetrain-ff') {
         this.buildDrivetrainGroup();
         continue;
       }
-      if (def.id === 'drivetrain-fr') continue;
+      if (def.id === 'drivetrain-fr' || def.id === 'drivetrain-awd') continue;
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'machine-btn';
@@ -189,7 +189,7 @@ export class HUD {
     branch('내연기관 자동차', '⛽', [
       { label: 'FF 전륜구동', id: 'drivetrain-ff' },
       { label: 'FR 후륜구동', id: 'drivetrain-fr' },
-      { label: 'AWD 사륜구동', id: null }
+      { label: 'AWD 사륜구동', id: 'drivetrain-awd' }
     ]);
     branch('전기 자동차', '🔌', [
       { label: '싱글 모터(2WD)', id: null },
