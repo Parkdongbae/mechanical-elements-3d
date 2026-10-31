@@ -1,6 +1,6 @@
 // ================================================
-// FR 후륜구동 반축(구동축) & 차축 하우징 포함 OpenSCAD 코드
-// 구조: 엔진 → 변속기 → 프로펠러 샤프트 → 차동기어 → 반축 (회전 구동) + 차축 하우징 (고정)
+// FR 후륜구동 반축(구동축) OpenSCAD 코드
+// 구조: 엔진 → 변속기 → 프로펠러 샤프트 → 차동기어 → 반축 (회전 구동)
 // ================================================
 
 $fn = 60; // 3D 프린터 출력을 위한 정밀도 설정
@@ -13,15 +13,14 @@ $fn = 60; // 3D 프린터 출력을 위한 정밀도 설정
 // 3  : 프로펠러 샤프트 (Propeller Shaft)
 // 4  : 차동기어 (Differential)
 // 5  : 반축 / 구동축 (Half Shafts - Purple)
-// 6  : 차축 하우징 (Axle Housing - Green)
-// 7  : 앞 차축 (Front Axle)
-// 8  : 앞좌측 바퀴 (Front Left Wheel)
-// 9  : 앞우측 바퀴 (Front Right Wheel)
-// 10 : 뒤좌측 바퀴 (Rear Left Wheel)
-// 11 : 뒤우측 바퀴 (Rear Right Wheel)
-// 12 : 베이스 프레임 (Car Base Frame)
+// 6  : 앞 차축 (Front Axle)
+// 7  : 앞좌측 바퀴 (Front Left Wheel)
+// 8  : 앞우측 바퀴 (Front Right Wheel)
+// 9  : 뒤좌측 바퀴 (Rear Left Wheel)
+// 10 : 뒤우측 바퀴 (Rear Right Wheel)
+// 11 : 베이스 프레임 (Car Base Frame)
 // ------------------------------------------------
-selected_part = 0; 
+selected_part = 0;
 
 // ---- 기본 치수 (단위: mm) ----
 car_width  = 160;   // X축 (좌우)
@@ -110,25 +109,7 @@ module part_half_shafts() {
     }
 }
 
-// [6] 차축 하우징 (첫 번째 이미지의 녹색 고정 차축 하우징)
-module part_axle_housing() {
-    translate([0, -65, 12]) {
-        color([0.2, 0.65, 0.25, 0.8]) { // 녹색 하우징
-            difference() {
-                union() {
-                    // 차동기어에서 양쪽 바퀴 쪽으로 뻗어나가는 외부 고정 하우징 파이프
-                    for (s = [-1, 1])
-                        translate([s * 30, 0, 0])
-                            rotate([0, 90, 0]) cylinder(r=6.5, h=40, center=true);
-                }
-                // 내부 반축 통과 구멍 (중공 파이프 구조)
-                rotate([0, 90, 0]) cylinder(r=4.0, h=140, center=true);
-            }
-        }
-    }
-}
-
-// [7] 앞 차축 (조향 전용 단순 빔 액슬, 다크 그레이)
+// [6] 앞 차축 (조향 전용 단순 빔 액슬, 다크 그레이)
 module part_front_axle() {
     translate([0, 65, 12]) {
         color([0.25, 0.25, 0.28]) {
@@ -155,7 +136,7 @@ module part_wheel_fr() { translate([ car_width/2 - wheel_w/2,  car_length*0.25, 
 module part_wheel_rl() { translate([-car_width/2 + wheel_w/2, -car_length*0.25, 12]) raw_wheel(); }
 module part_wheel_rr() { translate([ car_width/2 - wheel_w/2, -car_length*0.25, 12]) raw_wheel(); }
 
-// [12] 베이스 프레임 (반투명)
+// [11] 베이스 프레임 (반투명)
 module part_car_frame() {
     color([0.8, 0.8, 0.8, 0.3]) {
         difference() {
@@ -179,7 +160,6 @@ if (selected_part == 0) {
     part_propeller_shaft();
     part_differential();
     part_half_shafts();
-    part_axle_housing();
     part_front_axle();
     part_wheel_fl();
     part_wheel_fr();
@@ -203,23 +183,20 @@ if (selected_part == 0) {
     part_half_shafts();
 
 } else if (selected_part == 6) {
-    part_axle_housing();
-
-} else if (selected_part == 7) {
     part_front_axle();
 
-} else if (selected_part == 8) {
+} else if (selected_part == 7) {
     part_wheel_fl();
 
-} else if (selected_part == 9) {
+} else if (selected_part == 8) {
     part_wheel_fr();
 
-} else if (selected_part == 10) {
+} else if (selected_part == 9) {
     part_wheel_rl();
 
-} else if (selected_part == 11) {
+} else if (selected_part == 10) {
     part_wheel_rr();
 
-} else if (selected_part == 12) {
+} else if (selected_part == 11) {
     part_car_frame();
 }

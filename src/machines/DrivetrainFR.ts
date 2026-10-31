@@ -1,8 +1,7 @@
-// 자동차 구동방식 — FR 후륜구동: 폴더 부품(엔진·변속기·차동기어·차축 하우징·반축·바퀴 4)이
-// 순차 등장하는 차에서 하단 '축용' 패널에서 앞 차축(차축) → 프로펠러 샤프트(구동축) → 뒤 구동축(차축)
-// 순서로 정답을 찾아 선택하는 미션. 베이스 프레임은 사용하지 않는다.
-// 차축 하우징(녹색 반투명 ghost)과 반축(보라)은 처음부터 장착돼 있고 정답 후보에서 제외 —
-// 뒤 구동축 정답 설치 시 가이드 반축을 빼고 뒤 구동축 STL로 교체한다(같은 형태라 겹침 방지).
+// 자동차 구동방식 — FR 후륜구동: 폴더 부품(엔진·변속기·차동기어·바퀴 4)이 순차 등장하는 차에서
+// 하단 '축용' 패널에서 앞 차축(차축) → 프로펠러 샤프트(구동축) → 뒤 구동축(구동축)
+// 순서로 정답을 찾아 선택하는 미션. 베이스 프레임과 차축 하우징은 사용하지 않는다.
+// '반축' 지시선은 3번 정답(뒤 구동축) 설치 후 표시한다.
 // 완료하면 프로펠러 샤프트 + 반축 + 뒷바퀴만 회전한다(FR 특성: 앞바퀴는 정지).
 //
 // 좌표계: OpenSCAD(Z-up, mm, 조립 좌표계 유지) → three.js(Y-up). SteelFrame/DrivetrainFF와 같은
@@ -37,20 +36,18 @@ interface PartRecipe {
   metalness: number;
   roughness: number;
   delay: number; // 인트로 시작 후 대기 시간(s) — 조립 순서
-  ghost?: boolean; // 반투명 구조물(차축 하우징) — 내부 반축이 비쳐 보임
 }
 
 // 인트로 순차 등장 부품 — 앞 차축(front_axle)·프로펠러 샤프트(propeller_shaft)·뒤 구동축(rear_driveshaft)은
-// 정답이므로 등장하지 않고, 반축도 인트로에 표시하지 않는다. 차축 하우징은 미리 장착된 가이드(정답 후보 제외).
+// 정답이므로 등장하지 않고, 반축도 인트로에 표시하지 않는다.
 const INTRO_RECIPES: PartRecipe[] = [
   { file: 'engine.stl', color: 0x2f6fbe, metalness: 0.55, roughness: 0.4, delay: 0.0 },
   { file: 'transmission.stl', color: 0xd96a1f, metalness: 0.6, roughness: 0.38, delay: 0.7 },
   { file: 'differential.stl', color: 0x2f8f4e, metalness: 0.55, roughness: 0.4, delay: 1.4 },
-  { file: 'axle_housing.stl', color: 0x5fae74, metalness: 0.3, roughness: 0.5, delay: 2.1, ghost: true },
-  { file: 'wheel_fl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 2.7 },
-  { file: 'wheel_fr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.0 },
-  { file: 'wheel_rl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.3 },
-  { file: 'wheel_rr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.6 }
+  { file: 'wheel_fl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 2.1 },
+  { file: 'wheel_fr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 2.4 },
+  { file: 'wheel_rl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 2.7 },
+  { file: 'wheel_rr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.0 }
 ];
 
 // 정답 부품(인트로에 등장하지 않음) — 하단 패널에서 선택되면 날아와 장착된다.
@@ -341,8 +338,7 @@ export class DrivetrainFR extends BaseMachine {
       bumpScale: 0.02,
       envMapIntensity: recipe.metalness >= 0.6 ? 1.25 : 0.9,
       transparent: true,
-      opacity: 0,
-      depthWrite: recipe.ghost ? false : true
+      opacity: 0
     });
   }
 
@@ -454,7 +450,7 @@ export class DrivetrainFR extends BaseMachine {
       mesh.visible = e > 0;
       // 피벗에 물린 바퀴는 로컬 원점(축 중심) 기준 상대 낙하, 루트 직속 부품은 루트 좌표 낙하
       mesh.position.y = (part.inPivot ? 0 : part.center.y) + (1 - k) * INTRO_DROP;
-      part.material!.opacity = k * (part.recipe.ghost ? 0.4 : 1);
+      part.material!.opacity = k;
       if (e < 1) allDone = false;
     }
     if (allDone && this.intro.length === INTRO_RECIPES.length) this.finishIntro();
@@ -467,8 +463,8 @@ export class DrivetrainFR extends BaseMachine {
       if (!mesh) continue;
       mesh.visible = true;
       mesh.position.y = part.inPivot ? 0 : part.center.y;
-      part.material!.opacity = part.recipe.ghost ? 0.4 : 1;
-      if (!part.recipe.ghost) part.material!.transparent = false;
+      part.material!.opacity = 1;
+      part.material!.transparent = false;
     }
   }
 }
