@@ -43,10 +43,11 @@ const INTRO_RECIPES: PartRecipe[] = [
   { file: 'engine.stl', color: 0x2f6fbe, metalness: 0.55, roughness: 0.4, delay: 0.0 },
   { file: 'transmission.stl', color: 0xd96a1f, metalness: 0.6, roughness: 0.38, delay: 0.7 },
   { file: 'center_diff.stl', color: 0xd9bd2e, metalness: 0.55, roughness: 0.4, delay: 1.4 },
-  { file: 'wheel_fl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 2.1 },
-  { file: 'wheel_fr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 2.4 },
-  { file: 'wheel_rl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 2.7 },
-  { file: 'wheel_rr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.0 }
+  { file: 'rear_differential.stl', color: 0x2f8f4e, metalness: 0.55, roughness: 0.4, delay: 2.1 },
+  { file: 'wheel_fl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 2.7 },
+  { file: 'wheel_fr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.0 },
+  { file: 'wheel_rl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.3 },
+  { file: 'wheel_rr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.6 }
 ];
 
 // 정답 부품(인트로에 등장하지 않음) — 하단 패널에서 선택되면 날아와 장착된다. 정답은 모두 구동축.
@@ -283,6 +284,7 @@ export class DrivetrainAWD extends BaseMachine {
     this.makeCallout('엔진', '#7fd1ff', new THREE.Vector3(-0.22, 0.18, -0.83), new THREE.Vector3(-0.95, 0.75, -0.85));
     this.makeCallout('변속기', '#ffb37a', new THREE.Vector3(0.1, 0.22, -0.42), new THREE.Vector3(0.8, 0.72, -0.35));
     this.makeCallout('센터 디퍼렌셜', '#f2d95e', new THREE.Vector3(0, 0.16, -0.14), new THREE.Vector3(0.95, 0.62, -0.1), 0.95);
+    this.makeCallout('뒤 차동기어', '#8ee08e', new THREE.Vector3(0, 0.16, 0.62), new THREE.Vector3(0.95, 0.6, 0.78));
     // 반축은 인트로에 등장하지 않으므로 정답(뒤 구동축) 설치 후에 표시한다
     this.halfShaftCallout = this.makeCallout('반축', '#c98ae8', new THREE.Vector3(-0.45, 0.12, 0.65), new THREE.Vector3(-0.7, 0.55, 1.05));
     this.halfShaftCallout.sprite.visible = false;
