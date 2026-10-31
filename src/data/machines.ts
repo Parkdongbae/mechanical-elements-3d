@@ -131,7 +131,7 @@ export const MACHINES: MachineDef[] = [
     steps: [
       { partId: 'axle', label: '차축' },
       { partId: 'driveShaft', label: '구동축' },
-      { partId: 'axle', label: '차축' }
+      { partId: 'driveShaft', label: '구동축' }
     ],
     create: () => new DrivetrainFR()
   },

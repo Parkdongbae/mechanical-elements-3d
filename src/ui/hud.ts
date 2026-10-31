@@ -130,10 +130,12 @@ export class HUD {
 
   private buildMachineBar(): void {
     for (const def of MACHINES) {
+      // 구동방식(FF·FR)은 '자동차 구동방식' 중첩 메뉴로만 노출 — 최상단 버튼 중복 방지
       if (def.id === 'drivetrain-ff') {
         this.buildDrivetrainGroup();
         continue;
       }
+      if (def.id === 'drivetrain-fr') continue;
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'machine-btn';
