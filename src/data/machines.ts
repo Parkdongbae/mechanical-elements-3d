@@ -11,6 +11,8 @@ import { MerryGoRound } from '../machines/MerryGoRound';
 import { DrivetrainFF } from '../machines/DrivetrainFF';
 import { DrivetrainFR } from '../machines/DrivetrainFR';
 import { DrivetrainAWD } from '../machines/DrivetrainAWD';
+import { DrivetrainEVSingle } from '../machines/DrivetrainEVSingle';
+import { DrivetrainEVDual } from '../machines/DrivetrainEVDual';
 
 export interface StepDef {
   partId: string;
@@ -150,6 +152,34 @@ export const MACHINES: MachineDef[] = [
       { partId: 'driveShaft', label: '구동축' }
     ],
     create: () => new DrivetrainAWD()
+  },
+  {
+    id: 'ev-single',
+    name: '싱글 모터(2WD)',
+    icon: '⚡',
+    missionText: '싱글 모터(2WD) 전기차예요! 모터의 동력을 전달하는 축과 바퀴를 받쳐 주는 축을 순서대로 찾아 선택하세요!',
+    hint: '모터의 동력을 전달하는 축은 구동축, 바퀴의 회전 중심을 받쳐 주는 축은 차축이에요! 구동축을 먼저 찾으세요.',
+    completeText: '구동축과 앞바퀴가 함께 회전해요 ⚡',
+    nameOverrides: { driveShaft: '구동축' },
+    steps: [
+      { partId: 'driveShaft', label: '구동축' },
+      { partId: 'axle', label: '차축' }
+    ],
+    create: () => new DrivetrainEVSingle()
+  },
+  {
+    id: 'ev-dual',
+    name: '듀얼 모터(AWD)',
+    icon: '⚡',
+    missionText: '듀얼 모터(AWD) 전기차예요! 네 바퀴에 동력을 전달하는 구동축들을 순서대로 찾아 선택하세요!',
+    hint: '모터의 동력을 전달하는 축은 모두 구동축이에요! 앞바퀴로 가는 구동 반축을 먼저 찾으세요.',
+    completeText: '두 모터의 힘으로 네 바퀴가 힘차게 회전해요 ⚡',
+    nameOverrides: { driveShaft: '구동축' },
+    steps: [
+      { partId: 'driveShaft', label: '구동축' },
+      { partId: 'driveShaft', label: '구동축' }
+    ],
+    create: () => new DrivetrainEVDual()
   },
   {
     id: 'merryround',
