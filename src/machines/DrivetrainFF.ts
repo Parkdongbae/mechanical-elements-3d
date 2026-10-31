@@ -350,6 +350,14 @@ export class DrivetrainFF extends BaseMachine {
     pivot.position.set(mesh.position.x, axisLocal.y, axisLocal.z); // 바퀴 중심을 차축선(X축) 위로 스냅
     mesh.position.set(0, 0, 0);
     pivot.add(mesh);
+    // 바퀴 STL은 회전대칭(원통)이라 회전해도 겉모습이 변하지 않는다 — 타이어 바깥면에 가시화 마커를 붙인다
+    const side = Math.sign(pivot.position.x) || 1; // 차 바깥쪽 타이어 면
+    const marker = new THREE.Mesh(
+      new THREE.BoxGeometry(0.05, 0.055, 0.055),
+      new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
+    );
+    marker.position.set(side * 0.078, 0.19, 0);
+    pivot.add(marker);
     this.root.add(pivot);
     this.wheelPivots.push({ pivot, sign });
   }
