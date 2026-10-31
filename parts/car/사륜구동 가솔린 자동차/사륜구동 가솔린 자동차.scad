@@ -21,7 +21,7 @@ $fn = 60; // 3D 프린터 출력을 위한 정밀도 설정
 // 10 : 뒤좌측 바퀴 (Rear Left Wheel)
 // 11 : 뒤우측 바퀴 (Rear Right Wheel)
 // ------------------------------------------------
-selected_part = 0;
+selected_part = 4;
 
 // ---- 기본 치수 (단위: mm) ----
 car_width  = 160;   // X축 (좌우)
@@ -97,10 +97,10 @@ module part_front_driveshaft() {
             }
         }
         // 센터 디퍼렌셜 → 앞 차동기어 연결 세로 축 (y 14 → 65)
-        color([0.2, 0.65, 0.25])
-            translate([0, -25.5, 0])
-                rotate([90, 0, 0])
-                    cylinder(r=3.8, h=51, center=true);
+       // color([0.2, 0.65, 0.25])
+        //    translate([0, -25.5, 0])
+         //       rotate([90, 0, 0])
+            //        cylinder(r=3.8, h=51, center=true);
     }
 }
 
