@@ -41,17 +41,16 @@ interface PartRecipe {
 }
 
 // 인트로 순차 등장 부품 — 앞 차축(front_axle)·프로펠러 샤프트(propeller_shaft)·뒤 구동축(rear_driveshaft)은
-// 정답이므로 등장하지 않는다. 차축 하우징과 반축은 미리 장착된 가이드(정답 후보 제외).
+// 정답이므로 등장하지 않고, 반축도 인트로에 표시하지 않는다. 차축 하우징은 미리 장착된 가이드(정답 후보 제외).
 const INTRO_RECIPES: PartRecipe[] = [
   { file: 'engine.stl', color: 0x2f6fbe, metalness: 0.55, roughness: 0.4, delay: 0.0 },
   { file: 'transmission.stl', color: 0xd96a1f, metalness: 0.6, roughness: 0.38, delay: 0.7 },
   { file: 'differential.stl', color: 0x2f8f4e, metalness: 0.55, roughness: 0.4, delay: 1.4 },
   { file: 'axle_housing.stl', color: 0x5fae74, metalness: 0.3, roughness: 0.5, delay: 2.1, ghost: true },
-  { file: 'half_shafts.stl', color: 0x7d1ab3, metalness: 0.75, roughness: 0.35, delay: 2.8 },
-  { file: 'wheel_fl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.5 },
-  { file: 'wheel_fr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.8 },
-  { file: 'wheel_rl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 4.1 },
-  { file: 'wheel_rr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 4.4 }
+  { file: 'wheel_fl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 2.7 },
+  { file: 'wheel_fr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.0 },
+  { file: 'wheel_rl.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.3 },
+  { file: 'wheel_rr.stl', color: 0x2b2b30, metalness: 0.2, roughness: 0.8, delay: 3.6 }
 ];
 
 // 정답 부품(인트로에 등장하지 않음) — 하단 패널에서 선택되면 날아와 장착된다.
@@ -98,7 +97,6 @@ export class DrivetrainFR extends BaseMachine {
 
   private root = new THREE.Group();
   private intro: IntroPart[] = [];
-  private introHalfShaft: IntroPart | null = null; // 가이드 반축 — 뒤 구동축 정답 시 교체됨
   private loadedCount = 0;
   private introStart = -1;
   private introDone = false;
@@ -154,7 +152,10 @@ export class DrivetrainFR extends BaseMachine {
     part.installed = true;
     this.hideSlot(step);
     if (step < this.stepCount - 1) this.showSlot(step + 1); // 다음 정답 슬롯 표시
-    if (step === this.stepCount - 1) this.removeIntroHalfShaft(); // 가이드 반축 → 정답 뒤 구동축으로 교체
+    if (step === this.stepCount - 1 && this.halfShaftCallout) {
+      this.halfShaftCallout.sprite.visible = true; // 반축이 설치된 뒤에 라벨 표시
+      this.halfShaftCallout.line.visible = true;
+    }
     const flown = model.children[0] as THREE.Mesh | undefined;
     if (flown && part.geometry) {
       flown.position.copy(part.center);
@@ -185,9 +186,10 @@ export class DrivetrainFR extends BaseMachine {
       if (i === 0) this.showSlot(0);
       else this.hideSlot(i);
     }
-    // 가이드 반축 복원(제거됐다면 다시 붙인다)
-    const half = this.introHalfShaft;
-    if (half?.mesh && !half.mesh.parent) this.root.add(half.mesh);
+    if (this.halfShaftCallout) {
+      this.halfShaftCallout.sprite.visible = false;
+      this.halfShaftCallout.line.visible = false;
+    }
     this.introStart = -1;
     this.introDone = false;
     this.spinning = false;
@@ -213,9 +215,9 @@ export class DrivetrainFR extends BaseMachine {
       update: (dt: number) => {
         if (!self.spinning) return;
         self.theta += SPIN_SPEED * dt;
-        // 프로펠러 샤프트: 90° 베벨로 차동기어와 맞물림 — 반대 부호
+        // 프로펠러 샤프트와 반축: 90° 베벨 양쪽 — 동일 부호로 회전
         if (self.propShaft.pivot) self.propShaft.pivot.setRotationFromAxisAngle(PROP_AXIS_DIR, -self.theta);
-        if (self.rearDrive.pivot) self.rearDrive.pivot.setRotationFromAxisAngle(X_AXIS, self.theta);
+        if (self.rearDrive.pivot) self.rearDrive.pivot.setRotationFromAxisAngle(X_AXIS, -self.theta);
         for (const w of self.rearWheelPivots()) {
           w.pivot.setRotationFromAxisAngle(X_AXIS, self.theta * w.sign);
         }
@@ -271,6 +273,8 @@ export class DrivetrainFR extends BaseMachine {
     return sprite;
   }
 
+  private halfShaftCallout: { sprite: THREE.Sprite; line: THREE.Line } | null = null;
+
   private buildLabels(): void {
     this.makeLabel('앞 FRONT', '#7fd1ff', new THREE.Vector3(-0.55, 0.3, -1.2));
     this.makeLabel('뒤 REAR', '#ffd479', new THREE.Vector3(0, 0.3, 1.2));
@@ -278,7 +282,10 @@ export class DrivetrainFR extends BaseMachine {
     this.makeCallout('엔진', '#7fd1ff', new THREE.Vector3(-0.22, 0.18, -0.83), new THREE.Vector3(-0.95, 0.75, -0.85));
     this.makeCallout('변속기', '#ffb37a', new THREE.Vector3(0.1, 0.22, -0.42), new THREE.Vector3(0.8, 0.72, -0.35));
     this.makeCallout('차동기어', '#8ee08e', new THREE.Vector3(0, 0.16, 0.62), new THREE.Vector3(0.95, 0.6, 0.78));
-    this.makeCallout('반축', '#c98ae8', new THREE.Vector3(-0.45, 0.12, 0.65), new THREE.Vector3(-0.7, 0.55, 1.05));
+    // 반축은 인트로에 등장하지 않으므로 정답(뒤 구동축) 설치 후에 표시한다
+    this.halfShaftCallout = this.makeCallout('반축', '#c98ae8', new THREE.Vector3(-0.45, 0.12, 0.65), new THREE.Vector3(-0.7, 0.55, 1.05));
+    this.halfShaftCallout.sprite.visible = false;
+    this.halfShaftCallout.line.visible = false;
   }
 
   /** 부품 → 라벨 지시선 */
@@ -348,9 +355,7 @@ export class DrivetrainFR extends BaseMachine {
     mesh.visible = false;
     this.root.add(mesh);
     const inPivot = recipe.file.startsWith('wheel_');
-    const entry: IntroPart = { recipe, mesh, material, center: center.clone().multiplyScalar(K), inPivot };
-    this.intro.push(entry);
-    if (recipe.file === 'half_shafts.stl') this.introHalfShaft = entry;
+    this.intro.push({ recipe, mesh, material, center: center.clone().multiplyScalar(K), inPivot });
     this.loadedCount += 1;
     this.enableShadows();
 
@@ -425,12 +430,6 @@ export class DrivetrainFR extends BaseMachine {
     this.root.add(pivot);
     part.pivot = pivot;
     part.mesh = mesh;
-  }
-
-  /** 가이드 반축 제거 — 같은 자리에 정답 뒤 구동축이 설치되므로 겹침 방지 */
-  private removeIntroHalfShaft(): void {
-    const half = this.introHalfShaft;
-    if (half?.mesh) half.mesh.removeFromParent();
   }
 
   private updateIntro(t: number): void {
