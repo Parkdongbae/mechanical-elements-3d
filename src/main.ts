@@ -380,6 +380,8 @@ canvas.addEventListener('pointerup', (e) => {
       if (result.partId) hud.showInfoCard(getPart(result.partId));
       if (stats.found >= stats.total) {
         hud.toast(`완성! ${currentDef().completeText}`, 'ok', 4200);
+        startSim();
+        setSpeedSlider(true); // 복원 진입(switchMachine)과 동일 처리 — 최초 완료에도 회전·속도 슬라이더 즉시 시작
       }
     } else if (result.hint) {
       hud.toast(result.hint, 'warn', 3600);
