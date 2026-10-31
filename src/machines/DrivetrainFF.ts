@@ -87,7 +87,7 @@ export class DrivetrainFF extends BaseMachine {
 
   private drive = new AnswerPart({ ...DRIVE_RECIPE }, FRONT_AXIS_MM); // step 0: 구동축
   private axle = new AnswerPart({ ...AXLE_RECIPE }, REAR_AXIS_MM);    // step 1: 차축
-  private wheelPivots: { pivot: THREE.Group; sign: number }[] = [];
+  private wheelPivots: { pivot: THREE.Group; sign: number; front: boolean }[] = [];
   private theta = 0;
   private spinning = false;
 
@@ -204,15 +204,16 @@ export class DrivetrainFF extends BaseMachine {
       getDisplay: () => [
         { label: '구동 방식', value: 'FF (전륜구동)' },
         { label: '구동 요소', value: '구동축 + 차동기어' },
-        { label: '회전', value: this.spinning ? '구동축 + 전체 바퀴' : '정지' }
+        { label: '회전', value: this.spinning ? '구동축 + 앞바퀴' : '정지' }
       ]
     };
   }
 
   private spinEntries(): { pivot: THREE.Group; sign: number }[] {
+    // FF는 전륜구동 — 구동축과 앞바퀴만 회전한다(뒷바퀴는 차축 위 정지)
     const entries: { pivot: THREE.Group; sign: number }[] = [];
     if (this.drive.pivot) entries.push({ pivot: this.drive.pivot, sign: -1 });
-    for (const w of this.wheelPivots) entries.push(w);
+    for (const w of this.wheelPivots) if (w.front) entries.push(w);
     return entries;
   }
 
@@ -340,12 +341,13 @@ export class DrivetrainFF extends BaseMachine {
     // 바퀴는 완성 후 회전해야 하므로 즉시 피벗에 물려둔다(회전은 spinning 이후)
     if (recipe.file.startsWith('wheel_')) {
       // 바퀴는 반드시 차축선 위에서 회전 — Y·Z는 축 값으로 강제 스냅해 중심을 맞춘다
-      const axis = recipe.file.startsWith('wheel_f') ? FRONT_AXIS_MM : REAR_AXIS_MM;
-      this.attachWheelPivot(mesh, toThree(axis).multiplyScalar(K), recipe.file.endsWith('rl') || recipe.file.endsWith('rr') ? 1 : -1);
+      const front = recipe.file.startsWith('wheel_f');
+      const axis = front ? FRONT_AXIS_MM : REAR_AXIS_MM;
+      this.attachWheelPivot(mesh, toThree(axis).multiplyScalar(K), front ? 1 : -1, front);
     }
   }
 
-  private attachWheelPivot(mesh: THREE.Mesh, axisLocal: THREE.Vector3, sign: number): void {
+  private attachWheelPivot(mesh: THREE.Mesh, axisLocal: THREE.Vector3, sign: number, front: boolean): void {
     const pivot = new THREE.Group();
     pivot.position.set(mesh.position.x, axisLocal.y, axisLocal.z); // 바퀴 중심을 차축선(X축) 위로 스냅
     mesh.position.set(0, 0, 0);
@@ -359,7 +361,7 @@ export class DrivetrainFF extends BaseMachine {
     marker.position.set(side * 0.078, 0.19, 0);
     pivot.add(marker);
     this.root.add(pivot);
-    this.wheelPivots.push({ pivot, sign });
+    this.wheelPivots.push({ pivot, sign, front });
   }
 
   private onAnswerLoaded(part: AnswerPart, geo: THREE.BufferGeometry): void {
@@ -393,11 +395,12 @@ export class DrivetrainFF extends BaseMachine {
     mesh.rotation.set(0, 0, 0);
     pivot.add(mesh);
     if (part === this.drive) {
-      // 구동축 회전 가시화용 마커(유지) — 디퍼렌셜 회전을 보여준다
+      // 구동축 회전 가시화용 마커 — 축 중심에서 벗어나 배치해 회전이 눈에 보인다
       const marker = new THREE.Mesh(
         new THREE.BoxGeometry(0.045, 0.17, 0.045),
         new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
       );
+      marker.position.set(0, 0.08, 0);
       pivot.add(marker);
     }
     this.root.add(pivot);
