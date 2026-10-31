@@ -1,7 +1,7 @@
 # HANDOFF — 3D 기계요소 학습 웹앱 인수인계 문서
 
 > 새 세션에서 이 프로젝트를 이어받을 때 이 문서를 먼저 읽으세요.
-> 마지막 업데이트: 2026-10-29
+> 마지막 업데이트: 2026-10-31
 
 ## 1. 프로젝트 개요
 
@@ -32,18 +32,20 @@ npm run preview    # 빌드 결과 미리보기
 | 언어 | TypeScript (strict, noUncheckedIndexedAccess) |
 | 3D | Three.js 0.170 |
 | 물리(오답 연출) | Cannon-es 0.20 |
-| 3D 에셋 | **전부 절차적 생성** (GLB 파일 없음) + 기어 장치·철골 구조물은 parts/ STL 로드 |
+| 3D 에셋 | **전부 절차적 생성** (GLB 파일 없음) + 기어 장치·철골·회전놀이기구·자동차 구동방식은 parts/ STL 로드 |
 
-## 4. 미션(머신) 7종 — 화면 좌상단에서 전환
+## 4. 미션(머신) 9종 — 화면 좌상단에서 전환
 
 | 머신 id | 이름 | 미션 단계 (순서 강제) | 완료 시 애니메이션 |
 |---|---|---|---|
 | bicycle | 🚲 자전거 | 크랭크축(축용) → 스프로킷 → 체인 → 평행 핀 (4단계) | 페달 60rpm → 뒷바퀴 100rpm(기어비 1.67), 체인 링크 이동 |
 | clock | ⏰ 시계 | 스프링(태엽, 제어용) → 평 기어 (전동용) | 태엽 드럼 6rpm → 분침 3rpm → 시침 0.26rpm (1/24 감속 아님, 6:2 관계) |
-| treadmill | 🏃 러닝머신 | 볼 베어링(축용) → 벨트와 풀리(전동용) | 모터 롤러 60rpm → 벨트 1.13m/s |
+| treadmill | 🏃 러닝머신 | 볼 베어링(축용) → 벨트와 풀리 (전동용) | 모터 롤러 60rpm → 벨트 1.13m/s |
 | steering | 🚗 자동차 핸들 | 래크와 피니언 → 링크 (전동용) | 핸들 ±55° → 래크 ±29cm → 바퀴 조향 |
-| gearhunt | 🔍 기어의 종류 | 조립 단계 없음 — **개별 STL 부품을 동력 전달 순서대로 드래그 조립** (7단계) | 전 기어가 맞물려 회전, 슬라이더로 속도 제어(0~10x) |
+| gearhunt | 🔍 기어의 종류 | 조립 단계 없음 — **개별 STL 부품을 동력 전달 순서대로 드래그 조립** (7단계) | 전 기어가 맞물려 회전, 슬라이더로 속도 제어(0~10x) — 최초 완료 시에도 즉시 시작 |
 | steelframe | 🏗️ 철골공사 | 정답 1단계 — 하부/상부 기둥·이음칼라·H형 들보가 인트로 애니메이션으로 순차 조립 등장, **하단 패널에서 결합용 나사(볼트와 너트)를 찾아 선택** | bolts_nuts.stl이 비행해 접합부에 체결(에미시브 플래시), 정보 패널 표시 |
+| drivetrain-ff | 🚙 FF 전륜구동 | 정답 2단계 — 엔진 → 트랜스액슬 → 바퀴 4개 인트로 조립, **하단 축용 패널에서 구동축(앞 구동축&차동기어) → 차축(뒤 차축) 순서로 선택** | 정답 STL 비행 설치 후 구동축 + 앞바퀴만 회전(뒷바퀴 정지), 바퀴 회전 마커 |
+| drivetrain-fr | 🚗 FR 후륜구동 | 정답 3단계 — 엔진 → 변속기 → 차동기어 → 차축 하우징(반투명 ghost) → 바퀴 4개 인트로 조립(반축은 미표시), **축용 패널에서 앞 차축(차축) → 프로펠러 샤프트(구동축) → 뒤 구동축(구동축) 순서로 선택** | 정답 STL 비행 설치 후 프로펠러 샤프트 + 뒤 구동축(반축) + 뒷바퀴만 회전(앞바퀴 정지), '반축' 라벨은 뒤 구동축 설치 후 표시 |
 | merryround | 🎠 회전놀이기구 | 정답 1단계 — base → shaft → hub_cap → turntable → handles 순서 인트로 조립, **하단 패널에서 축용 볼 베어링을 찾아 선택** | ball_bearing.stl이 비행해 축에 체결(플래시) 후 회전부(회전판·허브캡·핸들·베어링 볼)가 램프업하며 회전(≈8.1rpm), 정보 패널 표시 |
 
 ## 5. 파일 구조와 역할
@@ -53,7 +55,7 @@ src/
 ├── main.ts              # 게임 컨트롤러: 머신 전환, 미션 진행, 드래그/클릭 판정, 메인 루프
 ├── data/
 │   ├── elements.ts      # 기계요소 4대분류 + 22종 데이터 (교과서 검증됨)
-│   └── machines.ts      # 7개 머신 정의 (단계·라벨·힌트·완료문구)
+│   └── machines.ts      # 9개 머신 정의 (단계·라벨·힌트·완료문구)
 ├── machines/
 │   ├── types.ts         # Machine / HuntMachine / DragMachine 인터페이스 + BaseMachine
 │   ├── Bicycle.ts       # 자전거 (프레임 절차 생성, 4슬롯, 체인 경로 ChainPath2D)
@@ -62,6 +64,11 @@ src/
 │   ├── Steering.ts      # 자동차 조향장치 (기울어진 컬럼, 타이로드 동기화)
 │   ├── GearHunt.ts      # STL 드래그 조립 (parts/ 개별 부품 10종 로드)
 │   ├── SteelFrame.ts    # 철골공사 — parts/bolt_nut STL 5종 로드, 인트로 조립, 볼트 체결
+│   ├── DrivetrainFF.ts  # FF 전륜구동 — public/models/fwd_ff STL 8종, 인트로 조립,
+│   │                    #   축용 패널 정답 2단계. 완료 시 구동축+앞바퀴만 회전(바퀴 회전 마커)
+│   ├── DrivetrainFR.ts  # FR 후륜구동 — public/models/rwd_fr STL, 인트로 조립(반축 미표시),
+│   │                    #   정답 3단계(차축→구동축→구동축). 완료 시 프로펠러 샤프트+반축+뒷바퀴 회전,
+│   │                    #   차축 하우징은 반투명 ghost 재질, '반축' 라벨은 정답 설치 후 표시
 │   └── MerryGoRound.ts  # 회전놀이기구 — parts/회전 놀이 기구 STL 6종 로드, 인트로 조립,
 │                        #   볼 베어링 체결 후 회전. 삼각형 무게중심으로 재질 분할(핸들 빨강/파랑,
 │                        #   베어링 링/볼) — splitByMaterial + geometry groups
@@ -79,8 +86,10 @@ src/
 public/models/           # parts/ 에서 복사한 STL (빌드 포함용) — parts 수정 시 재복사
 public/models/bolt_nut/  # 철골공사 STL 5종 (parts/bolt_nut 에서 복사)
 public/models/merry_round/ # 회전놀이기구 STL 6종 (parts/회전 놀이 기구 에서 복사)
+public/models/fwd_ff/    # FF 전륜구동 STL 8종 (parts/car/올바른 FF 에서 복사, 영문 파일명)
+public/models/rwd_fr/    # FR 후륜구동 STL 12종 (parts/car/올바른 FR 에서 복사, 영문 파일명)
 parts/                   # 원본 STL (OpenSCAD 기어 장치 개별 부품 + total, bolt_nut 철골 부재,
-                         #   회전 놀이 기구 6종 + .scad 원본)
+                         #   회전 놀이 기구 6종, car/ 자동차 구동방식별 부품(FR·FF·EV 등) + .scad 원본)
 3d.md                    # 기획 문서
 HANDOFF.md               # 이 문서
 ```
@@ -113,11 +122,15 @@ HANDOFF.md               # 이 문서
 `BaseMachine.addSlot(step, radius, position)` → 초록색 토러스가 펄스. 순차 미션에서는
 이전 단계 설치 시 `hideSlot(n) / showSlot(n+1)` 호출 필요
 
-## 7. STL 파이프라인 (기어의 종류 / 철골공사 / 회전놀이기구)
+## 7. STL 파이프라인 (기어의 종류 / 철골공사 / 회전놀이기구 / 자동차 구동방식)
 
-1. 원본: `parts/*.stl`, `parts/bolt_nut/*.stl`, `parts/회전 놀이 기구/*.stl`
+1. 원본: `parts/*.stl`, `parts/bolt_nut/*.stl`, `parts/회전 놀이 기구/*.stl`, `parts/car/**/*.stl`
    (OpenSCAD로 생성, Z-up, mm, **조립 좌표계 유지**)
-2. `public/models/`, `public/models/bolt_nut/`, `public/models/merry_round/` 로 복사 (빌드 포함) — parts 수정 시 반드시 재복사
+2. `public/models/`, `public/models/bolt_nut/`, `public/models/merry_round/`,
+   `public/models/fwd_ff/`, `public/models/rwd_fr/` 로 복사 (빌드 포함) — parts 수정 시 반드시 재복사
+   (car 폴더는 한글 파일명 → 복사 시 영문 파일명으로 변경. car scad의 컨트롤 변수는 반드시 `selected_part`
+   관례(0=전체) — `part_select`면 STL 출력 파이프라인이 부품 선택을 못 하고 전체 어셈블리가 통째로
+   출력된다. FR은 수정 완료, **FF·AWD scad는 아직 part_select — 재출력 전 변수명 수정 필요**)
 3. GearHunt.ts가 STLLoader로 로드: `rotateX(-π/2)` (Z-up→Y-up) → bbox 중심 `center` 빼기
    → scale `k` = 2.6/maxDim → 회전축은 `toThree(axisPoint) - center` 기준
 4. **각 부품 STL은 조립 좌표 그대로 export 되어야 함** (OpenSCAD render_part 위치 유지)
@@ -149,10 +162,13 @@ HANDOFF.md               # 이 문서
    - 래크 속도에서 웜 감속비 누락 → /24 적용
    - GearHunt 복원 시 개수 기반 복원으로 잘못된 부품 배치 → huntIds 배열 사용
    - 핸들 컬럼·시계 드럼 등 축점 좌표 오차 → STL bbox center 실측으로 교정
+   - car scad 컨트롤 변수명 part_select → 파이프라인이 전체 어셈블리 통째 출력 (selected_part로 통일)
+   - GearHunt 최초 완료 시 startSim 누락 → main.ts pointerup 완료 브랜치에 복원 경로와 동일 호출 추가
+   - drivetrain-fr을 buildMachineBar에서 스킵 누락 → 최상단 중복 버튼 + 구동방식 그룹 2개 생성
 
 ## 9. UI 요소
 
-- 좌상단: 머신 선택 바 (6개)
+- 좌상단: 머신 선택 바 (9종 — '자동차 구동방식'은 중첩 호버 메뉴: 내연기관 자동차(FF·FR, AWD 준비 중) / 전기 자동차(준비 중))
 - 상단: 미션 텍스트 + 단계 칩 + 힌트/다시하기 버튼
 - 우상단: 속도 슬라이더 (GearHunt만, 0~10x) 또는 RPM/정보 패널
 - 우측 중앙: 🏷️ 기어 이름 보기 버튼 (GearHunt만, 클릭 시 전동용 패널)
@@ -185,3 +201,14 @@ HANDOFF.md               # 이 문서
   %LOCALAPPDATA%\ms-playwright에 chromium-1248 있음). E2E 시 headless는 저FPS(4fps)라
   dt cap 0.05s 때문에 비행/물리/busy 해제가 수 초 걸림 — 대기 시간 넉넉히
 - 검증용 스크린샷 픽셀 비교는 `frameA.equals(frameB)` (Buffer)로 충분 — 회전 중이면 바이트 불일치
+- 바퀴 STL(자동차)은 회전대칭 원통(타이어+휠+허브)이라 회전해도 겉모습 변화 없음 → 타이어 바깥면에
+  주황 박스 마커를 피벗에 부착해 회전을 가시화 (FR은 뒷바퀴만, FF는 전 바퀴).
+  이후 자동차형 머신(AWD/EV) 추가 시 동일 패턴 적용
+- FF 전륜구동(drivetrain-ff): 완료 시 구동축 + 앞바퀴만 회전(뒷바퀴는 차축 위 정지 — spinEntries에서
+  front만 push). 구동축 빨간 마커는 축 중심 오프셋(0, 0.08, 0) 필요 — 중심 배치면 회전이 안 보임
+- FR 후륜구동(drivetrain-fr): 인트로(엔진→변속기→차동기어→차축 하우징 ghost→바퀴 4)에 반축은 등장하지
+  않는다(사용자 지정). '반축' 지시선은 3번 정답(뒤 구동축) 설치 후 표시(FF diffCallout 패턴).
+  완료 회전 부호: 프로펠러 샤프트 -θ, 뒤 구동축 -θ, 뒷바퀴 +θ — 모두 사용자 지정 방향.
+  차축 하우징은 반투명 ghost 재질(opacity 0.4, depthWrite off)로 내부가 비쳐 보임
+- 기어의 종류(GearHunt): 최초 완료 시에도 회전과 속도 슬라이더가 즉시 시작돼야 함 —
+  main.ts pointerup의 완료 브랜치에 startSim()+setSpeedSlider(true) (복원 진입 경로와 동일 처리)
