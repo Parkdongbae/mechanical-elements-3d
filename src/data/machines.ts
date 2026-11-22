@@ -161,7 +161,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'drivetrain-ff',
-    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
+    view: { pos: [2.1, 1.7, 2.9], target: [0, 0.3, 0] },
     group: 'drivetrain',
     summary: '엔진이 앞바퀴를 굴려요',
     name: 'FF 전륜구동',
@@ -178,7 +178,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'drivetrain-fr',
-    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
+    view: { pos: [2.1, 1.7, 2.9], target: [0, 0.3, 0] },
     group: 'drivetrain',
     summary: '엔진의 힘을 뒷바퀴까지',
     name: 'FR 후륜구동',
@@ -196,7 +196,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'drivetrain-awd',
-    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
+    view: { pos: [2.1, 1.7, 2.9], target: [0, 0.3, 0] },
     group: 'drivetrain',
     summary: '네 바퀴 모두에 동력을',
     name: 'AWD 사륜구동',
@@ -214,7 +214,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ev-single',
-    view: { pos: [3.3, 2.3, 0.6], target: [0, 0.2, -0.2] },
+    view: { pos: [2.6, 1.8, 0.5], target: [0, 0.2, -0.15] },
     group: 'drivetrain',
     summary: '모터 하나로 달리는 전기차',
     name: '싱글 모터(2WD)',
@@ -231,7 +231,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ev-dual',
-    view: { pos: [3.3, 2.3, 0.5], target: [0, 0.2, 0] },
+    view: { pos: [2.6, 1.8, 0.4], target: [0, 0.2, 0] },
     group: 'drivetrain',
     summary: '앞뒤 모터로 네 바퀴 구동',
     name: '듀얼 모터(AWD)',

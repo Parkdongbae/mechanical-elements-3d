@@ -37,6 +37,7 @@ const sceneMgr = new SceneManager(canvas, {
   quality: q.get('q') === 'low' ? 'low' : 'high'
 });
 sceneMgr.setLabelsVisible(q.get('labels') !== '0');
+sceneMgr.adaptive = false; // 캡처용 — 헤드리스의 낮은 프레임률 때문에 품질이 내려가지 않게
 
 let machine: Machine | null = null;
 let sim: MachineSim | null = null;
