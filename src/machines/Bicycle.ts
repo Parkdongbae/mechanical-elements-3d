@@ -2,35 +2,155 @@
 // 차축 정답 시 양쪽 허브에 축이 먼저 들어가고 바퀴가 자동 장착되며,
 // 크랭크축 정답 시 앞 스프로킷(체인링)이 자동 장착된다 — 팝업은 후속 장착까지 끝난 뒤 표시
 // 교과서 근거: 차축 = 바퀴 회전축(축용), 스프링(제어용) = 안장 충격 흡수
+// v2: 다이아몬드 프레임 비례(헤드 72°·시트 73.5°)로 재모델링, 시트포스트를 무는 정비 스탠드에 걸려
+//     두 바퀴가 바닥에서 떠 있다(페달을 돌리면 뒷바퀴만 돈다 — 앞바퀴는 구동과 무관하므로 정지).
 
 import * as THREE from 'three';
-import { mat, buildSpurGearMesh, ChainPath2D, buildChainAlongPath } from '../models/factory';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { ParametricGeometry } from 'three/examples/jsm/geometries/ParametricGeometry.js';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { gearShape, ChainPath2D, buildChainAlongPath } from '../models/factory';
+import { paint, steel, darkSteel, chrome, aluminum, rubber, plastic, glow } from '../models/materials';
 import { BaseMachine, type MachineSim, type MachineDisplayItem, type FollowUpPart } from './types';
 
+/** 체인링·뒤 스프로킷 피치원 반지름 — 체인 경로·기어비(1.67)의 기준 */
 export const RING_R = 0.45;
 export const SPR_R = 0.27;
+const RING_TEETH = 30;
+const SPR_TEETH = 18; // 30:18 = 0.45:0.27 → 이 피치가 체인 피치와 같다
+const CHAIN_PITCH = (Math.PI * 2 * RING_R) / RING_TEETH;
 
-const REAR = new THREE.Vector2(-1.55, 1.1);
-const FRONT = new THREE.Vector2(1.55, 1.1);
-const BB = new THREE.Vector2(0, 0.88);
-const SEAT_TOP = new THREE.Vector2(-0.4, 2.7);
-const HEAD_BOT = new THREE.Vector2(1.05, 2.5);
-const HEAD_TOP = new THREE.Vector2(0.98, 2.72);
-const BAR_POS = new THREE.Vector2(1.04, 2.86);
-const CHAIN_Z = 0.24;
-const BLADE_Z = 0.14;
-const TIRE_TUBE = 0.1;
-const CHAIN_PIN_POS = new THREE.Vector3(-0.78, 0.62, CHAIN_Z);
-// 안장 하단(y≈2.84)과 시트관 상단(SEAT_TOP.y=2.7) 사이 — 스프링 높이 0.14와 정확히 일치
-const SADDLE_SPRING_POS = new THREE.Vector3(SEAT_TOP.x + 0.02, SEAT_TOP.y + 0.07, 0);
+const deg = Math.PI / 180;
+const v2 = (x: number, y: number) => new THREE.Vector2(x, y);
+const along = (p: THREE.Vector2, d: THREE.Vector2, t: number) => p.clone().addScaledVector(d, t);
+
+// ── 기하 기준점 (XY = 자전거 측면, +Z = 구동측) ──
+const WHEEL_R = 1.05; // 타이어 바깥 반지름
+const LIFT = 0.3; // 정비 스탠드가 들어 올린 높이
+const AXLE_Y = WHEEL_R + LIFT;
+const BB = v2(0, AXLE_Y - 0.22);
+const FRONT = v2(1.6, AXLE_Y);
+const CHAIN_LINKS = 54; // 짝수(안/바깥 링크 교대)
+/** 체인 길이가 정확히 CHAIN_LINKS × 피치가 되도록 체인스테이 길이(뒤 차축 x)를 맞춘다 → 롤러가 이골에 앉는다 */
+const REAR = (() => {
+  const len = (x: number) => new ChainPath2D(x, AXLE_Y, SPR_R, BB.x, BB.y, RING_R).length;
+  let lo = -1.6;
+  let hi = -1.2;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    if (len(mid) > CHAIN_LINKS * CHAIN_PITCH) lo = mid;
+    else hi = mid;
+  }
+  return v2((lo + hi) / 2, AXLE_Y);
+})();
+const SEAT_DIR = v2(-Math.cos(73.5 * deg), Math.sin(73.5 * deg));
+const HEAD_DIR = v2(-Math.cos(72 * deg), Math.sin(72 * deg));
+const HEAD_FWD = v2(HEAD_DIR.y, -HEAD_DIR.x);
+const ST_TOP = along(BB, SEAT_DIR, 1.62);
+const SEAT_CLUSTER = along(BB, SEAT_DIR, 1.55);
+const STEER_BASE = along(FRONT, HEAD_FWD, -0.13); // 포크 오프셋(레이크)
+const CROWN = along(STEER_BASE, HEAD_DIR, 1.1);
+const HT_BOT = along(CROWN, HEAD_DIR, 0.04);
+const HT_TOP = along(HT_BOT, HEAD_DIR, 0.44);
+const TT_FRONT = along(HT_BOT, HEAD_DIR, 0.37);
+const DT_FRONT = along(HT_BOT, HEAD_DIR, 0.08);
+const STEM_C = along(HT_TOP, HEAD_DIR, 0.13);
+const STEM_DIR = v2(Math.cos(14 * deg), Math.sin(14 * deg));
+const BAR_POS = along(STEM_C, STEM_DIR, 0.3);
+const POST_HEAD = along(BB, SEAT_DIR, 1.95);
+const STAND_CLAMP = along(BB, SEAT_DIR, 1.79);
+
+const CHAIN_Z = 0.2;
+const REAR_DROP_Z = 0.26;
+const FRONT_DROP_Z = 0.15;
+const CRANK_LEN = 0.5;
+const CRANK_Z = 0.29;
+
+// 안장 밑 스프링: 레일 뒤 브리지(아래)와 안장 칸틀 판(위) 사이, 높이 0.14
+const RAIL_Y = POST_HEAD.y + 0.03;
+const SADDLE_SPRING_POS = new THREE.Vector3(POST_HEAD.x - 0.3, RAIL_Y + 0.085, 0);
+const SPRING_H = 0.14;
+
+const CHAIN_PATH = new ChainPath2D(REAR.x, REAR.y, SPR_R, BB.x, BB.y, RING_R);
+// 스프로킷 초기 위상: 체인 롤러(호장거리 (k+½)·피치)가 이골(각도 0 + k·step) 중심에 오도록
+const SPROCKET_PHASE = (() => {
+  const dx = BB.x - REAR.x;
+  const dy = BB.y - REAR.y;
+  const D = Math.hypot(dx, dy);
+  const delta = Math.acos((RING_R - SPR_R) / D);
+  const aTop = Math.atan2(dy, dx) + Math.PI - delta;
+  const topLen = Math.sqrt(D * D - (RING_R - SPR_R) ** 2);
+  return { rear: aTop + (0.5 * CHAIN_PITCH) / SPR_R, front: aTop + (topLen - 0.5 * CHAIN_PITCH) / RING_R };
+})();
+const CHAIN_PIN_POS = (() => {
+  const p = CHAIN_PATH.pointAt(0.62); // 윗줄(장력측) 중간 — 정면에서 잘 보인다
+  return new THREE.Vector3(p.x, p.y, CHAIN_Z);
+})();
+
+// ── 지오메트리 헬퍼 (병합용: 메시가 아니라 변환된 지오메트리를 돌려준다) ──
+
+const Y_UP = new THREE.Vector3(0, 1, 0);
+
+function cylBetween(a: THREE.Vector3, b: THREE.Vector3, r: number, seg = 24, r2 = r): THREE.BufferGeometry {
+  const dir = b.clone().sub(a);
+  const g = new THREE.CylinderGeometry(r2, r, dir.length(), seg, 1);
+  g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(Y_UP, dir.normalize()));
+  g.translate((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2);
+  return g;
+}
+
+function zCyl(r: number, z0: number, z1: number, seg = 32, x = 0, y = 0): THREE.BufferGeometry {
+  const g = new THREE.CylinderGeometry(r, r, z1 - z0, seg);
+  g.rotateX(Math.PI / 2);
+  g.translate(x, y, (z0 + z1) / 2);
+  return g;
+}
+
+function ball(p: THREE.Vector3, r: number): THREE.BufferGeometry {
+  const g = new THREE.SphereGeometry(r, 24, 16);
+  g.translate(p.x, p.y, p.z);
+  return g;
+}
+
+/** (반지름, z) 프로파일을 Z축 둘레로 회전 */
+function latheZ(profile: [number, number][], seg = 48): THREE.BufferGeometry {
+  const g = new THREE.LatheGeometry(profile.map(([r, z]) => new THREE.Vector2(r, z)), seg);
+  g.rotateX(Math.PI / 2);
+  return g;
+}
+
+/** 인덱스 유무·속성 차이를 맞춰 하나로 병합 (드로콜 절약) */
+function merge(geos: THREE.BufferGeometry[]): THREE.BufferGeometry {
+  const prepared = geos.map((g) => {
+    const n = g.index ? g.toNonIndexed() : g;
+    for (const key of Object.keys(n.attributes)) {
+      if (key !== 'position' && key !== 'normal' && key !== 'uv') n.deleteAttribute(key);
+    }
+    if (!n.attributes.uv) n.setAttribute('uv', new THREE.Float32BufferAttribute(new Float32Array(n.attributes.position!.count * 2), 2));
+    if (!n.attributes.normal) n.computeVertexNormals();
+    return n;
+  });
+  const merged = mergeGeometries(prepared);
+  if (!merged) throw new Error('bicycle: geometry merge failed');
+  return merged;
+}
+
+const P3 = (p: THREE.Vector2, z = 0) => new THREE.Vector3(p.x, p.y, z);
+
+function mesh(geo: THREE.BufferGeometry, material: THREE.Material, receive = false): THREE.Mesh {
+  const m = new THREE.Mesh(geo, material);
+  m.castShadow = true;
+  m.receiveShadow = receive;
+  return m;
+}
 
 interface BicycleSimState {
   crank: THREE.Object3D;
   rear: THREE.Object3D;
-  front: THREE.Object3D;
   chainGroup: THREE.Group;
   path: ChainPath2D;
   pin: THREE.Object3D | null;
+  pedals: THREE.Object3D[];
 }
 
 export class Bicycle extends BaseMachine {
@@ -42,7 +162,7 @@ export class Bicycle extends BaseMachine {
   private frontSprocketMesh: THREE.Group | null = null;
   private chainPin: THREE.Group | null = null;
   private springModel: THREE.Group | null = null;
-  private axleRods: THREE.Mesh[] = [];
+  private axleRods: THREE.Object3D[] = [];
   private crank = new THREE.Group();
   private rearWheel = new THREE.Group();
   private frontWheel = new THREE.Group();
@@ -50,15 +170,18 @@ export class Bicycle extends BaseMachine {
   constructor() {
     super();
     this.buildFrame();
-    this.buildWheel(this.rearWheel, REAR);
-    this.buildWheel(this.frontWheel, FRONT);
+    this.buildCockpit();
+    this.buildSaddle();
+    this.buildStand();
+    this.buildWheel(this.rearWheel, REAR, true);
+    this.buildWheel(this.frontWheel, FRONT, false);
     this.crank.position.set(BB.x, BB.y, 0);
     this.group.add(this.crank);
 
     this.addSlot(0, 0.12, new THREE.Vector3(REAR.x, REAR.y, 0));
     this.addSlot(6, 0.12, new THREE.Vector3(FRONT.x, FRONT.y, 0));
     this.addSlot(1, 0.13, new THREE.Vector3(BB.x, BB.y, 0));
-    this.addSlot(2, 0.24, new THREE.Vector3(REAR.x, REAR.y, CHAIN_Z));
+    this.addSlot(2, SPR_R + 0.03, new THREE.Vector3(REAR.x, REAR.y, CHAIN_Z));
     this.addChainSlotOutline();
     this.addSlot(4, 0.08, CHAIN_PIN_POS);
     this.addSlot(5, 0.11, SADDLE_SPRING_POS);
@@ -107,7 +230,7 @@ export class Bicycle extends BaseMachine {
       case 0: return this.buildAxlePair();
       case 1: return this.buildCrankShaft();
       case 2: return this.createSprocketModel();
-      case 3: return buildChainAlongPath(this.getChainPath(), 0.155, CHAIN_Z);
+      case 3: return buildChainAlongPath(this.getChainPath(), CHAIN_PITCH, CHAIN_Z);
       case 4: return this.buildChainPin();
       default: return this.buildSaddleSpring();
     }
@@ -131,12 +254,14 @@ export class Bicycle extends BaseMachine {
     if (step === 0) {
       const pos = index === 0 ? FRONT : REAR;
       model.position.set(pos.x, pos.y, 0);
+      model.rotation.set(0, 0, 0);
       this.enableMeshShadows(model);
       this.group.add(model);
       return;
     }
     if (step === 1) {
       model.position.set(0, 0, CHAIN_Z);
+      model.rotation.set(0, 0, SPROCKET_PHASE.front);
       this.crank.add(model);
       this.frontSprocketMesh = model;
     }
@@ -145,7 +270,7 @@ export class Bicycle extends BaseMachine {
   installStep(step: number, model: THREE.Group): void {
     switch (step) {
       case 0: {
-        this.axleRods = [...model.children] as THREE.Mesh[];
+        this.axleRods = [...model.children];
         for (const rod of this.axleRods) this.group.add(rod);
         model.removeFromParent();
         this.hideSlot(0);
@@ -155,6 +280,7 @@ export class Bicycle extends BaseMachine {
       }
       case 1:
         model.position.set(0, 0, 0);
+        model.rotation.set(0, 0, 0);
         this.crank.add(model);
         this.crankModel = model;
         this.hideSlot(1);
@@ -162,27 +288,34 @@ export class Bicycle extends BaseMachine {
         break;
       case 2:
         model.position.set(0, 0, CHAIN_Z);
+        model.rotation.set(0, 0, SPROCKET_PHASE.rear);
         this.rearWheel.add(model);
         this.sprocketMesh = model;
         this.hideSlot(2);
         this.showSlot(3);
         break;
       case 3:
+        model.position.set(0, 0, 0);
+        model.rotation.set(0, 0, 0);
         this.group.add(model);
         this.chainGroup = model;
         this.hideSlot(3);
         this.showSlot(4);
         break;
-      case 4:
+      case 4: {
         model.position.copy(CHAIN_PIN_POS);
+        const s = this.nearestChainS(CHAIN_PIN_POS);
+        model.rotation.set(0, 0, this.getChainPath().pointAt(s).angle);
         this.group.add(model);
         this.chainPin = model;
-        model.userData.s = this.nearestChainS(CHAIN_PIN_POS);
+        model.userData.s = s;
         this.hideSlot(4);
         this.showSlot(5);
         break;
+      }
       case 5:
         model.position.copy(SADDLE_SPRING_POS);
+        model.rotation.set(0, 0, 0);
         this.group.add(model);
         this.springModel = model;
         this.hideSlot(5);
@@ -201,8 +334,8 @@ export class Bicycle extends BaseMachine {
     const path = this.getChainPath();
     let best = 0;
     let bestD = Infinity;
-    for (let i = 0; i < 240; i++) {
-      const s = (i / 240) * path.length;
+    for (let i = 0; i < 480; i++) {
+      const s = (i / 480) * path.length;
       const p = path.pointAt(s);
       const d = (p.x - pos.x) ** 2 + (p.y - pos.y) ** 2;
       if (d < bestD) {
@@ -216,8 +349,11 @@ export class Bicycle extends BaseMachine {
   reset(): void {
     this.rearWheel.removeFromParent();
     this.frontWheel.removeFromParent();
+    this.rearWheel.rotation.set(0, 0, 0);
+    this.frontWheel.rotation.set(0, 0, 0);
     for (const rod of this.axleRods) this.group.remove(rod);
     this.axleRods = [];
+    this.crank.rotation.set(0, 0, 0);
     if (this.crankModel) {
       this.crank.remove(this.crankModel);
       this.crankModel = null;
@@ -253,13 +389,17 @@ export class Bicycle extends BaseMachine {
 
   createSim(): MachineSim {
     if (!this.chainGroup || !this.sprocketMesh || !this.crankModel || !this.frontSprocketMesh || !this.springModel) throw new Error('bicycle mission incomplete');
+    const pedals: THREE.Object3D[] = [];
+    this.crankModel.traverse((o) => {
+      if (o.name === 'pedal') pedals.push(o);
+    });
     const state: BicycleSimState = {
       crank: this.crank,
       rear: this.rearWheel,
-      front: this.frontWheel,
       chainGroup: this.chainGroup,
       path: this.getChainPath(),
-      pin: this.chainPin
+      pin: this.chainPin,
+      pedals
     };
     let angle = 0;
     let chainOffset = 0;
@@ -270,12 +410,13 @@ export class Bicycle extends BaseMachine {
     ];
     return {
       update(dt: number) {
-        const wCrank = Math.PI * 2;
-        angle -= wCrank * dt;
+        const wCrank = Math.PI * 2; // 60rpm
+        angle -= wCrank * dt; // 구동측(+Z)에서 보아 시계 방향 = 전진
         state.crank.rotation.z = angle;
+        // 페달은 베어링으로 크랭크에 대해 자유 회전 — 발판이 수평을 유지
+        for (const p of state.pedals) p.rotation.z = -angle;
         chainOffset += wCrank * RING_R * dt;
         state.rear.rotation.z = angle * (RING_R / SPR_R);
-        state.front.rotation.z = angle * 0.96;
         state.chainGroup.traverse((o) => {
           const s = o.userData.s as number | undefined;
           if (typeof s === 'number') {
@@ -297,62 +438,449 @@ export class Bicycle extends BaseMachine {
     };
   }
 
+  // ─────────────────────────── 조립 부품 ───────────────────────────
+
+  /** 크랭크축(BB 스핀들) + 크랭크 암 2개 + 페달 2개 */
   private buildCrankShaft(): THREE.Group {
     const g = new THREE.Group();
-    const armGeo = new THREE.BoxGeometry(0.52, 0.11, 0.07);
-    const armMat = mat(0x5a646d, 0.8, 0.35);
-    const armR = new THREE.Mesh(armGeo, armMat);
-    armR.position.set(0.26, 0, 0.34);
-    const armL = new THREE.Mesh(armGeo, armMat);
-    armL.position.set(-0.26, 0, -0.34);
-    const pedalGeo = new THREE.BoxGeometry(0.2, 0.06, 0.12);
-    const pedalMat = mat(0x2c3138, 0.2, 0.8);
-    const pedalR = new THREE.Mesh(pedalGeo, pedalMat);
-    pedalR.position.set(0.5, 0, 0.42);
-    const pedalL = new THREE.Mesh(pedalGeo, pedalMat);
-    pedalL.position.set(-0.5, 0, -0.42);
-    const axle = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.78, 10), mat(0x8fa3b0, 0.85, 0.3));
-    axle.rotation.x = Math.PI / 2;
-    g.add(armR, armL, pedalR, pedalL, axle);
+    g.add(mesh(zCyl(0.034, -CRANK_Z - 0.03, CRANK_Z + 0.03, 24), steel()));
+
+    // 테이퍼진 크랭크 암 (단조 알루미늄 느낌)
+    const armShape = new THREE.Shape();
+    armShape.moveTo(0, 0.068);
+    armShape.lineTo(CRANK_LEN, 0.04);
+    armShape.absarc(CRANK_LEN, 0, 0.04, Math.PI / 2, -Math.PI / 2, true);
+    armShape.lineTo(0, -0.068);
+    armShape.absarc(0, 0, 0.068, -Math.PI / 2, Math.PI / 2, true);
+    const armGeo = new THREE.ExtrudeGeometry(armShape, { depth: 0.03, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.008, bevelSegments: 2, curveSegments: 16 });
+    armGeo.translate(0, 0, -0.015);
+    const armMat = aluminum({ color: 0xc9ced4 });
+    const armR = mesh(armGeo, armMat);
+    armR.position.z = CRANK_Z;
+    const armL = mesh(armGeo, armMat);
+    armL.rotation.z = Math.PI;
+    armL.position.z = -CRANK_Z;
+    const capMat = darkSteel();
+    const capR = mesh(zCyl(0.045, CRANK_Z + 0.02, CRANK_Z + 0.032, 24), capMat);
+    const capL = mesh(zCyl(0.045, -CRANK_Z - 0.032, -CRANK_Z - 0.02, 24), capMat);
+    g.add(armR, armL, capR, capL);
+
+    const bodyGeo = new RoundedBoxGeometry(0.26, 0.05, 0.17, 3, 0.015);
+    const bodyMat = plastic(0x2a2d33);
+    const spindleMat = steel();
+    const reflMat = glow(0xff8a1c, 0.35);
+    for (const side of [1, -1]) {
+      const pedal = new THREE.Group();
+      pedal.name = 'pedal';
+      pedal.position.set(side * CRANK_LEN, 0, side * CRANK_Z);
+      const spindle = mesh(zCyl(0.014, Math.min(0, side * 0.16), Math.max(0, side * 0.16), 16), spindleMat);
+      const body = mesh(bodyGeo, bodyMat);
+      body.position.z = side * 0.12;
+      const refl = mesh(new THREE.BoxGeometry(0.012, 0.025, 0.09), reflMat);
+      refl.position.set(0.133, 0, side * 0.12);
+      const refl2 = refl.clone();
+      refl2.position.x = -0.133;
+      pedal.add(spindle, body, refl, refl2);
+      g.add(pedal);
+    }
     return g;
   }
 
+  /** 체인링(앞 스프로킷) — factory 치형 + 5암 스파이더 일체형 */
   private buildFrontSprocket(): THREE.Group {
     const g = new THREE.Group();
-    const ring = buildSpurGearMesh(22, 0.42, 0.045, 0.05, 0xd7dde3);
-    const ringCap = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.02, 20), mat(0x8b959e));
-    ringCap.rotation.x = Math.PI / 2;
-    g.add(ring, ringCap);
+    const shape = gearShape(RING_TEETH, RING_R + 0.032, 0.07, 0.16);
+    const rIn = 0.1;
+    const rOut = RING_R - 0.085;
+    for (let i = 0; i < 5; i++) {
+      const a0 = (i / 5) * Math.PI * 2 + 0.2;
+      const a1 = a0 + (Math.PI * 2) / 5 - 0.4;
+      const hole = new THREE.Path();
+      hole.absarc(0, 0, rOut, a0, a1, false);
+      hole.absarc(0, 0, rIn + 0.06, a1 - 0.12, a0 + 0.12, true);
+      hole.closePath();
+      shape.holes.push(hole);
+    }
+    const center = new THREE.Path();
+    center.absarc(0, 0, 0.036, 0, Math.PI * 2, true);
+    shape.holes.push(center);
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.016, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 1, curveSegments: 10 });
+    geo.translate(0, 0, -0.008);
+    g.add(mesh(geo, aluminum({ color: 0xdfe3e8, roughness: 0.32 })));
+
+    // 스파이더 보스(크랭크 암 쪽으로 이어짐) + 체인링 볼트 5개
+    g.add(mesh(latheZ([[0.036, 0.0], [0.1, 0.0], [0.11, 0.01], [0.09, 0.07], [0.036, 0.07]], 40), darkSteel()));
+    const boltGeos: THREE.BufferGeometry[] = [];
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2;
+      const x = Math.cos(a) * (rOut - 0.035);
+      const y = Math.sin(a) * (rOut - 0.035);
+      boltGeos.push(zCyl(0.02, -0.018, 0.02, 16, x, y));
+    }
+    g.add(mesh(merge(boltGeos), chrome()));
     return g;
   }
 
-  private buildChainPin(): THREE.Group {
-    const g = new THREE.Group();
-    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.16, 10), mat(0x8fa3b0, 0.85, 0.3));
-    body.rotation.x = Math.PI / 2;
-    const head = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.025, 12), mat(0x6b7680));
-    head.rotation.x = Math.PI / 2;
-    head.position.z = 0.09;
-    g.add(body, head);
-    return g;
-  }
-
+  /** 뒤 스프로킷(18T) + 락링 */
   private createSprocketModel(): THREE.Group {
     const g = new THREE.Group();
-    const r = 0.24;
-    const gear = buildSpurGearMesh(14, r, r * 0.22, 0.07, 0xd7dde3);
-    const holeGeo = new THREE.CylinderGeometry(0.045, 0.045, 0.1, 10);
-    holeGeo.rotateX(Math.PI / 2);
-    const holeMat = mat(0x5a646d);
-    for (let i = 0; i < 4; i++) {
-      const a = (i / 4) * Math.PI * 2 + Math.PI / 4;
-      const hole = new THREE.Mesh(holeGeo, holeMat);
-      hole.position.set(Math.cos(a) * 0.135, Math.sin(a) * 0.135, 0);
-      g.add(hole);
+    const shape = gearShape(SPR_TEETH, SPR_R + 0.032, 0.07, 0.16);
+    const center = new THREE.Path();
+    center.absarc(0, 0, 0.056, 0, Math.PI * 2, true);
+    shape.holes.push(center);
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2;
+      const hole = new THREE.Path();
+      hole.absarc(Math.cos(a) * 0.15, Math.sin(a) * 0.15, 0.032, 0, Math.PI * 2, true);
+      shape.holes.push(hole);
     }
-    const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.16, 14), mat(0x5a646d));
-    g.add(gear, hub);
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.016, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 1, curveSegments: 10 });
+    geo.translate(0, 0, -0.008);
+    g.add(mesh(geo, steel({ color: 0xb4bcc6 })));
+    g.add(mesh(latheZ([[0.04, 0.012], [0.072, 0.012], [0.072, 0.034], [0.04, 0.034]], 36), darkSteel()));
     return g;
+  }
+
+  /** 평행 핀: 체인 링크를 관통하는 연결 핀 */
+  private buildChainPin(): THREE.Group {
+    const g = new THREE.Group();
+    g.add(mesh(zCyl(0.022, -0.06, 0.06, 20), steel()));
+    g.add(mesh(latheZ([[0, 0.05], [0.045, 0.05], [0.05, 0.058], [0.045, 0.066], [0, 0.066]], 24), chrome()));
+    g.add(mesh(latheZ([[0, -0.05], [0.045, -0.05], [0.05, -0.058], [0.045, -0.066], [0, -0.066]], 24), chrome()));
+    return g;
+  }
+
+  /** 안장 밑 코일 스프링 (양 끝은 닫힌 감김, 높이 SPRING_H) */
+  private buildSaddleSpring(): THREE.Group {
+    const turns = 5.5;
+    const pts: THREE.Vector3[] = [];
+    const n = 220;
+    const wire = 0.014;
+    for (let i = 0; i <= n; i++) {
+      const t = i / n;
+      const a = t * turns * Math.PI * 2;
+      // 양 끝 0.6바퀴는 피치 0(닫힌 끝) — 받침에 평평하게 앉는다
+      const endT = 0.6 / turns;
+      const k = t < endT ? 0 : t > 1 - endT ? 1 : (t - endT) / (1 - 2 * endT);
+      const y = -SPRING_H / 2 + wire + k * (SPRING_H - 2 * wire);
+      pts.push(new THREE.Vector3(Math.cos(a) * 0.068, y, Math.sin(a) * 0.068));
+    }
+    const g = new THREE.Group();
+    g.add(mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 480, wire, 10), chrome()));
+    return g;
+  }
+
+  /** 앞·뒤 차축(너트 포함) */
+  private buildAxlePair(): THREE.Group {
+    const g = new THREE.Group();
+    const axleMat = steel();
+    const nutMat = chrome();
+    for (const [pos, half] of [[REAR, REAR_DROP_Z + 0.06], [FRONT, FRONT_DROP_Z + 0.06]] as const) {
+      const axle = new THREE.Group();
+      axle.position.set(pos.x, pos.y, 0);
+      axle.add(mesh(zCyl(0.022, -half, half, 20), axleMat));
+      const dz = half - 0.06;
+      const nuts = merge([zCyl(0.045, dz + 0.014, dz + 0.042, 6), zCyl(0.045, -dz - 0.042, -dz - 0.014, 6)]);
+      axle.add(mesh(nuts, nutMat));
+      g.add(axle);
+    }
+    return g;
+  }
+
+  // ─────────────────────────── 고정 구조 ───────────────────────────
+
+  private buildFrame(): void {
+    const geos: THREE.BufferGeometry[] = [];
+    const TT = 0.042;
+    const DT = 0.054;
+    const ST = 0.046;
+    // 메인 삼각형
+    geos.push(cylBetween(P3(BB), P3(DT_FRONT), DT, 32));
+    geos.push(cylBetween(P3(SEAT_CLUSTER), P3(TT_FRONT), TT, 32));
+    geos.push(cylBetween(P3(along(BB, SEAT_DIR, -0.02)), P3(ST_TOP), ST, 32));
+    // 헤드튜브: 양 끝이 살짝 벌어진 러그 형태
+    const htLen = HT_BOT.distanceTo(HT_TOP);
+    const ht = new THREE.LatheGeometry(
+      ([[0, 0], [0.066, 0], [0.068, 0.02], [0.06, 0.06], [0.058, htLen - 0.06], [0.066, htLen - 0.02], [0.064, htLen], [0, htLen]] as const).map(
+        ([r, y]) => new THREE.Vector2(r, y)
+      ),
+      40
+    );
+    ht.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(Y_UP, new THREE.Vector3(HEAD_DIR.x, HEAD_DIR.y, 0)));
+    ht.translate(HT_BOT.x, HT_BOT.y, 0);
+    geos.push(ht);
+    // 접합부 필렛
+    geos.push(ball(P3(SEAT_CLUSTER), 0.05), ball(P3(TT_FRONT), 0.046), ball(P3(DT_FRONT), 0.058));
+    // BB 쉘
+    const bbShell = latheZ([[0, -0.12], [0.06, -0.12], [0.068, -0.11], [0.068, 0.11], [0.06, 0.12], [0, 0.12]], 40);
+    bbShell.translate(BB.x, BB.y, 0);
+    geos.push(bbShell);
+    // 체인스테이·시트스테이 (드롭아웃으로 벌어짐)
+    const seatStayTop = along(SEAT_CLUSTER, SEAT_DIR, -0.06);
+    for (const s of [1, -1]) {
+      const drop = P3(REAR, s * REAR_DROP_Z);
+      geos.push(cylBetween(P3(along(BB, v2(-1, 0), 0.04), s * 0.085), drop, 0.026, 20, 0.032));
+      geos.push(cylBetween(P3(seatStayTop, s * 0.05), drop, 0.022, 20, 0.024));
+      geos.push(ball(P3(seatStayTop, s * 0.05), 0.026));
+      // 드롭아웃 판(축 홈은 아래로 열린 형태)
+      const dShape = new THREE.Shape();
+      dShape.moveTo(-0.07, 0.06);
+      dShape.quadraticCurveTo(0.0, 0.11, 0.07, 0.05);
+      dShape.lineTo(0.06, -0.035);
+      dShape.lineTo(0.025, -0.06);
+      dShape.lineTo(0.025, 0.0);
+      dShape.absarc(0, 0, 0.025, 0, Math.PI, false);
+      dShape.lineTo(-0.025, -0.06);
+      dShape.lineTo(-0.06, -0.035);
+      dShape.closePath();
+      const dGeo = new THREE.ExtrudeGeometry(dShape, { depth: 0.018, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 1, curveSegments: 8 });
+      dGeo.translate(0, 0, -0.009);
+      dGeo.rotateZ(0.35);
+      dGeo.translate(REAR.x, REAR.y, s * REAR_DROP_Z);
+      geos.push(dGeo);
+    }
+    // 시트스테이 브리지(뒤 브레이크 장착)
+    const bridgeC = along(REAR, along(seatStayTop, REAR, -1).normalize(), 1.16);
+    geos.push(cylBetween(P3(bridgeC, -0.09), P3(bridgeC, 0.09), 0.016, 16));
+
+    // 포크: 크라운 + 레이크가 들어간 블레이드
+    const crownGeo = new RoundedBoxGeometry(0.16, 0.08, 0.3, 3, 0.03);
+    crownGeo.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(Y_UP, new THREE.Vector3(HEAD_DIR.x, HEAD_DIR.y, 0)));
+    crownGeo.translate(CROWN.x, CROWN.y, 0);
+    geos.push(crownGeo);
+    for (const s of [1, -1]) {
+      const pts = [
+        P3(along(CROWN, HEAD_DIR, -0.02), s * 0.12),
+        P3(along(CROWN, HEAD_DIR, -0.4), s * 0.14),
+        P3(along(along(CROWN, HEAD_DIR, -0.85), HEAD_FWD, 0.04), s * FRONT_DROP_Z),
+        P3(FRONT, s * FRONT_DROP_Z)
+      ];
+      geos.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 40, 0.028, 16));
+      geos.push(ball(P3(FRONT, s * FRONT_DROP_Z), 0.028));
+      const tip = new THREE.CylinderGeometry(0.04, 0.04, 0.016, 24);
+      tip.rotateX(Math.PI / 2);
+      tip.translate(FRONT.x, FRONT.y, s * FRONT_DROP_Z);
+      geos.push(tip);
+    }
+    const frame = mesh(merge(geos), paint(0xc62f2a), true);
+    this.group.add(frame);
+
+    // 헤드셋 컵·BB 컵(어두운 금속)
+    const cupGeos = [
+      latheZ([[0.04, 0.115], [0.072, 0.115], [0.072, 0.135], [0.04, 0.135]], 40),
+      latheZ([[0.04, -0.135], [0.072, -0.135], [0.072, -0.115], [0.04, -0.115]], 40)
+    ];
+    for (const c of cupGeos) c.translate(BB.x, BB.y, 0);
+    for (const [p, t] of [[HT_BOT, -0.03], [HT_TOP, 0.0]] as const) {
+      const cup = new THREE.CylinderGeometry(0.07, 0.07, 0.03, 40);
+      cup.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(Y_UP, new THREE.Vector3(HEAD_DIR.x, HEAD_DIR.y, 0)));
+      const c = along(p, HEAD_DIR, t + 0.015);
+      cup.translate(c.x, c.y, 0);
+      cupGeos.push(cup);
+    }
+    this.group.add(mesh(merge(cupGeos), darkSteel()));
+
+    // 림 브레이크 캘리퍼(앞: 크라운, 뒤: 시트스테이 브리지)
+    const calGeos: THREE.BufferGeometry[] = [];
+    const padGeos: THREE.BufferGeometry[] = [];
+    const addCaliper = (mount: THREE.Vector2, hub: THREE.Vector2) => {
+      const dir = mount.clone().sub(hub).normalize();
+      const padC = along(hub, dir, 0.895);
+      for (const s of [1, -1]) {
+        calGeos.push(cylBetween(P3(mount, s * 0.02), P3(along(mount, dir, -0.02), s * 0.115), 0.014, 12));
+        calGeos.push(cylBetween(P3(along(mount, dir, -0.02), s * 0.115), P3(padC, s * 0.075), 0.013, 12));
+        const pad = new RoundedBoxGeometry(0.1, 0.024, 0.022, 2, 0.008);
+        pad.rotateZ(Math.atan2(dir.y, dir.x) + Math.PI / 2);
+        pad.translate(padC.x, padC.y, s * 0.062);
+        padGeos.push(pad);
+      }
+      calGeos.push(zCyl(0.02, -0.04, 0.04, 16, mount.x, mount.y));
+    };
+    addCaliper(along(CROWN, HEAD_FWD, 0.09), FRONT);
+    addCaliper(bridgeC, REAR);
+    this.group.add(mesh(merge(calGeos), aluminum({ color: 0xb9c0c8 })));
+    this.group.add(mesh(merge(padGeos), rubber({ color: 0x2b2b2b })));
+  }
+
+  private buildCockpit(): void {
+    const alu = aluminum({ color: 0xbfc5cc });
+    const geos: THREE.BufferGeometry[] = [];
+    const hd = new THREE.Vector3(HEAD_DIR.x, HEAD_DIR.y, 0);
+    // 스페이서 + 스템 클램프 + 탑캡
+    geos.push(cylBetween(P3(HT_TOP), P3(along(STEM_C, HEAD_DIR, -0.065)), 0.044, 32));
+    geos.push(cylBetween(P3(along(STEM_C, HEAD_DIR, -0.065)), P3(along(STEM_C, HEAD_DIR, 0.065)), 0.05, 32));
+    const cap = new THREE.CylinderGeometry(0.044, 0.05, 0.016, 32);
+    cap.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(Y_UP, hd));
+    const capC = along(STEM_C, HEAD_DIR, 0.073);
+    cap.translate(capC.x, capC.y, 0);
+    geos.push(cap);
+    // 스템 몸통
+    geos.push(cylBetween(P3(STEM_C), P3(BAR_POS), 0.034, 24, 0.03));
+    geos.push(zCyl(0.05, -0.07, 0.07, 32, BAR_POS.x, BAR_POS.y));
+    // 핸들바(살짝 뒤로 휜 플랫바)
+    const barPts: THREE.Vector3[] = [];
+    for (let i = 0; i <= 16; i++) {
+      const z = -0.62 + (i / 16) * 1.24;
+      const a = Math.max(0, Math.abs(z) - 0.16) / 0.46;
+      barPts.push(new THREE.Vector3(BAR_POS.x - 0.09 * a * a, BAR_POS.y + 0.02 * a, z));
+    }
+    geos.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(barPts), 64, 0.03, 20));
+    geos.push(zCyl(0.04, -0.13, 0.13, 32, BAR_POS.x, BAR_POS.y));
+    this.group.add(mesh(merge(geos), alu));
+
+    // 그립(골이 있는 고무) + 브레이크 레버
+    const gripProfile: [number, number][] = [[0.03, 0], [0.05, 0], [0.05, 0.02]];
+    for (let i = 0; i < 9; i++) {
+      const z = 0.03 + i * 0.016;
+      gripProfile.push([0.043, z], [0.046, z + 0.008]);
+    }
+    gripProfile.push([0.046, 0.18], [0.04, 0.19], [0.0, 0.19]);
+    const gripGeos: THREE.BufferGeometry[] = [];
+    const leverGeos: THREE.BufferGeometry[] = [];
+    for (const s of [1, -1]) {
+      const z0 = s * 0.43;
+      const gGeo = latheZ(gripProfile, 32);
+      if (s < 0) gGeo.rotateY(Math.PI);
+      const a = (Math.abs(z0) - 0.16) / 0.46;
+      gGeo.translate(BAR_POS.x - 0.09 * a * a - 0.004, BAR_POS.y + 0.02 * a, z0);
+      gripGeos.push(gGeo);
+      const lx = BAR_POS.x - 0.09 * a * a;
+      const ly = BAR_POS.y + 0.02 * a;
+      leverGeos.push(zCyl(0.042, z0 - s * 0.04, z0 - s * 0.012, 24, lx, ly));
+      leverGeos.push(cylBetween(new THREE.Vector3(lx + 0.04, ly - 0.01, z0 - s * 0.03), new THREE.Vector3(lx + 0.09, ly - 0.04, z0 + s * 0.06), 0.012, 12));
+      leverGeos.push(cylBetween(new THREE.Vector3(lx + 0.09, ly - 0.04, z0 + s * 0.06), new THREE.Vector3(lx + 0.08, ly - 0.05, z0 + s * 0.16), 0.012, 12));
+    }
+    this.group.add(mesh(merge(gripGeos), rubber({ color: 0x23252a }), true));
+    this.group.add(mesh(merge(leverGeos), darkSteel()));
+  }
+
+  private buildSaddle(): void {
+    // 시트포스트 + 시트 클램프 칼라
+    const postGeos = [cylBetween(P3(along(BB, SEAT_DIR, 1.45)), P3(POST_HEAD), 0.034, 32)];
+    postGeos.push(zCyl(0.032, -0.08, 0.08, 32, POST_HEAD.x, RAIL_Y - 0.004));
+    this.group.add(mesh(merge(postGeos), aluminum({ color: 0xc7ccd2 })));
+    const collar = new THREE.CylinderGeometry(0.056, 0.056, 0.05, 32);
+    collar.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(Y_UP, new THREE.Vector3(SEAT_DIR.x, SEAT_DIR.y, 0)));
+    const cc = along(ST_TOP, SEAT_DIR, -0.01);
+    collar.translate(cc.x, cc.y, 0);
+    const collarBolt = zCyl(0.014, 0.03, 0.09, 12, cc.x - 0.05, cc.y);
+    this.group.add(mesh(merge([collar, collarBolt]), darkSteel()));
+
+    // 가죽 안장(곡면) — 뒤가 넓고 코가 좁은 형태
+    const rearX = POST_HEAD.x - 0.4;
+    const len = 0.84;
+    const thick = (u: number) => 0.075 * (0.55 + 0.45 * (1 - u));
+    const dip = (u: number) => -0.022 * Math.sin(Math.PI * u);
+    const uS = (SADDLE_SPRING_POS.x - rearX) / len;
+    // 스프링 윗면(y+H/2)에 안장 바닥이 닿도록 기준 높이를 맞춘다(칸틀 판 두께 0.012 포함)
+    const topY = SADDLE_SPRING_POS.y + SPRING_H / 2 + 0.012 + thick(uS) - dip(uS);
+    const saddleGeo = new ParametricGeometry(
+      (u: number, v: number, target: THREE.Vector3) => {
+        const e = Math.pow(Math.sin(Math.PI * u), 0.42);
+        const sm = THREE.MathUtils.smoothstep(u, 0.2, 0.74);
+        const w = 0.05 + 0.18 * (1 - sm);
+        const ang = v * Math.PI * 2;
+        const c = Math.cos(ang);
+        const s = Math.sin(ang);
+        const sx = Math.sign(c) * Math.pow(Math.abs(c), 0.5);
+        const sy = Math.sign(s) * Math.pow(Math.abs(s), 0.65);
+        const t = thick(u);
+        const yTop = topY + dip(u);
+        let y = yTop - t / 2 + (t / 2) * sy;
+        if (s > 0) y += 0.014 * (1 - sx * sx) * e;
+        target.set(rearX + u * len, y, w * e * sx);
+      },
+      64,
+      40
+    );
+    this.group.add(mesh(saddleGeo, plastic(0x6e4529, { roughness: 0.5 }), true));
+
+    // 레일(코 → 클램프 → 뒤 브리지) + 스프링 받침
+    const railGeos: THREE.BufferGeometry[] = [];
+    const noseU = 0.86;
+    const noseBot = topY + dip(noseU) - thick(noseU);
+    for (const s of [1, -1]) {
+      const pts = [
+        new THREE.Vector3(SADDLE_SPRING_POS.x - 0.07, RAIL_Y, s * 0.05),
+        new THREE.Vector3(POST_HEAD.x - 0.12, RAIL_Y, s * 0.05),
+        new THREE.Vector3(POST_HEAD.x + 0.12, RAIL_Y, s * 0.045),
+        new THREE.Vector3(rearX + len * 0.78, RAIL_Y + 0.05, s * 0.03),
+        new THREE.Vector3(rearX + len * noseU, noseBot + 0.01, s * 0.012)
+      ];
+      railGeos.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 40, 0.011, 10));
+    }
+    const sp = SADDLE_SPRING_POS;
+    const bottomSeat = latheZ([[0, 0], [0.085, 0], [0.09, 0.008], [0.085, 0.016], [0, 0.016]], 32);
+    bottomSeat.rotateX(-Math.PI / 2);
+    bottomSeat.translate(sp.x, sp.y - SPRING_H / 2 - 0.016, 0);
+    const topSeat = latheZ([[0, 0], [0.085, 0], [0.09, 0.006], [0.085, 0.012], [0, 0.012]], 32);
+    topSeat.rotateX(-Math.PI / 2);
+    topSeat.translate(sp.x, sp.y + SPRING_H / 2, 0);
+    railGeos.push(bottomSeat, topSeat);
+    this.group.add(mesh(merge(railGeos), chrome()));
+  }
+
+  /** 시트포스트를 무는 정비 스탠드(비구동측 -Z에 세움) */
+  private buildStand(): void {
+    const blue = paint(0x2468c9);
+    const mastX = STAND_CLAMP.x;
+    const mastZ = -0.85;
+    const topY = STAND_CLAMP.y;
+    const geos: THREE.BufferGeometry[] = [];
+    geos.push(cylBetween(new THREE.Vector3(mastX, 0.28, mastZ), new THREE.Vector3(mastX, 1.75, mastZ), 0.05, 32));
+    geos.push(cylBetween(new THREE.Vector3(mastX, 0.5, mastZ), new THREE.Vector3(mastX, 0.62, mastZ), 0.068, 32));
+    // 삼각 다리
+    const feet: THREE.Vector3[] = [];
+    for (const a of [90, 210, 330]) {
+      const foot = new THREE.Vector3(mastX + Math.cos(a * deg) * 0.85, 0.035, mastZ + Math.sin(a * deg) * 0.85);
+      feet.push(foot);
+      geos.push(cylBetween(new THREE.Vector3(mastX, 0.56, mastZ), foot, 0.03, 20));
+    }
+    // 머리: 회전 헤드 + 수평 암 + 클램프 몸체
+    geos.push(ball(new THREE.Vector3(mastX, topY, mastZ), 0.07));
+    geos.push(cylBetween(new THREE.Vector3(mastX, topY, mastZ), new THREE.Vector3(mastX, topY, -0.16), 0.042, 24));
+    this.group.add(mesh(merge(geos), blue, true));
+
+    const steelGeos: THREE.BufferGeometry[] = [];
+    steelGeos.push(cylBetween(new THREE.Vector3(mastX, 1.7, mastZ), new THREE.Vector3(mastX, topY, mastZ), 0.038, 32));
+    steelGeos.push(cylBetween(new THREE.Vector3(mastX, 1.7, mastZ), new THREE.Vector3(mastX, 1.8, mastZ), 0.062, 32));
+    steelGeos.push(cylBetween(new THREE.Vector3(mastX + 0.06, 1.75, mastZ), new THREE.Vector3(mastX + 0.2, 1.72, mastZ), 0.014, 12));
+    this.group.add(mesh(merge(steelGeos), darkSteel()));
+
+    // 클램프 턱: 시트포스트 각도에 맞춰 기울임
+    const jaw = new THREE.Group();
+    jaw.position.set(STAND_CLAMP.x, STAND_CLAMP.y, 0);
+    jaw.rotation.z = Math.atan2(SEAT_DIR.y, SEAT_DIR.x) - Math.PI / 2;
+    const body = new RoundedBoxGeometry(0.2, 0.13, 0.08, 3, 0.02);
+    body.translate(0, 0, -0.12);
+    const jawGeos = [body];
+    for (const s of [1, -1]) {
+      const plate = new RoundedBoxGeometry(0.04, 0.12, 0.13, 2, 0.012);
+      plate.translate(s * 0.058, 0, -0.03);
+      jawGeos.push(plate);
+    }
+    jaw.add(mesh(merge(jawGeos), blue));
+    const padGeos: THREE.BufferGeometry[] = [];
+    for (const s of [1, -1]) {
+      const pad = new RoundedBoxGeometry(0.014, 0.11, 0.09, 2, 0.005);
+      pad.translate(s * 0.036, 0, -0.005);
+      padGeos.push(pad);
+    }
+    jaw.add(mesh(merge(padGeos), rubber()));
+    const screw = merge([
+      cylBetween(new THREE.Vector3(0.08, 0, -0.03), new THREE.Vector3(0.22, 0, -0.03), 0.014, 12),
+      cylBetween(new THREE.Vector3(0.22, -0.07, -0.03), new THREE.Vector3(0.22, 0.07, -0.03), 0.012, 12)
+    ]);
+    jaw.add(mesh(screw, steel()));
+    this.group.add(jaw);
+
+    const footGeos = feet.map((f) => {
+      const g = new THREE.SphereGeometry(0.05, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+      g.scale(1.2, 0.75, 1.2);
+      g.translate(f.x, 0, f.z);
+      return g;
+    });
+    this.group.add(mesh(merge(footGeos), rubber()));
   }
 
   private addChainSlotOutline(): void {
@@ -370,112 +898,91 @@ export class Bicycle extends BaseMachine {
     this.group.add(ring);
   }
 
-  private tube(a: THREE.Vector2, b: THREE.Vector2, r: number, material: THREE.Material, z = 0): THREE.Mesh {
-    const dir = new THREE.Vector3(b.x - a.x, b.y - a.y, 0);
-    const len = dir.length();
-    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 12), material);
-    mesh.position.set((a.x + b.x) / 2, (a.y + b.y) / 2, z);
-    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
-    return mesh;
-  }
+  /** 바퀴: 트레드 타이어 + 림 + 플랜지 허브 + 3크로스 스포크 32개 + 밸브 */
+  private buildWheel(wheel: THREE.Group, pos: THREE.Vector2, rear: boolean): void {
+    const TUBE = 0.085;
+    const RT = WHEEL_R - TUBE;
+    const tireGeo = new THREE.TorusGeometry(RT, TUBE, 20, 384);
+    const p = tireGeo.attributes.position as THREE.BufferAttribute;
+    const v = new THREE.Vector3();
+    for (let i = 0; i < p.count; i++) {
+      v.fromBufferAttribute(p, i);
+      const th = Math.atan2(v.y, v.x);
+      const cx = Math.cos(th) * RT;
+      const cy = Math.sin(th) * RT;
+      const dx = v.x - cx;
+      const dy = v.y - cy;
+      const out = (dx * Math.cos(th) + dy * Math.sin(th)) / TUBE;
+      const zc = v.z / TUBE;
+      if (out > 0.35) {
+        // 접지면에 V자 트레드 블록
+        const band = THREE.MathUtils.smoothstep(out, 0.35, 0.7);
+        const s = THREE.MathUtils.smoothstep(Math.sin(th * 90 + Math.abs(zc) * 2.6), -0.25, 0.25);
+        const k = 1 + (0.075 * s * band) / 1;
+        v.set(cx + dx * k, cy + dy * k, v.z * k);
+        p.setXYZ(i, v.x, v.y, v.z);
+      }
+    }
+    tireGeo.computeVertexNormals();
+    wheel.add(mesh(tireGeo, rubber({ color: 0x1d1f23 }), true));
 
-  private boss(p: THREE.Vector2, r: number, len: number, material: THREE.Material): THREE.Mesh {
-    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 12), material);
-    mesh.rotation.x = Math.PI / 2;
-    mesh.position.set(p.x, p.y, 0);
-    return mesh;
-  }
-
-  private buildFrame(): void {
-    const frameMat = mat(0xd64545, 0.45, 0.4);
-    const frameMat2 = mat(0xc23b3b, 0.45, 0.4);
-    const rearA = new THREE.Vector2(REAR.x, REAR.y);
-    const frontA = new THREE.Vector2(FRONT.x, FRONT.y);
-
-    this.group.add(
-      this.tube(BB, HEAD_BOT, 0.05, frameMat),
-      this.tube(SEAT_TOP, HEAD_TOP, 0.045, frameMat),
-      this.tube(BB, SEAT_TOP, 0.05, frameMat),
-      this.tube(HEAD_BOT, HEAD_TOP, 0.055, frameMat)
+    const rim = latheZ(
+      [
+        [0.845, -0.022], [0.858, -0.043], [0.912, -0.05], [0.92, -0.044], [0.905, -0.036],
+        [0.905, 0.036], [0.92, 0.044], [0.912, 0.05], [0.858, 0.043], [0.845, 0.022], [0.845, -0.022]
+      ],
+      128
     );
-    for (const z of [BLADE_Z, -BLADE_Z]) {
-      this.group.add(
-        this.tube(HEAD_BOT, frontA, 0.035, frameMat2, z),
-        this.tube(BB, rearA, 0.03, frameMat2, z),
-        this.tube(SEAT_TOP, rearA, 0.03, frameMat2, z)
-      );
+    wheel.add(mesh(rim, aluminum({ color: 0xd3d8de, roughness: 0.28 })));
+
+    // 허브: 뒤는 구동측에 프리허브 바디(스프로킷 자리)가 있다
+    const flL = rear ? -0.13 : -0.085;
+    const flR = rear ? 0.07 : 0.085;
+    const lock = rear ? REAR_DROP_Z - 0.012 : FRONT_DROP_Z - 0.012;
+    const hubProfile: [number, number][] = [
+      [0.026, -lock], [0.04, -lock], [0.04, flL - 0.03], [0.045, flL - 0.012], [0.1, flL - 0.008], [0.1, flL + 0.008],
+      [0.042, flL + 0.02], [0.036, 0], [0.042, flR - 0.02], [0.1, flR - 0.008], [0.1, flR + 0.008], [0.045, flR + 0.012]
+    ];
+    if (rear) hubProfile.push([0.05, flR + 0.02], [0.052, lock - 0.01], [0.04, lock - 0.005], [0.04, lock], [0.026, lock]);
+    else hubProfile.push([0.04, flR + 0.03], [0.04, lock], [0.026, lock]);
+    wheel.add(mesh(latheZ(hubProfile, 48), aluminum({ color: 0xaab2bb })));
+
+    // 스포크 32개(3크로스) — InstancedMesh 1드로콜
+    const N = 32;
+    const spokes = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.0065, 0.0065, 1, 6), steel({ color: 0xd0d6dc, grain: false }), N);
+    const m4 = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    const a = new THREE.Vector3();
+    const b = new THREE.Vector3();
+    const cross = (3 * 4 * Math.PI) / N;
+    for (let i = 0; i < N; i++) {
+      const side = i % 2 === 0 ? 1 : -1;
+      const aR = (i / N) * Math.PI * 2;
+      const lead = Math.floor(i / 2) % 2 === 0 ? 1 : -1;
+      const aH = aR + lead * cross;
+      const fz = side > 0 ? flR : flL;
+      a.set(Math.cos(aH) * 0.092, Math.sin(aH) * 0.092, fz);
+      b.set(Math.cos(aR) * 0.85, Math.sin(aR) * 0.85, side * 0.006);
+      const d = b.clone().sub(a);
+      const len = d.length();
+      q.setFromUnitVectors(Y_UP, d.normalize());
+      m4.compose(a.clone().add(b).multiplyScalar(0.5), q, new THREE.Vector3(1, len, 1));
+      spokes.setMatrixAt(i, m4);
     }
-    this.group.add(
-      this.boss(HEAD_BOT, 0.052, 0.3, frameMat2),
-      this.boss(SEAT_TOP, 0.045, 0.3, frameMat2),
-      this.boss(BB, 0.055, 0.3, frameMat2)
-    );
+    spokes.castShadow = true;
+    wheel.add(spokes);
 
-    const stem = this.tube(HEAD_TOP, BAR_POS.clone().add(new THREE.Vector2(0, -0.02)), 0.035, frameMat2);
-    const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.9, 12), mat(0x5a646d, 0.8, 0.35));
-    bar.rotation.x = Math.PI / 2;
-    bar.position.set(BAR_POS.x, BAR_POS.y, 0);
-    const gripL = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.16, 10), mat(0x2c3138, 0.1, 0.85));
-    gripL.rotation.x = Math.PI / 2;
-    gripL.position.set(BAR_POS.x, BAR_POS.y, 0.4);
-    const gripR = gripL.clone();
-    gripR.position.z = -0.4;
-    this.group.add(stem, bar, gripL, gripR);
+    // 밸브(회전이 눈에 보이는 표식) + 니플 링
+    const va = Math.PI / N;
+    const valve = new THREE.Group();
+    valve.rotation.z = va - Math.PI / 2;
+    const stem = mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.09, 12), chrome());
+    stem.position.y = 0.815;
+    const capV = mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.035, 12), plastic(0x1a1a1a));
+    capV.position.y = 0.76;
+    valve.add(stem, capV);
+    wheel.add(valve);
 
-    // 안장(삼각형) + 안장 밑 스프링
-    const saddleShape = new THREE.Shape();
-    saddleShape.moveTo(0.3, 0);
-    saddleShape.lineTo(-0.22, 0.17);
-    saddleShape.lineTo(-0.22, -0.17);
-    saddleShape.closePath();
-    const saddleGeo = new THREE.ExtrudeGeometry(saddleShape, {
-      depth: 0.06,
-      bevelEnabled: true,
-      bevelThickness: 0.02,
-      bevelSize: 0.02,
-      bevelSegments: 2
-    });
-    saddleGeo.rotateX(-Math.PI / 2);
-    const saddle = new THREE.Mesh(saddleGeo, mat(0x2c3138, 0.1, 0.85));
-    saddle.position.set(SEAT_TOP.x + 0.02, SEAT_TOP.y + 0.16, 0);
-    this.group.add(saddle);
-  }
-
-  private buildSaddleSpring(): THREE.Group {
-    const springPts: THREE.Vector3[] = Array.from({ length: 60 }, (_, i) => {
-      const t = i / 59;
-      const a = t * Math.PI * 10;
-      return new THREE.Vector3(Math.cos(a) * 0.075, t * 0.14 - 0.07, Math.sin(a) * 0.075);
-    });
-    const g = new THREE.Group();
-    g.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(springPts), 120, 0.02, 8), mat(0x9aa7b2, 0.7, 0.45)));
-    return g;
-  }
-
-  private buildAxlePair(): THREE.Group {
-    const g = new THREE.Group();
-    for (const pos of [REAR, FRONT]) {
-      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.36, 8), mat(0x8b959e, 0.85, 0.3));
-      rod.rotation.x = Math.PI / 2;
-      rod.position.set(pos.x, pos.y, 0);
-      g.add(rod);
-    }
-    return g;
-  }
-
-  private buildWheel(wheel: THREE.Group, pos: THREE.Vector2): void {
-    const tire = new THREE.Mesh(new THREE.TorusGeometry(1.0, TIRE_TUBE, 14, 48), mat(0x2c3138, 0.05, 0.9));
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(0.99, 0.03, 10, 44), mat(0xb8c2cc, 0.85, 0.3));
-    const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.16, 14), mat(0x5a646d, 0.85, 0.3));
-    hub.rotation.x = Math.PI / 2;
-    wheel.add(tire, rim, hub);
-    const spokeGeo = new THREE.CylinderGeometry(0.011, 0.011, 1.94, 6);
-    const spokeMat = mat(0xb8c2cc, 0.85, 0.35);
-    for (let i = 0; i < 9; i++) {
-      const spoke = new THREE.Mesh(spokeGeo, spokeMat);
-      spoke.rotation.z = (i / 9) * Math.PI;
-      wheel.add(spoke);
-    }
     wheel.position.set(pos.x, pos.y, 0);
   }
 }

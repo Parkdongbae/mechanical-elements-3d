@@ -12,7 +12,8 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { BaseMachine, type MachineSim } from './types';
-import { generatePlanarUVs, getGrainMaps } from '../models/surfaces';
+import { glow } from '../models/materials';
+import { drivetrainMaterial, makeCalloutLine, makeLabelSprite, smoothSTL, startTransparent } from './stlShared';
 
 const MODEL_DIR = '/models/awd/';
 const ROOT_Y = 0.13;   // 바퀴 바닥(scad z=-13mm)이 씬 바닥(y=0)에 닿도록 하는 루트 높이
@@ -243,34 +244,7 @@ export class DrivetrainAWD extends BaseMachine {
 
   /** 캔버스 텍스트 스프라이트 (부품 라벨·앞뒤 표시 공용) */
   private makeLabel(text: string, color: string, position: THREE.Vector3, w = 0.9, h = 0.34, fontPx = 44): THREE.Sprite {
-    const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 96;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
-      ctx.beginPath();
-      ctx.roundRect(8, 8, 240, 80, 18);
-      ctx.fill();
-      // 긴 라벨('센터 디퍼렌셜' 등)은 캔버스 폭에 맞게 폰트를 축소한다 — 잘림 방지
-      let font = fontPx;
-      ctx.font = `700 ${font}px "Noto Sans KR", sans-serif`;
-      const textW = ctx.measureText(text).width;
-      if (textW > 232) {
-        font = Math.max(20, Math.floor((fontPx * 232) / textW));
-        ctx.font = `700 ${font}px "Noto Sans KR", sans-serif`;
-      }
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = color;
-      ctx.fillText(text, 128, 50);
-    }
-    const texture = new THREE.CanvasTexture(canvas);
-    // depthTest off — 라벨은 차체 뒤에 숨지 않고 항상 표시(앞 FRONT 등 가림 방지)
-    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, depthTest: false }));
-    sprite.renderOrder = 10;
-    sprite.layers.set(1);
-    sprite.scale.set(w, h, 1);
+    const sprite = makeLabelSprite(text, color, w, h, fontPx);
     sprite.position.copy(position);
     this.group.add(sprite);
     return sprite;
@@ -295,12 +269,7 @@ export class DrivetrainAWD extends BaseMachine {
   /** 부품 → 라벨 지시선 */
   private makeCallout(text: string, color: string, partPoint: THREE.Vector3, labelPos: THREE.Vector3, w = 0.75): { sprite: THREE.Sprite; line: THREE.Line } {
     const sprite = this.makeLabel(text, color, labelPos, w, 0.3, 60);
-    const line = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([partPoint, labelPos]),
-      new THREE.LineBasicMaterial({ color, depthTest: false } as THREE.LineBasicMaterialParameters)
-    );
-    line.renderOrder = 9;
-    line.layers.set(1);
+    const line = makeCalloutLine(partPoint, labelPos, color);
     this.root.add(line);
     return { sprite, line };
   }
@@ -326,7 +295,7 @@ export class DrivetrainAWD extends BaseMachine {
   /** OpenSCAD(Z-up, mm) → three.js(Y-up) 회전 후 bbox 중심 재배치 정보 계산 */
   private prepareGeometry(geo: THREE.BufferGeometry): { center: THREE.Vector3 } {
     geo.rotateX(-Math.PI / 2);
-    generatePlanarUVs(geo);
+    smoothSTL(geo);
     geo.computeBoundingBox();
     const bb = geo.boundingBox;
     if (!bb) throw new Error('STL bounding box missing');
@@ -336,18 +305,8 @@ export class DrivetrainAWD extends BaseMachine {
   }
 
   private makeMaterial(recipe: PartRecipe): THREE.MeshStandardMaterial {
-    const grain = getGrainMaps();
-    return new THREE.MeshStandardMaterial({
-      color: recipe.color,
-      metalness: recipe.metalness,
-      roughness: recipe.roughness,
-      roughnessMap: grain.roughness,
-      bumpMap: grain.bump,
-      bumpScale: 0.02,
-      envMapIntensity: recipe.metalness >= 0.6 ? 1.25 : 0.9,
-      transparent: true,
-      opacity: 0
-    });
+    // 공용 재질 라이브러리(부품 종류별 주철/알루미늄/강재/고무) — 인트로 페이드를 위해 투명으로 시작
+    return startTransparent(drivetrainMaterial(recipe.file, recipe.color));
   }
 
   private onIntroLoaded(recipe: PartRecipe, geo: THREE.BufferGeometry): void {
@@ -357,6 +316,13 @@ export class DrivetrainAWD extends BaseMachine {
     mesh.scale.setScalar(K);
     mesh.position.set(center.x * K, center.y * K, center.z * K);
     mesh.visible = false;
+    // 진행도 복원 등으로 인트로가 이미 끝난 상태에서 뒤늦게 로드된 부품은 즉시 완성 상태로 표시한다
+    // (finishIntro는 로드 시점에 존재하던 부품만 처리하므로 그대로 두면 영영 안 보인다)
+    if (this.introDone) {
+      mesh.visible = true;
+      material.opacity = 1;
+      material.transparent = false;
+    }
     this.root.add(mesh);
     const inPivot = recipe.file.startsWith('wheel_');
     this.intro.push({ recipe, mesh, material, center: center.clone().multiplyScalar(K), inPivot });
@@ -387,7 +353,7 @@ export class DrivetrainAWD extends BaseMachine {
     const side = Math.sign(pivot.position.x) || 1; // 차 바깥쪽 타이어 면
     const marker = new THREE.Mesh(
       new THREE.BoxGeometry(0.05, 0.055, 0.055),
-      new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
+      glow(0xff5a3c, 0.6)
     );
     marker.position.set(side * 0.078, 0.19, 0);
     pivot.add(marker);
@@ -427,7 +393,7 @@ export class DrivetrainAWD extends BaseMachine {
       // 구동축 회전 가시화용 마커 — 축 중심에서 벗어나 배치해 회전이 눈에 보인다
       const marker = new THREE.Mesh(
         new THREE.BoxGeometry(0.045, 0.17, 0.045),
-        new THREE.MeshStandardMaterial({ color: 0xff5a3c, roughness: 0.5 })
+        glow(0xff5a3c, 0.6)
       );
       marker.position.set(0, 0.08, 0);
       pivot.add(marker);

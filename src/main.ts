@@ -1,35 +1,49 @@
 // 진입점: 머신 전환, 미션 진행, 조립 애니메이션, 정답/오답 판정, 메인 루프
 
 import * as THREE from 'three';
-import './style.css';
-import { SceneManager } from './scene/SceneSetup';
+import './styles/tokens.css';
+import './styles/app.css';
+import './styles/modes.css';
+import { SceneManager, DEFAULT_VIEW } from './scene/SceneSetup';
 import { buildPart, normalizePart, disposeObject } from './models/factory';
 import { ThumbnailFactory } from './models/thumbnails';
 import { PhysicsFX } from './sim/physics';
 import { isDragMachine, isHuntMachine, type DraggableItem, type Machine, type MachineSim } from './machines/types';
-import { MACHINES, getMachineDef } from './data/machines';
+import { MACHINES, MACHINE_GROUPS, getMachineDef } from './data/machines';
 import { getPart, getCategory } from './data/elements';
 import { HUD } from './ui/hud';
+import { HomeScreen } from './ui/home';
+import { ICON } from './ui/icons';
+import type { AppMode } from './modes/types';
+import { Encyclopedia, getSeenCount } from './modes/Encyclopedia';
+import { Quiz, getQuizBest } from './modes/Quiz';
 import { loadProgress, saveProgress, clearMachineProgress, clearAllProgress, allMachinesCompleted, type ProgressData } from './state/progress';
 import { loadSettings, saveSettings, type AppSettings } from './state/settings';
-import { playCorrectSound } from './ui/sound';
+import { playCorrectSound, playWrongSound } from './ui/sound';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#scene');
 if (!canvas) throw new Error('#scene canvas not found');
 
-const sceneMgr = new SceneManager(canvas);
+let settings: AppSettings = loadSettings();
+const sceneMgr = new SceneManager(canvas, { theme: settings.theme, quality: settings.quality });
 const thumbs = new ThumbnailFactory();
 const physics = new PhysicsFX(sceneMgr.scene);
-let settings: AppSettings = loadSettings();
 const hud = new HUD(
   {
     onSelectPart: handleSelect,
     onHint: showHint,
     onReset: resetMission,
-    onSwitchMachine: switchMachine,
+    onHome: () => navigate(''),
+    onNextMission: () => {
+      const next = nextMissionId();
+      navigate(next ? `m/${next}` : '');
+    },
     onSettingsChange: (s) => {
       settings = s;
-      syncMission();
+      applyTheme();
+      if (sceneMgr.getQuality() !== s.quality) sceneMgr.setQuality(s.quality);
+      if (screen === 'mission' && current) syncMission();
+      if (screen === 'home') showHome();
     },
     onResetAll: resetAllProgress,
     onToggleLabels: (visible) => {
@@ -42,6 +56,18 @@ const hud = new HUD(
   settings
 );
 sceneMgr.setLabelsVisible(settings.showLabels);
+sceneMgr.onAutoLowQuality = () => {
+  settings.quality = 'low';
+  saveSettings(settings);
+  hud.refreshSettings();
+};
+
+function applyTheme(): void {
+  document.documentElement.dataset.theme = settings.theme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', settings.theme === 'dark' ? '#0f131a' : '#e6ecf2');
+  if (sceneMgr.getTheme() !== settings.theme) sceneMgr.setTheme(settings.theme);
+}
+applyTheme();
 
 let allCompleteShown = false;
 
@@ -52,10 +78,14 @@ function resetAllProgress(): void {
     disposeObject(flyTask.model);
     flyTask = null;
   }
-  current?.reset();
+  for (const m of machines.values()) m.reset();
+  sim = null;
+  hud.setDisplay(null);
+  hud.setSpeedControl(false, () => {});
   clearAllProgress(progress);
   allCompleteShown = false;
-  syncMission();
+  if (screen === 'mission' && current) syncMission();
+  if (screen === 'home') showHome();
   hud.showRestartModal();
 }
 
@@ -152,23 +182,43 @@ function switchMachine(id: string): void {
   saveProgress(progress);
 
   const def = currentDef();
-  hud.setMachineActive(id);
+  const groupName = MACHINE_GROUPS.find((g) => g.id === def.group)?.name ?? '';
+  const nextId = nextMissionId();
+  hud.setMachineTitle(groupName, def.name, nextId ? getMachineDef(nextId).name : null);
+  sceneMgr.flyTo(def.view ?? DEFAULT_VIEW);
   hud.setPartNameOverrides(def.nameOverrides ?? {});
   hud.setGearNameButton(id === 'gearhunt');
-  hud.setMission(missionHeading(def), count, def.steps.map((s) => stepDisplay(s.partId)));
+  hud.setMission(missionHeading(def), count, def.steps.map((s) => stepDisplay(s.partId)), def.completeText);
   if (count >= def.steps.length) {
     startSim();
     const machine = current;
     if (isDragMachine(machine)) {
-      machine.onReady = () => hud.setHunt(machine.huntStats().found, machine.huntStats().total, machine.huntPrompt());
+      machine.onReady = () => syncHunt(machine);
       machine.beginHunt(progress.machines[id]?.huntIds ?? []);
-      hud.setHunt(machine.huntStats().found, machine.huntStats().total, machine.huntPrompt());
+      syncHunt(machine);
       setSpeedSlider(true);
     } else if (isHuntMachine(machine)) {
       machine.beginHunt(progress.machines[id]?.huntFound ?? 0);
-      hud.setHunt(machine.huntStats().found, machine.huntStats().total, machine.huntPrompt());
+      syncHunt(machine);
     }
   }
+}
+
+/** 드래그 조립형 미션의 진행 표시 */
+function syncHunt(machine: { huntStats(): { found: number; total: number }; huntPrompt(): string }): void {
+  const st = machine.huntStats();
+  hud.setHunt(st.found, st.total, machine.huntPrompt(), currentDef().completeText);
+}
+
+/** 목록 순서에서 현재 미션 다음의 미완료 미션 (없으면 null) */
+function nextMissionId(): string | null {
+  if (!current) return null;
+  const idx = MACHINES.findIndex((m) => m.id === current!.id);
+  for (let k = 1; k < MACHINES.length; k++) {
+    const m = MACHINES[(idx + k) % MACHINES.length]!;
+    if (!progress.machines[m.id]?.completedOnce) return m.id;
+  }
+  return null;
 }
 
 function stepDisplay(partId: string): { text: string; tip: string } {
@@ -184,13 +234,17 @@ function stepDisplay(partId: string): { text: string; tip: string } {
 
 function missionHeading(def: ReturnType<typeof currentDef>): string {
   if (settings.difficulty === 'low') return def.missionText;
-  if (settings.difficulty === 'medium') return '미션 칩의 설명에 맞는 기계요소를 찾아 조립하세요!';
+  if (settings.difficulty === 'medium') return '단계 설명에 맞는 기계요소를 아래에서 찾아 조립하세요!';
   return '힌트 없이 알맞은 기계요소를 찾아 조립하세요!';
 }
 
 function syncMission(): void {
   const def = currentDef();
-  hud.setMission(missionHeading(def), installedCount(), def.steps.map((s) => stepDisplay(s.partId)));
+  if (def.steps.length === 0 && current && isDragMachine(current)) {
+    syncHunt(current);
+    return;
+  }
+  hud.setMission(missionHeading(def), installedCount(), def.steps.map((s) => stepDisplay(s.partId)), def.completeText);
 }
 
 function startSim(): void {
@@ -204,14 +258,14 @@ function startSim(): void {
 function handleSelect(id: string): void {
   if (!current || flyTask || physics.busy) return;
   if (currentDef().steps.length === 0 && isDragMachine(current)) {
-    hud.toast('이 미션은 목록이 아니라 3D 부품을 드래그해서 반투명 그림에 맞추는 미션이에요! 🖐️', 'info');
+    hud.toast('이 미션은 목록이 아니라 3D 부품을 드래그해서 반투명 그림에 맞추는 미션이에요!', 'info');
     return;
   }
   const def = currentDef();
   const count = installedCount();
 
   if (count >= def.steps.length) {
-    hud.toast(`${def.name} 미션 완료! 잘 작동하고 있어요 ${def.icon}`, 'ok');
+    hud.toast(`${def.name} 미션 완료! 잘 작동하고 있어요.`, 'ok');
     return;
   }
 
@@ -234,6 +288,7 @@ function handleSelect(id: string): void {
 
 function wrongAnswer(part: ReturnType<typeof getPart>, required: ReturnType<typeof getPart>): void {
   const model = normalizePart(buildPart(part.builder), 0.9);
+  if (settings.sound) playWrongSound();
   physics.throwPart(model, SPAWN.clone(), current!.slotTarget(installedCount()));
 
   const reqCat = getCategory(required.category).name;
@@ -241,7 +296,7 @@ function wrongAnswer(part: ReturnType<typeof getPart>, required: ReturnType<type
   if (part.category !== required.category) {
     hud.toast(`${partDisplayName(part)}은(는) ${getCategory(part.category).name} 기계요소예요. 이 슬롯에는 ${reqCat} 부품이 필요해요!`, 'warn');
   } else {
-    hud.toast(`${partDisplayName(part)}도 ${reqCat} 기계요소지만, 이 자리에는 '${reqName}'이(가) 필요해요! 💡 힌트를 눌러 보세요.`, 'warn');
+    hud.toast(`${partDisplayName(part)}도 ${reqCat} 기계요소지만, 이 자리에는 '${reqName}'이(가) 필요해요! 힌트를 눌러 보세요.`, 'warn');
   }
 }
 
@@ -281,15 +336,15 @@ function flyAndInstall(partId: string, step: number): void {
     runFollowUps(machine, step, () => {
       const def = currentDef();
       if (newCount >= def.steps.length) {
-        hud.toast(`완성! ${def.completeText}`, 'ok', 4200);
+        hud.closePanel(); // 완성된 기계가 가려지지 않게 트레이를 닫는다
         if (settings.sound) playCorrectSound();
         startSim();
         if (isHuntMachine(machine)) {
           machine.beginHunt(0);
-          hud.setHunt(0, machine.huntStats().total, machine.huntPrompt());
+          syncHunt(machine);
         }
       } else {
-        hud.toast(settings.difficulty === 'low' ? `정답! '${def.steps[step]!.label}'이(가) 장착되었어요 ✅` : '정답! 알맞은 기계요소가 장착되었어요 ✅', 'ok');
+        hud.toast(settings.difficulty === 'low' ? `정답! '${def.steps[step]!.label}'이(가) 장착되었어요.` : '정답! 알맞은 기계요소가 장착되었어요.', 'ok');
         if (settings.sound) playCorrectSound();
       }
     });
@@ -315,12 +370,18 @@ function resetMission(): void {
   hud.setDisplay(null);
   hud.setSpeedControl(false, () => {});
   clearMachineProgress(progress, current.id);
+  if (isDragMachine(current)) {
+    const machine = current;
+    machine.onReady = () => syncHunt(machine);
+    machine.beginHunt([]);
+  }
   syncMission();
   if (isHuntMachine(current) && installedCount() >= current.stepCount) {
     current.beginHunt(0);
-    hud.setHunt(0, current.huntStats().total, current.huntPrompt());
+    syncHunt(current);
   }
-  hud.toast('미션을 초기화했어요. 다시 도전해 보세요! 💪', 'info');
+  hud.hideInfoCard();
+  hud.toast('미션을 초기화했어요. 다시 도전해 보세요!', 'info');
 }
 
 // ── 3D 씬 클릭(찾기) 및 드래그(조립) ──
@@ -402,7 +463,7 @@ canvas.addEventListener('pointerup', (e) => {
     const result = machine.endDrag(pt);
     const stats = machine.huntStats();
     if (result.correct) {
-      hud.setHunt(stats.found, stats.total, machine.huntPrompt());
+      syncHunt(machine);
       const entry = progress.machines[machine.id] ?? { installed: 0, completedOnce: false };
       entry.huntFound = stats.found;
       entry.huntIds = machine.placedIds();
@@ -412,7 +473,7 @@ canvas.addEventListener('pointerup', (e) => {
       saveProgress(progress);
       if (result.partId) hud.showInfoCard(getPart(result.partId));
       if (stats.found >= stats.total) {
-        hud.toast(`완성! ${currentDef().completeText}`, 'ok', 4200);
+        if (settings.sound) playCorrectSound();
         startSim();
         setSpeedSlider(true); // 복원 진입(switchMachine)과 동일 처리 — 최초 완료에도 회전·속도 슬라이더 즉시 시작
         checkAllComplete();
@@ -438,7 +499,7 @@ canvas.addEventListener('pointerup', (e) => {
   const result = current.handleHuntPick(root.object);
   const stats = current.huntStats();
   if (result.correct) {
-    hud.setHunt(stats.found, stats.total, current.huntPrompt());
+    syncHunt(current);
     const entry = progress.machines[current.id] ?? { installed: 0, completedOnce: false };
     entry.huntFound = stats.found;
     if (stats.found >= stats.total) entry.completedOnce = true;
@@ -473,8 +534,9 @@ function tick(): void {
   const dt = Math.min(clock.getDelta(), 0.05);
   const t = clock.elapsedTime;
 
-  sceneMgr.controls.update();
+  sceneMgr.update(dt);
   current?.update(t);
+  activeMode?.update(dt, t);
   sim?.update(dt);
   physics.update(dt);
 
@@ -504,5 +566,106 @@ function tick(): void {
   requestAnimationFrame(tick);
 }
 
-switchMachine(MACHINES.some((m) => m.id === progress.last) ? progress.last : 'bicycle');
+// ── 화면 전환 (해시 라우팅: #/ 홈, #/m/<id> 미션, #/enc 도감, #/quiz 퀴즈) ──
+
+type Screen = 'home' | 'mission' | 'enc' | 'quiz';
+let screen: Screen = 'home';
+let activeMode: AppMode | null = null;
+const modes: Record<'enc' | 'quiz', AppMode> = { enc: new Encyclopedia(), quiz: new Quiz() };
+
+const home = new HomeScreen({
+  onOpenMission: (id) => navigate(`m/${id}`),
+  onOpenMode: (mode) => navigate(mode),
+  onOpenSettings: () => hud.toggleSettings(),
+  onToggleTheme: () => {
+    settings.theme = settings.theme === 'dark' ? 'light' : 'dark';
+    saveSettings(settings);
+    applyTheme();
+    hud.refreshSettings();
+    showHome();
+  }
+});
+
+const modeScreen = document.querySelector<HTMLElement>('#mode-screen')!;
+const modeRoot = document.querySelector<HTMLElement>('#mode-root')!;
+const modeHomeBtn = document.querySelector<HTMLElement>('#mode-home-btn')!;
+modeHomeBtn.innerHTML = ICON.home;
+modeHomeBtn.addEventListener('click', () => navigate(''));
+
+function navigate(path: string): void {
+  const target = `#/${path}`;
+  if (location.hash === target) route();
+  else location.hash = target;
+}
+
+function leaveMission(): void {
+  if (flyTask) {
+    sceneMgr.scene.remove(flyTask.model);
+    disposeObject(flyTask.model);
+    flyTask = null;
+  }
+  hud.setVisible(false);
+}
+
+function leaveMode(): void {
+  if (activeMode) {
+    activeMode.exit();
+    activeMode = null;
+    modeRoot.innerHTML = '';
+  }
+  modeScreen.classList.add('hidden');
+}
+
+function showHome(): void {
+  const quiz = getQuizBest();
+  home.show({ progress, seenParts: getSeenCount(), quizBest: quiz.best, quizPlays: quiz.plays, theme: settings.theme });
+}
+
+function route(): void {
+  const path = location.hash.replace(/^#\/?/, '');
+  const [head, arg] = path.split('/');
+  leaveMode();
+
+  if (head === 'm' && arg && MACHINES.some((m) => m.id === arg)) {
+    screen = 'mission';
+    home.hide();
+    hud.setVisible(true);
+    switchMachine(arg);
+    return;
+  }
+  if (head === 'enc' || head === 'quiz') {
+    screen = head;
+    leaveMission();
+    home.hide();
+    // 학습 모드는 씬을 직접 쓰므로 미션 기계를 치운다
+    if (current) {
+      sceneMgr.remove(current.group);
+      current = null;
+      sim = null;
+    }
+    document.querySelector<HTMLElement>('#mode-name')!.textContent = head === 'enc' ? '기계요소 도감' : '단원 퀴즈';
+    modeScreen.classList.remove('hidden');
+    activeMode = modes[head];
+    activeMode.enter({
+      sceneMgr,
+      thumbs,
+      root: modeRoot,
+      settings,
+      toast: (m, kind, duration) => hud.toast(m, kind, duration),
+      goHome: () => navigate(''),
+      playSound: (kind) => {
+        if (!settings.sound) return;
+        if (kind === 'ok') playCorrectSound();
+        else playWrongSound();
+      }
+    });
+    return;
+  }
+  screen = 'home';
+  leaveMission();
+  showHome();
+}
+
+window.addEventListener('hashchange', route);
+route();
 tick();

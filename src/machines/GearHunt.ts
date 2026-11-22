@@ -8,6 +8,8 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { BaseMachine, type MachineSim, type DragMachine, type DraggableItem, type HuntPickResult } from './types';
+import { brass, bronze, darkSteel, ghost, plastic, steel } from '../models/materials';
+import { makeCalloutLine, makeLabelSprite, smoothSTL } from './stlShared';
 
 const P_ROOT = new THREE.Vector3(0, 1.5, 0);
 const TARGET_SIZE = 2.6;
@@ -20,14 +22,22 @@ function toThree(v: THREE.Vector3): THREE.Vector3 {
   return new THREE.Vector3(v.x, v.z, -v.y);
 }
 
-function prettyMaterial(color: number): THREE.MeshStandardMaterial {
-  return new THREE.MeshStandardMaterial({
-    color,
-    metalness: 0.45,
-    roughness: 0.3,
-    emissive: color,
-    emissiveIntensity: 0.1
-  });
+/**
+ * 기어 종류별 금속 톤으로 구별(평기어=황동, 베벨=청동, 웜휠=황동, 웜·피니언·래크=강재, 축=어두운 강재).
+ * 기존 부품 색은 틴트로 살짝 남겨 트레이에서도 종류가 구분되게 한다.
+ * emissive는 부품 색으로 두어 조립 성공 플래시(emissiveIntensity 변조)가 그대로 동작한다.
+ */
+function partMaterial(file: string, color: number): THREE.MeshStandardMaterial {
+  const f = file.replace('.stl', '');
+  const tint = (base: number, amt: number) => new THREE.Color(base).lerp(new THREE.Color(color), amt).getHex();
+  let m: THREE.MeshStandardMaterial;
+  if (f.startsWith('spur') || f === 'worm_wheel') m = brass({ color: tint(0xd4a94a, 0.35) });
+  else if (f.startsWith('bevel')) m = bronze({ color: tint(0xb07a3c, 0.4) });
+  else if (f === 'shaft') m = darkSteel({ color });
+  else m = steel({ color: tint(0xc3ccd6, 0.4) }); // worm_screw, pinion_gear, rack_gear
+  m.emissive.setHex(color);
+  m.emissiveIntensity = 0.1;
+  return m;
 }
 
 type RoundId =
@@ -311,40 +321,10 @@ export class GearHunt extends BaseMachine implements DragMachine {
   }
 
   private makeGearLabelCallout(text: string, color: string, partPoint: THREE.Vector3, labelPos: THREE.Vector3): THREE.Object3D[] {
-    const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 96;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
-      ctx.beginPath();
-      ctx.roundRect(8, 8, 240, 80, 18);
-      ctx.fill();
-      let font = 60;
-      ctx.font = `700 ${font}px "Noto Sans KR", sans-serif`;
-      const textW = ctx.measureText(text).width;
-      if (textW > 232) {
-        font = Math.max(20, Math.floor((60 * 232) / textW));
-        ctx.font = `700 ${font}px "Noto Sans KR", sans-serif`;
-      }
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = color;
-      ctx.fillText(text, 128, 50);
-    }
-    const texture = new THREE.CanvasTexture(canvas);
-    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, depthTest: false }));
-    sprite.renderOrder = 10;
-    sprite.layers.set(1);
-    sprite.scale.set(0.75, 0.3, 1);
+    const sprite = makeLabelSprite(text, color, 0.75, 0.3, 60);
     sprite.position.copy(labelPos);
     this.group.add(sprite);
-    const line = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([partPoint, labelPos]),
-      new THREE.LineBasicMaterial({ color, depthTest: false } as THREE.LineBasicMaterialParameters)
-    );
-    line.renderOrder = 9;
-    line.layers.set(1);
+    const line = makeCalloutLine(partPoint, labelPos, color);
     this.group.add(line);
     return [sprite, line];
   }
@@ -370,10 +350,11 @@ export class GearHunt extends BaseMachine implements DragMachine {
   // ── 모델 로딩 및 씬 구성 ──
 
   private buildPad(): void {
-    const pad = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.2, 0.08, 48), prettyMaterial(0x8b6f47));
-    pad.material.metalness = 0.1;
-    pad.material.roughness = 0.7;
+    // 스튜디오 바닥과 어울리는 밝은 회색 받침(기존 갈색 → 중성 회색)
+    const pad = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.2, 0.08, 64), plastic(0xa9b0b8, { roughness: 0.55 }));
     pad.position.set(0, 0.04, 0.2);
+    pad.castShadow = true;
+    pad.receiveShadow = true;
     this.group.add(pad);
   }
 
@@ -383,6 +364,7 @@ export class GearHunt extends BaseMachine implements DragMachine {
       .loadAsync('/models/total.stl')
       .then((totalGeo) => {
         totalGeo.rotateX(-Math.PI / 2);
+        smoothSTL(totalGeo);
         totalGeo.computeBoundingBox();
         const bb = totalGeo.boundingBox;
         if (!bb) throw new Error('total.stl bounding box missing');
@@ -392,29 +374,23 @@ export class GearHunt extends BaseMachine implements DragMachine {
         this.k = TARGET_SIZE / maxDim;
         totalGeo.translate(-this.center.x, -this.center.y, -this.center.z);
 
-        const ghost = new THREE.Mesh(
-          totalGeo,
-          new THREE.MeshStandardMaterial({
-            color: 0x7fb2d8,
-            transparent: true,
-            opacity: 0.15,
-            depthWrite: false,
-            roughness: 0.6,
-            metalness: 0.1
-          })
-        );
-        ghost.scale.setScalar(this.k);
-        this.root.add(ghost);
+        // 정답 가이드(반투명 완성 모형) — 공용 ghost 재질, 불투명도는 기존 값 유지
+        const guideMaterial = ghost(0x7fb2d8, 0.15);
+        const ghostMesh = new THREE.Mesh(totalGeo, guideMaterial);
+        ghostMesh.scale.setScalar(this.k);
+        this.root.add(ghostMesh);
 
         for (const pre of PRE_PLACED) {
           loader
             .loadAsync(`/models/${pre.file}`)
             .then((geo) => {
               geo.rotateX(-Math.PI / 2);
+              smoothSTL(geo);
               geo.translate(-this.center.x, -this.center.y, -this.center.z);
-              const mesh = new THREE.Mesh(geo, prettyMaterial(pre.color));
+              const mesh = new THREE.Mesh(geo, partMaterial(pre.file, pre.color));
               mesh.scale.setScalar(this.k);
               mesh.castShadow = true;
+              mesh.receiveShadow = true;
               this.attachAnimated(mesh, pre.def);
             })
             .catch((err) => console.error(`STL load failed: ${pre.file}`, err));
@@ -425,6 +401,7 @@ export class GearHunt extends BaseMachine implements DragMachine {
             .loadAsync(`/models/${def.file}`)
             .then((geo) => {
               geo.rotateX(-Math.PI / 2);
+              smoothSTL(geo);
               geo.computeBoundingBox();
               const pbb = geo.boundingBox;
               if (!pbb) throw new Error(`${def.file} bounding box missing`);
@@ -432,10 +409,11 @@ export class GearHunt extends BaseMachine implements DragMachine {
               const visualOffset = partCenter.clone().sub(this.center).multiplyScalar(this.k);
               geo.translate(-this.center.x, -this.center.y, -this.center.z);
 
-              const material = prettyMaterial(def.color);
+              const material = partMaterial(def.file, def.color);
               const mesh = new THREE.Mesh(geo, material);
               mesh.scale.setScalar(this.k);
               mesh.castShadow = true;
+              mesh.receiveShadow = true;
               const home = new THREE.Vector3(def.tray[0], P_ROOT.y, def.tray[1]).sub(visualOffset);
               mesh.position.copy(home);
               this.group.add(mesh);

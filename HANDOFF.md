@@ -1,7 +1,68 @@
 # HANDOFF — 3D 기계요소 학습 웹앱 인수인계 문서
 
 > 새 세션에서 이 프로젝트를 이어받을 때 이 문서를 먼저 읽으세요.
-> 마지막 업데이트: 2026-10-31
+> 마지막 업데이트: 2026-11-23 (v2 업그레이드)
+
+## 0. v2 업그레이드 요약 (2026-11-23) — 아래 1~10장보다 이 장이 우선
+
+v2에서 화면 구조·렌더링·절차 모델을 전면 교체했다. 실행 지시서는 `docs/work-orders/`(00~08)에 있다.
+아래 1~10장은 v1 기준 기록이며, **STL 파이프라인(7장)·회전 부호 규약(6-2)·기계별 주의(10장)는 여전히 유효**하다.
+UI 관련 서술(9장, 머신 선택 바 등)은 이 장으로 대체된다.
+
+### 0-1. 화면 구조 (해시 라우팅)
+| 경로 | 화면 | 담당 코드 |
+|---|---|---|
+| `#/` | 홈 — 이어서 하기, 진행도, 학습 모드 2종, 미션 카드 15종(4묶음) | `src/ui/home.ts` |
+| `#/m/<id>` | 미션 — 상단 단계 스테퍼, 우측 수치 패널, 하단 4분류 독 + 부품 트레이 | `src/ui/hud.ts`, `src/main.ts` |
+| `#/enc` | 기계요소 도감 — 22종 3D 뷰어 + 쓰임새·핵심·헷갈리는 요소 | `src/modes/Encyclopedia.ts`, `src/data/encyclopedia.ts` |
+| `#/quiz` | 단원 퀴즈 — 10문제(이름·분류·쓰임새·O/X) | `src/modes/Quiz.ts`, `src/data/quiz.ts` |
+
+- 미션 묶음·카드 문구·카메라 시점(`view`)은 `src/data/machines.ts`의 `MachineDef`에 있다.
+- 학습 모드는 `src/modes/types.ts`의 `AppMode`(enter/exit/update)를 구현한다. 3D 턴테이블은 `src/modes/PartStage.ts`.
+- 설정(`mech3d-settings-v1`): 난이도·효과음·이름표·**테마(light/dark)**·**그래픽 품질(high/low)**.
+  도감 본 부품 `mech3d-seen-v1`, 퀴즈 최고 점수 `mech3d-quiz-v1`. 미션 진행도 키는 그대로 `mech3d-progress-v2`.
+
+### 0-2. 미션 15종
+v1의 12종 + 신규 3종.
+| id | 이름 | 단계 | 구현 |
+|---|---|---|---|
+| automata | 캠 오토마타 | 전동축 → 캠 | `CamAutomata.ts` — 캠 윤곽에서 종동절 높이를 매 프레임 계산 |
+| discbrake | 디스크 브레이크 | 볼 베어링 → 디스크 브레이크 | `DiscBrakeRig.ts` — 6초 주기 가속·제동, 패드 이동·디스크 발광 |
+| wiper | 와이퍼 | 웜과 웜 기어 → 링크 | `Wiper.ts` — 1/50 감속, 크랭크-로커 4절 링크를 실제로 풂 |
+
+절차 생성 기계 4종(자전거·시계·러닝머신·자동차 핸들)은 전면 재모델링됐다(미션 단계·표시 수치는 동일).
+자전거는 정비 스탠드 위에 있어 **앞바퀴는 돌지 않는다**(v1은 0.96배로 회전).
+
+### 0-3. 렌더링 (`src/scene/SceneSetup.ts`, `src/models/materials.ts`)
+- 모든 재질은 `materials.ts` 함수로 만든다(steel, chrome, castIron, aluminum, brass, bronze, rubber, paint, plastic, wood, glass, ghost, glow …).
+- 후처리: EffectComposer(MSAA) → GTAOPass → OutputPass. `setTheme`, `setQuality`, `flyTo(view)`.
+  30fps 미만이 이어지면 품질을 자동으로 low(후처리 생략)로 내린다.
+- **주의**: GTAO 법선 패스 전에 `scene.background`를 비워야 한다(텍스처 배경이 원점에 검은 사각형으로 찍힘).
+  라벨 스프라이트·슬롯 링(`userData.slot`)·`userData.noAO`·투명 재질은 법선 패스에서 제외한다. 상세는 `docs/work-orders/01-렌더링.md`.
+- 부품 22종은 `src/models/parts/`(인벌류트 치형, 실제 나선 나사산 등)로 분리됐고 `factory.ts`는 조립·공용 API만 가진다.
+  `buildChainAlongPath`의 "자식 1개 = 링크 1개, `userData.s`, 링크 수 짝수" 규칙을 바꾸면 자전거 스프로킷 위상이 어긋난다.
+- STL 기계 8종은 `src/machines/stlShared.ts`의 `smoothSTL`(크리스 법선)·공용 라벨 헬퍼를 쓴다. 형상·좌표·회전 부호는 v1 그대로.
+
+### 0-4. 검증 도구 (dev 서버를 띄운 상태에서)
+```bash
+node scripts/shot.mjs "preview.html?machine=bicycle&steps=all&t=2" shots/a.png   # HUD 없는 모델 미리보기 캡처
+node scripts/shot.mjs "preview.html?parts=all" shots/parts.png                  # 부품 22종 격자
+node scripts/ui-flow.mjs <미션id> <light|dark> [w] [h]   # 트레이 → 정답 → 완료까지 자동 진행·캡처
+node scripts/smoke.mjs                                    # 15종 로드·완료 복원, 오답, 다시하기, 화면 전환, 콘솔 에러 수집
+node scripts/thumbs.mjs [id ...]                          # 홈 카드 썸네일(public/thumbs) 재생성 — 모델을 바꾸면 다시 실행
+```
+- Git Bash에서 `#/m/...` 인자를 넘길 때는 `MSYS_NO_PATHCONV=1`을 붙인다(경로로 변환됨).
+- `preview.html`·`src/dev/`·`scripts/`는 개발용이며 Vite 빌드(입력 `index.html`)에 포함되지 않는다.
+- playwright는 시스템 Chrome을 쓴다(`channel: 'chrome'`).
+
+### 0-5. 알려진 한계
+- 드래그 조립형 '기어의 종류'는 자동 흐름 테스트가 없다(로드·복원만 스모크 테스트).
+- 디스크 브레이크는 진행도 복원 시에도 바퀴 장착 연출이 다시 재생된다.
+- 와이퍼의 웜은 화면에서 초당 5바퀴로 제한해 그린다(표시 수치·감속비 계산은 정확).
+- 자동차 핸들의 '래크 이동' 표시값(θ×30cm)과 3D 래크 이동량(피치 일치용)은 의도적으로 다른 값이다.
+- 구동방식 기계의 일부 라벨이 서로 겹친다(라벨 좌표는 v1 그대로).
+
+---
 
 ## 1. 프로젝트 개요
 
