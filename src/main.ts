@@ -4,6 +4,9 @@ import * as THREE from 'three';
 import './styles/tokens.css';
 import './styles/app.css';
 import './styles/modes.css';
+import './styles/lab-bike.css';
+import './styles/lab-car.css';
+import './styles/lab-power.css';
 import { SceneManager, DEFAULT_VIEW } from './scene/SceneSetup';
 import { buildPart, normalizePart, disposeObject } from './models/factory';
 import { ThumbnailFactory } from './models/thumbnails';
@@ -17,6 +20,9 @@ import { ICON } from './ui/icons';
 import type { AppMode } from './modes/types';
 import { Encyclopedia, getSeenCount } from './modes/Encyclopedia';
 import { Quiz, getQuizBest } from './modes/Quiz';
+import { BikeGears } from './labs/BikeGears';
+import { CarShift } from './labs/CarShift';
+import { PowerFlow } from './labs/PowerFlow';
 import { loadProgress, saveProgress, clearMachineProgress, clearAllProgress, allMachinesCompleted, type ProgressData } from './state/progress';
 import { loadSettings, saveSettings, type AppSettings } from './state/settings';
 import { playCorrectSound, playWrongSound } from './ui/sound';
@@ -568,10 +574,17 @@ function tick(): void {
 
 // ── 화면 전환 (해시 라우팅: #/ 홈, #/m/<id> 미션, #/enc 도감, #/quiz 퀴즈) ──
 
-type Screen = 'home' | 'mission' | 'enc' | 'quiz';
+type ModeId = 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power';
+type Screen = 'home' | 'mission' | ModeId;
 let screen: Screen = 'home';
 let activeMode: AppMode | null = null;
-const modes: Record<'enc' | 'quiz', AppMode> = { enc: new Encyclopedia(), quiz: new Quiz() };
+const modes: Record<ModeId, { name: string; mode: AppMode }> = {
+  enc: { name: '기계요소 도감', mode: new Encyclopedia() },
+  quiz: { name: '단원 퀴즈', mode: new Quiz() },
+  'lab/bike': { name: '자전거 기어 변속', mode: new BikeGears() },
+  'lab/car': { name: '자동차 기어 변속', mode: new CarShift() },
+  'lab/power': { name: '자동차의 동력 전달', mode: new PowerFlow() }
+};
 
 const home = new HomeScreen({
   onOpenMission: (id) => navigate(`m/${id}`),
@@ -633,8 +646,9 @@ function route(): void {
     switchMachine(arg);
     return;
   }
-  if (head === 'enc' || head === 'quiz') {
-    screen = head;
+  const modeId = (head === 'lab' ? `lab/${arg ?? ''}` : head) as ModeId;
+  if (modeId in modes) {
+    screen = modeId;
     leaveMission();
     home.hide();
     // 학습 모드는 씬을 직접 쓰므로 미션 기계를 치운다
@@ -643,9 +657,9 @@ function route(): void {
       current = null;
       sim = null;
     }
-    document.querySelector<HTMLElement>('#mode-name')!.textContent = head === 'enc' ? '기계요소 도감' : '단원 퀴즈';
+    document.querySelector<HTMLElement>('#mode-name')!.textContent = modes[modeId].name;
     modeScreen.classList.remove('hidden');
-    activeMode = modes[head];
+    activeMode = modes[modeId].mode;
     activeMode.enter({
       sceneMgr,
       thumbs,

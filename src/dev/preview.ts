@@ -1,6 +1,7 @@
 // 개발용 미리보기 (HUD 없이 모델만) — 배포 번들에는 포함되지 않는다(preview.html 전용).
 //   /preview.html?part=spurGear            부품 1종
 //   /preview.html?parts=all                부품 22종 격자
+//   /preview.html?mode=bike | car | power   탐구 실험(자전거 변속·자동차 변속·동력 전달) 단독 실행
 //   /preview.html?mode=enc | mode=quiz      학습 모드(도감·퀴즈) 단독 실행
 //   /preview.html?machine=gearhunt&hunt=spur_gear1,bevel_gear1,...  드래그 조립형의 조립 상태 복원
 //   /preview.html?machine=bicycle&steps=6  기계 + n단계 조립(steps=all 가능, 완료 시 시뮬레이션 가동)
@@ -15,6 +16,12 @@ import { isDragMachine, type Machine, type MachineSim } from '../machines/types'
 import type { AppMode } from '../modes/types';
 import { Encyclopedia } from '../modes/Encyclopedia';
 import { Quiz } from '../modes/Quiz';
+import { BikeGears } from '../labs/BikeGears';
+import { CarShift } from '../labs/CarShift';
+import { PowerFlow } from '../labs/PowerFlow';
+import '../styles/lab-bike.css';
+import '../styles/lab-car.css';
+import '../styles/lab-power.css';
 import { ThumbnailFactory } from '../models/thumbnails';
 import { loadSettings } from '../state/settings';
 import '../styles/tokens.css';
@@ -50,13 +57,20 @@ const modeArg = q.get('mode');
 document.documentElement.dataset.theme = q.get('theme') === 'dark' ? 'dark' : 'light';
 
 const partId = q.get('part');
-if (modeArg === 'enc' || modeArg === 'quiz') {
+const MODE_CTORS: Record<string, () => AppMode> = {
+  enc: () => new Encyclopedia(),
+  quiz: () => new Quiz(),
+  bike: () => new BikeGears(),
+  car: () => new CarShift(),
+  power: () => new PowerFlow()
+};
+if (modeArg && MODE_CTORS[modeArg]) {
   const root = document.createElement('div');
   root.id = 'mode-root';
   root.style.cssText = 'position:fixed;inset:0;pointer-events:none;font-family:var(--font);color:var(--text)';
   document.body.appendChild(root);
   if (info) info.style.display = 'none';
-  mode = modeArg === 'enc' ? new Encyclopedia() : new Quiz();
+  mode = MODE_CTORS[modeArg]!();
   mode.enter({
     sceneMgr,
     thumbs: new ThumbnailFactory(),

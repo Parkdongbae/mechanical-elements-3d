@@ -411,6 +411,27 @@ input:focus-visible {
   color: var(--cat-control);
 }
 
+.home-labs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.mode-lab-bike {
+  background: color-mix(in srgb, var(--cat-power) 15%, transparent);
+  color: var(--cat-power);
+}
+
+.mode-lab-car {
+  background: color-mix(in srgb, var(--cat-joining) 16%, transparent);
+  color: var(--cat-joining);
+}
+
+.mode-lab-power {
+  background: color-mix(in srgb, var(--ok) 16%, transparent);
+  color: var(--ok);
+}
+
 .mode-text {
   display: flex;
   flex-direction: column;
@@ -1375,7 +1396,8 @@ input:focus-visible {
   .home-hero h2 {
     font-size: 22px;
   }
-  .home-modes {
+  .home-modes,
+  .home-labs {
     grid-template-columns: 1fr;
   }
   .home-grid {
