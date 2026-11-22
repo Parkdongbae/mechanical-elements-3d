@@ -1,1 +1,992 @@
-/* 탐구 실험 스타일 — 작업 지시서 11 (CarShift) */
+/* 탐구 실험 스타일 — 작업 지시서 11-B (CarShift). 색·간격·그림자는 tokens.css 변수만 사용한다.
+   선택된 단은 3D 강조색과 같은 주황(--cat-joining)으로 통일한다. */
+
+.car-wrap {
+  --car-sel: var(--cat-joining);
+  --car-cockpit-h: 236px;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--font);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.car-wrap *,
+.car-wrap *::before,
+.car-wrap *::after {
+  box-sizing: border-box;
+}
+
+.car-wrap button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.car-wrap :focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.car-wrap [hidden] {
+  display: none !important;
+}
+
+.car-panel {
+  pointer-events: auto;
+  background: var(--panel);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-1);
+}
+
+.car-sheet {
+  display: contents;
+}
+
+.car-h {
+  margin: 0 0 var(--space-2);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.01em;
+}
+
+.car-note {
+  margin: var(--space-2) 0 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.car-dim {
+  color: var(--text-dim);
+}
+
+.car-num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ───────── 모드 세그먼트 ───────── */
+
+.car-seg {
+  position: absolute;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-pill);
+}
+
+.car-seg-btn {
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 15px;
+  white-space: nowrap;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.car-seg-btn:hover {
+  color: var(--text);
+}
+
+.car-seg-btn.is-active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+/* ───────── 옆 패널 ───────── */
+
+.car-side {
+  position: absolute;
+  top: 76px;
+  bottom: calc(var(--car-cockpit-h) + var(--space-4) + var(--space-3));
+  overflow-y: auto;
+  padding: var(--space-4);
+  scrollbar-width: thin;
+}
+
+.car-left {
+  left: var(--space-4);
+  width: 340px;
+}
+
+.car-right {
+  right: var(--space-4);
+  width: 310px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.car-right .car-h {
+  margin-bottom: 0;
+}
+
+.car-spec {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px var(--space-3);
+  margin: 0 0 var(--space-4);
+  font-size: 13px;
+}
+
+.car-spec dt {
+  color: var(--text-dim);
+}
+
+.car-spec dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.car-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.car-table th {
+  padding: 4px 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-faint);
+  text-align: right;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.car-table th:first-child,
+.car-table th:last-child {
+  text-align: left;
+}
+
+.car-table td {
+  padding: 5px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.car-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.car-td-gear {
+  font-weight: 800;
+  text-align: center;
+  width: 30px;
+}
+
+.car-td-use {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.car-table tr.is-current td {
+  background: color-mix(in srgb, var(--car-sel) 16%, transparent);
+}
+
+.car-table tr.is-current td:first-child {
+  box-shadow: inset 3px 0 0 var(--car-sel);
+  color: var(--car-sel);
+  border-radius: var(--radius-s) 0 0 var(--radius-s);
+}
+
+.car-table tr.is-current td:last-child {
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  color: var(--text);
+}
+
+.car-table tr.is-rec td:first-child {
+  box-shadow: inset 3px 0 0 var(--ok);
+}
+
+.car-table tr.is-rec td:last-child::after {
+  content: ' ← 지금 알맞은 단';
+  color: var(--ok);
+  font-weight: 700;
+}
+
+/* 코치 */
+
+.car-coach {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-m);
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+}
+
+.car-coach[data-tone='ok'] {
+  background: var(--ok-soft);
+}
+
+.car-coach[data-tone='warn'] {
+  background: var(--warn-soft);
+  border-color: color-mix(in srgb, var(--warn) 40%, transparent);
+}
+
+.car-coach-title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.car-coach[data-tone='warn'] .car-coach-title {
+  color: var(--warn);
+}
+
+.car-coach[data-tone='ok'] .car-coach-title {
+  color: var(--ok);
+}
+
+.car-coach-text {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+}
+
+.car-btn {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-m);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+.car-start {
+  margin-top: var(--space-2);
+  width: 100%;
+}
+
+.car-calc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-3);
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+  font-size: 12.5px;
+}
+
+.car-calc-row {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: var(--space-2);
+}
+
+.car-calc-k {
+  color: var(--text-dim);
+}
+
+.car-calc-v {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.car-calc-line {
+  margin: 0;
+}
+
+.car-calc .car-note {
+  margin-top: 4px;
+}
+
+.car-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ───────── 조종석 ───────── */
+
+.car-cockpit {
+  position: absolute;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-4);
+  height: var(--car-cockpit-h);
+  display: grid;
+  grid-template-columns: minmax(200px, 250px) 1fr minmax(220px, auto);
+  grid-template-rows: 1fr auto;
+  grid-template-areas:
+    'shift dash pedals'
+    'keys keys keys';
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-4) var(--space-2);
+}
+
+.car-shift-area {
+  grid-area: shift;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.car-keys {
+  grid-area: keys;
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+/* H자 레버 */
+
+.car-hshift {
+  position: relative;
+  width: 210px;
+  height: 172px;
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+  touch-action: none;
+  user-select: none;
+}
+
+.car-hshift-gate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.car-hshift-gate path {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 9;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.car-hshift-pos {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--panel-solid);
+  font-weight: 800;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  z-index: 1;
+}
+
+.car-hshift-pos.is-n {
+  width: 36px;
+  height: 36px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.car-hshift-pos:hover {
+  border-color: var(--accent);
+}
+
+.car-hshift-knob {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-pill);
+  background: var(--car-sel);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  font-weight: 800;
+  box-shadow: var(--shadow-2);
+  z-index: 2;
+  pointer-events: none;
+  transition: left 0.22s var(--ease), top 0.22s var(--ease);
+}
+
+.car-hshift-knob.is-drag {
+  transition: none;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.car-hshift::after {
+  content: '손잡이를 끌거나 번호를 눌러요';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -18px;
+  font-size: 11px;
+  color: var(--text-faint);
+  text-align: center;
+  pointer-events: none;
+}
+
+.is-shake {
+  animation: car-shake 0.38s var(--ease);
+}
+
+@keyframes car-shake {
+  20% { transform: translateX(-6px); }
+  45% { transform: translateX(5px); }
+  70% { transform: translateX(-3px); }
+}
+
+/* P R N D */
+
+.car-prnd {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-2);
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+}
+
+.car-prnd-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 150px;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 2px solid transparent;
+  border-radius: var(--radius-s);
+  background: var(--panel-solid);
+  text-align: left;
+}
+
+.car-prnd-btn b {
+  width: 22px;
+  font-size: 19px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.car-prnd-btn span {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.car-prnd-btn.is-active {
+  border-color: var(--car-sel);
+  background: color-mix(in srgb, var(--car-sel) 18%, var(--panel-solid));
+}
+
+.car-prnd-btn.is-active b {
+  color: var(--car-sel);
+}
+
+/* 계기판 */
+
+.car-dash {
+  grid-area: dash;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.car-gauge {
+  position: relative;
+  width: 178px;
+  flex: none;
+}
+
+.car-gauge-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.car-g-face {
+  fill: var(--panel-sunken);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.car-g-track {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 4;
+}
+
+.car-g-zone {
+  fill: none;
+  stroke-width: 7;
+}
+
+.car-g-zone.is-caution {
+  stroke: var(--warn);
+}
+
+.car-g-zone.is-red {
+  stroke: var(--cat-power);
+}
+
+.car-g-tick {
+  stroke: var(--text-faint);
+  stroke-width: 1.4;
+}
+
+.car-g-tick.is-major {
+  stroke: var(--text);
+  stroke-width: 2.6;
+}
+
+.car-g-num {
+  fill: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-num);
+}
+
+.car-g-cap {
+  fill: var(--text-faint);
+  font-size: 11px;
+}
+
+.car-g-needle-shape {
+  fill: var(--cat-power);
+}
+
+.car-g-hub {
+  fill: var(--text);
+}
+
+.car-g-readout {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 71%;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.car-g-caption {
+  margin-top: -14px;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+.car-wrap.is-red .car-tach .car-g-readout {
+  color: var(--cat-power);
+}
+
+.car-gear {
+  flex: none;
+  width: 104px;
+  text-align: center;
+}
+
+.car-gear-cap {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+.car-gear-big {
+  margin: 2px auto;
+  width: 84px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-l);
+  background: var(--car-sel);
+  color: #fff;
+  font-size: 42px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--shadow-1);
+  transition: background 0.2s var(--ease);
+}
+
+.car-gear-big[data-gear='N'] {
+  background: var(--panel-sunken);
+  color: var(--text-dim);
+  border: 1px solid var(--line-strong);
+}
+
+.car-gear-sub {
+  min-height: 2.6em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+/* 페달 */
+
+.car-pedals {
+  grid-area: pedals;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: var(--space-2);
+  height: 100%;
+  padding-bottom: 2px;
+}
+
+.car-pedal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 72px;
+  padding: 6px 4px 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.08s var(--ease);
+}
+
+.car-pedal.is-down {
+  transform: translateY(3px) scale(0.98);
+}
+
+.car-pedal-plate {
+  position: relative;
+  width: 46px;
+  height: 104px;
+  border-radius: 10px 10px 14px 14px;
+  background: repeating-linear-gradient(0deg, var(--line-strong) 0 3px, transparent 3px 11px), var(--panel-sunken);
+  border: 2px solid var(--line-strong);
+  overflow: hidden;
+}
+
+.is-accel .car-pedal-plate {
+  height: 118px;
+  width: 38px;
+}
+
+.is-brake .car-pedal-plate {
+  width: 54px;
+  height: 88px;
+}
+
+.is-clutch .car-pedal-plate {
+  width: 50px;
+  height: 88px;
+}
+
+.car-pedal-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+  background: color-mix(in srgb, var(--pc) 55%, transparent);
+}
+
+.is-accel {
+  --pc: var(--ok);
+}
+
+.is-brake {
+  --pc: var(--cat-power);
+}
+
+.is-clutch {
+  --pc: var(--cat-shaft);
+}
+
+.car-pedal.is-pressed {
+  border-color: var(--pc);
+}
+
+.car-pedal-name {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.car-pedal-key {
+  font-size: 11px;
+  color: var(--text-faint);
+  line-height: 1;
+}
+
+/* 경고 말풍선(조종석 위) */
+
+.car-alert {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--car-cockpit-h) + var(--space-4) + var(--space-3));
+  transform: translate(-50%, 6px);
+  z-index: 5;
+  max-width: min(560px, calc(100vw - 32px));
+  width: max-content;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  border: 1px solid color-mix(in srgb, var(--warn) 55%, transparent);
+  box-shadow: var(--shadow-2);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.car-alert[data-tone='warn'] {
+  box-shadow: inset 4px 0 0 var(--warn), var(--shadow-2);
+}
+
+.car-alert[data-tone='ok'] {
+  border-color: color-mix(in srgb, var(--ok) 55%, transparent);
+  box-shadow: inset 4px 0 0 var(--ok), var(--shadow-2);
+}
+
+.car-alert.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ───────── 중간 폭: 옆 패널을 좁게 ───────── */
+
+@media (max-width: 1180px) and (min-width: 820px) {
+  .car-left {
+    width: 300px;
+  }
+  .car-right {
+    width: 270px;
+  }
+  .car-td-use {
+    display: none;
+  }
+  .car-table th:last-child {
+    display: none;
+  }
+  .car-gauge {
+    width: 150px;
+  }
+  .car-cockpit {
+    grid-template-columns: 220px 1fr auto;
+  }
+}
+
+/* ───────── 좁은 화면: 3D는 위, 조작부는 하단 시트 ───────── */
+
+@media (max-width: 819px) {
+  .car-sheet {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 61%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-2) var(--space-2) calc(var(--space-3) + env(safe-area-inset-bottom));
+    pointer-events: auto;
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+    box-shadow: var(--shadow-2);
+  }
+
+  .car-sheet > .car-panel {
+    position: static;
+    transform: none;
+    width: auto;
+    height: auto;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .car-seg {
+    align-self: center;
+    flex: none;
+    border-color: transparent;
+  }
+
+  .car-seg-btn {
+    padding: 0 var(--space-4);
+  }
+
+  .car-cockpit {
+    flex: none;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'dash dash'
+      'shift pedals';
+    gap: var(--space-3) var(--space-2);
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+  }
+
+  .car-keys {
+    display: none;
+  }
+
+  .car-dash {
+    gap: var(--space-1);
+  }
+
+  .car-gauge {
+    width: clamp(104px, 33vw, 150px);
+  }
+
+  .car-g-readout {
+    top: 76%;
+    font-size: 14px;
+  }
+
+  .car-g-cap {
+    display: none;
+  }
+
+  .car-pedal-name {
+    font-size: 12px;
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+  }
+
+  .car-gear {
+    width: 78px;
+  }
+
+  .car-gear-big {
+    width: 62px;
+    height: 62px;
+    font-size: 30px;
+  }
+
+  .car-gear-sub {
+    font-size: 11px;
+  }
+
+  .car-hshift {
+    width: min(168px, 44vw);
+    height: 150px;
+  }
+
+  .car-hshift::after {
+    display: none;
+  }
+
+  .car-prnd-btn {
+    min-width: 0;
+    width: min(150px, 40vw);
+  }
+
+  .car-pedal {
+    width: 58px;
+  }
+
+  .is-accel .car-pedal-plate {
+    height: 100px;
+    width: 32px;
+  }
+
+  .is-brake .car-pedal-plate,
+  .is-clutch .car-pedal-plate {
+    width: 42px;
+    height: 80px;
+  }
+
+  .car-pedal-key {
+    display: none;
+  }
+
+  .car-alert {
+    position: fixed;
+    left: var(--space-3);
+    right: var(--space-3);
+    top: 72px;
+    bottom: auto;
+    width: auto;
+    max-width: none;
+    transform: translateY(-6px);
+  }
+
+  .car-alert.is-on {
+    transform: none;
+  }
+
+  .car-side {
+    padding: var(--space-3);
+    border: 1px solid var(--line);
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .car-hshift-knob,
+  .car-alert,
+  .car-pedal {
+    transition: none;
+  }
+  .is-shake {
+    animation: none;
+  }
+}
+
+/* 아주 좁은 폰(≤ 400px): 계기·페달·레버를 더 줄여 가로 넘침을 막는다 */
+@media (max-width: 400px) {
+  .car-cockpit {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .car-gauge {
+    width: clamp(92px, 29vw, 130px);
+  }
+  .car-gear {
+    width: 70px;
+  }
+  .car-hshift {
+    width: 100%;
+    min-width: 128px;
+    max-width: 168px;
+  }
+  .car-pedals {
+    gap: 4px;
+  }
+  .car-pedal {
+    width: 50px;
+  }
+  .is-brake .car-pedal-plate,
+  .is-clutch .car-pedal-plate {
+    width: 36px;
+  }
+  .car-pedal-name {
+    font-size: 11px;
+  }
+}
+@media (max-width: 400px) {
+  .car-g-readout {
+    top: 72%;
+    font-size: 12px;
+  }
+}
