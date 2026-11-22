@@ -12,7 +12,7 @@ const browser = await chromium.launch({ channel: 'chrome', headless: true, args:
 const page = await browser.newPage({ viewport: { width: 800, height: 500 }, deviceScaleFactor: 1 });
 for (const id of ids) {
   await page.goto(`http://localhost:5173/preview.html?machine=${id}&steps=all&labels=0&ui=0&thumb=1`);
-  await page.waitForTimeout(id.startsWith('drivetrain') || id.startsWith('ev-') || ['gearhunt', 'steelframe', 'merryround'].includes(id) ? 9000 : 3500);
+  await page.waitForTimeout(9000);
   await page.screenshot({ path: `public/thumbs/${id}.jpg`, type: 'jpeg', quality: 82 });
   console.log('thumb', id);
 }
