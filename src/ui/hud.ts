@@ -341,8 +341,10 @@ export class HUD {
       items
         .map((item, i) => {
           const tone = item.tone ? ` ${item.tone}` : '';
+          // 숫자가 아닌 긴 값(예: '센터 디퍼렌셜 + 전동축')은 작은 글씨로
+          const wordy = /^[-+]?[0-9.,]+$/.test(item.value.trim()) ? '' : ' wordy';
           const arrow = i > 0 ? '<div class="rpm-arrow" aria-hidden="true"></div>' : '';
-          return `${arrow}<div class="rpm-item${tone}"><small>${item.label}</small><span><strong>${item.value}</strong><em>${item.unit ?? ''}</em></span></div>`;
+          return `${arrow}<div class="rpm-item${tone}${wordy}"><small>${item.label}</small><span><strong>${item.value}</strong><em>${item.unit ?? ''}</em></span></div>`;
         })
         .join('');
   }

@@ -122,6 +122,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'gearhunt',
+    view: { pos: [3.7, 3.1, 5.7], target: [0, 0.9, 0] },
     group: 'build',
     summary: '다섯 가지 기어를 순서대로 조립',
     name: '기어의 종류',
@@ -134,6 +135,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'steelframe',
+    view: { pos: [3, 2.4, 4.6], target: [0, 1, 0] },
     group: 'build',
     summary: '기둥과 들보를 볼트로 체결',
     name: '철골공사',
@@ -146,7 +148,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'drivetrain-ff',
-    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
+    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '엔진이 앞바퀴를 굴려요',
     name: 'FF 전륜구동',
@@ -163,7 +165,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'drivetrain-fr',
-    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
+    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '엔진의 힘을 뒷바퀴까지',
     name: 'FR 후륜구동',
@@ -181,7 +183,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'drivetrain-awd',
-    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
+    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '네 바퀴 모두에 동력을',
     name: 'AWD 사륜구동',
@@ -199,7 +201,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ev-single',
-    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
+    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '모터 하나로 달리는 전기차',
     name: '싱글 모터(2WD)',
@@ -216,7 +218,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ev-dual',
-    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
+    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '앞뒤 모터로 네 바퀴 구동',
     name: '듀얼 모터(AWD)',
@@ -233,6 +235,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'merryround',
+    view: { pos: [3, 2.6, 4.6], target: [0, 0.7, 0] },
     group: 'life',
     summary: '베어링으로 부드럽게 빙글빙글',
     name: '회전놀이기구',

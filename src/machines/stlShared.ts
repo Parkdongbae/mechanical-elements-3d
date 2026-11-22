@@ -62,6 +62,9 @@ const LABEL_BG = 'rgba(15, 23, 42, 0.95)';
  * @param accent 부품 색(CSS 문자열) — 테두리와 지시선에 사용
  * @param w,h 스프라이트 월드 크기(종횡비가 캔버스 종횡비가 된다)
  */
+/** 라벨이 부품을 가리지 않도록 지정 크기보다 작게 그린다 (가까워진 카메라 시점 기준) */
+const LABEL_SCALE = 0.6;
+
 export function makeLabelSprite(text: string, accent: string, w = 0.75, h = 0.3, fontPx = 60): THREE.Sprite {
   const cw = 512;
   const ch = Math.max(64, Math.round((cw * h) / w));
@@ -101,7 +104,7 @@ export function makeLabelSprite(text: string, accent: string, w = 0.75, h = 0.3,
   );
   sprite.renderOrder = 10;
   sprite.layers.set(1);
-  sprite.scale.set(w, h, 1);
+  sprite.scale.set(w * LABEL_SCALE, h * LABEL_SCALE, 1);
   return sprite;
 }
 

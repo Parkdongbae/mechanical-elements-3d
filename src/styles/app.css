@@ -826,6 +826,13 @@ input:focus-visible {
   line-height: 1.15;
 }
 
+.rpm-item.wordy strong {
+  font-family: var(--font);
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
 .rpm-item em {
   font-style: normal;
   font-size: 12px;
