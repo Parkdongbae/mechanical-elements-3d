@@ -1,0 +1,8 @@
+// 임시 스텁 — 작업 지시서 06에 따라 구현 예정
+import type { AppMode, ModeContext } from './types';
+
+export class Quiz implements AppMode {
+  enter(ctx: ModeContext): void { ctx.root.innerHTML = ''; }
+  exit(): void {}
+  update(): void {}
+}

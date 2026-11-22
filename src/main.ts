@@ -18,6 +18,7 @@ const canvas = document.querySelector<HTMLCanvasElement>('#scene');
 if (!canvas) throw new Error('#scene canvas not found');
 
 const sceneMgr = new SceneManager(canvas);
+(window as unknown as Record<string, unknown>).__scene = sceneMgr;
 const thumbs = new ThumbnailFactory();
 const physics = new PhysicsFX(sceneMgr.scene);
 let settings: AppSettings = loadSettings();
@@ -473,7 +474,7 @@ function tick(): void {
   const dt = Math.min(clock.getDelta(), 0.05);
   const t = clock.elapsedTime;
 
-  sceneMgr.controls.update();
+  sceneMgr.update(dt);
   current?.update(t);
   sim?.update(dt);
   physics.update(dt);

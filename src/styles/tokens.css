@@ -1,0 +1,77 @@
+/* 디자인 토큰 — 모든 UI는 이 변수만 사용한다. 테마는 <html data-theme="light|dark">로 전환. */
+
+:root {
+  --font: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --font-num: 'Pretendard Variable', Pretendard, ui-monospace, 'SF Mono', Consolas, monospace;
+
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 18px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* 기계요소 4대분류 색 (3D 강조색과 동일 계열) */
+  --cat-joining: #e9801c;
+  --cat-shaft: #2681d6;
+  --cat-control: #8a4fd8;
+  --cat-power: #dc3e44;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #e6ecf2;
+  --panel: rgba(255, 255, 255, 0.86);
+  --panel-solid: #ffffff;
+  --panel-sunken: #f1f4f8;
+  --line: rgba(20, 35, 60, 0.1);
+  --line-strong: rgba(20, 35, 60, 0.2);
+  --text: #16202e;
+  --text-dim: #5a6779;
+  --text-faint: #8794a6;
+  --accent: #2563eb;
+  --accent-soft: rgba(37, 99, 235, 0.1);
+  --accent-text: #ffffff;
+  --ok: #16925a;
+  --ok-soft: rgba(22, 146, 90, 0.12);
+  --warn: #c2410c;
+  --warn-soft: rgba(194, 65, 12, 0.1);
+  --shadow-1: 0 1px 2px rgba(15, 30, 55, 0.06), 0 4px 14px rgba(15, 30, 55, 0.08);
+  --shadow-2: 0 2px 6px rgba(15, 30, 55, 0.08), 0 16px 40px rgba(15, 30, 55, 0.16);
+  --scrim: rgba(230, 236, 242, 0.72);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f131a;
+  --panel: rgba(24, 30, 40, 0.84);
+  --panel-solid: #1a212c;
+  --panel-sunken: #121821;
+  --line: rgba(200, 215, 240, 0.1);
+  --line-strong: rgba(200, 215, 240, 0.22);
+  --text: #e8edf4;
+  --text-dim: #a3afc0;
+  --text-faint: #6f7c8e;
+  --accent: #5b9bff;
+  --accent-soft: rgba(91, 155, 255, 0.16);
+  --accent-text: #08111f;
+  --ok: #3ecf8e;
+  --ok-soft: rgba(62, 207, 142, 0.14);
+  --warn: #ff8a4c;
+  --warn-soft: rgba(255, 138, 76, 0.14);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.3);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.35), 0 16px 40px rgba(0, 0, 0, 0.5);
+  --scrim: rgba(10, 13, 19, 0.74);
+  --cat-joining: #ff9d3d;
+  --cat-shaft: #4da3f5;
+  --cat-control: #a97bf0;
+  --cat-power: #f2636a;
+}
