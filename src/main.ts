@@ -24,14 +24,15 @@ import { BikeGears } from './labs/BikeGears';
 import { CarShift } from './labs/CarShift';
 import { PowerFlow } from './labs/PowerFlow';
 import { loadProgress, saveProgress, clearMachineProgress, clearAllProgress, allMachinesCompleted, type ProgressData } from './state/progress';
-import { loadSettings, saveSettings, type AppSettings } from './state/settings';
+import { guessQuality, loadSettings, saveSettings, type AppSettings } from './state/settings';
 import { playCorrectSound, playWrongSound } from './ui/sound';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#scene');
 if (!canvas) throw new Error('#scene canvas not found');
 
 let settings: AppSettings = loadSettings();
-const sceneMgr = new SceneManager(canvas, { theme: settings.theme, quality: settings.quality });
+const sceneMgr = new SceneManager(canvas, { theme: settings.theme, quality: settings.quality === 'auto' ? guessQuality() : settings.quality });
+sceneMgr.adaptive = settings.quality === 'auto';
 const thumbs = new ThumbnailFactory();
 const physics = new PhysicsFX(sceneMgr.scene);
 const hud = new HUD(
@@ -47,7 +48,9 @@ const hud = new HUD(
     onSettingsChange: (s) => {
       settings = s;
       applyTheme();
-      if (sceneMgr.getQuality() !== s.quality) sceneMgr.setQuality(s.quality);
+      const wanted = s.quality === 'auto' ? guessQuality() : s.quality;
+      sceneMgr.adaptive = s.quality === 'auto';
+      if (sceneMgr.getQuality() !== wanted) sceneMgr.setQuality(wanted);
       if (screen === 'mission' && current) syncMission();
       if (screen === 'home') showHome();
     },
@@ -63,9 +66,8 @@ const hud = new HUD(
 );
 sceneMgr.setLabelsVisible(settings.showLabels);
 sceneMgr.onAutoLowQuality = () => {
-  settings.quality = 'low';
-  saveSettings(settings);
-  hud.refreshSettings();
+  // '자동' 설정은 그대로 두고 이번 실행의 렌더 품질만 낮춘다
+  hud.toast('화면이 느려져 그래픽 품질을 낮췄어요.', 'info');
 };
 
 function applyTheme(): void {
@@ -279,6 +281,7 @@ function handleSelect(id: string): void {
   const step = def.steps[count]!;
 
   if (part.id === step.partId) {
+    hud.closePanel(); // 부품이 날아가 장착되는 모습이 트레이에 가려지지 않게 바로 닫는다
     flyAndInstall(part.id, count);
     return;
   }

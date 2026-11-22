@@ -71,8 +71,8 @@ export const MACHINES: MachineDef[] = [
     summary: '페달의 힘이 체인을 타고 뒷바퀴로',
     name: '자전거',
     icon: '🚲',
-    missionText: '차축 → 크랭크축 → 스프로킷 → 체인 → 평행 핀 → 스프링 순서로 자전거를 조립하세요!',
-    hint: '축용 차축을 양쪽 바퀴 자리에 장착하면 바퀴가 자동으로 올라가요! 크랭크축을 장착하면 앞 스프로킷도 함께 장착되고, 이어서 전동용 스프로킷·체인, 평행 핀, 마지막엔 안장 밑 스프링(제어용)이 들어가요!',
+    missionText: '차축 → 크랭크축 → 스프로킷 → 체인 → 평행 핀 → 스프링 → 블록 브레이크 순서로 자전거를 조립하세요!',
+    hint: '축용 차축을 양쪽 바퀴 자리에 장착하면 바퀴가 자동으로 올라가요! 크랭크축을 장착하면 앞 스프로킷도 함께 장착되고, 이어서 전동용 스프로킷·체인, 평행 핀, 안장 밑 스프링(제어용), 마지막엔 바퀴 테를 눌러 멈추는 브레이크(제어용)가 들어가요!',
     completeText: '페달을 밟으면 동력이 전달돼요 🚲💨',
     steps: [
       { partId: 'axle', label: '차축' },
@@ -80,7 +80,8 @@ export const MACHINES: MachineDef[] = [
       { partId: 'sprocket', label: '스프로킷' },
       { partId: 'chain', label: '체인' },
       { partId: 'pinParallel', label: '평행 핀' },
-      { partId: 'spring', label: '스프링' }
+      { partId: 'spring', label: '스프링' },
+      { partId: 'blockBrake', label: '블록 브레이크' }
     ],
     create: () => new Bicycle()
   },
@@ -213,7 +214,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ev-single',
-    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
+    view: { pos: [3.3, 2.3, 0.6], target: [0, 0.2, -0.2] },
     group: 'drivetrain',
     summary: '모터 하나로 달리는 전기차',
     name: '싱글 모터(2WD)',
@@ -230,7 +231,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ev-dual',
-    view: { pos: [2.7, 2.3, 3.9], target: [0, 0.4, 0] },
+    view: { pos: [3.3, 2.3, 0.5], target: [0, 0.2, 0] },
     group: 'drivetrain',
     summary: '앞뒤 모터로 네 바퀴 구동',
     name: '듀얼 모터(AWD)',
