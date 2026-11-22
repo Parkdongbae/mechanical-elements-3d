@@ -1,1 +1,1095 @@
-/* 풍동 실험 스타일 — 작업 지시서 12 */
+/* 풍동 실험 스타일 — 작업 지시서 12 (WindTunnel). tokens.css 변수만 사용한다(밝음/다크 자동 대응). */
+
+.wind-wrap {
+  --wind-bar-h: 112px;
+  --wind-good: var(--ok);
+  --wind-bad: var(--cat-power);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--font);
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.wind-wrap *,
+.wind-wrap *::before,
+.wind-wrap *::after {
+  box-sizing: border-box;
+}
+
+.wind-wrap button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wind-wrap button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.wind-wrap :focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.wind-wrap [hidden] {
+  display: none !important;
+}
+
+.wind-panel {
+  pointer-events: auto;
+  background: var(--panel);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-1);
+}
+
+.wind-sheet {
+  display: contents;
+}
+
+.wind-h {
+  margin: 0 0 var(--space-2);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.wind-sub-h {
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.wind-note {
+  margin: var(--space-1) 0 0;
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+
+.wind-lead {
+  margin: 0 0 var(--space-2);
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.wind-num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ───────── 늘 보이는 안내 한 줄 ───────── */
+
+.wind-disclaimer {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--space-4) + var(--wind-bar-h) + 6px);
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 32px - 2 * 330px);
+  margin: 0;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--panel);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-align: center;
+  pointer-events: auto;
+}
+
+/* ───────── 탭 ───────── */
+
+.wind-tabs {
+  position: absolute;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-pill);
+}
+
+.wind-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 15px;
+  white-space: nowrap;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.wind-tab:hover {
+  color: var(--text);
+}
+
+.wind-tab.is-active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.wind-tab-num {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* ───────── 왼쪽: 부품 설정 ───────── */
+
+.wind-left {
+  position: absolute;
+  top: 76px;
+  left: var(--space-4);
+  width: 300px;
+  bottom: calc(var(--space-4) + var(--wind-bar-h) + var(--space-3));
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+}
+
+.wind-left-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.wind-left-head .wind-h {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.wind-collapse {
+  min-height: 36px;
+  min-width: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--panel-solid);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.wind-left-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: var(--space-2);
+  padding-right: var(--space-1);
+  scrollbar-width: thin;
+}
+
+.wind-wrap.is-left-closed .wind-left {
+  bottom: auto;
+}
+
+.wind-wrap.is-left-closed .wind-left-body {
+  display: none;
+}
+
+.wind-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.wind-presets .wind-btn {
+  flex: 1 1 120px;
+}
+
+.wind-item {
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+}
+
+.wind-item-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.wind-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.wind-chip {
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 4px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-s);
+  background: var(--panel-solid);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+
+.wind-chip:hover {
+  border-color: var(--accent);
+}
+
+.wind-chip.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.wind-tip {
+  margin: var(--space-2) 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+.wind-compare,
+.wind-goals {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+
+.wind-cmp {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wind-cmp th,
+.wind-cmp td {
+  padding: 3px 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.wind-cmp thead th {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  text-align: right;
+}
+
+.wind-cmp tbody th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.wind-cmp td[data-tone='good'] {
+  color: var(--wind-good);
+  font-weight: 700;
+}
+
+.wind-cmp td[data-tone='bad'] {
+  color: var(--wind-bad);
+  font-weight: 700;
+}
+
+.wind-goal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wind-goal-list li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: var(--space-2);
+  font-size: 12.5px;
+}
+
+.wind-goal-mark {
+  grid-row: span 2;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--line-strong);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.wind-goal-list li.is-ok .wind-goal-mark {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: var(--panel-solid);
+}
+
+.wind-goal-t {
+  font-weight: 600;
+}
+
+.wind-goal-s {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.wind-goal-list li.wind-goal-done {
+  display: block;
+  padding: var(--space-2);
+  border-radius: var(--radius-s);
+  background: var(--ok-soft);
+  color: var(--ok);
+  font-weight: 700;
+}
+
+/* ───────── 버튼 ───────── */
+
+.wind-btn {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-m);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.wind-wrap .wind-btn {
+  color: var(--accent-text);
+}
+
+.wind-wrap .wind-btn-soft {
+  background: var(--panel-solid);
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+}
+
+.wind-btn-soft:hover {
+  border-color: var(--accent);
+}
+
+.wind-toggle {
+  min-height: 44px;
+  padding: 0 var(--space-3) 0 34px;
+  position: relative;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.wind-toggle::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  border: 2px solid var(--line-strong);
+  border-radius: 5px;
+  background: var(--panel-sunken);
+}
+
+.wind-toggle[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.wind-toggle[aria-pressed='true']::before {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--panel-solid);
+}
+
+/* ───────── 오른쪽: 결과 ───────── */
+
+.wind-right {
+  position: absolute;
+  top: 76px;
+  right: var(--space-4);
+  width: 330px;
+  bottom: calc(var(--space-4) + var(--wind-bar-h) + var(--space-3));
+  overflow-y: auto;
+  padding: var(--space-3) var(--space-4);
+  scrollbar-width: thin;
+}
+
+.wind-big-cap {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.wind-big-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wind-big-num {
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.wind-big-unit {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.wind-delta {
+  margin-left: auto;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  background: var(--panel-sunken);
+  color: var(--text-faint);
+}
+
+.wind-delta[data-tone='good'] {
+  background: var(--ok-soft);
+  color: var(--wind-good);
+}
+
+.wind-delta[data-tone='bad'] {
+  background: color-mix(in srgb, var(--wind-bad) 14%, transparent);
+  color: var(--wind-bad);
+}
+
+.wind-kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px var(--space-3);
+  margin: var(--space-2) 0;
+}
+
+.wind-row {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 10px;
+  border-radius: var(--radius-s);
+  background: var(--panel-sunken);
+}
+
+.wind-row-k {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+.wind-row-v {
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.wind-row.is-good .wind-row-v {
+  color: var(--wind-good);
+}
+
+.wind-row.is-bad .wind-row-v {
+  color: var(--wind-bad);
+}
+
+.wind-calc {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+  font-size: 12px;
+}
+
+.wind-calc-row {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: var(--space-2);
+}
+
+.wind-calc-k {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.wind-calc-v {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-num);
+}
+
+.wind-trade {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-m);
+  background: var(--warn-soft);
+  font-size: 12.5px;
+}
+
+.wind-chart-wrap {
+  margin-top: var(--space-2);
+}
+
+.wind-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wind-chart-grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.wind-chart-tick {
+  fill: var(--text-faint);
+  font-size: 10px;
+  font-family: var(--font-num);
+}
+
+.wind-chart-axis {
+  fill: var(--text-dim);
+  font-size: 10.5px;
+}
+
+.wind-chart-cur {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.wind-chart-a {
+  fill: none;
+  stroke: var(--text-faint);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.wind-chart-guide {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  opacity: 0.7;
+}
+
+.wind-chart-dot {
+  fill: var(--cat-joining);
+  stroke: var(--panel-solid);
+  stroke-width: 2;
+}
+
+.wind-chart-label {
+  fill: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  font-family: var(--font-num);
+}
+
+.wind-contrib {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.wind-bar-row {
+  display: grid;
+  grid-template-columns: 82px 1fr 54px;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 12px;
+}
+
+.wind-bar-name {
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wind-bar-track {
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--panel-sunken);
+  overflow: hidden;
+}
+
+.wind-bar-fill {
+  height: 100%;
+  min-width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transition: width 0.3s var(--ease);
+}
+
+.wind-bar-fill[data-tone='bad'] {
+  background: var(--cat-joining);
+}
+
+.wind-bar-fill[data-tone='good'] {
+  background: var(--ok);
+}
+
+.wind-bar-fill[data-tone='base'] {
+  background: var(--text-faint);
+}
+
+.wind-bar-fill[data-tone='mid'] {
+  background: var(--cat-joining);
+}
+
+.wind-bar-fill[data-tone='whistle'] {
+  background: var(--cat-control);
+}
+
+.wind-bar-fill[data-tone='hiss'] {
+  background: var(--warn);
+}
+
+.wind-bar-fill[data-tone='rumble'] {
+  background: var(--cat-shaft);
+}
+
+.wind-bar-val {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.wind-test {
+  margin-bottom: var(--space-3);
+}
+
+.wind-test .wind-sub-h {
+  margin-top: 0;
+}
+
+.wind-test-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 0 var(--space-2);
+  margin-bottom: 4px;
+  padding: 6px 10px;
+  border-radius: var(--radius-s);
+  border-left: 4px solid var(--ok);
+  background: var(--ok-soft);
+}
+
+.wind-test-row.is-fail {
+  border-left-color: var(--wind-bad);
+  background: color-mix(in srgb, var(--wind-bad) 12%, transparent);
+}
+
+.wind-test-name {
+  font-weight: 700;
+  font-size: 12.5px;
+}
+
+.wind-test-st {
+  font-weight: 800;
+  color: var(--wind-good);
+  text-align: right;
+}
+
+.wind-test-row.is-fail .wind-test-st {
+  color: var(--wind-bad);
+}
+
+.wind-test-sub {
+  grid-column: span 2;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.wind-test .wind-calc {
+  margin-top: var(--space-2);
+}
+
+.wind-spec-wrap {
+  margin-top: var(--space-2);
+}
+
+.wind-spec {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 600 / 220;
+  border-radius: var(--radius-s);
+  background: var(--panel-sunken);
+}
+
+.wind-list {
+  margin: var(--space-2) 0 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ───────── 아래: 풍속 + 조작 ───────── */
+
+.wind-bar {
+  position: absolute;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-4);
+  height: var(--wind-bar-h);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+}
+
+.wind-speed {
+  display: grid;
+  grid-template-columns: auto 1fr 96px;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.wind-speed-label {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.wind-speed-track {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.wind-speed-mm {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.wind-speed-val {
+  white-space: nowrap;
+  font-size: 20px;
+  font-weight: 800;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.wind-range {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  accent-color: var(--accent);
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+.wind-ctrls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.wind-seg {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+}
+
+.wind-seg-btn {
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.wind-seg-btn.is-active {
+  background: var(--panel-solid);
+  color: var(--accent);
+  box-shadow: var(--shadow-1);
+}
+
+.wind-sound[aria-pressed='true'] {
+  background: var(--warn);
+}
+
+.wind-vol {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.wind-vol-range {
+  width: 110px;
+  flex: none;
+}
+
+.wind-ab {
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--cat-control);
+}
+
+/* 알림 */
+
+.wind-alert {
+  position: absolute;
+  left: 50%;
+  top: 76px;
+  transform: translate(-50%, -6px);
+  z-index: 5;
+  max-width: min(520px, calc(100vw - 32px));
+  width: max-content;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  border: 1px solid color-mix(in srgb, var(--warn) 55%, transparent);
+  box-shadow: inset 4px 0 0 var(--warn), var(--shadow-2);
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.wind-alert[data-tone='ok'] {
+  border-color: color-mix(in srgb, var(--ok) 55%, transparent);
+  box-shadow: inset 4px 0 0 var(--ok), var(--shadow-2);
+}
+
+.wind-alert.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ───────── 중간 폭 ───────── */
+
+@media (max-width: 1180px) and (min-width: 820px) {
+  .wind-left {
+    width: 264px;
+  }
+  .wind-right {
+    width: 292px;
+  }
+  .wind-disclaimer {
+    max-width: calc(100vw - 32px - 2 * 290px);
+  }
+  .wind-tab {
+    padding: 0 var(--space-3);
+    font-size: 14px;
+  }
+  .wind-vol-range {
+    width: 80px;
+  }
+}
+
+/* ───────── 좁은 화면: 3D는 위, 조작은 하단 시트 ───────── */
+
+@media (max-width: 819px) {
+  .wind-sheet {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 56%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 var(--space-2) calc(var(--space-3) + env(safe-area-inset-bottom));
+    pointer-events: auto;
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+    box-shadow: var(--shadow-2);
+  }
+
+  .wind-sheet > .wind-panel {
+    position: static;
+    transform: none;
+    width: auto;
+    height: auto;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .wind-disclaimer {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    width: auto;
+    max-width: none;
+    margin: 0 calc(-1 * var(--space-2));
+    padding: 6px var(--space-3);
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+    border-width: 0 0 1px;
+    background: var(--panel-solid);
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .wind-tabs {
+    align-self: stretch;
+    flex: none;
+    border-color: transparent;
+    background: var(--panel-sunken);
+    border-radius: var(--radius-m);
+  }
+
+  .wind-tab {
+    flex: 1;
+    justify-content: center;
+    padding: 0 var(--space-2);
+    font-size: 14px;
+    border-radius: var(--radius-s);
+  }
+
+  .wind-tab-num {
+    display: none;
+  }
+
+  .wind-bar {
+    flex: none;
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    gap: var(--space-2);
+  }
+
+  .wind-speed {
+    grid-template-columns: auto 1fr 88px;
+    gap: var(--space-2);
+  }
+
+  .wind-speed-val {
+    font-size: 17px;
+  }
+
+  .wind-ctrls {
+    justify-content: flex-start;
+  }
+
+  .wind-toggle {
+    flex: 1 1 auto;
+    font-size: 12.5px;
+  }
+
+  .wind-seg {
+    flex: 1 1 100%;
+  }
+
+  .wind-seg-btn {
+    flex: 1;
+    padding: 0 var(--space-1);
+    font-size: 12.5px;
+  }
+
+  .wind-vol-range {
+    width: 90px;
+  }
+
+  .wind-left,
+  .wind-right {
+    flex: none;
+    padding: var(--space-3);
+    border: 1px solid var(--line);
+    overflow: visible;
+  }
+
+  .wind-left-body {
+    overflow: visible;
+  }
+
+  .wind-big-num {
+    font-size: 32px;
+  }
+
+  .wind-alert {
+    position: fixed;
+    left: var(--space-3);
+    right: var(--space-3);
+    top: 72px;
+    width: auto;
+    max-width: none;
+    transform: translateY(-6px);
+  }
+
+  .wind-alert.is-on {
+    transform: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .wind-tab {
+    font-size: 13px;
+  }
+  .wind-bar-row {
+    grid-template-columns: 74px 1fr 50px;
+  }
+  .wind-calc-row {
+    grid-template-columns: 50px 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wind-alert,
+  .wind-bar-fill,
+  .wind-chip,
+  .wind-tab {
+    transition: none;
+  }
+}

@@ -24,7 +24,7 @@ async function scene(name, actions) {
       if (m.type() === 'error' && !m.text().includes('Failed to load')) errors.push(`${name}: ${m.text()}`);
     });
     try {
-      await page.goto(`http://localhost:5173/preview.html?mode=power&theme=${theme}`, { waitUntil: 'load', timeout: 60000 });
+      await page.goto(`http://localhost:5273/preview.html?mode=power&theme=${theme}`, { waitUntil: 'load', timeout: 60000 });
       await page.waitForSelector('.pf-step', { timeout: 30000 });
       page.on('framenavigated', (f) => {
         if (f === page.mainFrame()) reloaded = true;

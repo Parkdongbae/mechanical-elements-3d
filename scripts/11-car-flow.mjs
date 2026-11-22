@@ -20,7 +20,7 @@ async function open() {
   page.on('console', (m) => {
     if (m.type() === 'error' && !m.text().includes('Failed to load')) errors.push(m.text());
   });
-  await page.goto(`http://localhost:5173/preview.html?mode=car&theme=${theme}`, { waitUntil: 'load' });
+  await page.goto(`http://localhost:5273/preview.html?mode=car&theme=${theme}`, { waitUntil: 'load' });
   await page.waitForSelector('.car-cockpit', { timeout: 15000 });
   await page.waitForTimeout(2500);
   await page.evaluate(() => { window.__flow = 1; });

@@ -12,7 +12,7 @@ async function open(progress, hash, wait = 2500) {
   page.on('console', (m) => { if (m.type() === 'error' && !m.text().includes('Failed to load resource')) errors.push(`${hash}: ${m.text()}`); });
   page.on('response', (r) => { if (r.status() >= 400) errors.push(`${hash}: ${r.status()} ${r.url()}`); });
   await page.addInitScript((p) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.clear(); if (p) localStorage.setItem('mech3d-progress-v2', p); } }, progress);
-  await page.goto('http://localhost:5173/' + hash);
+  await page.goto('http://localhost:5273/' + hash);
   await page.waitForTimeout(wait);
   return page;
 }
