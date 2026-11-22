@@ -353,6 +353,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'dynamo',
+    view: { pos: [2, 2.5, 2.9], target: [0.03, 1.8, 0] },
     group: 'life',
     summary: '바퀴에 닿은 작은 바퀴가 발전기를 돌려요',
     name: '자전거 전조등',
@@ -368,6 +369,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'cart',
+    view: { pos: [3, 2.6, 4.2], target: [-0.1, 0.5, 0.5] },
     group: 'life',
     summary: '바퀴를 받치는 축과 빠짐을 막는 핀',
     name: '손수레',
@@ -383,6 +385,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'engine',
+    view: { pos: [3.4, 2.8, 3.8], target: [0, 1.4, 0] },
     group: 'car',
     summary: '피스톤의 왕복이 회전으로, 캠이 밸브를 열어요',
     name: '자동차 엔진',
@@ -398,6 +401,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'gearbox',
+    view: { pos: [2.6, 2.8, 4], target: [-0.2, 1.2, 0] },
     group: 'car',
     summary: '기어를 바꿔 물려 속도와 힘을 조절',
     name: '변속기',
@@ -413,6 +417,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'lathe',
+    view: { pos: [-2.4, 2.5, 3.8], target: [-0.3, 1.2, 0] },
     group: 'build',
     summary: '공작물을 돌려 깎는 공작 기계',
     name: '선반',
@@ -428,6 +433,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'winch',
+    view: { pos: [-1.6, 2.2, 4.4], target: [0.15, 1.25, 0] },
     group: 'build',
     summary: '작은 힘으로 무거운 짐을 천천히 들어 올려요',
     name: '윈치 크레인',
@@ -443,6 +449,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'conveyor',
+    view: { pos: [3.2, 2.6, 4], target: [0.4, 0.8, 0] },
     group: 'build',
     summary: '체인이 상자를 일정한 속도로 날라요',
     name: '컨베이어',
