@@ -7,7 +7,7 @@ import { ICON } from './icons';
 
 export interface HomeCallbacks {
   onOpenMission: (id: string) => void;
-  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power') => void;
+  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind') => void;
   onOpenSettings: () => void;
   onToggleTheme: () => void;
 }
@@ -160,6 +160,10 @@ export class HomeScreen {
             <button type="button" class="mode-card lab-card" data-mode="lab/power">
               <span class="mode-icon mode-lab-power">${ICON.flow}</span>
               <span class="mode-text"><strong>자동차의 동력 전달</strong><small>엔진에서 바퀴까지, 후륜구동(FR)으로 전체 과정 따라가기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/wind">
+              <span class="mode-icon mode-lab-wind">${ICON.wind}</span>
+              <span class="mode-text"><strong>풍동 실험</strong><small>손잡이·미러·하부를 바꿔 공기저항·다운포스·풍절음 비교하기</small></span>
             </button>
           </div>
         </section>

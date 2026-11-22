@@ -7,6 +7,7 @@ import './styles/modes.css';
 import './styles/lab-bike.css';
 import './styles/lab-car.css';
 import './styles/lab-power.css';
+import './styles/lab-wind.css';
 import { SceneManager, DEFAULT_VIEW } from './scene/SceneSetup';
 import { buildPart, normalizePart, disposeObject } from './models/factory';
 import { ThumbnailFactory } from './models/thumbnails';
@@ -23,6 +24,7 @@ import { Quiz, getQuizBest } from './modes/Quiz';
 import { BikeGears } from './labs/BikeGears';
 import { CarShift } from './labs/CarShift';
 import { PowerFlow } from './labs/PowerFlow';
+import { WindTunnel } from './labs/WindTunnel';
 import { loadProgress, saveProgress, clearMachineProgress, clearAllProgress, allMachinesCompleted, type ProgressData } from './state/progress';
 import { guessQuality, loadSettings, saveSettings, type AppSettings } from './state/settings';
 import { playCorrectSound, playWrongSound } from './ui/sound';
@@ -577,7 +579,7 @@ function tick(): void {
 
 // ── 화면 전환 (해시 라우팅: #/ 홈, #/m/<id> 미션, #/enc 도감, #/quiz 퀴즈) ──
 
-type ModeId = 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power';
+type ModeId = 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind';
 type Screen = 'home' | 'mission' | ModeId;
 let screen: Screen = 'home';
 let activeMode: AppMode | null = null;
@@ -586,7 +588,8 @@ const modes: Record<ModeId, { name: string; mode: AppMode }> = {
   quiz: { name: '단원 퀴즈', mode: new Quiz() },
   'lab/bike': { name: '자전거 기어 변속', mode: new BikeGears() },
   'lab/car': { name: '자동차 기어 변속', mode: new CarShift() },
-  'lab/power': { name: '자동차의 동력 전달', mode: new PowerFlow() }
+  'lab/power': { name: '자동차의 동력 전달', mode: new PowerFlow() },
+  'lab/wind': { name: '풍동 실험', mode: new WindTunnel() }
 };
 
 const home = new HomeScreen({

@@ -22,6 +22,8 @@ import { PowerFlow } from '../labs/PowerFlow';
 import '../styles/lab-bike.css';
 import '../styles/lab-car.css';
 import '../styles/lab-power.css';
+import '../styles/lab-wind.css';
+import { WindTunnel } from '../labs/WindTunnel';
 import { ThumbnailFactory } from '../models/thumbnails';
 import { loadSettings } from '../state/settings';
 import '../styles/tokens.css';
@@ -63,7 +65,8 @@ const MODE_CTORS: Record<string, () => AppMode> = {
   quiz: () => new Quiz(),
   bike: () => new BikeGears(),
   car: () => new CarShift(),
-  power: () => new PowerFlow()
+  power: () => new PowerFlow(),
+  wind: () => new WindTunnel()
 };
 if (modeArg && MODE_CTORS[modeArg]) {
   const root = document.createElement('div');

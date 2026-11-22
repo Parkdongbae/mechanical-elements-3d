@@ -413,7 +413,7 @@ input:focus-visible {
 
 .home-labs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 14px;
 }
 
@@ -425,6 +425,11 @@ input:focus-visible {
 .mode-lab-car {
   background: color-mix(in srgb, var(--cat-joining) 16%, transparent);
   color: var(--cat-joining);
+}
+
+.mode-lab-wind {
+  background: color-mix(in srgb, var(--cat-shaft) 16%, transparent);
+  color: var(--cat-shaft);
 }
 
 .mode-lab-power {
