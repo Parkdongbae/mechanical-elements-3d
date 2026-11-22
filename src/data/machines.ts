@@ -26,6 +26,8 @@ import { Gearbox } from '../machines/Gearbox';
 import { Lathe } from '../machines/Lathe';
 import { Winch } from '../machines/Winch';
 import { Conveyor } from '../machines/Conveyor';
+import { Microwave } from '../machines/Microwave';
+import { DrumWasher } from '../machines/DrumWasher';
 import type { CameraView } from '../scene/SceneSetup';
 
 export interface StepDef {
@@ -453,6 +455,36 @@ export const MACHINES: MachineDef[] = [
       { partId: 'chain', label: '체인' }
     ],
     create: () => new Conveyor()
+  },
+  {
+    id: 'microwave',
+    group: 'life',
+    summary: '작은 모터가 회전판을 천천히 돌려요',
+    name: '전자레인지',
+    icon: '🍲',
+    missionText: '음식이 골고루 데워지지 않는 전자레인지! 모터의 빠른 회전을 느리게 줄여 주는 기어와, 회전판을 받치는 롤러가 돌 수 있게 해 주는 축을 찾아 조립하세요!',
+    hint: '가깝고 평행한 두 축 사이에 정확하게 동력을 전달하는 전동용 기어를 먼저 끼우고, 몸체에 고정되어 롤러만 회전하게 하는 축(축용)을 끼워 주세요!',
+    completeText: '기어가 속도를 줄여 회전판이 천천히 돌고, 음식이 골고루 데워져요 🍲',
+    steps: [
+      { partId: 'spurGear', label: '평 기어' },
+      { partId: 'axle', label: '차축' }
+    ],
+    create: () => new Microwave()
+  },
+  {
+    id: 'washer',
+    group: 'life',
+    summary: '모터와 벨트가 빨래통을 돌려요',
+    name: '드럼 세탁기',
+    icon: '🧺',
+    missionText: '빨래통이 돌지 않는 드럼 세탁기! 모터의 힘을 멀리 떨어진 빨래통 축으로 조용히 전달하는 기계요소와, 탈수할 때 생기는 큰 진동을 줄여 주는 기계요소를 찾아 조립하세요!',
+    hint: '두 축의 거리가 멀 때 마찰력으로 조용히 동력을 전달하는 전동용 기계요소를 먼저 걸고, 충격을 완화하는 제어용 기계요소로 빨래통을 매달아 주세요!',
+    completeText: '벨트가 빨래통을 돌리고 스프링이 진동을 줄여 줘요 🧺',
+    steps: [
+      { partId: 'beltPulley', label: '벨트와 풀리' },
+      { partId: 'spring', label: '스프링' }
+    ],
+    create: () => new DrumWasher()
   }
 ];
 
