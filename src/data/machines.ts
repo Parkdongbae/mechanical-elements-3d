@@ -308,6 +308,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'handdrill',
+    view: { pos: [1.7, 2.5, 4.6], target: [-0.1, 1.72, 0] },
     group: 'life',
     summary: '손잡이의 회전이 직각으로 꺾여 드릴 날로',
     name: '핸드 드릴',
@@ -323,6 +324,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'sewing',
+    view: { pos: [2.6, 2.3, 3.4], target: [-0.1, 0.95, 0] },
     group: 'life',
     summary: '모터의 회전이 바늘의 위아래 운동으로',
     name: '재봉틀',
@@ -338,6 +340,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'bikebrake',
+    view: { pos: [1.6, 2.4, 3.3], target: [0.05, 1.68, 0] },
     group: 'life',
     summary: '레버를 쥐면 블록이 바퀴 테를 눌러요',
     name: '자전거 브레이크',
