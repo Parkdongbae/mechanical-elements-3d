@@ -1,40 +1,80 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>기계요소 3D 조립 실험실</title>
+  <meta name="description" content="중학교 기술·가정 '기계의 구성과 동력 전달' — 기계요소를 3D로 조립하며 배우는 실험실" />
+  <meta name="theme-color" content="#e6ecf2" />
+  <meta property="og:title" content="기계요소 3D 실험실" />
+  <meta property="og:description" content="자전거·시계·자동차 속 기계요소를 직접 조립하며 동력 전달을 배워요." />
+  <meta property="og:image" content="/og.jpg" />
+  <title>기계요소 3D 실험실</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <script>
+    // 첫 페인트 전에 저장된 테마 적용(깜빡임 방지)
+    try {
+      var s = JSON.parse(localStorage.getItem('mech3d-settings-v1') || '{}');
+      if (s.theme === 'dark') document.documentElement.dataset.theme = 'dark';
+    } catch (e) {}
+  </script>
 </head>
 <body>
   <div id="app">
     <canvas id="scene"></canvas>
-    <div id="hud">
-      <nav id="machine-bar" aria-label="기계 선택"></nav>
+
+    <!-- 미션 화면 HUD -->
+    <div id="hud" class="hidden">
       <header id="topbar">
-        <h1 id="title">🔧 기계요소 3D 조립 실험실</h1>
-        <div id="mission">
-          <span id="mission-text">크랭크축 → 스프로킷 → 체인 → 평행 핀 순서로 자전거를 조립하세요!</span>
-          <span id="mission-chips"></span>
+        <div id="nav-pill">
+          <button id="home-btn" type="button" class="icon-btn" aria-label="홈으로"></button>
+          <div id="nav-title">
+            <small id="nav-group"></small>
+            <strong id="nav-name"></strong>
+          </div>
         </div>
+        <section id="mission" aria-live="polite">
+          <p id="mission-text"></p>
+          <ol id="mission-chips"></ol>
+          <div id="mission-done" class="hidden"></div>
+        </section>
         <div id="topbar-actions">
-          <button id="hint-btn" type="button">💡 힌트</button>
-          <button id="reset-btn" type="button">↺ 다시하기</button>
+          <button id="hint-btn" type="button" class="tool-btn"></button>
+          <button id="reset-btn" type="button" class="tool-btn"></button>
+          <button id="labels-btn" type="button" class="tool-btn" aria-pressed="true"></button>
+          <button id="settings-btn" type="button" class="tool-btn" aria-label="설정"></button>
         </div>
       </header>
-      <div id="category-bar" aria-label="기계요소 대분류"></div>
-      <div id="part-panel" class="hidden" aria-label="기계요소 소분류"></div>
-      <div id="rpm-display" class="hidden" aria-label="회전수 표시"></div>
-      <div id="speed-control" class="hidden" aria-label="회전 속도 조절"></div>
-      <button id="labels-btn" type="button" aria-label="부품 이름 표시">🏷️ 부품 이름 켜짐</button>
-      <button id="settings-btn" type="button" aria-label="설정">⚙️ 설정</button>
-      <div id="settings-panel" class="hidden" aria-label="설정"></div>
-      <div id="info-card" class="hidden" role="dialog"></div>
-      <div id="toast" class="hidden"></div>
-      <button id="gear-name-btn" class="hidden" type="button">🏷️<span>기어<br />이름 보기</span></button>
-      <div id="control-hint">
-        🖱️ 좌클릭 드래그: 회전 &nbsp;·&nbsp; 휠: 확대/축소 &nbsp;·&nbsp; 우클릭 드래그: 이동 &nbsp;·&nbsp; 📱 한 손가락: 회전, 두 손가락: 확대/이동
+
+      <aside id="side-panel">
+        <div id="rpm-display" class="hidden" aria-label="동력 전달 수치"></div>
+        <div id="speed-control" class="hidden" aria-label="회전 속도 조절"></div>
+        <button id="gear-name-btn" class="hidden" type="button"></button>
+      </aside>
+
+      <div id="dock">
+        <div id="part-panel" class="hidden" aria-label="기계요소 소분류"></div>
+        <div id="category-bar" role="toolbar" aria-label="기계요소 대분류"></div>
       </div>
+      <div id="control-hint"></div>
+      <div id="info-card" class="hidden" role="dialog"></div>
     </div>
+
+    <!-- 도감·퀴즈 화면 -->
+    <div id="mode-screen" class="hidden">
+      <div id="mode-nav">
+        <button id="mode-home-btn" type="button" class="icon-btn" aria-label="홈으로"></button>
+        <strong id="mode-name"></strong>
+      </div>
+      <div id="mode-root"></div>
+    </div>
+
+    <!-- 홈 -->
+    <main id="home"></main>
+
+    <div id="settings-panel" class="hidden" role="dialog" aria-label="설정"></div>
+    <div id="toast" class="hidden" role="status"></div>
   </div>
   <script type="module" src="/src/main.ts"></script>
 </body>

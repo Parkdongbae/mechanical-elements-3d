@@ -109,6 +109,8 @@ if (cam) {
 }
 if (view) sceneMgr.flyTo(view, true);
 
+if (q.get('ui') === '0' && info) info.style.display = 'none';
+
 const stopAt = q.get('t') ? Number(q.get('t')) : Infinity;
 const clock = new THREE.Clock();
 let simTime = 0;

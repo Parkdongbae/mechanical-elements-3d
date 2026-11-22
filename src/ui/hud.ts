@@ -1,74 +1,30 @@
-// HUD: 머신 선택 바, 대분류/소분류 UI, 미션 칩, 학습 카드, 토스트, 정보 표시
+// 미션 화면 HUD: 상단 내비·미션 단계, 도구 버튼, 대분류 독/소분류 트레이, 수치 패널, 학습 카드, 토스트, 설정
 
 import { CATEGORIES, PARTS, getCategory, type PartDef } from '../data/elements';
-import { MACHINES } from '../data/machines';
 import type { MachineDisplayItem } from '../machines/types';
 import { ThumbnailFactory } from '../models/thumbnails';
 import { saveSettings, type AppSettings, type Difficulty } from '../state/settings';
-
-/** 출발 깃발과 자동차 — "새롭게 시작" 모달용 인라인 SVG */
-const RESTART_SVG = `
-<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="출발선 앞 자동차">
-  <circle cx="120" cy="75" r="70" fill="#e8f4fd"/>
-  <circle cx="45" cy="32" r="14" fill="#ffd66b"/>
-  <circle cx="45" cy="32" r="8" fill="#ffe9ad"/>
-  <ellipse cx="185" cy="30" rx="22" ry="9" fill="#ffffff"/>
-  <ellipse cx="160" cy="38" rx="16" ry="7" fill="#f2f9ff"/>
-  <rect x="28" y="104" width="184" height="28" rx="12" fill="#8d9aa8"/>
-  <line x1="46" y1="118" x2="66" y2="118" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-  <line x1="86" y1="118" x2="106" y2="118" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-  <line x1="126" y1="118" x2="146" y2="118" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-  <line x1="166" y1="118" x2="186" y2="118" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-  <rect x="58" y="46" width="5" height="60" rx="2" fill="#7a6248"/>
-  <g>
-    <rect x="63" y="48" width="34" height="9" fill="#ffffff" stroke="#4a5568" stroke-width="1.5"/>
-    <rect x="63" y="57" width="34" height="9" fill="#4a5568"/>
-    <rect x="63" y="48" width="17" height="9" fill="#4a5568"/>
-    <rect x="80" y="57" width="17" height="9" fill="#ffffff" stroke="#4a5568" stroke-width="1.5"/>
-  </g>
-  <g>
-    <path d="M104 92 q6 -20 26 -20 h18 q16 0 22 20 z" fill="#e74c3c"/>
-    <rect x="96" y="90" width="84" height="20" rx="9" fill="#e74c3c"/>
-    <rect x="126" y="78" width="20" height="10" rx="3" fill="#bce0f7"/>
-    <rect x="92" y="93" width="7" height="9" rx="2" fill="#ffd66b"/>
-    <circle cx="112" cy="111" r="10" fill="#2d3436"/>
-    <circle cx="164" cy="111" r="10" fill="#2d3436"/>
-    <circle cx="112" cy="111" r="4.5" fill="#dfe6e9"/>
-    <circle cx="164" cy="111" r="4.5" fill="#dfe6e9"/>
-  </g>
-</svg>`;
-
-/** 트로피와 별 — "모두 클리어 축하" 모달용 인라인 SVG */
-const CONGRATS_SVG = `
-<svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="트로피와 별">
-  <circle cx="120" cy="75" r="70" fill="#fff7e0"/>
-  <polygon points="40,32 44,42 55,43 47,50 49,61 40,55 31,61 33,50 25,43 36,42" fill="#ffd66b"/>
-  <polygon points="200,30 204,40 215,41 207,48 209,59 200,53 191,59 193,48 185,41 196,40" fill="#ffd66b"/>
-  <polygon points="120,10 123,17 131,18 125,23 127,31 120,27 113,31 115,23 109,18 117,17" fill="#ff8fab"/>
-  <g>
-    <path d="M92 38 h56 v20 q0 28 -28 34 q-28 -6 -28 -34 z" fill="#f6c344"/>
-    <path d="M92 44 h-14 q-2 20 16 26" fill="none" stroke="#f6c344" stroke-width="7"/>
-    <path d="M148 44 h14 q2 20 -16 26" fill="none" stroke="#f6c344" stroke-width="7"/>
-    <rect x="96" y="42" width="48" height="6" fill="#e0a72e"/>
-    <rect x="116" y="92" width="8" height="16" fill="#e0a72e"/>
-    <rect x="104" y="106" width="32" height="9" rx="3" fill="#f6c344"/>
-    <rect x="98" y="115" width="44" height="8" rx="4" fill="#e0a72e"/>
-    <path d="M112 50 l6 12 13 2 -9 9 2 13 -12 -6 -12 6 2 -13 -9 -9 13 -2 z" fill="#ffffff" opacity="0.85"/>
-  </g>
-</svg>`;
+import { ICON } from './icons';
+import { CONGRATS_SVG, RESTART_SVG } from './modalArt';
 
 export interface HudCallbacks {
   onSelectPart: (id: string) => void;
   onHint: () => void;
   onReset: () => void;
-  onSwitchMachine: (id: string) => void;
+  onHome: () => void;
+  onNextMission: () => void;
   onSettingsChange: (s: AppSettings) => void;
   onResetAll: () => void;
   onToggleLabels: (visible: boolean) => void;
 }
 
+export interface StepLabel {
+  text: string;
+  tip: string;
+}
+
 export class HUD {
-  private machineBar: HTMLElement;
+  private root: HTMLElement;
   private categoryBar: HTMLElement;
   private partPanel: HTMLElement;
   private displayBox: HTMLElement;
@@ -76,17 +32,20 @@ export class HUD {
   private toastEl: HTMLElement;
   private missionChips: HTMLElement;
   private missionText: HTMLElement;
+  private missionDone: HTMLElement;
+  private settingsPanel: HTMLElement;
   private toastTimer: number | null = null;
-  private hoverCloseTimer: number | null = null;
   private speedChange: ((v: number) => void) | null = null;
   private partNameOverrides: Record<string, string> = {};
+  private openCat: string | null = null;
+  private nextName: string | null = null;
 
   constructor(
     private callbacks: HudCallbacks,
     private thumbs: ThumbnailFactory,
     private settings: AppSettings
   ) {
-    this.machineBar = this.require('#machine-bar');
+    this.root = this.require('#hud');
     this.categoryBar = this.require('#category-bar');
     this.partPanel = this.require('#part-panel');
     this.displayBox = this.require('#rpm-display');
@@ -94,25 +53,35 @@ export class HUD {
     this.toastEl = this.require('#toast');
     this.missionChips = this.require('#mission-chips');
     this.missionText = this.require('#mission-text');
+    this.missionDone = this.require('#mission-done');
+    this.settingsPanel = this.require('#settings-panel');
 
-    this.buildMachineBar();
     this.buildCategoryBar();
-    this.buildSettingsPanel();
+    this.renderSettings();
 
-    // 호버 하위 메뉴: 카테고리 바 ↔ 소분류 패널 영역을 벗어나면 자동으로 닫힘
-    this.categoryBar.addEventListener('mouseenter', () => this.cancelHoverClose());
-    this.categoryBar.addEventListener('mouseleave', () => this.scheduleHoverClose());
-    this.partPanel.addEventListener('mouseenter', () => this.cancelHoverClose());
-    this.partPanel.addEventListener('mouseleave', () => this.scheduleHoverClose());
+    const homeBtn = this.require('#home-btn');
+    homeBtn.innerHTML = ICON.home;
+    homeBtn.addEventListener('click', () => this.callbacks.onHome());
 
-    this.require('#hint-btn').addEventListener('click', () => this.callbacks.onHint());
-    this.require('#reset-btn').addEventListener('click', () => this.callbacks.onReset());
-    this.require('#gear-name-btn').addEventListener('click', () => {
+    const hintBtn = this.require('#hint-btn');
+    hintBtn.innerHTML = `${ICON.hint}<span>힌트</span>`;
+    hintBtn.addEventListener('click', () => this.callbacks.onHint());
+
+    const resetBtn = this.require('#reset-btn');
+    resetBtn.innerHTML = `${ICON.reset}<span>다시하기</span>`;
+    resetBtn.addEventListener('click', () => this.callbacks.onReset());
+
+    const settingsBtn = this.require('#settings-btn');
+    settingsBtn.innerHTML = ICON.gear;
+    settingsBtn.addEventListener('click', () => this.toggleSettings());
+
+    const gearBtn = this.require('#gear-name-btn');
+    gearBtn.innerHTML = `${ICON.tag}<span>기어 이름 보기</span>`;
+    gearBtn.addEventListener('click', () => {
       this.openCategory('power');
-      this.toast('씬에 조립된 기어들과 이름을 비교해 보세요! 🔍', 'info');
+      this.toast('씬에 조립된 기어들과 이름을 비교해 보세요!', 'info');
     });
 
-    // 부품 이름 표시 토글(설정 버튼 위) — 3D 씬의 라벨 레이어를 켜고 끈다
     const labelsBtn = this.require('#labels-btn');
     labelsBtn.addEventListener('click', () => {
       this.settings.showLabels = !this.settings.showLabels;
@@ -121,17 +90,24 @@ export class HUD {
       this.callbacks.onToggleLabels(this.settings.showLabels);
     });
     this.updateLabelsButton();
-  }
 
-  private updateLabelsButton(): void {
-    const btn = this.require('#labels-btn');
-    btn.textContent = this.settings.showLabels ? '🏷️ 부품 이름 켜짐' : '🏷️ 부품 이름 꺼짐';
-    btn.classList.toggle('labels-off', !this.settings.showLabels);
-  }
+    this.require('#control-hint').innerHTML =
+      `${ICON.mouse}<span class="hint-desktop">드래그 회전 · 휠 확대 · 우클릭 드래그 이동</span><span class="hint-touch">한 손가락 회전 · 두 손가락 확대/이동</span>`;
 
-  setLabelsVisible(visible: boolean): void {
-    this.settings.showLabels = visible;
-    this.updateLabelsButton();
+    // 패널 바깥을 누르면 소분류 트레이·설정을 닫는다
+    document.addEventListener('pointerdown', (e) => {
+      const t = e.target as Node;
+      if (this.openCat && !this.partPanel.contains(t) && !this.categoryBar.contains(t)) this.closePanel();
+      if (!this.settingsPanel.classList.contains('hidden') && !this.settingsPanel.contains(t) && !(t as HTMLElement).closest?.('#settings-btn, [data-act="settings"]')) {
+        this.settingsPanel.classList.add('hidden');
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      this.closePanel();
+      this.settingsPanel.classList.add('hidden');
+      this.infoCard.classList.add('hidden');
+    });
   }
 
   private require(selector: string): HTMLElement {
@@ -140,162 +116,87 @@ export class HUD {
     return el;
   }
 
-  private buildSettingsPanel(): void {
-    const btn = this.require('#settings-btn');
-    const panel = this.require('#settings-panel');
-    btn.addEventListener('click', () => panel.classList.toggle('hidden'));
-
-    const difficultyOptions: { id: Difficulty; label: string; desc: string }[] = [
-      { id: 'low', label: '하', desc: '기계요소 이름 표시' },
-      { id: 'medium', label: '중', desc: '이름 대신 설명 표시' },
-      { id: 'high', label: '상', desc: '이름·설명 모두 숨김' }
-    ];
-
-    const render = (): void => {
-      panel.innerHTML = '';
-      const title = document.createElement('h3');
-      title.textContent = '⚙️ 설정';
-      panel.appendChild(title);
-
-      const diffRow = document.createElement('div');
-      diffRow.className = 'settings-row';
-      const diffLabel = document.createElement('small');
-      diffLabel.textContent = '난이도';
-      diffRow.appendChild(diffLabel);
-      for (const opt of difficultyOptions) {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'settings-opt';
-        b.textContent = opt.label;
-        b.title = opt.desc;
-        b.classList.toggle('active', this.settings.difficulty === opt.id);
-        b.addEventListener('click', () => {
-          this.settings.difficulty = opt.id;
-          saveSettings(this.settings);
-          render();
-          this.callbacks.onSettingsChange(this.settings);
-        });
-        diffRow.appendChild(b);
-      }
-      panel.appendChild(diffRow);
-
-      const soundRow = document.createElement('div');
-      soundRow.className = 'settings-row';
-      const soundLabel = document.createElement('small');
-      soundLabel.textContent = '효과음';
-      soundRow.appendChild(soundLabel);
-      const soundBtn = document.createElement('button');
-      soundBtn.type = 'button';
-      soundBtn.className = 'settings-opt';
-      soundBtn.textContent = this.settings.sound ? '🔊 켜기' : '🔇 끄기';
-      soundBtn.title = '정답 효과음';
-      soundBtn.classList.toggle('active', this.settings.sound);
-      soundBtn.addEventListener('click', () => {
-        this.settings.sound = !this.settings.sound;
-        saveSettings(this.settings);
-        render();
-        this.callbacks.onSettingsChange(this.settings);
-      });
-      soundRow.appendChild(soundBtn);
-      panel.appendChild(soundRow);
-
-      const resetAllRow = document.createElement('div');
-      resetAllRow.className = 'settings-row';
-      const resetAllBtn = document.createElement('button');
-      resetAllBtn.type = 'button';
-      resetAllBtn.className = 'settings-opt settings-reset-all';
-      resetAllBtn.textContent = '🧹 모두 초기화';
-      resetAllBtn.title = '모든 기계의 진행도를 지웁니다';
-      resetAllBtn.addEventListener('click', () => {
-        this.callbacks.onResetAll();
-        panel.classList.add('hidden');
-      });
-      resetAllRow.appendChild(resetAllBtn);
-      panel.appendChild(resetAllRow);
-    };
-    render();
-  }
-
-  private buildMachineBar(): void {
-    for (const def of MACHINES) {
-      // 구동방식(FF·FR·AWD·EV)은 '자동차 구동방식' 중첩 메뉴로만 노출 — 최상단 버튼 중복 방지
-      if (def.id === 'drivetrain-ff') {
-        this.buildDrivetrainGroup();
-        continue;
-      }
-      if (def.id === 'drivetrain-fr' || def.id === 'drivetrain-awd' || def.id === 'ev-single' || def.id === 'ev-dual') continue;
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'machine-btn';
-      btn.dataset.machine = def.id;
-      btn.innerHTML = `<span class="machine-icon">${def.icon}</span><span>${def.name}</span>`;
-      btn.addEventListener('click', () => this.callbacks.onSwitchMachine(def.id));
-      this.machineBar.appendChild(btn);
+  setVisible(visible: boolean): void {
+    this.root.classList.toggle('hidden', !visible);
+    if (!visible) {
+      this.closePanel();
+      this.infoCard.classList.add('hidden');
     }
   }
 
-  /** '자동차 구동방식' 중첩 호버 메뉴: 1단 내연기관/전기, 2단 각 구동방식. FF·FR 구현됨. */
-  private buildDrivetrainGroup(): void {
-    const group = document.createElement('div');
-    group.className = 'machine-group';
-    group.dataset.machine = 'drivetrain';
+  // ── 상단 내비 ──
 
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'machine-btn';
-    btn.innerHTML = `<span class="machine-icon">🚗</span><span>자동차 구동방식</span><span class="menu-arrow">▸</span>`;
-    group.appendChild(btn);
+  setMachineTitle(group: string, name: string, nextName: string | null): void {
+    this.require('#nav-group').textContent = group;
+    this.require('#nav-name').textContent = name;
+    this.nextName = nextName;
+  }
 
-    const submenu = document.createElement('div');
-    submenu.className = 'machine-submenu';
+  private updateLabelsButton(): void {
+    const btn = this.require('#labels-btn');
+    btn.innerHTML = `${ICON.tag}<span>이름표</span>`;
+    btn.setAttribute('aria-pressed', String(this.settings.showLabels));
+    btn.title = this.settings.showLabels ? '3D 부품 이름표 숨기기' : '3D 부품 이름표 보이기';
+  }
 
-    const branch = (label: string, icon: string, items: { label: string; id: string | null }[]): void => {
-      const item = document.createElement('div');
-      item.className = 'machine-subitem has-children';
-      item.innerHTML = `<span class="machine-icon">${icon}</span><span>${label}</span><span class="menu-arrow">▸</span>`;
-      const sub = document.createElement('div');
-      sub.className = 'machine-submenu machine-submenu2';
-      for (const it of items) {
-        const leaf = document.createElement('button');
-        leaf.type = 'button';
-        leaf.className = 'machine-subitem machine-leaf';
-        leaf.innerHTML = `<span>${it.label}</span>`;
-        leaf.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (it.id) {
-            this.callbacks.onSwitchMachine(it.id);
-          } else {
-            this.toast(`${it.label} 미션은 준비 중이에요! 🔧`, 'info');
-          }
-        });
-        sub.appendChild(leaf);
-      }
-      item.appendChild(sub);
-      submenu.appendChild(item);
+  // ── 설정 ──
+
+  toggleSettings(): void {
+    this.renderSettings();
+    this.settingsPanel.classList.toggle('hidden');
+  }
+
+  /** 외부(자동 품질 하향 등)에서 설정이 바뀌었을 때 패널을 다시 그린다 */
+  refreshSettings(): void {
+    this.renderSettings();
+  }
+
+  private renderSettings(): void {
+    const panel = this.settingsPanel;
+    const s = this.settings;
+    const seg = <T extends string>(label: string, desc: string, options: { id: T; label: string }[], value: T, key: string): string => `
+      <div class="set-row">
+        <div class="set-label"><strong>${label}</strong><small>${desc}</small></div>
+        <div class="seg" role="radiogroup" aria-label="${label}">
+          ${options.map((o) => `<button type="button" role="radio" aria-checked="${o.id === value}" data-key="${key}" data-val="${o.id}">${o.label}</button>`).join('')}
+        </div>
+      </div>`;
+
+    const diffDesc: Record<Difficulty, string> = {
+      low: '단계에 기계요소 이름 표시',
+      medium: '이름 대신 설명 표시',
+      high: '이름·설명 모두 숨김'
     };
 
-    branch('내연기관 자동차', '⛽', [
-      { label: 'FF 전륜구동', id: 'drivetrain-ff' },
-      { label: 'FR 후륜구동', id: 'drivetrain-fr' },
-      { label: 'AWD 사륜구동', id: 'drivetrain-awd' }
-    ]);
-    branch('전기 자동차', '🔌', [
-      { label: '싱글 모터(2WD)', id: 'ev-single' },
-      { label: '듀얼 모터(AWD)', id: 'ev-dual' }
-    ]);
+    panel.innerHTML = `
+      <header class="set-head"><h3>설정</h3><button type="button" class="icon-btn set-close" aria-label="닫기">${ICON.close}</button></header>
+      ${seg('난이도', diffDesc[s.difficulty], [{ id: 'low', label: '쉬움' }, { id: 'medium', label: '보통' }, { id: 'high', label: '어려움' }], s.difficulty, 'difficulty')}
+      ${seg('화면 테마', '교실 밝기에 맞춰 선택', [{ id: 'light', label: '밝게' }, { id: 'dark', label: '어둡게' }], s.theme, 'theme')}
+      ${seg('그래픽 품질', '느리면 낮음으로', [{ id: 'high', label: '높음' }, { id: 'low', label: '낮음' }], s.quality, 'quality')}
+      ${seg('효과음', '정답 효과음', [{ id: 'on', label: '켜기' }, { id: 'off', label: '끄기' }], s.sound ? 'on' : 'off', 'sound')}
+      <button type="button" class="set-reset">모든 진행도 초기화</button>`;
 
-    group.appendChild(submenu);
-    this.machineBar.appendChild(group);
+    panel.querySelector('.set-close')?.addEventListener('click', () => panel.classList.add('hidden'));
+    panel.querySelectorAll<HTMLElement>('[data-key]').forEach((b) => {
+      b.addEventListener('click', () => {
+        const key = b.dataset.key;
+        const val = b.dataset.val ?? '';
+        if (key === 'difficulty') s.difficulty = val as Difficulty;
+        else if (key === 'theme') s.theme = val === 'dark' ? 'dark' : 'light';
+        else if (key === 'quality') s.quality = val === 'low' ? 'low' : 'high';
+        else if (key === 'sound') s.sound = val === 'on';
+        saveSettings(s);
+        this.renderSettings();
+        this.callbacks.onSettingsChange(s);
+      });
+    });
+    panel.querySelector('.set-reset')?.addEventListener('click', () => {
+      panel.classList.add('hidden');
+      this.confirm('모든 미션의 진행도를 지울까요?', '되돌릴 수 없어요.', '초기화', () => this.callbacks.onResetAll());
+    });
   }
 
-  setMachineActive(id: string): void {
-    for (const btn of Array.from(this.machineBar.children)) {
-      const el = btn as HTMLElement;
-      const dm = el.dataset.machine;
-      // '자동차 구동방식' 그룹(drivetrain)은 FF/FR 어느 쪽이든 활성 표시
-      btn.classList.toggle('active', dm === id || (dm !== undefined && id.startsWith(dm)));
-    }
-  }
+  // ── 부품 선택 독 ──
 
   /** 현재 머신에서만 적용되는 부품 표시 이름 (예: 전동축 → 구동축) */
   setPartNameOverrides(map: Record<string, string>): void {
@@ -312,31 +213,28 @@ export class HUD {
       btn.type = 'button';
       btn.className = 'cat-btn';
       btn.dataset.cat = cat.id;
-      btn.style.setProperty('--cat-color', cat.color);
-      btn.innerHTML = `<span class="cat-icon">${cat.icon}</span><span class="cat-name">${cat.name}</span>`;
+      btn.style.setProperty('--c', `var(--cat-${cat.id})`);
+      btn.innerHTML = `<i class="cat-swatch"></i><span class="cat-name">${cat.name}</span><small>${PARTS.filter((p) => p.category === cat.id).length}</small>`;
       btn.title = cat.desc;
-      btn.addEventListener('click', () => this.openCategory(cat.id));
-      btn.addEventListener('mouseenter', () => this.openCategory(cat.id));
+      btn.addEventListener('click', () => {
+        if (this.openCat === cat.id) this.closePanel();
+        else this.openCategory(cat.id);
+      });
       this.categoryBar.appendChild(btn);
     }
   }
 
   openCategory(id: string): void {
     const cat = getCategory(id as PartDef['category']);
-    this.partPanel.innerHTML = '';
-
-    const header = document.createElement('div');
-    header.className = 'panel-header';
-    header.innerHTML = `
-      <button type="button" class="back-btn" aria-label="뒤로">◀</button>
-      <div class="panel-title">
-        <span class="cat-icon">${cat.icon}</span>
-        <strong style="color:${cat.color}">${cat.name} 기계요소</strong>
+    this.openCat = id;
+    this.partPanel.style.setProperty('--c', `var(--cat-${cat.id})`);
+    this.partPanel.innerHTML = `
+      <header class="tray-head">
+        <strong>${cat.name} 기계요소</strong>
         <small>${cat.desc}</small>
-      </div>
-    `;
-    header.querySelector('.back-btn')?.addEventListener('click', () => this.closePanel());
-    this.partPanel.appendChild(header);
+        <button type="button" class="icon-btn tray-close" aria-label="닫기">${ICON.close}</button>
+      </header>`;
+    this.partPanel.querySelector('.tray-close')?.addEventListener('click', () => this.closePanel());
 
     const grid = document.createElement('div');
     grid.className = 'part-grid';
@@ -344,8 +242,8 @@ export class HUD {
       const card = document.createElement('button');
       card.type = 'button';
       card.className = 'part-card';
-      card.innerHTML = `<img src="${this.thumbs.get(part)}" alt="${part.name}" loading="lazy" draggable="false" />
-        <span>${this.displayName(part)}</span>`;
+      const name = this.displayName(part);
+      card.innerHTML = `<img src="${this.thumbs.get(part)}" alt="" loading="lazy" draggable="false" /><span>${name}</span>`;
       card.addEventListener('click', () => this.callbacks.onSelectPart(part.id));
       grid.appendChild(card);
     }
@@ -358,46 +256,51 @@ export class HUD {
   }
 
   closePanel(): void {
-    this.cancelHoverClose();
+    this.openCat = null;
     this.partPanel.classList.add('hidden');
-    for (const btn of Array.from(this.categoryBar.children)) {
-      btn.classList.remove('active');
-    }
+    for (const btn of Array.from(this.categoryBar.children)) btn.classList.remove('active');
   }
 
-  private scheduleHoverClose(): void {
-    if (this.hoverCloseTimer !== null) window.clearTimeout(this.hoverCloseTimer);
-    this.hoverCloseTimer = window.setTimeout(() => this.closePanel(), 200);
-  }
+  // ── 미션 진행 ──
 
-  private cancelHoverClose(): void {
-    if (this.hoverCloseTimer !== null) {
-      window.clearTimeout(this.hoverCloseTimer);
-      this.hoverCloseTimer = null;
-    }
-  }
-
-  setMission(text: string, installed: number, labels: (string | { text: string; tip: string })[]): void {
+  setMission(text: string, installed: number, labels: StepLabel[], completeText?: string): void {
     this.missionText.textContent = text;
     this.missionChips.innerHTML = '';
     labels.forEach((label, i) => {
-      const chip = document.createElement('span');
-      chip.className = `chip${i < installed ? ' done' : ''}`;
-      const display = typeof label === 'string' ? label : label.text;
-      chip.textContent = `${i + 1}. ${display}${i < installed ? ' ✔' : ''}`;
-      if (typeof label !== 'string') chip.title = label.tip;
+      const chip = document.createElement('li');
+      const state = i < installed ? 'done' : i === installed ? 'current' : 'todo';
+      chip.className = `step ${state}`;
+      chip.innerHTML = `<i>${i < installed ? ICON.check : i + 1}</i><span>${label.text}</span>`;
+      if (label.tip) chip.title = label.tip;
       this.missionChips.appendChild(chip);
+    });
+    this.setDone(labels.length > 0 && installed >= labels.length ? (completeText ?? '') : null);
+  }
+
+  setHunt(found: number, total: number, prompt: string, completeText?: string): void {
+    this.missionText.textContent = prompt;
+    this.missionChips.innerHTML = `<li class="step ${found >= total ? 'done' : 'current'} step-count"><i>${found >= total ? ICON.check : found}</i><span>${found} / ${total} 조립</span></li>`;
+    this.setDone(found >= total ? (completeText ?? '') : null);
+  }
+
+  private setDone(text: string | null): void {
+    if (text === null) {
+      this.missionDone.classList.add('hidden');
+      this.missionText.classList.remove('hidden');
+      return;
+    }
+    this.missionText.classList.add('hidden');
+    this.missionDone.classList.remove('hidden');
+    this.missionDone.innerHTML = `
+      <span class="done-text">${ICON.check}<span>완성! ${text}</span></span>
+      ${this.nextName ? `<button type="button" class="btn-primary btn-next"><span>다음 · ${this.nextName}</span>${ICON.next}</button>` : `<button type="button" class="btn-primary btn-next"><span>홈으로</span>${ICON.next}</button>`}`;
+    this.missionDone.querySelector('.btn-next')?.addEventListener('click', () => {
+      if (this.nextName) this.callbacks.onNextMission();
+      else this.callbacks.onHome();
     });
   }
 
-  setHunt(found: number, total: number, prompt: string): void {
-    this.missionText.textContent = prompt;
-    const chip = document.createElement('span');
-    chip.className = `chip${found >= total ? ' done' : ''}`;
-    chip.textContent = `🎯 ${found} / ${total}`;
-    this.missionChips.innerHTML = '';
-    this.missionChips.appendChild(chip);
-  }
+  // ── 우측 수치 패널 ──
 
   setSpeedControl(visible: boolean, onChange: (v: number) => void): void {
     const box = this.require('#speed-control');
@@ -408,7 +311,7 @@ export class HUD {
     }
     box.classList.remove('hidden');
     if (!box.querySelector('input')) {
-      box.innerHTML = `<small>회전 속도</small><input type="range" min="0" max="10" step="0.5" value="1" /><strong>1.0x</strong>`;
+      box.innerHTML = `<label><small>회전 속도</small><strong>1.0x</strong></label><input type="range" min="0" max="10" step="0.5" value="1" aria-label="회전 속도" />`;
       box.querySelector('input')?.addEventListener('input', (e) => {
         const v = Number((e.target as HTMLInputElement).value);
         const label = box.querySelector('strong');
@@ -424,8 +327,7 @@ export class HUD {
   }
 
   setGearNameButton(visible: boolean): void {
-    const btn = this.require('#gear-name-btn');
-    btn.classList.toggle('hidden', !visible);
+    this.require('#gear-name-btn').classList.toggle('hidden', !visible);
   }
 
   setDisplay(items: MachineDisplayItem[] | null): void {
@@ -434,34 +336,42 @@ export class HUD {
       return;
     }
     this.displayBox.classList.remove('hidden');
-    this.displayBox.innerHTML = items
-      .map((item, i) => {
-        const tone = item.tone ? ` ${item.tone}` : '';
-        const arrow = i > 0 ? '<div class="rpm-arrow">→</div>' : '';
-        return `${arrow}<div class="rpm-item${tone}"><small>${item.label}</small><strong>${item.value}</strong><small>${item.unit ?? ''}</small></div>`;
-      })
-      .join('');
+    this.displayBox.innerHTML =
+      `<h4>동력 전달</h4>` +
+      items
+        .map((item, i) => {
+          const tone = item.tone ? ` ${item.tone}` : '';
+          const arrow = i > 0 ? '<div class="rpm-arrow" aria-hidden="true"></div>' : '';
+          return `${arrow}<div class="rpm-item${tone}"><small>${item.label}</small><span><strong>${item.value}</strong><em>${item.unit ?? ''}</em></span></div>`;
+        })
+        .join('');
   }
+
+  // ── 학습 카드·토스트·모달 ──
 
   showInfoCard(part: PartDef): void {
     const cat = getCategory(part.category);
     const name = this.displayName(part);
+    this.infoCard.style.setProperty('--c', `var(--cat-${cat.id})`);
     this.infoCard.innerHTML = `
-      <div class="info-chip" style="background:${cat.color}">${cat.icon} ${cat.name}</div>
-      <h2>${name}</h2>
-      <p>${part.role}</p>
-      <button type="button" class="info-close">확인</button>
-    `;
-    this.infoCard.querySelector('.info-close')?.addEventListener('click', () => {
-      this.infoCard.classList.add('hidden');
-    });
+      <img src="${this.thumbs.get(part)}" alt="" draggable="false" />
+      <div class="info-body">
+        <span class="info-chip">${cat.name} 기계요소</span>
+        <h2>${name}</h2>
+        <p>${part.role}</p>
+      </div>
+      <button type="button" class="icon-btn info-close" aria-label="닫기">${ICON.close}</button>`;
+    this.infoCard.querySelector('.info-close')?.addEventListener('click', () => this.infoCard.classList.add('hidden'));
     this.infoCard.classList.remove('hidden');
+  }
+
+  hideInfoCard(): void {
+    this.infoCard.classList.add('hidden');
   }
 
   toast(message: string, kind: 'ok' | 'warn' | 'info' = 'info', duration = 3200): void {
     this.toastEl.textContent = message;
     this.toastEl.className = `toast-${kind}`;
-    this.toastEl.classList.remove('hidden');
     if (this.toastTimer !== null) window.clearTimeout(this.toastTimer);
     this.toastTimer = window.setTimeout(() => this.toastEl.classList.add('hidden'), duration);
   }
@@ -471,20 +381,40 @@ export class HUD {
   }
 
   showCongratsModal(): void {
-    this.showModal(CONGRATS_SVG, '당신이 자랑스럽습니다.');
+    this.showModal(CONGRATS_SVG, '당신이 자랑스럽습니다.', '모든 미션을 완료했어요!');
   }
 
-  private showModal(art: string, message: string): void {
+  private showModal(art: string, message: string, sub = ''): void {
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
     overlay.innerHTML = `
       <div class="modal-card" role="dialog" aria-label="${message}">
         <div class="modal-art">${art}</div>
         <h2>${message}</h2>
-        <button type="button" class="modal-close">확인</button>
-      </div>
-    `;
+        ${sub ? `<p>${sub}</p>` : ''}
+        <button type="button" class="btn-primary modal-close">확인</button>
+      </div>`;
     overlay.querySelector('.modal-close')?.addEventListener('click', () => overlay.remove());
-    this.require('#hud').appendChild(overlay);
+    this.require('#app').appendChild(overlay);
+  }
+
+  private confirm(title: string, sub: string, okLabel: string, onOk: () => void): void {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal-card" role="alertdialog" aria-label="${title}">
+        <h2>${title}</h2>
+        <p>${sub}</p>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost modal-cancel">취소</button>
+          <button type="button" class="btn-danger modal-ok">${okLabel}</button>
+        </div>
+      </div>`;
+    overlay.querySelector('.modal-cancel')?.addEventListener('click', () => overlay.remove());
+    overlay.querySelector('.modal-ok')?.addEventListener('click', () => {
+      overlay.remove();
+      onOk();
+    });
+    this.require('#app').appendChild(overlay);
   }
 }

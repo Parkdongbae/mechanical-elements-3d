@@ -46,27 +46,27 @@ const THEMES: Record<ThemeId, ThemeSpec> = {
     gridMinor: 0xc6d2de,
     gridOpacity: 0.5,
     exposure: 1.0,
-    envIntensity: 0.9,
+    envIntensity: 0.7,
     hemiSky: 0xeaf2ff,
     hemiGround: 0x97a3b0,
-    hemiIntensity: 0.7,
-    keyIntensity: 2.3,
+    hemiIntensity: 0.42,
+    keyIntensity: 3.1,
     aoIntensity: 0.9
   },
   dark: {
-    top: '#2a3342',
-    horizon: '#161b24',
+    top: '#222a37',
+    horizon: '#151a22',
     bottom: '#0c0f15',
     floor: 0x1a202a,
-    gridMajor: 0x3a4658,
-    gridMinor: 0x283140,
-    gridOpacity: 0.55,
+    gridMajor: 0x343f50,
+    gridMinor: 0x252d3a,
+    gridOpacity: 0.32,
     exposure: 1.08,
-    envIntensity: 0.8,
+    envIntensity: 0.7,
     hemiSky: 0x8fa6c8,
     hemiGround: 0x1a1f28,
-    hemiIntensity: 0.35,
-    keyIntensity: 2.7,
+    hemiIntensity: 0.25,
+    keyIntensity: 3.3,
     aoIntensity: 1.0
   }
 };
@@ -346,6 +346,9 @@ export class SceneManager {
     const w = window.innerWidth;
     const h = window.innerHeight;
     this.camera.aspect = w / h;
+    // 세로 화면에서는 가로 시야가 좁아져 기계가 잘린다 — 수직 화각을 넓혀 보정(왜곡 방지를 위해 상한)
+    const aspect = w / h;
+    this.camera.fov = aspect >= 1.2 ? 40 : Math.min(64, THREE.MathUtils.radToDeg(2 * Math.atan((Math.tan(THREE.MathUtils.degToRad(20)) * 1.2) / aspect)));
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h, false);
     if (this.composer) {
