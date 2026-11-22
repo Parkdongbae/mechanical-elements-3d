@@ -337,7 +337,7 @@ export class HUD {
     }
     this.displayBox.classList.remove('hidden');
     this.displayBox.innerHTML =
-      `<h4>동력 전달</h4>` +
+      `<h4>실시간 수치</h4>` +
       items
         .map((item, i) => {
           const tone = item.tone ? ` ${item.tone}` : '';

@@ -1,7 +1,9 @@
-// 자전거: 차축 → 크랭크축 → 스프로킷 → 체인 → 평행 핀 → 스프링 6단계 조립 미션
+// 자전거: 차축 → 크랭크축 → 스프로킷 → 체인 → 평행 핀 → 스프링 → 블록 브레이크 7단계 조립 미션
 // 차축 정답 시 양쪽 허브에 축이 먼저 들어가고 바퀴가 자동 장착되며,
 // 크랭크축 정답 시 앞 스프로킷(체인링)이 자동 장착된다 — 팝업은 후속 장착까지 끝난 뒤 표시
-// 교과서 근거: 차축 = 바퀴 회전축(축용), 스프링(제어용) = 안장 충격 흡수
+// 교과서 근거: 차축 = 바퀴 회전축(축용), 스프링(제어용) = 안장 충격 흡수, 블록 브레이크(제어용) = 림을 눌러 멈춤
+// 블록 브레이크는 기본 카메라에서 정면으로 보이는 앞 포크 크라운에 단다(뒤 시트스테이 브리지는 시트튜브에 가린다).
+// 앞바퀴는 구동과 무관하므로, 완성 후 시연에서 앞바퀴를 손으로 툭 쳐서 돌린 뒤 레버를 쥐어 세운다.
 // v2: 다이아몬드 프레임 비례(헤드 72°·시트 73.5°)로 재모델링, 시트포스트를 무는 정비 스탠드에 걸려
 //     두 바퀴가 바닥에서 떠 있다(페달을 돌리면 뒷바퀴만 돈다 — 앞바퀴는 구동과 무관하므로 정지).
 
@@ -10,7 +12,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import { ParametricGeometry } from 'three/examples/jsm/geometries/ParametricGeometry.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { gearShape, ChainPath2D, buildChainAlongPath } from '../models/factory';
-import { paint, steel, darkSteel, chrome, aluminum, rubber, plastic, glow } from '../models/materials';
+import { CATEGORY_COLORS, paint, steel, darkSteel, chrome, aluminum, rubber, plastic, glow } from '../models/materials';
 import { BaseMachine, type MachineSim, type MachineDisplayItem, type FollowUpPart } from './types';
 
 /** 체인링·뒤 스프로킷 피치원 반지름 — 체인 경로·기어비(1.67)의 기준 */
@@ -87,6 +89,53 @@ const CHAIN_PIN_POS = (() => {
   return new THREE.Vector3(p.x, p.y, CHAIN_Z);
 })();
 
+// ── 앞 블록 브레이크(사이드풀 캘리퍼) ──
+// 국소 좌표: 원점 = 크라운 앞면의 피벗 볼트 자리, +Y = 허브→피벗 방사 방향, +X = 앞쪽(피벗 볼트 축), Z = 바퀴 축.
+// 두 암이 피벗 볼트(X축) 둘레로 돌며 블록을 림 옆면(z = ±RIM_HW)으로 민다.
+const BRAKE_M = along(CROWN, HEAD_FWD, 0.08);
+const BRAKE_U = BRAKE_M.clone().sub(FRONT).normalize();
+const BRAKE_X = v2(BRAKE_U.y, -BRAKE_U.x);
+const BRAKE_RM = BRAKE_M.distanceTo(FRONT);
+const BRAKE_ROT = Math.atan2(BRAKE_U.y, BRAKE_U.x) - Math.PI / 2;
+const RIM_HW = 0.05; // 림 제동면 반폭(바퀴 림 프로파일과 같은 값)
+const PAD_T = 0.025; // 블록 중심의 앞뒤 위치
+const PAD_Y = Math.sqrt(0.876 ** 2 - PAD_T ** 2) - BRAKE_RM; // 제동면(0.858~0.896, 타이어 비드 아래) 중앙
+const PAD_H = 0.034; // 블록 방사 방향 높이
+const PAD_THK = 0.02; // 고무 두께
+const BRAKE_GAP = 0.018; // 해제 시 블록–림 간격(≈6mm, 화면에서 벌어짐이 읽히도록 실물보다 약간 넓게)
+const PAD_FACE_Z = RIM_HW + BRAKE_GAP;
+const BARREL_P = { t: 0.048, y: 0.085, z: 0.1 }; // 오른쪽 암 윗탭: 케이블 겉피 받침(배럴)
+const ANCHOR_P = { t: 0.05, y: 0.035, z: 0.1 }; // 왼쪽 암 아랫탭: 속케이블 고정 볼트
+/** 국소 (y, z)를 피벗 볼트(X축) 둘레로 a만큼 회전 */
+function rotX(y: number, z: number, a: number): { y: number; z: number } {
+  return { y: y * Math.cos(a) - z * Math.sin(a), z: y * Math.sin(a) + z * Math.cos(a) };
+}
+/** 블록 아래 모서리(가장 먼저 닿는 곳)가 림에 닿는 암 회전각 */
+const BRAKE_THETA_C = (() => {
+  let lo = 0;
+  let hi = 0.3;
+  for (let i = 0; i < 50; i++) {
+    const mid = (lo + hi) / 2;
+    if (rotX(PAD_Y - PAD_H / 2, PAD_FACE_Z, mid).z > RIM_HW + 0.0005) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
+})();
+const BRAKE_THETA_MAX = BRAKE_THETA_C + 0.004; // 고무가 살짝 눌릴 만큼 더
+const LEVER_MAX = 0.3; // 레버 최대 당김각(rad)
+const LEVER_AXIS = new THREE.Vector3(-0.4, -1, 0).normalize();
+const W_NUDGE = Math.PI * 3; // 손으로 툭 친 앞바퀴 초기 각속도(90rpm)
+const BRAKE_CYCLE = 8;
+function brakeWorld(t: number, y: number, z: number): THREE.Vector3 {
+  return new THREE.Vector3(BRAKE_M.x + BRAKE_X.x * t + BRAKE_U.x * y, BRAKE_M.y + BRAKE_X.y * t + BRAKE_U.y * y, z);
+}
+const BRAKE_SLOT_POS = brakeWorld(0.03, -0.09, 0.21); // 포크 다리(z≤0.17)보다 바깥
+
+function smooth01(x: number): number {
+  const t = Math.min(1, Math.max(0, x));
+  return t * t * (3 - 2 * t);
+}
+
 // ── 지오메트리 헬퍼 (병합용: 메시가 아니라 변환된 지오메트리를 돌려준다) ──
 
 const Y_UP = new THREE.Vector3(0, 1, 0);
@@ -151,11 +200,19 @@ interface BicycleSimState {
   path: ChainPath2D;
   pin: THREE.Object3D | null;
   pedals: THREE.Object3D[];
+  front: THREE.Object3D;
+  lever: THREE.Object3D;
+  armR: THREE.Object3D;
+  armL: THREE.Object3D;
+  wire: THREE.Object3D;
 }
 
 export class Bicycle extends BaseMachine {
   readonly id = 'bicycle';
-  readonly stepCount = 6;
+  readonly stepCount = 7;
+  private brakeModel: THREE.Group | null = null;
+  /** 오른쪽(+Z, 앞 브레이크) 레버 날 — 시연 때 쥐어진다 */
+  private frontLever = new THREE.Group();
   private sprocketMesh: THREE.Group | null = null;
   private chainGroup: THREE.Group | null = null;
   private crankModel: THREE.Group | null = null;
@@ -179,18 +236,26 @@ export class Bicycle extends BaseMachine {
     this.group.add(this.crank);
 
     this.addSlot(0, 0.12, new THREE.Vector3(REAR.x, REAR.y, 0));
-    this.addSlot(6, 0.12, new THREE.Vector3(FRONT.x, FRONT.y, 0));
+    // 인덱스 7 = 차축 단계의 둘째(앞바퀴) 링 — 6은 브레이크 단계가 쓴다
+    this.addSlot(7, 0.12, new THREE.Vector3(FRONT.x, FRONT.y, 0));
     this.addSlot(1, 0.13, new THREE.Vector3(BB.x, BB.y, 0));
     this.addSlot(2, SPR_R + 0.03, new THREE.Vector3(REAR.x, REAR.y, CHAIN_Z));
     this.addChainSlotOutline();
     this.addSlot(4, 0.08, CHAIN_PIN_POS);
     this.addSlot(5, 0.11, SADDLE_SPRING_POS);
+    this.addSlot(6, 0.15, BRAKE_SLOT_POS, 0.02);
     this.hideSlot(1);
     this.hideSlot(2);
     this.hideSlot(3);
     this.hideSlot(4);
     this.hideSlot(5);
+    this.hideSlot(6);
     this.enableShadows();
+    for (const s of this.slots) {
+      if (!s) continue;
+      s.userData.noAO = true;
+      s.castShadow = false;
+    }
   }
 
   getChainPath(): ChainPath2D {
@@ -205,6 +270,7 @@ export class Bicycle extends BaseMachine {
       case 3: return this.chainGroup !== null;
       case 4: return this.chainPin !== null;
       case 5: return this.springModel !== null;
+      case 6: return this.brakeModel !== null;
       default: return false;
     }
   }
@@ -217,12 +283,13 @@ export class Bicycle extends BaseMachine {
       case 3: return new THREE.Vector3(0, 0, 0);
       case 4: return CHAIN_PIN_POS.clone();
       case 5: return SADDLE_SPRING_POS.clone();
+      case 6: return P3(BRAKE_M);
       default: return new THREE.Vector3();
     }
   }
 
   slotTarget(step: number): THREE.Vector3 {
-    return this.getFlyTarget(step);
+    return step === 6 ? BRAKE_SLOT_POS.clone() : this.getFlyTarget(step);
   }
 
   buildStepModel(step: number): THREE.Group {
@@ -232,7 +299,8 @@ export class Bicycle extends BaseMachine {
       case 2: return this.createSprocketModel();
       case 3: return buildChainAlongPath(this.getChainPath(), CHAIN_PITCH, CHAIN_Z);
       case 4: return this.buildChainPin();
-      default: return this.buildSaddleSpring();
+      case 5: return this.buildSaddleSpring();
+      default: return this.buildBlockBrake();
     }
   }
 
@@ -274,7 +342,7 @@ export class Bicycle extends BaseMachine {
         for (const rod of this.axleRods) this.group.add(rod);
         model.removeFromParent();
         this.hideSlot(0);
-        this.hideSlot(6);
+        this.hideSlot(7);
         this.showSlot(1);
         break;
       }
@@ -319,6 +387,14 @@ export class Bicycle extends BaseMachine {
         this.group.add(model);
         this.springModel = model;
         this.hideSlot(5);
+        this.showSlot(6);
+        break;
+      case 6:
+        model.position.copy(P3(BRAKE_M));
+        model.rotation.set(0, 0, 0);
+        this.group.add(model);
+        this.brakeModel = model;
+        this.hideSlot(6);
         break;
     }
   }
@@ -378,17 +454,27 @@ export class Bicycle extends BaseMachine {
       this.group.remove(this.springModel);
       this.springModel = null;
     }
+    if (this.brakeModel) {
+      this.group.remove(this.brakeModel);
+      this.brakeModel = null;
+    }
+    this.frontLever.quaternion.identity();
     this.showSlot(0);
-    this.showSlot(6);
+    this.showSlot(7);
     this.hideSlot(1);
     this.hideSlot(2);
     this.hideSlot(3);
     this.hideSlot(4);
     this.hideSlot(5);
+    this.hideSlot(6);
   }
 
   createSim(): MachineSim {
-    if (!this.chainGroup || !this.sprocketMesh || !this.crankModel || !this.frontSprocketMesh || !this.springModel) throw new Error('bicycle mission incomplete');
+    if (!this.chainGroup || !this.sprocketMesh || !this.crankModel || !this.frontSprocketMesh || !this.springModel || !this.brakeModel) throw new Error('bicycle mission incomplete');
+    const armR = this.brakeModel.getObjectByName('brakeArmR');
+    const armL = this.brakeModel.getObjectByName('brakeArmL');
+    const wire = this.brakeModel.getObjectByName('brakeWire');
+    if (!armR || !armL || !wire) throw new Error('bicycle brake model broken');
     const pedals: THREE.Object3D[] = [];
     this.crankModel.traverse((o) => {
       if (o.name === 'pedal') pedals.push(o);
@@ -399,17 +485,57 @@ export class Bicycle extends BaseMachine {
       chainGroup: this.chainGroup,
       path: this.getChainPath(),
       pin: this.chainPin,
-      pedals
+      pedals,
+      front: this.frontWheel,
+      lever: this.frontLever,
+      armR,
+      armL,
+      wire
     };
     let angle = 0;
     let chainOffset = 0;
+    // 브레이크 시연(앞바퀴): 구동계 표시값(페달·뒷바퀴·기어비)과 독립
+    let bt = 0;
+    let wFront = 0;
+    let frontAngle = 0;
+    const brakeItem: MachineDisplayItem = { label: '브레이크', value: '해제' };
     const display: MachineDisplayItem[] = [
       { label: '페달', value: '60', unit: 'rpm' },
       { label: '뒷바퀴', value: '100', unit: 'rpm', tone: 'red' },
-      { label: '기어비', value: '1.67', unit: ': 1', tone: 'blue' }
+      { label: '기어비', value: '1.67', unit: ': 1', tone: 'blue' },
+      brakeItem
     ];
+    const pivot = new THREE.Vector3();
+    const a = new THREE.Vector3();
+    const b = new THREE.Vector3();
     return {
       update(dt: number) {
+        bt = (bt + dt) % BRAKE_CYCLE;
+        // 0~0.5초 앞바퀴를 툭 쳐서 돌림 → 4초 레버를 쥠 → 6.3초 놓음
+        const squeeze =
+          bt < 4 ? 0 : bt < 4.35 ? smooth01((bt - 4) / 0.35) : bt < 6.3 ? 1 : bt < 6.65 ? 1 - smooth01((bt - 6.3) / 0.35) : 0;
+        const theta = squeeze * BRAKE_THETA_MAX;
+        const engaged = theta >= BRAKE_THETA_C;
+        if (bt < 0.5) wFront = Math.max(wFront, W_NUDGE * smooth01(bt / 0.5));
+        else if (engaged) wFront = Math.max(0, wFront - 14 * dt); // 블록 마찰이 림을 세운다
+        else wFront *= Math.exp(-0.06 * dt); // 허브 베어링의 작은 저항
+        frontAngle -= wFront * dt; // 앞으로 구르는 방향(구동측에서 보아 시계 방향)
+        state.front.rotation.z = frontAngle;
+        state.armR.rotation.x = theta;
+        state.armL.rotation.x = -theta;
+        // 레버 당김각은 케이블 당김량(두 탭 사이 거리 감소)에 비례
+        state.lever.quaternion.setFromAxisAngle(LEVER_AXIS, LEVER_MAX * (theta / BRAKE_THETA_MAX));
+        const pb = rotX(BARREL_P.y, BARREL_P.z, theta);
+        const pa = rotX(ANCHOR_P.y, ANCHOR_P.z, -theta);
+        a.set(BARREL_P.t, pb.y, pb.z);
+        b.set(ANCHOR_P.t, pa.y, pa.z);
+        pivot.copy(a).add(b).multiplyScalar(0.5);
+        state.wire.position.copy(pivot);
+        state.wire.scale.set(1, a.distanceTo(b), 1);
+        state.wire.quaternion.setFromUnitVectors(Y_UP, b.sub(a).normalize());
+        brakeItem.value = engaged ? '작동' : '해제';
+        brakeItem.tone = engaged ? 'red' : 'default';
+
         const wCrank = Math.PI * 2; // 60rpm
         angle -= wCrank * dt; // 구동측(+Z)에서 보아 시계 방향 = 전진
         state.crank.rotation.z = angle;
@@ -570,6 +696,134 @@ export class Bicycle extends BaseMachine {
     return g;
   }
 
+  /**
+   * 블록 브레이크(사이드풀 캘리퍼): 피벗 볼트 1개에 두 암이 겹쳐 돈다.
+   * 속케이블이 왼쪽 암 아랫탭(고정 볼트)을 오른쪽 암 윗탭(배럴) 쪽으로 끌면
+   * 오른쪽 암은 +θ, 왼쪽 암은 -θ 돌아 아래 끝의 고무 블록이 림 양옆을 누른다.
+   * 원점 = 피벗 볼트 자리(크라운 앞면), 회전 0으로 날아와도 장착 자세 그대로 보이도록 안쪽 그룹이 방향을 맡는다.
+   */
+  private buildBlockBrake(): THREE.Group {
+    const g = new THREE.Group();
+    const frame = new THREE.Group();
+    frame.rotation.z = BRAKE_ROT;
+    g.add(frame);
+
+    const armMat = aluminum({ color: 0xc8cdd3, roughness: 0.3 });
+    const shoeMat = darkSteel();
+    const boltMat = chrome();
+    const padMat = rubber({ color: CATEGORY_COLORS.control, roughness: 0.75 });
+
+    /** 국소 (z, y) 두 점을 잇는 둥근 판(두께 방향 = 피벗 축 X, t0~t1) */
+    const strap = (za: number, ya: number, zb: number, yb: number, w: number, t0: number, t1: number): THREE.BufferGeometry => {
+      const ang = Math.atan2(yb - ya, zb - za);
+      const r = w / 2;
+      const sh = new THREE.Shape();
+      sh.absarc(zb, yb, r, ang - Math.PI / 2, ang + Math.PI / 2, false);
+      sh.absarc(za, ya, r, ang + Math.PI / 2, ang + Math.PI * 1.5, false);
+      sh.closePath();
+      const bev = 0.004;
+      const geo = new THREE.ExtrudeGeometry(sh, { depth: t1 - t0 - 2 * bev, bevelEnabled: true, bevelThickness: bev, bevelSize: bev, bevelSegments: 2, curveSegments: 12 });
+      // 셰이프 (x=z, y=y, d) → 국소 (X=t, Y=y, Z=z): Y축 -90° 회전은 x' = -d, z' = x
+      geo.rotateY(-Math.PI / 2);
+      geo.translate(t1 - bev, 0, 0);
+      return geo;
+    };
+    const xCyl = (r: number, t0: number, t1: number, y: number, z: number, seg = 20): THREE.BufferGeometry => {
+      const c = new THREE.CylinderGeometry(r, r, t1 - t0, seg);
+      c.rotateZ(-Math.PI / 2);
+      c.translate((t0 + t1) / 2, y, z);
+      return c;
+    };
+    const boxAt = (sx: number, sy: number, sz: number, x: number, y: number, z: number, rad = 0.006): THREE.BufferGeometry => {
+      const bx = new RoundedBoxGeometry(sx, sy, sz, 2, rad);
+      bx.translate(x, y, z);
+      return bx;
+    };
+
+    // 피벗 볼트(크라운을 앞뒤로 관통) + 와셔 + 앞 돔 너트 + 뒤 너트
+    const pivotGeos = [
+      xCyl(0.011, -0.175, 0.05, 0, 0, 20),
+      xCyl(0.024, 0.0, 0.005, 0, 0, 28),
+      xCyl(0.022, 0.022, 0.026, 0, 0, 28)
+    ];
+    const dome = new THREE.SphereGeometry(0.019, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+    dome.rotateZ(-Math.PI / 2);
+    dome.translate(0.058, 0, 0);
+    pivotGeos.push(xCyl(0.019, 0.045, 0.058, 0, 0, 6), dome, xCyl(0.019, -0.178, -0.162, 0, 0, 6));
+    frame.add(mesh(merge(pivotGeos), boltMat));
+
+    const footY = PAD_Y;
+    const shoeZ = PAD_FACE_Z + PAD_THK + 0.006;
+    const footZ = shoeZ + 0.006 + 0.012;
+    const buildArm = (side: 1 | -1, name: string, t0: number, t1: number): THREE.Group => {
+      const arm = new THREE.Group();
+      arm.name = name;
+      const s = side;
+      const plate = [
+        xCyl(0.034, t0, t1, 0, 0, 32), // 피벗 보스
+        strap(0, 0, s * 0.128, -0.055, 0.04, t0, t1),
+        strap(s * 0.128, -0.055, s * footZ, footY + 0.012, 0.032, t0, t1),
+        // 발: 블록 스터드가 Z 방향으로 지나가는 덩어리
+        boxAt(0.05, 0.04, 0.024, PAD_T, footY, s * footZ, 0.007)
+      ];
+      if (s > 0) {
+        // 윗탭 + 케이블 겉피 받침(배럴 어저스터)
+        plate.push(strap(0, 0, BARREL_P.z, BARREL_P.y, 0.034, t0, t1));
+      } else {
+        // 반대편으로 넘어오는 아랫탭(속케이블 고정)
+        plate.push(strap(0, 0, ANCHOR_P.z, ANCHOR_P.y, 0.03, t0, t1));
+      }
+      arm.add(mesh(merge(plate), armMat));
+
+      // 슈(금속 받침) + 스터드 너트
+      const shoe = [boxAt(0.12, 0.042, 0.012, PAD_T, footY, s * shoeZ, 0.004)];
+      const stud = new THREE.CylinderGeometry(0.008, 0.008, footZ - shoeZ + 0.03, 12);
+      stud.rotateX(Math.PI / 2);
+      stud.translate(PAD_T, footY, s * ((shoeZ + footZ) / 2 + 0.01));
+      const nut = s > 0 ? zCyl(0.016, footZ + 0.012, footZ + 0.024, 6, PAD_T, footY) : zCyl(0.016, -footZ - 0.024, -footZ - 0.012, 6, PAD_T, footY);
+      shoe.push(stud);
+      arm.add(mesh(merge(shoe), shoeMat));
+      arm.add(mesh(nut, boltMat));
+
+      // 고무 블록(제어용 강조색) — 림 쪽 면이 PAD_FACE_Z
+      const pad = new RoundedBoxGeometry(0.11, PAD_H, PAD_THK, 3, 0.006);
+      pad.translate(PAD_T, footY, s * (PAD_FACE_Z + PAD_THK / 2));
+      arm.add(mesh(pad, padMat));
+
+      if (s > 0) {
+        const barrel = latheZ([[0, 0], [0.012, 0], [0.013, 0.004], [0.013, 0.028], [0.0105, 0.03], [0.0105, 0.05], [0, 0.05]], 20);
+        // latheZ는 Z축 회전체 → 방사(Y) 방향으로 세운다
+        barrel.rotateX(-Math.PI / 2);
+        barrel.translate(BARREL_P.t, BARREL_P.y, BARREL_P.z);
+        arm.add(mesh(barrel, boltMat));
+      } else {
+        const anchor = [
+          xCyl(0.007, t0 - 0.004, ANCHOR_P.t + 0.006, ANCHOR_P.y, ANCHOR_P.z, 12),
+          xCyl(0.016, ANCHOR_P.t - 0.003, ANCHOR_P.t + 0.002, ANCHOR_P.y, ANCHOR_P.z, 20),
+          xCyl(0.012, ANCHOR_P.t + 0.002, ANCHOR_P.t + 0.012, ANCHOR_P.y, ANCHOR_P.z, 6)
+        ];
+        arm.add(mesh(merge(anchor), boltMat));
+      }
+      return arm;
+    };
+    // 오른쪽 암은 앞 층, 왼쪽 암은 크라운 쪽 층
+    frame.add(buildArm(1, 'brakeArmR', 0.026, 0.044));
+    frame.add(buildArm(-1, 'brakeArmL', 0.006, 0.022));
+
+    // 속케이블(배럴 → 고정 볼트) — 시뮬레이션이 매 프레임 두 끝에 맞춰 늘인다
+    const wire = mesh(new THREE.CylinderGeometry(0.0045, 0.0045, 1, 8), steel({ grain: false }));
+    wire.name = 'brakeWire';
+    const a = new THREE.Vector3(BARREL_P.t, BARREL_P.y, BARREL_P.z);
+    const b = new THREE.Vector3(ANCHOR_P.t, ANCHOR_P.y, ANCHOR_P.z);
+    wire.position.copy(a).add(b).multiplyScalar(0.5);
+    wire.scale.set(1, a.distanceTo(b), 1);
+    wire.quaternion.setFromUnitVectors(Y_UP, b.clone().sub(a).normalize());
+    frame.add(wire);
+    // 겉피 쪽으로 이어지는 짧은 속케이블(배럴 위 페룰까지)
+    frame.add(mesh(new THREE.CylinderGeometry(0.0045, 0.0045, 0.012, 8).translate(BARREL_P.t, BARREL_P.y + 0.056, BARREL_P.z), steel({ grain: false })));
+    return g;
+  }
+
   /** 앞·뒤 차축(너트 포함) */
   private buildAxlePair(): THREE.Group {
     const g = new THREE.Group();
@@ -680,7 +934,7 @@ export class Bicycle extends BaseMachine {
     }
     this.group.add(mesh(merge(cupGeos), darkSteel()));
 
-    // 림 브레이크 캘리퍼(앞: 크라운, 뒤: 시트스테이 브리지)
+    // 뒤 림 브레이크 캘리퍼(시트스테이 브리지) — 고정 부품. 앞 브레이크는 조립 단계(블록 브레이크)
     const calGeos: THREE.BufferGeometry[] = [];
     const padGeos: THREE.BufferGeometry[] = [];
     const addCaliper = (mount: THREE.Vector2, hub: THREE.Vector2) => {
@@ -691,12 +945,11 @@ export class Bicycle extends BaseMachine {
         calGeos.push(cylBetween(P3(along(mount, dir, -0.02), s * 0.115), P3(padC, s * 0.075), 0.013, 12));
         const pad = new RoundedBoxGeometry(0.1, 0.024, 0.022, 2, 0.008);
         pad.rotateZ(Math.atan2(dir.y, dir.x) + Math.PI / 2);
-        pad.translate(padC.x, padC.y, s * 0.062);
+        pad.translate(padC.x, padC.y, s * 0.067); // 림(±0.05)에서 살짝 떨어져 회전 중 끌리지 않는다
         padGeos.push(pad);
       }
       calGeos.push(zCyl(0.02, -0.04, 0.04, 16, mount.x, mount.y));
     };
-    addCaliper(along(CROWN, HEAD_FWD, 0.09), FRONT);
     addCaliper(bridgeC, REAR);
     this.group.add(mesh(merge(calGeos), aluminum({ color: 0xb9c0c8 })));
     this.group.add(mesh(merge(padGeos), rubber({ color: 0x2b2b2b })));
@@ -737,6 +990,9 @@ export class Bicycle extends BaseMachine {
     gripProfile.push([0.046, 0.18], [0.04, 0.19], [0.0, 0.19]);
     const gripGeos: THREE.BufferGeometry[] = [];
     const leverGeos: THREE.BufferGeometry[] = [];
+    const bladeGeos: THREE.BufferGeometry[] = [];
+    const leverMat = darkSteel();
+    let housingStart = new THREE.Vector3();
     for (const s of [1, -1]) {
       const z0 = s * 0.43;
       const gGeo = latheZ(gripProfile, 32);
@@ -747,11 +1003,48 @@ export class Bicycle extends BaseMachine {
       const lx = BAR_POS.x - 0.09 * a * a;
       const ly = BAR_POS.y + 0.02 * a;
       leverGeos.push(zCyl(0.042, z0 - s * 0.04, z0 - s * 0.012, 24, lx, ly));
-      leverGeos.push(cylBetween(new THREE.Vector3(lx + 0.04, ly - 0.01, z0 - s * 0.03), new THREE.Vector3(lx + 0.09, ly - 0.04, z0 + s * 0.06), 0.012, 12));
-      leverGeos.push(cylBetween(new THREE.Vector3(lx + 0.09, ly - 0.04, z0 + s * 0.06), new THREE.Vector3(lx + 0.08, ly - 0.05, z0 + s * 0.16), 0.012, 12));
+      const root = new THREE.Vector3(lx + 0.04, ly - 0.01, z0 - s * 0.03);
+      const knee = new THREE.Vector3(lx + 0.09, ly - 0.04, z0 + s * 0.06);
+      const tip = new THREE.Vector3(lx + 0.08, ly - 0.05, z0 + s * 0.16);
+      if (s > 0) {
+        // 앞 브레이크 레버 날: 뿌리(피벗) 기준 지오메트리로 따로 두어 시연 때 쥐어지게 한다
+        this.frontLever.position.copy(root);
+        const o = root.clone().negate();
+        bladeGeos.push(cylBetween(root.clone().add(o), knee.clone().add(o), 0.012, 12));
+        bladeGeos.push(cylBetween(knee.clone().add(o), tip.clone().add(o), 0.012, 12));
+        bladeGeos.push(ball(new THREE.Vector3(), 0.016));
+        housingStart = new THREE.Vector3(lx + 0.03, ly + 0.03, z0 - s * 0.03);
+        // 겉피를 받는 레버 배럴
+        leverGeos.push(cylBetween(new THREE.Vector3(lx + 0.012, ly + 0.03, z0 - s * 0.03), housingStart, 0.013, 16));
+      } else {
+        leverGeos.push(cylBetween(root, knee, 0.012, 12));
+        leverGeos.push(cylBetween(knee, tip, 0.012, 12));
+      }
     }
     this.group.add(mesh(merge(gripGeos), rubber({ color: 0x23252a }), true));
-    this.group.add(mesh(merge(leverGeos), darkSteel()));
+    this.group.add(mesh(merge(leverGeos), leverMat));
+    this.frontLever.add(mesh(merge(bladeGeos), leverMat));
+    this.group.add(this.frontLever);
+
+    // 앞 브레이크 케이블 겉피: 레버 → 헤드튜브 앞 → 캘리퍼 배럴 위(브레이크가 없을 땐 끝 페룰만 남는다)
+    const end = brakeWorld(BARREL_P.t, BARREL_P.y + 0.062, BARREL_P.z);
+    const endUp = brakeWorld(BARREL_P.t, BARREL_P.y + 0.2, BARREL_P.z + 0.01);
+    const midHT = along(along(HT_BOT, HEAD_DIR, 0.2), HEAD_FWD, 0.24);
+    const hPts = [
+      housingStart,
+      new THREE.Vector3(housingStart.x + 0.1, housingStart.y + 0.02, housingStart.z - 0.04),
+      new THREE.Vector3(housingStart.x + 0.16, housingStart.y - 0.16, 0.26),
+      P3(midHT, 0.15),
+      endUp,
+      end
+    ];
+    const housing = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(hPts, false, 'centripetal'), 96, 0.013, 12);
+    this.group.add(mesh(housing, plastic(0x1b1d21, { roughness: 0.35, grain: false })));
+    const ferrule = new THREE.CylinderGeometry(0.016, 0.016, 0.02, 16);
+    ferrule.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(Y_UP, new THREE.Vector3(BRAKE_U.x, BRAKE_U.y, 0)));
+    const fc = brakeWorld(BARREL_P.t, BARREL_P.y + 0.062, BARREL_P.z);
+    ferrule.translate(fc.x, fc.y, fc.z);
+    this.group.add(mesh(ferrule, chrome()));
   }
 
   private buildSaddle(): void {
