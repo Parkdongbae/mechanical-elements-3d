@@ -469,6 +469,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'microwave',
+    view: { pos: [1.6, 2.5, 3.8], target: [-0.1, 0.6, 0.2] },
     group: 'life',
     summary: '작은 모터가 회전판을 천천히 돌려요',
     name: '전자레인지',
@@ -484,6 +485,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'washer',
+    view: { pos: [3.2, 2.4, -3.2], target: [0, 1, -0.3] },
     group: 'life',
     summary: '모터와 벨트가 빨래통을 돌려요',
     name: '드럼 세탁기',
