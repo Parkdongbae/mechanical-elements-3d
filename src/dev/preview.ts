@@ -2,6 +2,7 @@
 //   /preview.html?part=spurGear            부품 1종
 //   /preview.html?parts=all                부품 22종 격자
 //   /preview.html?mode=enc | mode=quiz      학습 모드(도감·퀴즈) 단독 실행
+//   /preview.html?machine=gearhunt&hunt=spur_gear1,bevel_gear1,...  드래그 조립형의 조립 상태 복원
 //   /preview.html?machine=bicycle&steps=6  기계 + n단계 조립(steps=all 가능, 완료 시 시뮬레이션 가동)
 // 공통 옵션: &theme=dark  &q=low  &cam=x,y,z,tx,ty,tz  &t=3 (시뮬레이션을 t초 진행 후 정지)
 
@@ -10,7 +11,7 @@ import { SceneManager, type CameraView } from '../scene/SceneSetup';
 import { buildPart, normalizePart } from '../models/factory';
 import { PARTS } from '../data/elements';
 import { getMachineDef } from '../data/machines';
-import type { Machine, MachineSim } from '../machines/types';
+import { isDragMachine, type Machine, type MachineSim } from '../machines/types';
 import type { AppMode } from '../modes/types';
 import { Encyclopedia } from '../modes/Encyclopedia';
 import { Quiz } from '../modes/Quiz';
@@ -96,6 +97,12 @@ if (modeArg === 'enc' || modeArg === 'quiz') {
     ups.forEach((u, idx) => machine!.installFollowUp?.(i, idx, u.model));
   }
   if (n >= machine.stepCount && def.steps.length > 0) sim = machine.createSim();
+  // 드래그 조립형(기어의 종류): &hunt=id1,id2,... 로 조립된 상태를 복원해 본다
+  if (isDragMachine(machine)) {
+    sim = machine.createSim();
+    const ids = (q.get('hunt') ?? '').split(',').filter(Boolean);
+    machine.beginHunt(ids);
+  }
   view = def.view ?? null;
   if (info) info.textContent = `${def.name} — ${n}/${machine.stepCount}단계`;
 }

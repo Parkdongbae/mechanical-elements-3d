@@ -10,6 +10,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { BaseMachine, type MachineSim, type DragMachine, type DraggableItem, type HuntPickResult } from './types';
 import { aluminum, brass, bronze, castIron, copper, darkSteel, ghost, glow, plastic, rubber, steel } from '../models/materials';
 import { makeCalloutLine, makeLabelSprite, smoothSTL } from './stlShared';
+import { buildGearHuntBevel } from './gearHuntBevel';
 
 const P_ROOT = new THREE.Vector3(0, 1.5, 0);
 const TARGET_SIZE = 2.6;
@@ -130,6 +131,7 @@ export class GearHunt extends BaseMachine implements DragMachine {
   private speedMul = 1;
   private center = new THREE.Vector3();
   private k = 1;
+  private guide: THREE.Mesh | null = null;
   public onReady: (() => void) | null = null;
 
   constructor() {
@@ -189,6 +191,8 @@ export class GearHunt extends BaseMachine implements DragMachine {
     return {
       update: (dt: number) => {
         self.theta += BASE_OMEGA * self.speedMul * dt;
+        // 전부 조립하면 반투명 가이드(원본 STL 윤곽)를 숨겨 실제 기어만 보이게 한다
+        if (self.guide) self.guide.visible = self.placed < DRAG_DEFS.length;
         for (const entry of [...self.preAnimated, ...self.animated]) {
           const axis = toThree(entry.def.axisDirScad).normalize();
           if (entry.def.kind === 'rotate') {
@@ -379,6 +383,7 @@ export class GearHunt extends BaseMachine implements DragMachine {
         const ghostMesh = new THREE.Mesh(totalGeo, guideMaterial);
         ghostMesh.scale.setScalar(this.k);
         this.root.add(ghostMesh);
+        this.guide = ghostMesh;
 
         for (const pre of PRE_PLACED) {
           loader
@@ -404,8 +409,11 @@ export class GearHunt extends BaseMachine implements DragMachine {
         for (const def of DRAG_DEFS) {
           loader
             .loadAsync(`/models/${def.file}`)
-            .then((geo) => {
-              geo.rotateX(-Math.PI / 2);
+            .then((stlGeo) => {
+              // 베벨 기어는 STL 대신 실제 치형의 절차 모델로 교체(위치·축은 동일)
+              const bevel = buildGearHuntBevel(def.id);
+              const geo = bevel ?? stlGeo;
+              if (!bevel) geo.rotateX(-Math.PI / 2);
               smoothSTL(geo);
               geo.computeBoundingBox();
               const pbb = geo.boundingBox;
