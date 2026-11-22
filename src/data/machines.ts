@@ -16,6 +16,16 @@ import { DrivetrainEVDual } from '../machines/DrivetrainEVDual';
 import { CamAutomata } from '../machines/CamAutomata';
 import { DiscBrakeRig } from '../machines/DiscBrakeRig';
 import { Wiper } from '../machines/Wiper';
+import { HandDrill } from '../machines/HandDrill';
+import { SewingMachine } from '../machines/SewingMachine';
+import { BikeBrake } from '../machines/BikeBrake';
+import { DynamoLight } from '../machines/DynamoLight';
+import { HandCart } from '../machines/HandCart';
+import { CarEngine } from '../machines/CarEngine';
+import { Gearbox } from '../machines/Gearbox';
+import { Lathe } from '../machines/Lathe';
+import { Winch } from '../machines/Winch';
+import { Conveyor } from '../machines/Conveyor';
 import type { CameraView } from '../scene/SceneSetup';
 
 export interface StepDef {
@@ -293,6 +303,156 @@ export const MACHINES: MachineDef[] = [
       { partId: 'link', label: '링크' }
     ],
     create: () => new Wiper()
+  },
+  {
+    id: 'handdrill',
+    group: 'life',
+    summary: '손잡이의 회전이 직각으로 꺾여 드릴 날로',
+    name: '핸드 드릴',
+    icon: '🪛',
+    missionText: '손잡이를 돌려도 드릴 날이 돌지 않는 핸드 드릴! 직각으로 만나는 두 축 사이에 동력을 전달하는 기어와, 드릴 날까지 회전을 전달하는 축을 찾아 조립하세요!',
+    hint: '원뿔 모양으로 생겨 직각으로 만나는 두 축을 이어 주는 전동용 기어를 먼저 끼우고, 회전체와 함께 돌며 동력을 전달하는 축(축용)을 끼워 주세요!',
+    completeText: '베벨 기어가 회전 방향을 직각으로 바꿔 드릴 날이 돌아요 🪛',
+    steps: [
+      { partId: 'bevelGear', label: '베벨 기어' },
+      { partId: 'driveShaft', label: '전동축' }
+    ],
+    create: () => new HandDrill()
+  },
+  {
+    id: 'sewing',
+    group: 'life',
+    summary: '모터의 회전이 바늘의 위아래 운동으로',
+    name: '재봉틀',
+    icon: '🧵',
+    missionText: '바늘이 움직이지 않는 재봉틀! 멀리 떨어진 모터의 힘을 조용히 전달하는 기계요소와, 회전 운동을 바늘의 왕복 운동으로 바꾸는 축을 찾아 조립하세요!',
+    hint: '두 축의 거리가 멀 때 마찰력으로 조용히 동력을 전달하는 전동용 기계요소를 먼저 걸고, 회전 운동과 왕복 운동을 서로 바꾸는 축(축용)을 끼워 주세요!',
+    completeText: '벨트가 모터의 힘을 전하고 크랭크축이 바늘을 위아래로 움직여요 🧵',
+    steps: [
+      { partId: 'beltPulley', label: '벨트와 풀리' },
+      { partId: 'crankShaft', label: '크랭크축' }
+    ],
+    create: () => new SewingMachine()
+  },
+  {
+    id: 'bikebrake',
+    group: 'life',
+    summary: '레버를 쥐면 블록이 바퀴 테를 눌러요',
+    name: '자전거 브레이크',
+    icon: '🚴',
+    missionText: '달리는 자전거 바퀴를 멈출 수 없어요! 바퀴 테를 눌러 멈추게 하는 기계요소와, 레버를 놓으면 브레이크가 제자리로 돌아오게 하는 기계요소를 찾아 조립하세요!',
+    hint: '브레이크 블록을 바퀴 테에 눌러 마찰력으로 멈추는 제어용 기계요소를 먼저 달고, 눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 끼워 주세요!',
+    completeText: '블록이 바퀴 테를 눌러 멈추고, 스프링이 브레이크를 제자리로 돌려요 🚴',
+    steps: [
+      { partId: 'blockBrake', label: '블록 브레이크' },
+      { partId: 'spring', label: '스프링' }
+    ],
+    create: () => new BikeBrake()
+  },
+  {
+    id: 'dynamo',
+    group: 'life',
+    summary: '바퀴에 닿은 작은 바퀴가 발전기를 돌려요',
+    name: '자전거 전조등',
+    icon: '🔦',
+    missionText: '자전거 전조등에 불이 들어오지 않아요! 타이어에 맞닿아 마찰력으로 회전을 전달받는 기계요소와, 발전기 축을 매끄럽게 받쳐 주는 기계요소를 찾아 조립하세요!',
+    hint: '접촉면의 마찰력으로 회전을 전달하는 전동용 기계요소를 먼저 달고, 구슬이 굴러 마찰을 줄이는 축용 기계요소를 끼워 주세요!',
+    completeText: '마찰차가 바퀴의 회전을 발전기로 전해 전조등이 켜져요 🔦',
+    steps: [
+      { partId: 'frictionWheel', label: '마찰차' },
+      { partId: 'bearing', label: '볼 베어링' }
+    ],
+    create: () => new DynamoLight()
+  },
+  {
+    id: 'cart',
+    group: 'life',
+    summary: '바퀴를 받치는 축과 빠짐을 막는 핀',
+    name: '손수레',
+    icon: '🛒',
+    missionText: '바퀴가 빠진 손수레를 고쳐 주세요! 바퀴의 회전 중심을 받쳐 주는 축과, 바퀴가 축에서 빠지지 않도록 끝을 벌려 고정하는 기계요소를 찾아 조립하세요!',
+    hint: '몸체에 고정되어 바퀴만 회전하게 하는 축(축용)을 먼저 끼우고, 끝이 두 갈래로 갈라진 결합용 핀으로 바퀴를 고정하세요!',
+    completeText: '차축이 바퀴를 받치고 분할 핀이 바퀴가 빠지지 않게 잡아 줘요 🛒',
+    steps: [
+      { partId: 'axle', label: '차축' },
+      { partId: 'pinSplit', label: '분할 핀' }
+    ],
+    create: () => new HandCart()
+  },
+  {
+    id: 'engine',
+    group: 'car',
+    summary: '피스톤의 왕복이 회전으로, 캠이 밸브를 열어요',
+    name: '자동차 엔진',
+    icon: '🔥',
+    missionText: '피스톤은 있는데 힘이 바퀴로 가지 못하는 엔진! 피스톤의 왕복 운동을 회전 운동으로 바꾸는 축과, 회전하며 밸브를 눌러 여닫는 기계요소를 찾아 조립하세요!',
+    hint: '왕복 운동과 회전 운동을 서로 바꾸는 축(축용)을 먼저 끼우고, 회전 운동을 왕복 운동으로 바꾸는 달걀 모양의 전동용 기계요소를 달아 주세요!',
+    completeText: '크랭크축이 피스톤의 왕복을 회전으로 바꾸고 캠이 밸브를 여닫아요 🔥',
+    steps: [
+      { partId: 'crankShaft', label: '크랭크축' },
+      { partId: 'cam', label: '캠' }
+    ],
+    create: () => new CarEngine()
+  },
+  {
+    id: 'gearbox',
+    group: 'car',
+    summary: '기어를 바꿔 물려 속도와 힘을 조절',
+    name: '변속기',
+    icon: '⚙️',
+    missionText: '엔진의 힘을 바퀴 쪽으로 넘겨주지 못하는 변속기! 회전을 전달하는 축과, 이가 비스듬해 조용하게 맞물리는 기어를 찾아 조립하세요!',
+    hint: '회전체에 고정되어 함께 돌며 동력을 전달하는 축(축용)을 먼저 끼우고, 이가 경사져 진동과 소음이 적은 전동용 기어를 맞물려 주세요!',
+    completeText: '헬리컬 기어가 조용히 맞물려 속도를 바꿔 전달해요 ⚙️',
+    steps: [
+      { partId: 'driveShaft', label: '전동축' },
+      { partId: 'helicalGear', label: '헬리컬 기어' }
+    ],
+    create: () => new Gearbox()
+  },
+  {
+    id: 'lathe',
+    group: 'build',
+    summary: '공작물을 돌려 깎는 공작 기계',
+    name: '선반',
+    icon: '🏭',
+    missionText: '공작물이 돌지 않는 선반! 모터의 힘을 주축대로 전달하는 기계요소와, 가깝고 평행한 두 축 사이에 정확하게 동력을 전달하는 기어를 찾아 조립하세요!',
+    hint: '멀리 떨어진 모터와 주축대를 잇는 전동용 기계요소를 먼저 걸고, 평행한 두 축 사이에 쓰이는 가장 기본적인 기어를 끼워 주세요!',
+    completeText: '벨트와 평 기어가 주축을 돌려 공작물을 깎아요 🏭',
+    steps: [
+      { partId: 'beltPulley', label: '벨트와 풀리' },
+      { partId: 'spurGear', label: '평 기어' }
+    ],
+    create: () => new Lathe()
+  },
+  {
+    id: 'winch',
+    group: 'build',
+    summary: '작은 힘으로 무거운 짐을 천천히 들어 올려요',
+    name: '윈치 크레인',
+    icon: '🏗️',
+    missionText: '무거운 짐을 들어 올리지 못하는 윈치! 손잡이를 축에 고정하는 기계요소와, 큰 감속비로 힘을 키워 주는 기어를 찾아 조립하세요!',
+    hint: '끝으로 갈수록 가늘어지는 결합용 핀으로 손잡이를 축에 고정하고, 큰 감속비가 필요할 때 쓰는 나사 모양의 전동용 기어를 끼워 주세요!',
+    completeText: '웜 기어가 속도를 크게 줄여 무거운 짐도 천천히 들어 올려요 🏗️',
+    steps: [
+      { partId: 'pinTaper', label: '테이퍼 핀' },
+      { partId: 'wormGear', label: '웜과 웜 기어' }
+    ],
+    create: () => new Winch()
+  },
+  {
+    id: 'conveyor',
+    group: 'build',
+    summary: '체인이 상자를 일정한 속도로 날라요',
+    name: '컨베이어',
+    icon: '📦',
+    missionText: '상자를 나르지 못하는 컨베이어! 체인과 맞물려 돌아가는 톱니바퀴와, 멀리 떨어진 두 축을 미끄럼 없이 이어 주는 기계요소를 찾아 조립하세요!',
+    hint: '체인의 이와 맞물리는 전동용 톱니바퀴를 먼저 끼우고, 스프로킷에 걸려 정확하게 동력을 전달하는 전동용 기계요소를 걸어 주세요!',
+    completeText: '스프로킷과 체인이 미끄러지지 않고 상자를 날라요 📦',
+    steps: [
+      { partId: 'sprocket', label: '스프로킷' },
+      { partId: 'chain', label: '체인' }
+    ],
+    create: () => new Conveyor()
   }
 ];
 
