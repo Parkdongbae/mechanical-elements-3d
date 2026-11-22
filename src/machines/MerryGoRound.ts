@@ -15,7 +15,8 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { BaseMachine, type MachineSim } from './types';
-import { generatePlanarUVs, getGrainMaps } from '../models/surfaces';
+import { brass, chrome, ghost, paint, plastic, rubber, steel } from '../models/materials';
+import { smoothSTL } from './stlShared';
 
 const MODEL_DIR = '/models/merry_round/';
 const ROOT_Y = 0.02;   // 베이스 바닥 높이 — 바닥면 바로 위에 안착
@@ -26,65 +27,55 @@ const INTRO_DUR = 0.8;    // 부재 1개 낙하 시간(s)
 const SPIN_SPEED = 0.85;  // 정답 후 회전 각속도 (rad/s) ≈ 8.1 rpm
 const SPIN_RAMP = 1.8;    // 회전 속도가 최고 속도까지 올라가는 시간(s)
 
-interface MatSpec {
-  color: number;
-  metalness: number;
-  roughness: number;
-  env?: number;
-  emissive?: number;
-}
+type MatFactory = () => THREE.MeshStandardMaterial;
 
 interface PartRecipe {
   file: string;
   delay: number; // 인트로 시작 후 대기 시간(s) — 조립 순서
   spin: boolean; // 정답 후 함께 회전하는 부분인가
-  mats: MatSpec[];
+  mats: MatFactory[];
   split?: (cx: number, cy: number, cz: number) => number; // 삼각형 무게중심 → 재질 번호
-  bumpScale?: number;
-  ghost?: { opacity: number }; // 반투명 처리 — 판 아래 부품(베어링·축·베이스)이 보이게
 }
 
-// 사실적 재질 스펙 (참조 사진 + OpenSCAD 색상 기준)
+/** 베어링 플래시용: emissive를 재질 색 계열로 두고 기본 강도 0.08(updateBearingFlash가 변조) */
+function withGlow(m: THREE.MeshStandardMaterial, emissive: number): THREE.MeshStandardMaterial {
+  m.emissive.setHex(emissive);
+  m.emissiveIntensity = 0.08;
+  return m;
+}
+
+// 재질: 콘크리트 베이스 / 아연도금 축 / 광택 도장 허브·핸들 / 반투명 회전판 / 크롬 링 + 황동 볼
 const PART_RECIPES: PartRecipe[] = [
   {
     file: 'base.stl', delay: 0.0, spin: false,
-    mats: [{ color: 0x8f9399, metalness: 0.08, roughness: 0.92, env: 0.55 }] // 콘크리트 고정부
+    mats: [() => plastic(0x8f9399, { roughness: 0.92 })] // 콘크리트 고정부
   },
   {
     file: 'shaft.stl', delay: 0.5, spin: false,
-    // 불투명 유지(인트로 페이드 후 transparent=false) — 베어링 볼과 링이 잘 보이게 한다
-    mats: [{ color: 0xaab0b8, metalness: 0.9, roughness: 0.34, env: 1.2 }] // 아연도금 축
+    // 불투명 유지 — 베어링 볼과 링이 잘 보이게 한다
+    mats: [() => steel({ color: 0xb4bcc5 })]
   },
   {
     file: 'hub_cap.stl', delay: 1.0, spin: true,
-    mats: [{ color: 0x1b2a6b, metalness: 0.4, roughness: 0.45, env: 1.0 }] // 미드나잇 블루 허브 캡
+    mats: [() => paint(0x1b2a6b)] // 미드나잇 블루 허브 캡
   },
   {
     file: 'turntable.stl', delay: 1.5, spin: true,
-    // 반투명 유리판 — 판 아래의 볼 베어링·축·베이스가 판 위에서도 보이게 한다
-    mats: [{ color: 0x1d4fae, metalness: 0.32, roughness: 0.52, env: 0.95 }], // 로얄 블루 회전판
-    bumpScale: 0.03, // 다이아몬드 tread plate 느낌
-    ghost: { opacity: 0.45 }
+    // 반투명 유리판 — 판 아래의 볼 베어링·축·베이스가 판 위에서도 보이게 한다(opacity 0.45 유지)
+    mats: [() => ghost(0x1d4fae, 0.45)]
   },
   {
     file: 'handles.stl', delay: 2.0, spin: true,
     // 8개 핸들을 45° 간격으로 분할해 빨강/파랑 교차 (사진과 동일)
-    mats: [
-      { color: 0xc0334b, metalness: 0.35, roughness: 0.42, env: 1.0 }, // 크림슨
-      { color: 0x1f6fd6, metalness: 0.35, roughness: 0.42, env: 1.0 }  // 도저 블루
-    ],
+    mats: [() => paint(0xc0334b), () => paint(0x1f6fd6)],
     split: handleMaterialIndex
   }
 ];
 const BEARING_RECIPE: PartRecipe = {
   file: 'ball_bearing.stl', delay: 0, spin: true,
-  // 무게중심 반지름 ~70mm(볼) → 금색 볼, 그 외 → 강재 링
-  mats: [
-    { color: 0xcdd3da, metalness: 1.0, roughness: 0.2, env: 1.35, emissive: 0x9fb2c4 }, // 내·외륜
-    { color: 0xd9a91e, metalness: 1.0, roughness: 0.16, env: 1.45, emissive: 0xd4a017 } // 볼 16개
-  ],
-  split: bearingMaterialIndex,
-  bumpScale: 0.008
+  // 무게중심 반지름 ~70mm(볼) → 황동 볼, 그 외 → 크롬 링
+  mats: [() => withGlow(chrome(), 0x9fb2c4), () => withGlow(brass({ roughness: 0.2 }), 0xd4a017)],
+  split: bearingMaterialIndex
 };
 
 /** 핸들: 8개가 45° 간격 — 무게중심 각도로 번호를 매겨 홀수번은 파랑, 짝수번은 빨강 */
@@ -298,7 +289,7 @@ export class MerryGoRound extends BaseMachine {
   private buildGroundDisc(): void {
     const pad = new THREE.Mesh(
       new THREE.CylinderGeometry(1.15, 1.15, 0.02, 48),
-      new THREE.MeshStandardMaterial({ color: 0x7fc4b2, roughness: 0.96, metalness: 0 })
+      rubber({ color: 0x7fc4b2, roughness: 0.96 })
     );
     pad.position.y = 0.01;
     pad.receiveShadow = true;
@@ -328,7 +319,7 @@ export class MerryGoRound extends BaseMachine {
   ): { geo: THREE.BufferGeometry; center: THREE.Vector3 } {
     const geo = recipe.split ? splitByMaterial(srcGeo, recipe.split) : srcGeo;
     geo.rotateX(-Math.PI / 2);
-    generatePlanarUVs(geo);
+    smoothSTL(geo);
     geo.computeBoundingBox();
     const bb = geo.boundingBox;
     if (!bb) throw new Error('STL bounding box missing');
@@ -338,24 +329,7 @@ export class MerryGoRound extends BaseMachine {
   }
 
   private makeMaterials(recipe: PartRecipe): THREE.MeshStandardMaterial[] {
-    const grain = getGrainMaps();
-    // 기본은 항상 불투명. recipe.ghost가 있으면 반투명 유리처럼 처리해 판 아래 부품이 보이게 한다
-    // (depthWrite=false — 반투명 판이 아래 부품 깊이를 가리지 않도록)
-    const ghost = recipe.ghost;
-    return recipe.mats.map((spec) => new THREE.MeshStandardMaterial({
-      color: spec.color,
-      metalness: spec.metalness,
-      roughness: spec.roughness,
-      roughnessMap: grain.roughness,
-      bumpMap: grain.bump,
-      bumpScale: recipe.bumpScale ?? 0.015,
-      envMapIntensity: spec.env ?? 1.0,
-      emissive: spec.emissive ?? 0x000000,
-      emissiveIntensity: 0.08,
-      transparent: !!ghost,
-      opacity: ghost ? ghost.opacity : 1,
-      depthWrite: !ghost
-    }));
+    return recipe.mats.map((make) => make());
   }
 
   private onPartLoaded(recipe: PartRecipe, loadedGeo: THREE.BufferGeometry): void {
@@ -367,6 +341,7 @@ export class MerryGoRound extends BaseMachine {
     );
     mesh.scale.setScalar(K);
     mesh.castShadow = true;
+    mesh.receiveShadow = true;
     const homeY = center.y * K;
     mesh.position.set(center.x * K, homeY, center.z * K);
     // 진행도 복원(체결 완료 상태)이면 인트로 없이 바로 표시

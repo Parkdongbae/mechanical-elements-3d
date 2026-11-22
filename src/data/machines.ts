@@ -54,6 +54,7 @@ export interface MachineDef {
 export const MACHINES: MachineDef[] = [
   {
     id: 'bicycle',
+    view: { pos: [3.4, 3, 6.2], target: [-0.2, 1.6, 0] },
     group: 'life',
     summary: '페달의 힘이 체인을 타고 뒷바퀴로',
     name: '자전거',
@@ -73,6 +74,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'clock',
+    view: { pos: [1.5, 2.4, 4.7], target: [0, 1.55, -0.1] },
     group: 'life',
     summary: '태엽과 기어가 바늘을 돌려요',
     name: '시계',
@@ -88,6 +90,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'treadmill',
+    view: { pos: [3.5, 3.6, 6.2], target: [0.6, 1.15, 0] },
     group: 'life',
     summary: '모터와 벨트로 달리는 바닥',
     name: '러닝머신',
@@ -103,6 +106,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'steering',
+    view: { pos: [2.8, 2.4, -2.2], target: [0.15, 0.5, 0.15] },
     group: 'car',
     summary: '핸들의 회전이 바퀴 방향으로',
     name: '자동차 핸들',
@@ -142,6 +146,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'drivetrain-ff',
+    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '엔진이 앞바퀴를 굴려요',
     name: 'FF 전륜구동',
@@ -158,6 +163,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'drivetrain-fr',
+    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '엔진의 힘을 뒷바퀴까지',
     name: 'FR 후륜구동',
@@ -175,6 +181,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'drivetrain-awd',
+    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '네 바퀴 모두에 동력을',
     name: 'AWD 사륜구동',
@@ -192,6 +199,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ev-single',
+    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '모터 하나로 달리는 전기차',
     name: '싱글 모터(2WD)',
@@ -208,6 +216,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ev-dual',
+    view: { pos: [3.3, 2.7, 4.8], target: [0, 0.4, 0] },
     group: 'drivetrain',
     summary: '앞뒤 모터로 네 바퀴 구동',
     name: '듀얼 모터(AWD)',
@@ -236,6 +245,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'automata',
+    view: { pos: [2.9, 2.3, 4], target: [0.1, 0.85, 0] },
     group: 'life',
     summary: '손잡이를 돌리면 인형이 오르락내리락',
     name: '캠 오토마타',
@@ -251,6 +261,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'discbrake',
+    view: { pos: [3.9, 3.2, 5.2], target: [-0.35, 1.8, 0.2] },
     group: 'car',
     summary: '달리는 바퀴를 패드로 꽉 잡아 멈춰요',
     name: '디스크 브레이크',
@@ -266,6 +277,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'wiper',
+    view: { pos: [1.6, 4.4, 5.6], target: [0.1, 1.3, 0.2] },
     group: 'car',
     summary: '모터의 회전이 와이퍼의 왕복 운동으로',
     name: '와이퍼',

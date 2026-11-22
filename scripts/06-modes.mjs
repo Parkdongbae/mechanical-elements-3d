@@ -30,28 +30,38 @@ async function open(mode) {
   await p.close();
 }
 
-// 퀴즈 전체 흐름
-const p = await open('quiz');
-await p.screenshot({ path: `shots/06-quiz-start-${tag}.png` });
-await p.click('text=시작하기');
-await p.waitForTimeout(1200);
-await p.screenshot({ path: `shots/06-quiz-q1-${tag}.png` });
-await p.click('.quiz-choice >> nth=0');
-await p.waitForTimeout(900);
-await p.screenshot({ path: `shots/06-quiz-fb1-${tag}.png` });
-for (let i = 1; i < 10; i++) {
+// 퀴즈 전체 흐름 (dev 서버 HMR 리로드로 끊기면 처음부터 재시도)
+for (let attempt = 0; attempt < 4; attempt++) {
+  const p = await open('quiz');
+  try {
+  const p = await open('quiz');
+  await p.screenshot({ path: `shots/06-quiz-start-${tag}.png` });
+  await p.click('text=시작하기');
+  await p.waitForTimeout(1200);
+  await p.screenshot({ path: `shots/06-quiz-q1-${tag}.png` });
+  await p.click('.quiz-choice >> nth=0');
+  await p.waitForTimeout(900);
+  await p.screenshot({ path: `shots/06-quiz-fb1-${tag}.png` });
+  for (let i = 1; i < 10; i++) {
+    await p.click('.quiz-next');
+    await p.waitForTimeout(500);
+    if (i === 4) await p.screenshot({ path: `shots/06-quiz-q${i + 1}-${tag}.png` });
+    await p.click(`.quiz-choice >> nth=${i % 2}`);
+    await p.waitForTimeout(500);
+    if (i === 8) await p.screenshot({ path: `shots/06-quiz-fb${i + 1}-${tag}.png` });
+  }
   await p.click('.quiz-next');
-  await p.waitForTimeout(500);
-  if (i === 4) await p.screenshot({ path: `shots/06-quiz-q${i + 1}-${tag}.png` });
-  await p.click(`.quiz-choice >> nth=${i % 2}`);
-  await p.waitForTimeout(500);
-  if (i === 8) await p.screenshot({ path: `shots/06-quiz-fb${i + 1}-${tag}.png` });
+  await p.waitForTimeout(1000);
+  await p.screenshot({ path: `shots/06-quiz-result-${tag}.png` });
+  console.log('stored', await p.evaluate(() => localStorage.getItem('mech3d-quiz-v1')));
+  const reviewBtn = p.locator('.quiz-review-item .quiz-btn').first();
+  if (await reviewBtn.count()) { await reviewBtn.click(); await p.waitForTimeout(1500); await p.screenshot({ path: `shots/06-quiz-review-${tag}.png` }); }
+
+    break;
+  } catch (e) {
+    console.log('retry quiz flow:', String(e).slice(0, 80));
+    await p.close();
+  }
 }
-await p.click('.quiz-next');
-await p.waitForTimeout(1000);
-await p.screenshot({ path: `shots/06-quiz-result-${tag}.png` });
-console.log('stored', await p.evaluate(() => localStorage.getItem('mech3d-quiz-v1')));
-const reviewBtn = p.locator('.quiz-review-item .quiz-btn').first();
-if (await reviewBtn.count()) { await reviewBtn.click(); await p.waitForTimeout(1500); await p.screenshot({ path: `shots/06-quiz-review-${tag}.png` }); }
 await browser.close();
 console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'no console errors');

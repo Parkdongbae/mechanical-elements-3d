@@ -23,7 +23,8 @@ const steps = await page.evaluate(async (mid) => {
 }, id);
 let n = 0;
 for (const st of steps) {
-  await page.click(`.cat-btn[data-cat="${st.cat}"]`);
+  // 같은 분류가 이미 열려 있으면 다시 누르지 않는다(누르면 닫힘)
+  if (!(await page.$(`.cat-btn.active[data-cat="${st.cat}"]`))) await page.click(`.cat-btn[data-cat="${st.cat}"]`);
   await page.waitForTimeout(500);
   if (n === 0) await page.screenshot({ path: `${tag}-1tray.png` });
   await page.click(`.part-card:has-text("${st.name}")`);

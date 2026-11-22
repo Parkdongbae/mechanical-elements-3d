@@ -10,7 +10,8 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { BaseMachine, type MachineSim } from './types';
-import { generatePlanarUVs, getGrainMaps } from '../models/surfaces';
+import { darkSteel, paint, plastic, steel } from '../models/materials';
+import { smoothSTL, startTransparent } from './stlShared';
 
 const MODEL_DIR = '/models/bolt_nut/';
 const ROOT_Y = 1.16;      // 씬 기준: 기둥 접합부(OpenSCAD 원점) 높이 — 하부 기둥 바닥이 받침대(0.12) 위에 안착
@@ -22,20 +23,18 @@ const INTRO_DUR = 0.8;    // 부재 1개 낙하 시간(s)
 
 interface PartRecipe {
   file: string;
-  color: number;
-  metalness: number;
-  roughness: number;
   delay: number; // 인트로 시작 후 대기 시간(s) — 시공 순서
+  make: () => THREE.MeshStandardMaterial;
 }
 
-// 사실적 강재 재질: 아연도금 강관 기둥 / 도장 강재 / 레드옥사이드 프라이머 접합판 / H형강
+// 재질: 아연도금 강관 기둥(steel) / 접합판(어두운 강재) / 적갈색 방청 도장 H형강(paint)
 const STRUCTURE_RECIPES: PartRecipe[] = [
-  { file: 'lower_column.stl', color: 0x99a3ad, metalness: 0.88, roughness: 0.34, delay: 0.0 },
-  { file: 'upper_column.stl', color: 0x5c88ae, metalness: 0.82, roughness: 0.38, delay: 0.5 },
-  { file: 'connection_plates.stl', color: 0x9e3a30, metalness: 0.35, roughness: 0.58, delay: 1.0 },
-  { file: 'horizontal_beams.stl', color: 0x2f6f6a, metalness: 0.78, roughness: 0.42, delay: 1.5 }
+  { file: 'lower_column.stl', delay: 0.0, make: () => steel({ color: 0xb4bcc5, roughness: 0.38 }) },
+  { file: 'upper_column.stl', delay: 0.5, make: () => steel({ color: 0x9fb2c4, roughness: 0.4 }) },
+  { file: 'connection_plates.stl', delay: 1.0, make: () => darkSteel({ color: 0x6b727a, roughness: 0.45 }) },
+  { file: 'horizontal_beams.stl', delay: 1.5, make: () => paint(0x9c3b2e, { roughness: 0.5 }) }
 ];
-const BOLT_RECIPE: PartRecipe = { file: 'bolts_nuts.stl', color: 0xd4a017, metalness: 0.92, roughness: 0.26, delay: 0 };
+const BOLT_RECIPE = { file: 'bolts_nuts.stl', color: 0xd4a017 };
 
 interface StructurePart {
   recipe: PartRecipe;
@@ -222,7 +221,7 @@ export class SteelFrame extends BaseMachine {
   private buildPlinth(): void {
     const concrete = new THREE.Mesh(
       new THREE.BoxGeometry(0.9, PLINTH_TOP, 0.5),
-      new THREE.MeshStandardMaterial({ color: 0xb5afa4, roughness: 0.95, metalness: 0 })
+      plastic(0xb5afa4, { roughness: 0.95 })
     );
     concrete.position.set(0, PLINTH_TOP / 2, 0);
     concrete.receiveShadow = true;
@@ -249,7 +248,7 @@ export class SteelFrame extends BaseMachine {
   /** OpenSCAD(Z-up, mm) → three.js(Y-up) 회전 후 bbox 중심 재배치 정보 계산 */
   private prepareGeometry(geo: THREE.BufferGeometry): { center: THREE.Vector3; size: THREE.Vector3 } {
     geo.rotateX(-Math.PI / 2);
-    generatePlanarUVs(geo);
+    smoothSTL(geo);
     geo.computeBoundingBox();
     const bb = geo.boundingBox;
     if (!bb) throw new Error('STL bounding box missing');
@@ -261,21 +260,11 @@ export class SteelFrame extends BaseMachine {
 
   private onStructureLoaded(recipe: PartRecipe, geo: THREE.BufferGeometry): void {
     const { center } = this.prepareGeometry(geo);
-    const grain = getGrainMaps();
-    const material = new THREE.MeshStandardMaterial({
-      color: recipe.color,
-      metalness: recipe.metalness,
-      roughness: recipe.roughness,
-      roughnessMap: grain.roughness,
-      bumpMap: grain.bump,
-      bumpScale: 0.02,
-      envMapIntensity: recipe.metalness >= 0.6 ? 1.25 : 0.9,
-      transparent: true,
-      opacity: 0
-    });
+    const material = startTransparent(recipe.make());
     const mesh = new THREE.Mesh(geo, material);
     mesh.scale.setScalar(K);
     mesh.castShadow = true;
+    mesh.receiveShadow = true;
     const homeY = center.y * K;
     mesh.position.set(center.x * K, homeY, center.z * K);
     // 진행도 복원(체결 완료 상태)이면 인트로 없이 바로 표시
@@ -293,17 +282,10 @@ export class SteelFrame extends BaseMachine {
   private onBoltLoaded(geo: THREE.BufferGeometry): void {
     const { center } = this.prepareGeometry(geo);
     this.boltGeometry = geo;
-    this.boltMaterial = new THREE.MeshStandardMaterial({
-      color: BOLT_RECIPE.color,
-      metalness: BOLT_RECIPE.metalness,
-      roughness: BOLT_RECIPE.roughness,
-      roughnessMap: getGrainMaps().roughness,
-      bumpMap: getGrainMaps().bump,
-      bumpScale: 0.012,
-      envMapIntensity: 1.3,
-      emissive: BOLT_RECIPE.color,
-      emissiveIntensity: 0.08
-    });
+    // 아연도금 볼트·너트 — emissive는 체결 플래시(emissiveIntensity 변조)용
+    this.boltMaterial = steel({ color: 0xe3e8ee, roughness: 0.28 });
+    this.boltMaterial.emissive.setHex(BOLT_RECIPE.color);
+    this.boltMaterial.emissiveIntensity = 0.08;
     this.boltCenter.copy(center.multiplyScalar(K));
     this.boltLoaded = true;
     if (this.pendingInstall) {
