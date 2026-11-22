@@ -13,7 +13,7 @@ await page.addInitScript((t) => {
   localStorage.setItem('mech3d-settings-v1', JSON.stringify({ difficulty: 'low', sound: false, showLabels: true, theme: t, quality: 'high' }));
   localStorage.removeItem('mech3d-progress-v2');
 }, theme);
-await page.goto('http://localhost:5173/#/m/' + id);
+await page.goto('http://localhost:5273/#/m/' + id);
 await page.waitForTimeout(3500);
 const tag = `shots/flow-${id}-${theme}-${w}`;
 const steps = await page.evaluate(async (mid) => {

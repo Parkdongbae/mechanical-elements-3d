@@ -411,6 +411,32 @@ input:focus-visible {
   color: var(--cat-control);
 }
 
+.home-labs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.mode-lab-bike {
+  background: color-mix(in srgb, var(--cat-power) 15%, transparent);
+  color: var(--cat-power);
+}
+
+.mode-lab-car {
+  background: color-mix(in srgb, var(--cat-joining) 16%, transparent);
+  color: var(--cat-joining);
+}
+
+.mode-lab-wind {
+  background: color-mix(in srgb, var(--cat-shaft) 16%, transparent);
+  color: var(--cat-shaft);
+}
+
+.mode-lab-power {
+  background: color-mix(in srgb, var(--ok) 16%, transparent);
+  color: var(--ok);
+}
+
 .mode-text {
   display: flex;
   flex-direction: column;
@@ -849,23 +875,9 @@ input:focus-visible {
 }
 
 .rpm-arrow {
-  width: 2px;
-  height: 14px;
-  margin: 5px 0 5px 8px;
-  background: var(--line-strong);
-  position: relative;
-}
-
-.rpm-arrow::after {
-  content: '';
-  position: absolute;
-  left: -3px;
-  bottom: -1px;
-  width: 6px;
-  height: 6px;
-  border-right: 2px solid var(--line-strong);
-  border-bottom: 2px solid var(--line-strong);
-  transform: rotate(45deg);
+  height: 1px;
+  margin: 8px 0;
+  background: var(--line);
 }
 
 #speed-control {
@@ -1375,7 +1387,8 @@ input:focus-visible {
   .home-hero h2 {
     font-size: 22px;
   }
-  .home-modes {
+  .home-modes,
+  .home-labs {
     grid-template-columns: 1fr;
   }
   .home-grid {

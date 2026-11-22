@@ -4,6 +4,14 @@ import * as THREE from 'three';
 import './styles/tokens.css';
 import './styles/app.css';
 import './styles/modes.css';
+import './styles/lab-bike.css';
+import './styles/lab-car.css';
+import './styles/lab-power.css';
+import './styles/lab-wind.css';
+import './styles/lab-cycle.css';
+import './styles/lab-engines.css';
+import './styles/lab-steam.css';
+import './styles/lab-pump.css';
 import { SceneManager, DEFAULT_VIEW } from './scene/SceneSetup';
 import { buildPart, normalizePart, disposeObject } from './models/factory';
 import { ThumbnailFactory } from './models/thumbnails';
@@ -17,15 +25,24 @@ import { ICON } from './ui/icons';
 import type { AppMode } from './modes/types';
 import { Encyclopedia, getSeenCount } from './modes/Encyclopedia';
 import { Quiz, getQuizBest } from './modes/Quiz';
+import { BikeGears } from './labs/BikeGears';
+import { CarShift } from './labs/CarShift';
+import { PowerFlow } from './labs/PowerFlow';
+import { WindTunnel } from './labs/WindTunnel';
+import { EngineCycle } from './labs/EngineCycle';
+import { EngineTypes } from './labs/EngineTypes';
+import { SteamEngines } from './labs/SteamEngines';
+import { HandPump } from './labs/HandPump';
 import { loadProgress, saveProgress, clearMachineProgress, clearAllProgress, allMachinesCompleted, type ProgressData } from './state/progress';
-import { loadSettings, saveSettings, type AppSettings } from './state/settings';
+import { guessQuality, loadSettings, saveSettings, type AppSettings } from './state/settings';
 import { playCorrectSound, playWrongSound } from './ui/sound';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#scene');
 if (!canvas) throw new Error('#scene canvas not found');
 
 let settings: AppSettings = loadSettings();
-const sceneMgr = new SceneManager(canvas, { theme: settings.theme, quality: settings.quality });
+const sceneMgr = new SceneManager(canvas, { theme: settings.theme, quality: settings.quality === 'auto' ? guessQuality() : settings.quality });
+sceneMgr.adaptive = settings.quality === 'auto';
 const thumbs = new ThumbnailFactory();
 const physics = new PhysicsFX(sceneMgr.scene);
 const hud = new HUD(
@@ -41,7 +58,9 @@ const hud = new HUD(
     onSettingsChange: (s) => {
       settings = s;
       applyTheme();
-      if (sceneMgr.getQuality() !== s.quality) sceneMgr.setQuality(s.quality);
+      const wanted = s.quality === 'auto' ? guessQuality() : s.quality;
+      sceneMgr.adaptive = s.quality === 'auto';
+      if (sceneMgr.getQuality() !== wanted) sceneMgr.setQuality(wanted);
       if (screen === 'mission' && current) syncMission();
       if (screen === 'home') showHome();
     },
@@ -57,9 +76,8 @@ const hud = new HUD(
 );
 sceneMgr.setLabelsVisible(settings.showLabels);
 sceneMgr.onAutoLowQuality = () => {
-  settings.quality = 'low';
-  saveSettings(settings);
-  hud.refreshSettings();
+  // '자동' 설정은 그대로 두고 이번 실행의 렌더 품질만 낮춘다
+  hud.toast('화면이 느려져 그래픽 품질을 낮췄어요.', 'info');
 };
 
 function applyTheme(): void {
@@ -273,6 +291,7 @@ function handleSelect(id: string): void {
   const step = def.steps[count]!;
 
   if (part.id === step.partId) {
+    hud.closePanel(); // 부품이 날아가 장착되는 모습이 트레이에 가려지지 않게 바로 닫는다
     flyAndInstall(part.id, count);
     return;
   }
@@ -568,10 +587,22 @@ function tick(): void {
 
 // ── 화면 전환 (해시 라우팅: #/ 홈, #/m/<id> 미션, #/enc 도감, #/quiz 퀴즈) ──
 
-type Screen = 'home' | 'mission' | 'enc' | 'quiz';
+type ModeId = 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump';
+type Screen = 'home' | 'mission' | ModeId;
 let screen: Screen = 'home';
 let activeMode: AppMode | null = null;
-const modes: Record<'enc' | 'quiz', AppMode> = { enc: new Encyclopedia(), quiz: new Quiz() };
+const modes: Record<ModeId, { name: string; mode: AppMode }> = {
+  enc: { name: '기계요소 도감', mode: new Encyclopedia() },
+  quiz: { name: '단원 퀴즈', mode: new Quiz() },
+  'lab/bike': { name: '자전거 기어 변속', mode: new BikeGears() },
+  'lab/car': { name: '자동차 기어 변속', mode: new CarShift() },
+  'lab/power': { name: '자동차의 동력 전달', mode: new PowerFlow() },
+  'lab/wind': { name: '풍동 실험', mode: new WindTunnel() },
+  'lab/cycle': { name: '엔진의 작동 원리', mode: new EngineCycle() },
+  'lab/engines': { name: '엔진의 종류', mode: new EngineTypes() },
+  'lab/steam': { name: '증기 기관', mode: new SteamEngines() },
+  'lab/pump': { name: '우물 손펌프', mode: new HandPump() }
+};
 
 const home = new HomeScreen({
   onOpenMission: (id) => navigate(`m/${id}`),
@@ -633,8 +664,9 @@ function route(): void {
     switchMachine(arg);
     return;
   }
-  if (head === 'enc' || head === 'quiz') {
-    screen = head;
+  const modeId = (head === 'lab' ? `lab/${arg ?? ''}` : head) as ModeId;
+  if (modeId in modes) {
+    screen = modeId;
     leaveMission();
     home.hide();
     // 학습 모드는 씬을 직접 쓰므로 미션 기계를 치운다
@@ -643,9 +675,9 @@ function route(): void {
       current = null;
       sim = null;
     }
-    document.querySelector<HTMLElement>('#mode-name')!.textContent = head === 'enc' ? '기계요소 도감' : '단원 퀴즈';
+    document.querySelector<HTMLElement>('#mode-name')!.textContent = modes[modeId].name;
     modeScreen.classList.remove('hidden');
-    activeMode = modes[head];
+    activeMode = modes[modeId].mode;
     activeMode.enter({
       sceneMgr,
       thumbs,

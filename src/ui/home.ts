@@ -7,7 +7,7 @@ import { ICON } from './icons';
 
 export interface HomeCallbacks {
   onOpenMission: (id: string) => void;
-  onOpenMode: (mode: 'enc' | 'quiz') => void;
+  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump') => void;
   onOpenSettings: () => void;
   onToggleTheme: () => void;
 }
@@ -143,6 +143,47 @@ export class HomeScreen {
           </div>
         </section>
 
+        <section class="home-group">
+          <header class="home-group-head">
+            <h2>탐구 실험실</h2>
+            <p>직접 조작하며 변속과 동력 전달의 원리를 알아봐요</p>
+          </header>
+          <div class="home-labs">
+            <button type="button" class="mode-card lab-card" data-mode="lab/bike">
+              <span class="mode-icon mode-lab-bike">${ICON.bike}</span>
+              <span class="mode-text"><strong>자전거 기어 변속</strong><small>앞·뒤 기어를 바꿔 보며 언제 어떤 단을 쓰는지 알아보기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/car">
+              <span class="mode-icon mode-lab-car">${ICON.shift}</span>
+              <span class="mode-text"><strong>자동차 기어 변속</strong><small>수동 5단·자동 변속기를 직접 조작하고 속도 확인하기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/power">
+              <span class="mode-icon mode-lab-power">${ICON.flow}</span>
+              <span class="mode-text"><strong>자동차의 동력 전달</strong><small>엔진에서 바퀴까지, 후륜구동(FR)으로 전체 과정 따라가기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/wind">
+              <span class="mode-icon mode-lab-wind">${ICON.wind}</span>
+              <span class="mode-text"><strong>풍동 실험</strong><small>손잡이·미러·하부를 바꿔 공기저항·다운포스·풍절음 비교하기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/cycle">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-power) 16%, transparent);color:var(--cat-power)">${ICON.cycle}</span>
+              <span class="mode-text"><strong>엔진의 작동 원리</strong><small>4행정(흡입·압축·폭발·배기)과 2행정 기관을 단계별로 눌러 보기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/engines">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-joining) 16%, transparent);color:var(--cat-joining)">${ICON.engine}</span>
+              <span class="mode-text"><strong>엔진의 종류</strong><small>4기통부터 V8, 16기통까지 실린더 배열 비교하기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/steam">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-control) 16%, transparent);color:var(--cat-control)">${ICON.steam}</span>
+              <span class="mode-text"><strong>증기 기관</strong><small>뉴커먼·와트의 증기 기관과 증기 기관차의 원리</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/pump">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-shaft) 16%, transparent);color:var(--cat-shaft)">${ICON.drop}</span>
+              <span class="mode-text"><strong>우물 손펌프</strong><small>손잡이를 움직여 물을 끌어 올리는 원리 알아보기</small></span>
+            </button>
+          </div>
+        </section>
+
         ${groups}
 
         <footer class="home-foot">2022 개정 교육과정 기술·가정② '기계의 구성과 동력 전달' 단원 학습용</footer>
@@ -152,7 +193,7 @@ export class HomeScreen {
       b.addEventListener('click', () => this.cb.onOpenMission(b.dataset.mission ?? ''));
     });
     this.el.querySelectorAll<HTMLElement>('[data-mode]').forEach((b) => {
-      b.addEventListener('click', () => this.cb.onOpenMode(b.dataset.mode === 'quiz' ? 'quiz' : 'enc'));
+      b.addEventListener('click', () => this.cb.onOpenMode((b.dataset.mode ?? 'enc') as Parameters<HomeCallbacks['onOpenMode']>[0]));
     });
     this.el.querySelector('[data-act="theme"]')?.addEventListener('click', () => this.cb.onToggleTheme());
     this.el.querySelector('[data-act="settings"]')?.addEventListener('click', () => this.cb.onOpenSettings());

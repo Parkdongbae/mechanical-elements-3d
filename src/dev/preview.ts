@@ -1,7 +1,9 @@
 // 개발용 미리보기 (HUD 없이 모델만) — 배포 번들에는 포함되지 않는다(preview.html 전용).
 //   /preview.html?part=spurGear            부품 1종
 //   /preview.html?parts=all                부품 22종 격자
+//   /preview.html?mode=bike | car | power   탐구 실험(자전거 변속·자동차 변속·동력 전달) 단독 실행
 //   /preview.html?mode=enc | mode=quiz      학습 모드(도감·퀴즈) 단독 실행
+//   /preview.html?machine=gearhunt&hunt=spur_gear1,bevel_gear1,...  드래그 조립형의 조립 상태 복원
 //   /preview.html?machine=bicycle&steps=6  기계 + n단계 조립(steps=all 가능, 완료 시 시뮬레이션 가동)
 // 공통 옵션: &theme=dark  &q=low  &cam=x,y,z,tx,ty,tz  &t=3 (시뮬레이션을 t초 진행 후 정지)
 
@@ -10,10 +12,26 @@ import { SceneManager, type CameraView } from '../scene/SceneSetup';
 import { buildPart, normalizePart } from '../models/factory';
 import { PARTS } from '../data/elements';
 import { getMachineDef } from '../data/machines';
-import type { Machine, MachineSim } from '../machines/types';
+import { isDragMachine, type Machine, type MachineSim } from '../machines/types';
 import type { AppMode } from '../modes/types';
 import { Encyclopedia } from '../modes/Encyclopedia';
 import { Quiz } from '../modes/Quiz';
+import { BikeGears } from '../labs/BikeGears';
+import { CarShift } from '../labs/CarShift';
+import { PowerFlow } from '../labs/PowerFlow';
+import '../styles/lab-bike.css';
+import '../styles/lab-car.css';
+import '../styles/lab-power.css';
+import '../styles/lab-wind.css';
+import { WindTunnel } from '../labs/WindTunnel';
+import { EngineCycle } from '../labs/EngineCycle';
+import '../styles/lab-cycle.css';
+import { EngineTypes } from '../labs/EngineTypes';
+import '../styles/lab-engines.css';
+import { SteamEngines } from '../labs/SteamEngines';
+import '../styles/lab-steam.css';
+import { HandPump } from '../labs/HandPump';
+import '../styles/lab-pump.css';
 import { ThumbnailFactory } from '../models/thumbnails';
 import { loadSettings } from '../state/settings';
 import '../styles/tokens.css';
@@ -29,6 +47,7 @@ const sceneMgr = new SceneManager(canvas, {
   quality: q.get('q') === 'low' ? 'low' : 'high'
 });
 sceneMgr.setLabelsVisible(q.get('labels') !== '0');
+sceneMgr.adaptive = false; // 캡처용 — 헤드리스의 낮은 프레임률 때문에 품질이 내려가지 않게
 
 let machine: Machine | null = null;
 let sim: MachineSim | null = null;
@@ -49,13 +68,25 @@ const modeArg = q.get('mode');
 document.documentElement.dataset.theme = q.get('theme') === 'dark' ? 'dark' : 'light';
 
 const partId = q.get('part');
-if (modeArg === 'enc' || modeArg === 'quiz') {
+const MODE_CTORS: Record<string, () => AppMode> = {
+  enc: () => new Encyclopedia(),
+  quiz: () => new Quiz(),
+  bike: () => new BikeGears(),
+  car: () => new CarShift(),
+  power: () => new PowerFlow(),
+  wind: () => new WindTunnel(),
+  cycle: () => new EngineCycle(),
+  engines: () => new EngineTypes(),
+  steam: () => new SteamEngines(),
+  pump: () => new HandPump()
+};
+if (modeArg && MODE_CTORS[modeArg]) {
   const root = document.createElement('div');
   root.id = 'mode-root';
   root.style.cssText = 'position:fixed;inset:0;pointer-events:none;font-family:var(--font);color:var(--text)';
   document.body.appendChild(root);
   if (info) info.style.display = 'none';
-  mode = modeArg === 'enc' ? new Encyclopedia() : new Quiz();
+  mode = MODE_CTORS[modeArg]!();
   mode.enter({
     sceneMgr,
     thumbs: new ThumbnailFactory(),
@@ -96,6 +127,12 @@ if (modeArg === 'enc' || modeArg === 'quiz') {
     ups.forEach((u, idx) => machine!.installFollowUp?.(i, idx, u.model));
   }
   if (n >= machine.stepCount && def.steps.length > 0) sim = machine.createSim();
+  // 드래그 조립형(기어의 종류): &hunt=id1,id2,... 로 조립된 상태를 복원해 본다
+  if (isDragMachine(machine)) {
+    sim = machine.createSim();
+    const ids = (q.get('hunt') ?? '').split(',').filter(Boolean);
+    machine.beginHunt(ids);
+  }
   view = def.view ?? null;
   if (info) info.textContent = `${def.name} — ${n}/${machine.stepCount}단계`;
 }

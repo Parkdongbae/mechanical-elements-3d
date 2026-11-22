@@ -8,8 +8,9 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { BaseMachine, type MachineSim, type DragMachine, type DraggableItem, type HuntPickResult } from './types';
-import { brass, bronze, darkSteel, ghost, plastic, steel } from '../models/materials';
+import { aluminum, brass, bronze, castIron, copper, darkSteel, ghost, glow, plastic, rubber, steel } from '../models/materials';
 import { makeCalloutLine, makeLabelSprite, smoothSTL } from './stlShared';
+import { buildGearHuntBevel } from './gearHuntBevel';
 
 const P_ROOT = new THREE.Vector3(0, 1.5, 0);
 const TARGET_SIZE = 2.6;
@@ -130,6 +131,7 @@ export class GearHunt extends BaseMachine implements DragMachine {
   private speedMul = 1;
   private center = new THREE.Vector3();
   private k = 1;
+  private guide: THREE.Mesh | null = null;
   public onReady: (() => void) | null = null;
 
   constructor() {
@@ -189,6 +191,8 @@ export class GearHunt extends BaseMachine implements DragMachine {
     return {
       update: (dt: number) => {
         self.theta += BASE_OMEGA * self.speedMul * dt;
+        // 전부 조립하면 반투명 가이드(원본 STL 윤곽)를 숨겨 실제 기어만 보이게 한다
+        if (self.guide) self.guide.visible = self.placed < DRAG_DEFS.length;
         for (const entry of [...self.preAnimated, ...self.animated]) {
           const axis = toThree(entry.def.axisDirScad).normalize();
           if (entry.def.kind === 'rotate') {
@@ -379,6 +383,7 @@ export class GearHunt extends BaseMachine implements DragMachine {
         const ghostMesh = new THREE.Mesh(totalGeo, guideMaterial);
         ghostMesh.scale.setScalar(this.k);
         this.root.add(ghostMesh);
+        this.guide = ghostMesh;
 
         for (const pre of PRE_PLACED) {
           loader
@@ -391,7 +396,12 @@ export class GearHunt extends BaseMachine implements DragMachine {
               mesh.scale.setScalar(this.k);
               mesh.castShadow = true;
               mesh.receiveShadow = true;
-              this.attachAnimated(mesh, pre.def);
+              const pivot = this.attachAnimated(mesh, pre.def);
+              if (pre.file === 'spur_gear2.stl') {
+                geo.computeBoundingBox();
+                const gbb = geo.boundingBox;
+                if (gbb) this.buildDriveMotor(pivot, P_ROOT.y + gbb.min.y * this.k);
+              }
             })
             .catch((err) => console.error(`STL load failed: ${pre.file}`, err));
         }
@@ -399,8 +409,11 @@ export class GearHunt extends BaseMachine implements DragMachine {
         for (const def of DRAG_DEFS) {
           loader
             .loadAsync(`/models/${def.file}`)
-            .then((geo) => {
-              geo.rotateX(-Math.PI / 2);
+            .then((stlGeo) => {
+              // 베벨 기어는 STL 대신 실제 치형의 절차 모델로 교체(위치·축은 동일)
+              const bevel = buildGearHuntBevel(def.id);
+              const geo = bevel ?? stlGeo;
+              if (!bevel) geo.rotateX(-Math.PI / 2);
               smoothSTL(geo);
               geo.computeBoundingBox();
               const pbb = geo.boundingBox;
@@ -439,7 +452,7 @@ export class GearHunt extends BaseMachine implements DragMachine {
       });
   }
 
-  private attachAnimated(mesh: THREE.Mesh, def: AnimDef): void {
+  private attachAnimated(mesh: THREE.Mesh, def: AnimDef): THREE.Group {
     const localOffset = toThree(def.axisPoint).clone().sub(this.center).multiplyScalar(this.k);
     const pivot = new THREE.Group();
     pivot.position.copy(P_ROOT).add(localOffset);
@@ -452,5 +465,85 @@ export class GearHunt extends BaseMachine implements DragMachine {
       material: mesh.material as THREE.MeshStandardMaterial,
       flash: 0
     });
+    return pivot;
+  }
+
+  /**
+   * 구동 평기어를 돌리는 전동기. 기어가 허공에서 혼자 도는 것처럼 보이지 않도록
+   * 받침 위에 세운 모터 → 출력축 → 커플링 → 기어로 동력의 출발점을 보여 준다.
+   * 몸체는 고정(group), 출력축·커플링은 기어 피벗의 자식이라 기어와 함께 회전한다.
+   */
+  private buildDriveMotor(pivot: THREE.Group, gearBottomY: number): void {
+    const x = pivot.position.x;
+    const z = pivot.position.z;
+    const padTop = 0.08;
+    const bodyTop = Math.max(padTop + 0.45, gearBottomY - 0.26);
+    const bodyH = bodyTop - (padTop + 0.06);
+    const R = 0.2;
+
+    const motor = new THREE.Group();
+    motor.position.set(x, 0, z);
+    const add = (geo: THREE.BufferGeometry, material: THREE.Material, y: number): THREE.Mesh => {
+      const m = new THREE.Mesh(geo, material);
+      m.position.y = y;
+      m.castShadow = true;
+      m.receiveShadow = true;
+      motor.add(m);
+      return m;
+    };
+    const housing = aluminum({ color: 0x4f7fb8, roughness: 0.5 });
+    const dark = castIron();
+    // 받침 플랜지 + 고정 볼트
+    add(new THREE.CylinderGeometry(R + 0.09, R + 0.1, 0.06, 40), dark, padTop + 0.03);
+    const boltMat = steel();
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2 + Math.PI / 4;
+      const b = add(new THREE.CylinderGeometry(0.022, 0.022, 0.03, 6), boltMat, padTop + 0.072);
+      b.position.x = Math.cos(a) * (R + 0.05);
+      b.position.z = Math.sin(a) * (R + 0.05);
+    }
+    // 몸체 + 방열핀
+    add(new THREE.CylinderGeometry(R * 0.9, R * 0.9, bodyH, 40), housing, padTop + 0.06 + bodyH / 2);
+    const finCount = Math.max(4, Math.round(bodyH / 0.06));
+    const finGeo = new THREE.CylinderGeometry(R, R, 0.022, 40);
+    for (let i = 0; i < finCount; i++) {
+      add(finGeo, housing, padTop + 0.06 + 0.05 + ((bodyH - 0.1) * i) / (finCount - 1));
+    }
+    // 위쪽 엔드벨과 축 받이
+    add(new THREE.CylinderGeometry(R * 0.6, R * 0.92, 0.07, 40), dark, bodyTop + 0.035);
+    add(new THREE.CylinderGeometry(0.075, 0.075, 0.03, 24), steel(), bodyTop + 0.08);
+    // 단자함 + 전선
+    const box = add(new THREE.BoxGeometry(0.16, 0.18, 0.12), dark, padTop + 0.06 + bodyH * 0.55);
+    box.position.z = R + 0.03;
+    const cablePts = [
+      new THREE.Vector3(0, padTop + 0.06 + bodyH * 0.5, R + 0.09),
+      new THREE.Vector3(0.05, padTop + 0.2, R + 0.3),
+      new THREE.Vector3(0.25, padTop + 0.03, R + 0.5),
+      new THREE.Vector3(0.6, padTop + 0.025, R + 0.62)
+    ];
+    const cable = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(cablePts), 32, 0.02, 8), rubber());
+    cable.castShadow = true;
+    motor.add(cable);
+    // 권선이 살짝 보이는 통풍 띠
+    add(new THREE.CylinderGeometry(R * 0.93, R * 0.93, 0.04, 40), copper(), padTop + 0.085);
+    this.group.add(motor);
+
+    // 회전부: 출력축 + 커플링(회전이 보이도록 발광 표시) — 피벗 좌표(피벗 원점 = 기어 축 위의 한 점)
+    const y0 = bodyTop + 0.08 - pivot.position.y;
+    const y1 = gearBottomY + 0.03 - pivot.position.y;
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, y1 - y0, 20), steel());
+    shaft.position.y = (y0 + y1) / 2;
+    shaft.castShadow = true;
+    const coupling = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.11, 28), darkSteel());
+    coupling.position.y = y1 - 0.075;
+    coupling.castShadow = true;
+    const mark = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.112, 0.03), glow(0xffb020, 0.9));
+    mark.position.set(0.078, y1 - 0.075, 0);
+    pivot.add(shaft, coupling, mark);
+
+    const labelPos = new THREE.Vector3(x + 0.75, padTop + 0.06 + bodyH * 0.6, z + 0.55);
+    const sprite = makeLabelSprite('모터', '#8ec5ff', 0.6, 0.26, 60);
+    sprite.position.copy(labelPos);
+    this.group.add(sprite, makeCalloutLine(new THREE.Vector3(x + R * 0.8, labelPos.y, z + R * 0.5), labelPos, '#8ec5ff'));
   }
 }

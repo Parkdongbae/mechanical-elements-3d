@@ -1,0 +1,821 @@
+/* 탐구 실험 13-D — 우물 손펌프(HandPump). 색·간격·그림자는 tokens.css 변수만 사용. 접두어 pmp- */
+
+.pmp-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--font);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.55;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.pmp-wrap *,
+.pmp-wrap *::before,
+.pmp-wrap *::after {
+  box-sizing: border-box;
+}
+
+.pmp-wrap button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.pmp-wrap :focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.pmp-panel {
+  pointer-events: auto;
+  background: var(--panel);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-1);
+}
+
+/* 넓은 화면: 왼쪽 안내 · 오른쪽 조작/상태 · 아래 단계 막대 */
+.pmp-dock {
+  display: contents;
+}
+
+.pmp-guide {
+  position: absolute;
+  left: var(--space-4);
+  top: 76px;
+  width: 340px;
+  max-height: calc(100% - 76px - 96px);
+  overflow-y: auto;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  scrollbar-width: thin;
+}
+
+.pmp-side {
+  position: absolute;
+  right: var(--space-4);
+  top: var(--space-4);
+  width: 312px;
+  max-height: calc(100% - var(--space-4) - 96px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  pointer-events: auto;
+  scrollbar-width: thin;
+  border-radius: var(--radius-l);
+}
+
+.pmp-act,
+.pmp-stat {
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.pmp-steps {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--space-4);
+  max-width: calc(100% - 2 * var(--space-4));
+  padding: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.pmp-steps-list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: max-content;
+}
+
+.pmp-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-m);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.pmp-step:hover {
+  color: var(--text);
+  background: var(--panel-sunken);
+}
+
+.pmp-step-n {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-pill);
+  background: var(--panel-sunken);
+  border: 1px solid var(--line-strong);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pmp-step.is-done {
+  color: var(--text);
+}
+
+.pmp-step.is-done .pmp-step-n {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--accent);
+}
+
+.pmp-step.is-on {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.pmp-step.is-on .pmp-step-n {
+  background: var(--accent-text);
+  border-color: transparent;
+  color: var(--accent);
+}
+
+/* ───────── 안내 ───────── */
+
+.pmp-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.pmp-badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-m);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 800;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pmp-head-t {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pmp-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.pmp-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.pmp-body {
+  margin: 0;
+  font-size: 14px;
+}
+
+.pmp-point {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-s);
+  background: var(--accent-soft);
+  font-size: 13.5px;
+  font-weight: 650;
+}
+
+.pmp-formula {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-s);
+  background: var(--panel-sunken);
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pmp-live {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-m);
+  border: 1px solid var(--line-strong);
+  background: var(--panel-solid);
+  font-size: 13px;
+  min-height: 72px;
+}
+
+.pmp-live.is-ok {
+  border-color: var(--ok);
+  background: var(--ok-soft);
+}
+
+.pmp-live.is-warn {
+  border-color: var(--warn);
+  background: var(--warn-soft);
+}
+
+.pmp-live-t {
+  font-size: 13.5px;
+}
+
+.pmp-live-b {
+  color: var(--text-dim);
+}
+
+.pmp-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.pmp-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+}
+
+.pmp-card-t {
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.pmp-card-b {
+  color: var(--text-dim);
+}
+
+.pmp-nav {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.pmp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  font-weight: 700;
+  font-size: 14px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.pmp-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.pmp-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.pmp-btn.is-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.pmp-demo {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pmp-small {
+  min-height: 44px;
+  font-size: 13px;
+}
+
+/* ───────── 조작 ───────── */
+
+.pmp-act-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.pmp-h3 {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 750;
+}
+
+.pmp-hint {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.pmp-act-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.pmp-act-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.pmp-act-row .pmp-btn {
+  min-height: 56px;
+  padding: 4px 6px;
+  font-size: 13px;
+  line-height: 1.25;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pmp-hold {
+  touch-action: none;
+}
+
+.pmp-hold.is-on {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pmp-prime.is-hint {
+  border-color: var(--cat-shaft);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.pmp-auto.is-on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.pmp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pmp-field-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.pmp-field-l {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pmp-field-v {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.pmp-range {
+  width: 100%;
+  height: 34px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.pmp-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+
+/* ───────── 상태 ───────── */
+
+.pmp-valves {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.pmp-valve {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-2);
+  border-radius: var(--radius-m);
+  border: 1px solid var(--line-strong);
+  background: var(--panel-solid);
+  transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+}
+
+.pmp-valve-d {
+  grid-row: 1 / 3;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-pill);
+  background: var(--cat-power);
+}
+
+.pmp-valve-n {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.pmp-valve-s {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--cat-power);
+}
+
+.pmp-valve.is-open {
+  border-color: var(--ok);
+  background: var(--ok-soft);
+}
+
+.pmp-valve.is-open .pmp-valve-d {
+  background: var(--ok);
+}
+
+.pmp-valve.is-open .pmp-valve-s {
+  color: var(--ok);
+}
+
+.pmp-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pmp-meter-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.pmp-meter-l {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pmp-meter-v {
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.pmp-meter-n {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.pmp-meter-n.is-warn {
+  color: var(--warn);
+  font-weight: 700;
+}
+
+.pmp-bar {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--panel-sunken);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.pmp-bar-f {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: var(--radius-pill);
+  background: var(--cat-shaft);
+  transition: width 0.12s linear;
+}
+
+.pmp-bar-f.is-low {
+  background: var(--cat-control);
+}
+
+.pmp-nums {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.pmp-num {
+  display: flex;
+  flex-direction: column;
+  padding: 6px var(--space-2);
+  border-radius: var(--radius-s);
+  background: var(--panel-sunken);
+  min-width: 0;
+}
+
+.pmp-num-l {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.pmp-num-v {
+  font-size: 14.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pmp-views {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+}
+
+.pmp-seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 3px;
+  padding: 3px;
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+}
+
+.pmp-seg-b {
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pmp-seg-b:hover {
+  color: var(--text);
+}
+
+.pmp-seg-b.is-on {
+  background: var(--panel-solid);
+  color: var(--text);
+  box-shadow: var(--shadow-1);
+}
+
+/* ───────── 3D 이름표 ───────── */
+
+.pmp-tags {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pmp-tag,
+.pmp-tick {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.pmp-tag {
+  width: 0;
+  height: 0;
+}
+
+.pmp-tag::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--panel-solid);
+}
+
+.pmp-tag-l {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  transform: translateY(-50%);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--panel-solid);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-1);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pmp-tag.is-valve::before {
+  background: var(--cat-power);
+}
+
+.pmp-tag.is-valve .pmp-tag-l {
+  border-color: var(--cat-power);
+  color: var(--cat-power);
+}
+
+.pmp-tag.is-valve.is-open::before {
+  background: var(--ok);
+}
+
+.pmp-tag.is-valve.is-open .pmp-tag-l {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.pmp-tag.is-below .pmp-tag-l,
+.pmp-tag.is-grip .pmp-tag-l {
+  left: auto;
+  right: 10px;
+}
+
+.pmp-tag.is-grip .pmp-tag-l {
+  top: -18px;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.pmp-tag.is-atm::before {
+  background: var(--cat-control);
+}
+
+.pmp-tag.is-atm .pmp-tag-l {
+  left: auto;
+  right: 10px;
+  border-color: var(--cat-control);
+  color: var(--cat-control);
+}
+
+.pmp-tag.is-water::before {
+  background: var(--cat-shaft);
+}
+
+.pmp-tag.is-limit::before {
+  background: var(--cat-power);
+}
+
+.pmp-tag.is-limit .pmp-tag-l {
+  color: var(--cat-power);
+}
+
+.pmp-tick {
+  transform-origin: 0 0;
+  margin-top: -8px;
+  margin-left: -40px;
+  width: 36px;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 3px var(--panel-solid), 0 0 3px var(--panel-solid);
+}
+
+/* ───────── 좁은 화면: 하단 시트 ───────── */
+
+@media (max-width: 1099px) {
+  .pmp-guide {
+    width: 300px;
+  }
+
+  .pmp-side {
+    width: 290px;
+  }
+}
+
+@media (max-width: 819px) {
+  .pmp-dock {
+    pointer-events: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-height: 52%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 var(--space-4) var(--space-4);
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+    box-shadow: var(--shadow-2);
+    scrollbar-width: thin;
+  }
+
+  .pmp-side {
+    display: contents;
+  }
+
+  /* 세로 flex + overflow 자식은 줄어들어 잘린다 — 줄어들지 않게 */
+  .pmp-dock > *,
+  .pmp-side > * {
+    flex-shrink: 0;
+  }
+
+  .pmp-dock .pmp-panel {
+    position: static;
+    width: auto;
+    max-height: none;
+    overflow: visible;
+    transform: none;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 0;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .pmp-dock > .pmp-steps {
+    order: 0;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    margin: 0 calc(var(--space-4) * -1);
+    padding: var(--space-2) var(--space-4) 6px;
+    background: var(--panel-solid);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    max-width: none;
+  }
+
+  .pmp-act {
+    order: 1;
+  }
+
+  .pmp-guide {
+    order: 2;
+    border-top: 1px solid var(--line) !important;
+    padding-top: var(--space-3) !important;
+  }
+
+  .pmp-stat {
+    order: 3;
+    border-top: 1px solid var(--line) !important;
+    padding-top: var(--space-3) !important;
+  }
+
+  .pmp-step {
+    min-height: 44px;
+    padding: 0 10px;
+  }
+
+  .pmp-title {
+    font-size: 16.5px;
+  }
+
+  .pmp-cards {
+    grid-template-columns: 1fr;
+  }
+}

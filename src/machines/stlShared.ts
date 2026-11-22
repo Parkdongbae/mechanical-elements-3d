@@ -63,7 +63,7 @@ const LABEL_BG = 'rgba(15, 23, 42, 0.95)';
  * @param w,h 스프라이트 월드 크기(종횡비가 캔버스 종횡비가 된다)
  */
 /** 라벨이 부품을 가리지 않도록 지정 크기보다 작게 그린다 (가까워진 카메라 시점 기준) */
-const LABEL_SCALE = 0.6;
+const LABEL_SCALE = 0.42;
 
 export function makeLabelSprite(text: string, accent: string, w = 0.75, h = 0.3, fontPx = 60): THREE.Sprite {
   const cw = 512;

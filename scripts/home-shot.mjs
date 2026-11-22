@@ -7,7 +7,7 @@ await page.addInitScript((t) => {
   localStorage.setItem('mech3d-settings-v1', JSON.stringify({ difficulty: 'medium', sound: false, showLabels: true, theme: t, quality: 'high' }));
   localStorage.setItem('mech3d-progress-v2', JSON.stringify({ last: 'treadmill', machines: { bicycle: { installed: 6, completedOnce: true }, clock: { installed: 2, completedOnce: true }, treadmill: { installed: 1, completedOnce: false } } }));
 }, theme);
-await page.goto('http://localhost:5173/');
+await page.goto('http://localhost:5273/');
 await page.waitForTimeout(2500);
 // 홈은 내부 스크롤 컨테이너 — 전체를 찍기 위해 뷰포트를 콘텐츠 높이로 늘린다
 const full = await page.evaluate(() => document.querySelector('#home .home-inner').scrollHeight);

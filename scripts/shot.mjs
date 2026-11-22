@@ -2,14 +2,14 @@
 // 사용: node scripts/shot.mjs "<경로+쿼리>" <출력.png> [대기ms=2500] [너비=1280] [높이=800]
 // 예:   node scripts/shot.mjs "preview.html?part=spurGear" shots/spur.png
 //       node scripts/shot.mjs "preview.html?machine=bicycle&steps=all&t=2" shots/bike.png 5000
-// dev 서버(http://localhost:5173)가 떠 있어야 한다. 캡처 후 콘솔 에러가 있으면 출력한다.
+// dev 서버(http://localhost:5273)가 떠 있어야 한다. 캡처 후 콘솔 에러가 있으면 출력한다.
 
 import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 
 const [, , target = 'preview.html?parts=all', out = 'shots/out.png', wait = '2500', w = '1280', h = '800'] = process.argv;
-const base = process.env.BASE_URL ?? 'http://localhost:5173/';
+const base = process.env.BASE_URL ?? 'http://localhost:5273/';
 mkdirSync(dirname(out), { recursive: true });
 
 const browser = await chromium.launch({

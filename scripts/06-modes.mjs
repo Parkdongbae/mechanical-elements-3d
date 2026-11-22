@@ -14,7 +14,7 @@ async function open(mode) {
   const page = await browser.newPage({ viewport: { width: +w, height: +h } });
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error' && !m.text().includes('Failed to load')) errors.push(m.text()); });
-  await page.goto(`http://localhost:5173/preview.html?mode=${mode}&theme=${theme}`, { waitUntil: 'load' });
+  await page.goto(`http://localhost:5273/preview.html?mode=${mode}&theme=${theme}`, { waitUntil: 'load' });
   await page.waitForTimeout(2500);
   return page;
 }

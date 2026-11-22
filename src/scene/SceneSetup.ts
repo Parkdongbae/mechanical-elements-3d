@@ -377,7 +377,7 @@ export class SceneManager {
     }
     this.controls.update();
 
-    if (this.quality === 'high' && document.visibilityState === 'visible') {
+    if (this.adaptive && this.quality === 'high' && document.visibilityState === 'visible') {
       // 2초가량 연속으로 30fps 미만이면 저사양 기기로 보고 후처리를 끈다
       this.slowFrames = dt > 0.034 ? this.slowFrames + 1 : Math.max(0, this.slowFrames - 2);
       if (this.slowFrames > 90) {
@@ -387,6 +387,9 @@ export class SceneManager {
       }
     }
   }
+
+  /** true면 프레임이 느릴 때 품질을 스스로 낮춘다('자동' 설정). 사용자가 '높음'을 고르면 false */
+  adaptive = true;
 
   /** 성능 저하로 품질이 자동 하향됐을 때 호출 (설정 UI 동기화용) */
   onAutoLowQuality: (() => void) | null = null;

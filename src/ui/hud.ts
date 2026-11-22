@@ -172,7 +172,7 @@ export class HUD {
       <header class="set-head"><h3>설정</h3><button type="button" class="icon-btn set-close" aria-label="닫기">${ICON.close}</button></header>
       ${seg('난이도', diffDesc[s.difficulty], [{ id: 'low', label: '쉬움' }, { id: 'medium', label: '보통' }, { id: 'high', label: '어려움' }], s.difficulty, 'difficulty')}
       ${seg('화면 테마', '교실 밝기에 맞춰 선택', [{ id: 'light', label: '밝게' }, { id: 'dark', label: '어둡게' }], s.theme, 'theme')}
-      ${seg('그래픽 품질', '느리면 낮음으로', [{ id: 'high', label: '높음' }, { id: 'low', label: '낮음' }], s.quality, 'quality')}
+      ${seg('그래픽 품질', s.quality === 'auto' ? '기기 사양에 맞춰 조절' : s.quality === 'high' ? '그림자·음영 효과 최대' : '느린 기기용', [{ id: 'auto', label: '자동' }, { id: 'high', label: '높음' }, { id: 'low', label: '낮음' }], s.quality, 'quality')}
       ${seg('효과음', '정답 효과음', [{ id: 'on', label: '켜기' }, { id: 'off', label: '끄기' }], s.sound ? 'on' : 'off', 'sound')}
       <button type="button" class="set-reset">모든 진행도 초기화</button>`;
 
@@ -183,7 +183,7 @@ export class HUD {
         const val = b.dataset.val ?? '';
         if (key === 'difficulty') s.difficulty = val as Difficulty;
         else if (key === 'theme') s.theme = val === 'dark' ? 'dark' : 'light';
-        else if (key === 'quality') s.quality = val === 'low' ? 'low' : 'high';
+        else if (key === 'quality') s.quality = val === 'low' || val === 'high' ? val : 'auto';
         else if (key === 'sound') s.sound = val === 'on';
         saveSettings(s);
         this.renderSettings();
@@ -337,7 +337,7 @@ export class HUD {
     }
     this.displayBox.classList.remove('hidden');
     this.displayBox.innerHTML =
-      `<h4>동력 전달</h4>` +
+      `<h4>실시간 수치</h4>` +
       items
         .map((item, i) => {
           const tone = item.tone ? ` ${item.tone}` : '';

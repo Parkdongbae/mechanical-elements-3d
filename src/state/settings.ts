@@ -1,6 +1,7 @@
 export type Difficulty = 'low' | 'medium' | 'high';
 export type ThemeSetting = 'light' | 'dark';
-export type QualitySetting = 'high' | 'low';
+/** auto: 기기 사양을 보고 시작 품질을 정하고, 느려지면 스스로 낮춘다 */
+export type QualitySetting = 'auto' | 'high' | 'low';
 
 export interface AppSettings {
   difficulty: Difficulty;
@@ -10,7 +11,7 @@ export interface AppSettings {
   quality: QualitySetting;
 }
 
-export const DEFAULT_SETTINGS: AppSettings = { difficulty: 'medium', sound: false, showLabels: true, theme: 'light', quality: 'high' };
+export const DEFAULT_SETTINGS: AppSettings = { difficulty: 'medium', sound: false, showLabels: true, theme: 'light', quality: 'auto' };
 
 const KEY = 'mech3d-settings-v1';
 
@@ -25,7 +26,7 @@ export function loadSettings(): AppSettings {
         sound: s.sound === true,
         showLabels: s.showLabels !== false,
         theme: s.theme === 'dark' ? 'dark' : 'light',
-        quality: s.quality === 'low' ? 'low' : 'high'
+        quality: s.quality === 'low' || s.quality === 'high' ? s.quality : 'auto'
       };
     }
   } catch {
@@ -40,4 +41,13 @@ export function saveSettings(s: AppSettings): void {
   } catch {
     void 0;
   }
+}
+
+/** 자동 품질의 시작값: 코어·메모리가 적거나 터치 기기면 낮음으로 시작한다 */
+export function guessQuality(): 'high' | 'low' {
+  const nav = navigator as Navigator & { deviceMemory?: number };
+  const cores = nav.hardwareConcurrency ?? 8;
+  const mem = nav.deviceMemory ?? 8;
+  const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+  return cores <= 4 || mem <= 4 || coarse ? 'low' : 'high';
 }
