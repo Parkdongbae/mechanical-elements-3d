@@ -7,7 +7,7 @@ import { ICON } from './icons';
 
 export interface HomeCallbacks {
   onOpenMission: (id: string) => void;
-  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind') => void;
+  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump') => void;
   onOpenSettings: () => void;
   onToggleTheme: () => void;
 }
@@ -164,6 +164,22 @@ export class HomeScreen {
             <button type="button" class="mode-card lab-card" data-mode="lab/wind">
               <span class="mode-icon mode-lab-wind">${ICON.wind}</span>
               <span class="mode-text"><strong>풍동 실험</strong><small>손잡이·미러·하부를 바꿔 공기저항·다운포스·풍절음 비교하기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/cycle">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-power) 16%, transparent);color:var(--cat-power)">${ICON.cycle}</span>
+              <span class="mode-text"><strong>엔진의 작동 원리</strong><small>4행정(흡입·압축·폭발·배기)과 2행정 기관을 단계별로 눌러 보기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/engines">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-joining) 16%, transparent);color:var(--cat-joining)">${ICON.engine}</span>
+              <span class="mode-text"><strong>엔진의 종류</strong><small>4기통부터 V8, 16기통까지 실린더 배열 비교하기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/steam">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-control) 16%, transparent);color:var(--cat-control)">${ICON.steam}</span>
+              <span class="mode-text"><strong>증기 기관</strong><small>뉴커먼·와트의 증기 기관과 증기 기관차의 원리</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/pump">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-shaft) 16%, transparent);color:var(--cat-shaft)">${ICON.drop}</span>
+              <span class="mode-text"><strong>우물 손펌프</strong><small>손잡이를 움직여 물을 끌어 올리는 원리 알아보기</small></span>
             </button>
           </div>
         </section>

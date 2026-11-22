@@ -24,6 +24,14 @@ import '../styles/lab-car.css';
 import '../styles/lab-power.css';
 import '../styles/lab-wind.css';
 import { WindTunnel } from '../labs/WindTunnel';
+import { EngineCycle } from '../labs/EngineCycle';
+import '../styles/lab-cycle.css';
+import { EngineTypes } from '../labs/EngineTypes';
+import '../styles/lab-engines.css';
+import { SteamEngines } from '../labs/SteamEngines';
+import '../styles/lab-steam.css';
+import { HandPump } from '../labs/HandPump';
+import '../styles/lab-pump.css';
 import { ThumbnailFactory } from '../models/thumbnails';
 import { loadSettings } from '../state/settings';
 import '../styles/tokens.css';
@@ -66,7 +74,11 @@ const MODE_CTORS: Record<string, () => AppMode> = {
   bike: () => new BikeGears(),
   car: () => new CarShift(),
   power: () => new PowerFlow(),
-  wind: () => new WindTunnel()
+  wind: () => new WindTunnel(),
+  cycle: () => new EngineCycle(),
+  engines: () => new EngineTypes(),
+  steam: () => new SteamEngines(),
+  pump: () => new HandPump()
 };
 if (modeArg && MODE_CTORS[modeArg]) {
   const root = document.createElement('div');
