@@ -1,1 +1,1045 @@
-/* 탐구 실험 스타일 — 작업 지시서 13 (EngineCycle) */
+/* 탐구 실험 13-A — 엔진의 작동 원리(EngineCycle). 색·간격·그림자는 tokens.css 변수만 사용. 접두어 cyc- */
+
+.cyc-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--font);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.55;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.cyc-wrap *,
+.cyc-wrap *::before,
+.cyc-wrap *::after {
+  box-sizing: border-box;
+}
+
+.cyc-wrap button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.cyc-wrap :focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cyc-panel {
+  pointer-events: auto;
+  background: var(--panel);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-1);
+}
+
+/* ───────── 넓은 화면 배치 ───────── */
+
+.cyc-dock {
+  display: contents;
+}
+
+.cyc-seg {
+  position: absolute;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 3px;
+  padding: 4px;
+  width: min(340px, calc(100% - 480px));
+  min-width: 260px;
+}
+
+.cyc-seg-b {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-m);
+  background: transparent;
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 14.5px;
+  white-space: nowrap;
+}
+
+.cyc-seg-b:hover {
+  color: var(--text);
+}
+
+.cyc-seg-b.is-on {
+  background: var(--accent);
+  color: var(--accent-text);
+  box-shadow: var(--shadow-1);
+}
+
+.cyc-guide {
+  position: absolute;
+  left: var(--space-4);
+  top: 76px;
+  width: 344px;
+  max-height: calc(100% - 76px - 176px);
+  overflow-y: auto;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  scrollbar-width: thin;
+}
+
+.cyc-side {
+  position: absolute;
+  right: var(--space-4);
+  top: var(--space-4);
+  width: 304px;
+  max-height: calc(100% - var(--space-4) - 176px);
+  overflow-y: auto;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  scrollbar-width: thin;
+}
+
+.cyc-ctrl {
+  position: absolute;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* ───────── 행정 버튼 (진행 막대 겸용) ───────── */
+
+.cyc-strokes {
+  display: grid;
+  grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
+  gap: 6px;
+}
+
+.cyc-stroke {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 14px;
+  overflow: hidden;
+  transition: border-color 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.cyc-stroke:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.cyc-stroke-fill {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: calc(var(--p, 0) * 100%);
+  background: var(--accent);
+  opacity: 0.55;
+}
+
+.cyc-stroke-n {
+  position: relative;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background: var(--panel-sunken);
+  border: 1px solid var(--line-strong);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cyc-stroke-l {
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cyc-stroke.is-done {
+  color: var(--text);
+}
+
+.cyc-stroke.is-done .cyc-stroke-n {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--accent);
+}
+
+.cyc-stroke.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.cyc-stroke.is-on .cyc-stroke-fill {
+  opacity: 1;
+}
+
+.cyc-stroke.is-on .cyc-stroke-n {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--accent-text);
+}
+
+/* ───────── 스크러버 · 속도 ───────── */
+
+.cyc-row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.cyc-scrub,
+.cyc-speed {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cyc-scrub-top {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.cyc-field-l {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cyc-angle {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  min-width: 3.2em;
+}
+
+.cyc-rev {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cyc-range {
+  width: 100%;
+  height: 30px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.cyc-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ───────── 안내 패널 ───────── */
+
+.cyc-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.cyc-badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-m);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 800;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cyc-head-t {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cyc-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.cyc-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.cyc-body {
+  margin: 0;
+  font-size: 14.5px;
+}
+
+.cyc-status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 0;
+}
+
+.cyc-status.is-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cyc-status.is-3 .cyc-st-v {
+  font-size: 12.5px;
+  white-space: normal;
+}
+
+.cyc-st {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px var(--space-2);
+  border-radius: var(--radius-s);
+  background: var(--panel-sunken);
+  border: 1px solid var(--line);
+  min-width: 0;
+}
+
+.cyc-st-l {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.cyc-st-v {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.cyc-st-v.is-open {
+  color: var(--ok);
+}
+
+.cyc-st-v.is-closed {
+  color: var(--text-faint);
+}
+
+.cyc-st-v.is-fire {
+  color: var(--warn);
+}
+
+.cyc-st-v.is-move {
+  color: var(--accent);
+}
+
+.cyc-gas {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cyc-point {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-s);
+  background: var(--accent-soft);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.cyc-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.cyc-nav {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1fr;
+  gap: var(--space-2);
+}
+
+/* 넓은 화면에서 안내가 길어도 이전/다음 버튼은 항상 보이게 */
+.cyc-guide > .cyc-next {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  flex: none;
+  box-shadow: 0 -8px 16px var(--panel-solid);
+}
+
+.cyc-guide > .cyc-nav {
+  position: sticky;
+  bottom: calc(var(--space-4) * -1);
+  z-index: 1;
+  margin: 0 calc(var(--space-4) * -1);
+  padding: var(--space-2) var(--space-4) var(--space-3);
+  background: var(--panel-solid);
+  border-top: 1px solid var(--line);
+}
+
+.cyc-nav.is-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.cyc-btn {
+  min-height: 46px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.cyc-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.cyc-btn.is-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.cyc-btn.is-on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.cyc-small {
+  min-height: 44px;
+  align-self: flex-start;
+}
+
+/* ───────── 오른쪽 패널 ───────── */
+
+.cyc-key {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-3);
+  border-radius: var(--radius-m);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+}
+
+.cyc-key-s {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.cyc-key-r {
+  font-size: 13px;
+}
+
+.cyc-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px var(--space-2);
+  font-size: 12.5px;
+}
+
+.cyc-legend-i {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cyc-dot {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 0 1px var(--line-strong);
+}
+
+.cyc-graph-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cyc-h-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.cyc-h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.cyc-pill {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.cyc-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-s);
+  background: var(--panel-sunken);
+  border: 1px solid var(--line);
+}
+
+.cyc-g-band {
+  fill: transparent;
+}
+
+.cyc-g-band.is-alt {
+  fill: var(--line);
+}
+
+.cyc-g-lab {
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--text-dim);
+}
+
+.cyc-g-ax {
+  font-size: 10px;
+  fill: var(--text-faint);
+}
+
+.cyc-g-axis {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+
+.cyc-g-fill {
+  fill: var(--accent-soft);
+}
+
+.cyc-g-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.cyc-g-cur {
+  stroke: var(--warn);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.cyc-g-dot {
+  fill: var(--warn);
+  stroke: var(--panel-solid);
+  stroke-width: 2;
+}
+
+.cyc-cmp {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+}
+
+.cyc-cmp-s {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  font-weight: 750;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cyc-cmp-t {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--space-2) var(--space-2);
+}
+
+.cyc-cmp-r {
+  display: grid;
+  grid-template-columns: 4.6em minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px;
+  padding: 5px 4px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.cyc-cmp-r.is-head {
+  border-top: 0;
+  font-weight: 800;
+  font-size: 12.5px;
+}
+
+.cyc-cmp-l {
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.cyc-cmp-r .is-cur {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.cyc-quiz-b {
+  width: 100%;
+}
+
+/* ───────── 확인 문제 ───────── */
+
+.cyc-quiz-n {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.cyc-quiz-q {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+}
+
+.cyc-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cyc-slot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 4px var(--space-2);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-m);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.cyc-slot.is-filled {
+  border-style: solid;
+  background: var(--panel-solid);
+}
+
+.cyc-slot.is-correct {
+  border-color: var(--ok);
+  background: var(--ok-soft);
+}
+
+.cyc-slot.is-wrong {
+  border-color: var(--warn);
+  background: var(--warn-soft);
+}
+
+.cyc-slot-n {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background: var(--panel-sunken);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cyc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cyc-chip {
+  min-height: 44px;
+  padding: 4px var(--space-3);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  background: var(--panel-solid);
+  font-weight: 700;
+  font-size: 13.5px;
+  text-align: left;
+}
+
+.cyc-chip:disabled {
+  opacity: 0.35;
+  cursor: default;
+  border-color: var(--line-strong);
+}
+
+.cyc-choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.cyc-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  text-align: left;
+  font-weight: 600;
+}
+
+.cyc-choice:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.cyc-choice:disabled {
+  cursor: default;
+}
+
+.cyc-choice-k {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-pill);
+  background: var(--panel-sunken);
+  font-size: 12px;
+}
+
+.cyc-choice.is-correct {
+  border-color: var(--ok);
+  background: var(--ok-soft);
+}
+
+.cyc-choice.is-wrong {
+  border-color: var(--warn);
+  background: var(--warn-soft);
+}
+
+.cyc-fb {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-3);
+  border-radius: var(--radius-m);
+  font-size: 13.5px;
+}
+
+.cyc-fb.is-ok {
+  background: var(--ok-soft);
+  border: 1px solid var(--ok);
+}
+
+.cyc-fb.is-bad {
+  background: var(--warn-soft);
+  border: 1px solid var(--warn);
+}
+
+.cyc-score {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────── 3D 이름표 ───────── */
+
+.cyc-tags {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cyc-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  will-change: transform;
+}
+
+.cyc-tag::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--panel-solid);
+}
+
+.cyc-tag::after {
+  content: '';
+  position: absolute;
+  left: -0.5px;
+  bottom: 4px;
+  width: 1px;
+  height: 14px;
+  background: var(--accent);
+}
+
+.cyc-tag-l {
+  position: absolute;
+  left: 0;
+  bottom: 18px;
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--panel-solid);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow-1);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.cyc-tag.is-below::after {
+  bottom: auto;
+  top: 4px;
+}
+
+.cyc-tag.is-below .cyc-tag-l {
+  bottom: auto;
+  top: 18px;
+}
+
+.cyc-tag.is-left::after,
+.cyc-tag.is-right::after {
+  bottom: auto;
+  top: -0.5px;
+  width: 14px;
+  height: 1px;
+}
+
+.cyc-tag.is-left::after {
+  left: auto;
+  right: 4px;
+}
+
+.cyc-tag.is-right::after {
+  left: 4px;
+}
+
+.cyc-tag.is-left .cyc-tag-l,
+.cyc-tag.is-right .cyc-tag-l {
+  bottom: auto;
+  top: 0;
+  transform: translateY(-50%);
+}
+
+.cyc-tag.is-left .cyc-tag-l {
+  left: auto;
+  right: 18px;
+}
+
+.cyc-tag.is-right .cyc-tag-l {
+  left: 18px;
+}
+
+.cyc-tag.is-open::before,
+.cyc-tag.is-open::after {
+  background: var(--ok);
+}
+
+.cyc-tag.is-open .cyc-tag-l {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.cyc-tag.is-closed .cyc-tag-l {
+  color: var(--text-dim);
+}
+
+.cyc-tag.is-fire::before,
+.cyc-tag.is-fire::after {
+  background: var(--warn);
+}
+
+.cyc-tag.is-fire .cyc-tag-l {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+/* ───────── 중간 폭·좁은 화면: 하단 시트 ───────── */
+
+@media (max-width: 1099px) {
+  .cyc-dock {
+    pointer-events: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-3) var(--space-4);
+    max-height: 48%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 var(--space-4) var(--space-4);
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+    box-shadow: var(--shadow-2);
+    scrollbar-width: thin;
+  }
+
+  .cyc-dock > .cyc-panel {
+    position: static;
+    transform: none;
+    width: auto;
+    min-width: 0;
+    max-height: none;
+    overflow: visible;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 0;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .cyc-dock > .cyc-ctrl {
+    display: contents;
+  }
+
+  .cyc-strokes {
+    grid-column: 1 / -1;
+    order: 1;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    margin: 0 calc(var(--space-4) * -1);
+    padding: var(--space-2) var(--space-4);
+    background: var(--panel-solid);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cyc-dock > .cyc-seg {
+    grid-column: 1 / -1;
+    order: 2;
+    padding: 3px;
+    background: var(--panel-sunken);
+    border-radius: var(--radius-m);
+  }
+
+  .cyc-row {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+
+  .cyc-dock > .cyc-guide {
+    order: 4;
+  }
+
+  .cyc-dock > .cyc-side {
+    order: 5;
+  }
+}
+
+@media (max-width: 819px) {
+  .cyc-dock {
+    grid-template-columns: minmax(0, 1fr);
+    max-height: 56%;
+  }
+
+  .cyc-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+
+  .cyc-stroke {
+    min-height: 44px;
+    gap: 6px;
+    padding: 0 6px;
+    font-size: 13px;
+  }
+
+  .cyc-stroke-n {
+    width: 22px;
+    height: 22px;
+  }
+
+  .cyc-title {
+    font-size: 17px;
+  }
+
+  .cyc-dock > .cyc-side {
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-3);
+  }
+}
+
+@media (max-width: 420px) {
+  .cyc-strokes[style*='--n: 4'] .cyc-stroke-n {
+    display: none;
+  }
+
+  .cyc-rev {
+    display: none;
+  }
+}
