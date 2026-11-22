@@ -107,6 +107,10 @@ node scripts/thumbs.mjs [id ...]                          # 홈 카드 썸네일
 
 **문서**: `upgrade_skill.md`(업그레이드 방법), `glm-5.3_skill.md`(가벼운 모델용 제작 방법).
 
+**검증 스크립트의 주소**: `scripts/*.mjs`는 `http://localhost:5273`을 본다(5173은 다른 프로젝트가 쓰는 경우가 있었다).
+검증할 때는 `npm run dev -- --port 5273 --strictPort`로 띄운다(`.claude/launch.json`도 같은 설정). `smoke.mjs`는 미션 27종과 학습 모드·탐구 실험 10개 화면을 모두 연다.
+번들 크기: JS 약 1.6MB(gzip 약 0.5MB) — 실험이 늘어 커졌다. 더 늘면 실험별 동적 import로 나누는 것을 검토.
+
 ---
 
 ## 1. 프로젝트 개요

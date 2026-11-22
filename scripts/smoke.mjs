@@ -26,6 +26,18 @@ for (const id of ids) {
   await p.close();
   console.log('ok', id);
 }
+// 학습 모드·탐구 실험: 진입해서 패널이 만들어지는지, 에러가 없는지
+for (const r of ['enc', 'quiz', 'lab/bike', 'lab/car', 'lab/power', 'lab/wind', 'lab/cycle', 'lab/engines', 'lab/steam', 'lab/pump']) {
+  const lp = await open(null, '#/' + r, 5000);
+  const n = await lp.evaluate(() => document.querySelector('#mode-root').childElementCount);
+  if (n === 0) errors.push(`${r}: 화면이 비어 있음`);
+  await lp.click('#mode-home-btn');
+  await lp.waitForTimeout(600);
+  if (await lp.evaluate(() => document.querySelector('#home').classList.contains('hidden'))) errors.push(`${r}: 홈으로 돌아가지 못함`);
+  await lp.close();
+  console.log('ok', r);
+}
+
 // 오답 → 토스트, 다시하기, 새로고침 복원
 const p = await open(null, '#/m/clock');
 await p.click('.cat-btn[data-cat="joining"]');
