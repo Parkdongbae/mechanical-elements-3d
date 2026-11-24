@@ -56,7 +56,7 @@ function readDecl(n) {
   const p = `docs/mm507-sheets/${id3(n)}.md`;
   if (!existsSync(p)) return { decl: {}, src: null, err: null };
   const md = readFileSync(p, 'utf8');
-  const h = md.search(/^#+[^\n]*검사\s*선언/m);
+  const h = md.search(/^(?:#+[^\n]*|[★*\s]*)검사\s*선언/m);
   if (h < 0) return { decl: {}, src: null, err: null };
   const m = /```json\s*\n([\s\S]*?)```/.exec(md.slice(h));
   if (!m) return { decl: {}, src: p, err: '검사 선언 절은 있으나 ```json 블록이 없음' };
