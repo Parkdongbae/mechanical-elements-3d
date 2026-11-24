@@ -730,7 +730,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'hoop',
-    view: { pos: [3.4, 3.2, 4.6], target: [-0.2, 2.4, 0] },
+    view: { pos: [-2.1, 3.5, 5.9], target: [-0.2, 2.4, 0] },
     group: 'structure',
     summary: '볼트로 고정하고 림은 스프링으로',
     name: '농구 골대',

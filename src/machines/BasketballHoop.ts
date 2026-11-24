@@ -368,6 +368,9 @@ export class BasketballHoop extends BaseMachine {
     const mat = darkSteel();
     this.group.add(box(POLE_W, POLE_H, POLE_W, 0.012, mat, POLE_X, POLE_Y, 0));
     this.group.add(box(ARM_L, ARM_H, ARM_D, 0.012, mat, ARM_X, ARM_Y, 0));
+    // 팔 끝 고정판: 볼트 4개가 이 판과 백보드를 함께 조인다
+    const PLATE_T = 0.03;
+    this.group.add(box(PLATE_T, 2 * BOLT_DY + 0.16, 2 * BOLT_DZ + 0.16, 0.008, mat, BOLT_X - PLATE_T / 2 - 0.002, ARM_Y, 0));
   }
 
   /** 림 브래킷 + 그 아래 스프링 받이 러그 */
