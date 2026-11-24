@@ -37,6 +37,7 @@ export class HUD {
   private toastTimer: number | null = null;
   private speedChange: ((v: number) => void) | null = null;
   private partNameOverrides: Record<string, string> = {};
+  private partNotes: Record<string, string> = {};
   private openCat: string | null = null;
   private nextName: string | null = null;
 
@@ -203,6 +204,11 @@ export class HUD {
     this.partNameOverrides = map;
   }
 
+  /** 현재 머신에서 부품의 쓰임을 덧붙이는 설명 */
+  setPartNotes(map: Record<string, string>): void {
+    this.partNotes = map;
+  }
+
   private displayName(part: PartDef): string {
     return this.partNameOverrides[part.id] ?? part.name;
   }
@@ -361,6 +367,7 @@ export class HUD {
         <span class="info-chip">${cat.name} 기계요소</span>
         <h2>${name}</h2>
         <p>${part.role}</p>
+        ${this.partNotes[part.id] ? `<p class="info-note"><b>이 기계에서는</b> ${this.partNotes[part.id]}</p>` : ''}
       </div>
       <button type="button" class="icon-btn info-close" aria-label="닫기">${ICON.close}</button>`;
     this.infoCard.querySelector('.info-close')?.addEventListener('click', () => this.infoCard.classList.add('hidden'));
