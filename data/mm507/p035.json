@@ -1,0 +1,170 @@
+{
+  "platePage": 35,
+  "textPage": 36,
+  "figures": [
+    {
+      "n": 102,
+      "box": [
+        0.075,
+        0.252,
+        0.392,
+        0.437
+      ]
+    },
+    {
+      "n": 103,
+      "box": [
+        0.401,
+        0.252,
+        0.661,
+        0.437
+      ]
+    },
+    {
+      "n": 104,
+      "box": [
+        0.671,
+        0.252,
+        0.989,
+        0.437
+      ]
+    },
+    {
+      "n": 105,
+      "box": [
+        0.075,
+        0.444,
+        0.392,
+        0.621
+      ]
+    },
+    {
+      "n": 106,
+      "box": [
+        0.401,
+        0.444,
+        0.661,
+        0.621
+      ]
+    },
+    {
+      "n": 107,
+      "box": [
+        0.671,
+        0.444,
+        0.989,
+        0.621
+      ]
+    },
+    {
+      "n": 108,
+      "box": [
+        0.075,
+        0.627,
+        0.392,
+        0.815
+      ]
+    },
+    {
+      "n": 109,
+      "box": [
+        0.401,
+        0.627,
+        0.661,
+        0.815
+      ]
+    },
+    {
+      "n": 110,
+      "box": [
+        0.671,
+        0.627,
+        0.989,
+        0.815
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 102,
+      "enStart": "Common screw bolt and nut",
+      "titleKo": "볼트와 너트",
+      "ko": "보통의 나사 볼트와 너트이다. 원운동에서 직선 운동을 얻는다.",
+      "easy": "볼트를 돌리면 나사산을 따라 너트가 앞으로 나아간다. 한 바퀴 돌 때 나사의 피치(나사산 간격)만큼 직선으로 움직인다.",
+      "category": "tool",
+      "mech": "Hex bolt with right-hand helical thread, hex nut at top and second nut at bottom; vertical axis. Input = rotation of bolt/nut; output = axial advance of one pitch per revolution."
+    },
+    {
+      "n": 103,
+      "enStart": "Rectilinear motion of slide",
+      "titleKo": "나사로 미는 슬라이드",
+      "ko": "나사가 회전하면 슬라이드가 직선 운동을 한다.",
+      "easy": "긴 나사 막대를 돌리면, 나사에 맞물린 T자 모양 슬라이드가 안내 틀을 따라 옆으로 밀려간다. 선반 같은 기계의 이송 장치에 쓰이는 방식이다.",
+      "category": "tool",
+      "mech": "L-shaped fixed bed; horizontal lead screw supported in a bracket at left; T-shaped slide with nut riding on the screw and the bed. Input = screw rotation; output = slide translation along the bed, one pitch per turn."
+    },
+    {
+      "n": 104,
+      "enStart": "In this, rotary motion is",
+      "titleKo": "웜과 웜 기어",
+      "ko": "여기서는 나사(웜)의 회전으로 바퀴에 회전 운동이 전해지거나, 바퀴의 회전으로 슬라이드에 직선 운동이 전해진다. 나사 절삭 선반(스크루 커팅 선반)과 슬라이드 선반에 쓰인다.",
+      "easy": "가로로 놓인 나사(웜)를 돌리면 맞물린 톱니바퀴가 천천히 돈다. 나사를 한 바퀴 돌릴 때 바퀴는 톱니 한 개만큼만 움직이므로 속도를 크게 줄일 수 있다. 나사 절삭 선반에 쓰인다.",
+      "category": "gear",
+      "mech": "Horizontal worm (screw with long helical thread, top) meshing with a spur/worm wheel below (teeth about 16, hub with bearing bracket on a base plate). Input = worm rotation; output = wheel rotation; ratio = number of wheel teeth : 1 for single-start worm."
+    },
+    {
+      "n": 105,
+      "enStart": "Screw stamping-press. Rectilinear",
+      "titleKo": "나사 압착기(스탬핑 프레스)",
+      "ko": "나사식 찍기 프레스이다. 원운동에서 직선 운동을 얻는다.",
+      "easy": "손잡이 막대의 양쪽 공을 잡고 돌리면 굵은 나사가 내려가면서 아래쪽 물건을 강하게 눌러 찍는다. 회전하는 힘이 큰 직선 압력으로 바뀐다.",
+      "category": "tool",
+      "mech": "C-shaped (G-clamp style) frame; vertical screw with a threaded collar in the frame top; handle bar with two ball ends fixed across the screw head; lower end presses a cylindrical piece (stamp). Input = handle rotation; output = vertical pressing stroke."
+    },
+    {
+      "n": 106,
+      "enStart": "Uniform reciprocating rectilinear motion,",
+      "titleKo": "홈 캠으로 만드는 왕복(106)",
+      "ko": "106번과 107번: 홈이 파인 캠을 회전시켜 일정한 왕복 직선 운동을 얻는다.",
+      "easy": "원통에 파인 홈을 따라 위쪽 핀이 끌려다니며 수평 막대가 좌우로 오간다. 홈의 모양이 곧 움직임의 모양이어서, 캠이 돌면 막대가 일정한 속도로 왕복한다.",
+      "category": "cam",
+      "mech": "Rotating drum (axis horizontal, shaft sticks out both sides) with a cylinder cam: grooves cut as a belt-like curve (in 106 a sloping/curved band); pin hanging from a horizontal slide bar guided in two bearings under a fixed support at top. Input = drum rotation; output = bar moving along its axis, speed set by groove slope."
+    },
+    {
+      "n": 107,
+      "enStart": "Uniform reciprocating rectilinear motion,",
+      "titleKo": "홈 캠으로 만드는 왕복(107)",
+      "ko": "106번과 107번: 홈이 파인 캠을 회전시켜 일정한 왕복 직선 운동을 얻는다.",
+      "easy": "106번과 비슷하지만 홈이 물결 모양이다. 홈의 모양대로 위쪽 핀이 따라가며 막대가 왕복하므로, 홈 모양을 바꾸면 움직임의 빠르기도 바꿀 수 있다.",
+      "category": "cam",
+      "mech": "Same layout as 106 but the groove on the drum is a wavy (sinusoidal) curve; follower pin on a bar guided in two bearings under a fixed support. Input = drum rotation; output = harmonic-like reciprocation of the bar, two strokes per revolution at this groove."
+    },
+    {
+      "n": 108,
+      "enStart": "Uniform reciprocating rectilinear motion",
+      "titleKo": "역나사 홈 실린더",
+      "ko": "실린더가 일정하게 회전하면 일정한 왕복 직선 운동이 나온다. 이 실린더에는 서로 반대로 감긴 나사나 홈이 파여 있어 한 바퀴에 두 번 교차한다. 홈에 꽂은 점은 한 바퀴마다 실린더 끝에서 끝까지 이동한다.",
+      "easy": "오른나사 홈과 왼나사 홈이 겹쳐 파인 원통이 돌면 홈에 낀 핀이 원통 한쪽 끝까지 가다가 교차점에서 방향을 바꾸어 되돌아온다. 그래서 원통이 한 방향으로만 돌아도 핀이 계속 왕복한다.",
+      "category": "cam",
+      "mech": "Vertical cylinder with crossed right- and left-hand helical grooves (diamond pattern); follower pin on a vertical-frame arm at left engages groove; small gear at the bottom drives the cylinder; frame with top and bottom plates. Input = uniform rotation of the cylinder; output = arm shuttling up and down once per revolution at constant speed."
+    },
+    {
+      "n": 109,
+      "enStart": "The rotation of the screw",
+      "titleKo": "나사 절삭 장치",
+      "ko": "왼쪽의 나사가 회전하면 절삭 공구가 일정한 직선 운동을 하여 다른 나사산을 깎는다. 깎을 나사의 피치(간격)는 틀 끝에 있는 바퀴의 크기를 바꾸어 달리할 수 있다.",
+      "easy": "왼쪽 나사가 돌면 공구가 일정하게 옆으로 움직이며 다른 나사의 나사산을 새긴다. 끝의 기어 바퀴 크기를 바꾸면 새 나사산의 간격도 바뀐다.",
+      "category": "tool",
+      "mech": "Frame with two vertical screws side by side (left = lead screw, right = workpiece screw to be cut) and a cutter carried on a nut/arm between; wheels (change gears) at the bottom ends of the screws; top and bottom plates. Input = rotation of the driving gear; output = cutter traversing at lead-screw pitch; change gears set ratio."
+    },
+    {
+      "n": 110,
+      "enStart": "Uniform circular into uniform",
+      "titleKo": "양쪽 나사 안내 롤러",
+      "ko": "일정한 회전 운동이 일정한 직선 운동으로 바뀐다. 실패 감는 기계에서 실을 실패 위로 이끄는 데 쓰인다. 롤러는 두 부분으로 나뉘어 있고, 각각 가는 나사산이 파여 있는데 하나는 오른나사, 다른 하나는 왼나사이다. 롤러와 평행한 축에는 두 개의 반너트(하프 너트)를 단 팔들이 있고 이 너트가 나사에 끼워져 있는데, 하나는 롤러 위에, 다른 하나는 롤러 아래에 있다. 한쪽 반너트가 맞물려 있으면 다른 쪽은 풀려 있다. 레버를 오른쪽이나 왼쪽으로 누르면 막대가 어느 방향으로든 이동하게 할 수 있다.",
+      "easy": "롤러의 오른쪽 절반과 왼쪽 절반에는 서로 반대 방향의 나사산이 있다. 레버로 위 너트나 아래 너트 중 하나만 맞물리게 하면 막대가 오른쪽 또는 왼쪽으로 움직인다. 실을 실패에 고르게 감는 데 쓰인다.",
+      "category": "tool",
+      "mech": "Rectangular frame with two end plates; a horizontal roller made of two threaded halves (right-hand and left-hand); parallel spindle with arms carrying two half-nuts (one above, one below the roller); traversing rod with lever handle at the right end. Input = roller rotation; output = traversing rod, direction chosen by which half-nut engages."
+    }
+  ]
+}

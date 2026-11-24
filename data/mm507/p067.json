@@ -1,0 +1,170 @@
+{
+  "platePage": 67,
+  "textPage": 68,
+  "figures": [
+    {
+      "n": 243,
+      "box": [
+        0.1231,
+        0.237,
+        0.4,
+        0.4258
+      ]
+    },
+    {
+      "n": 244,
+      "box": [
+        0.4088,
+        0.237,
+        0.6703,
+        0.4258
+      ]
+    },
+    {
+      "n": 245,
+      "box": [
+        0.678,
+        0.237,
+        0.9736,
+        0.4258
+      ]
+    },
+    {
+      "n": 246,
+      "box": [
+        0.1231,
+        0.4305,
+        0.4,
+        0.6177
+      ]
+    },
+    {
+      "n": 247,
+      "box": [
+        0.4088,
+        0.4305,
+        0.6703,
+        0.6177
+      ]
+    },
+    {
+      "n": 248,
+      "box": [
+        0.678,
+        0.4305,
+        0.9736,
+        0.6177
+      ]
+    },
+    {
+      "n": 249,
+      "box": [
+        0.1231,
+        0.62,
+        0.4,
+        0.812
+      ]
+    },
+    {
+      "n": 250,
+      "box": [
+        0.4088,
+        0.62,
+        0.6703,
+        0.812
+      ]
+    },
+    {
+      "n": 251,
+      "box": [
+        0.678,
+        0.62,
+        0.9736,
+        0.812
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 243,
+      "en": "Represents a mode of transmitting power from a horizontal shaft to two vertical ones by means of pulleys and a band.",
+      "titleKo": "수평 축에서 수직 축 둘로",
+      "ko": "수평 축에서 두 개의 수직 축으로 풀리와 띠(벨트)를 써서 동력을 전달하는 방법을 나타낸다.",
+      "easy": "가운데 가이드 풀리들이 벨트를 비틀어 방향을 바꿔 주어, 수평으로 돌던 힘이 좌우의 수직 축 두 개를 돌리게 된다.",
+      "category": "belt",
+      "mech": "Two vertical shafts (left and right) each with a drum pulley and a flange; a horizontal band runs from the left drum under/over three small guide pulleys in the middle (center larger) to the right drum. Driver = band moving; both vertical shafts rotate; guide pulleys twist the belt 90 degrees."
+    },
+    {
+      "n": 244,
+      "en": "A dynamometer, or instrument used for ascertaining the amount of useful effect given out by any motive-power. It is used as follows:—A is a smoothly-turned pulley, secured on a shaft as near as possible to the motive-power. Two blocks of wood are fitted to this pulley, or one block of wood and a series of straps fastened to a band or chain, as in the drawing, instead of a common block. The blocks or block and straps are so arranged that they may be made to bite or press upon the pulley by means of the screws and nuts on the top of the lever, D. To estimate the amount of power transmitted through the shaft, it is only necessary to ascertain the amount of friction of the drum, A, when it is in motion, and the number of revolutions made. At the end of the lever, D, is hung a scale, B, in which weights are placed. The two stops, C, C′, are to maintain the lever as nearly as possible in a horizontal position. Now, suppose the shaft to be in motion, the screws are to be tightened and weights added in B, until the lever takes the position shown in the drawing at the required number of revolutions. Therefore the useful effect would be equal to the product of the weights multiplied by the velocity at which the point of suspension of the weights would revolve if the lever were attached to the shaft.",
+      "titleKo": "마찰식 동력계",
+      "ko": "동력계이다. 어떤 동력이 내놓는 유용한 일의 양을 알아내는 데 쓰는 기구이다. 사용법은 이렇다. A는 매끄럽게 깎은 풀리로, 동력에 되도록 가까운 축에 고정한다. 이 풀리에 나무 블록 두 개를, 또는 보통 블록 대신 그림처럼 띠나 체인에 매단 여러 가닥의 줄과 나무 블록 하나를 맞춘다. 블록이나 블록과 줄은 레버 D 위쪽의 나사와 너트로 풀리를 물거나 누르게 되어 있다. 축으로 전해지는 동력을 어림하려면 드럼 A가 움직일 때의 마찰량과 회전수를 알아내기만 하면 된다. 레버 D의 끝에는 저울(접시) B가 걸려 있어 거기에 추를 올려놓는다. 멈추개 C, C′ 두 개는 레버를 되도록 수평으로 유지하게 한다. 이제 축이 돌고 있다고 하고, 나사를 조이고 B에 추를 더해 가면서 정해진 회전수에서 레버가 그림에 나타난 위치에 오게 한다. 그러면 유용한 일은 추의 무게에 레버가 축에 붙어 있다면 추를 매단 점이 돌아갈 속도를 곱한 값과 같다.",
+      "easy": "돌아가는 바퀴를 나무 블록으로 조여 레버를 수평으로 맞추고, 저울접시에 올린 추의 무게와 속도로 기계가 내는 힘을 잰다. 마찰을 이용해 힘을 측정하는 장치이다.",
+      "category": "tool",
+      "mech": "Smooth drum pulley A on a shaft (left, under a hatched block); wooden brake blocks / strap bands clamped on it by screws and nuts on top of a long horizontal lever D extending to the right; two stops C and C' above and below the lever; a hanging scale pan B on three cords at the right end carrying weights. Driver = shaft rotating against brake friction; lever held horizontal by weights."
+    },
+    {
+      "n": 245,
+      "en": "Bayonet joint. On turning the part, A, it is released from the L-shaped slot in the socket, B, when it can be withdrawn.",
+      "titleKo": "바요네트 이음",
+      "ko": "총검식(바요네트) 이음이다. 부품 A를 돌리면 소켓 B의 L자형 홈에서 풀려 빼낼 수 있다.",
+      "easy": "막대의 핀이 L자 홈에 걸려 있다가, 돌리면 홈의 입구와 맞아 빠진다. 돌려서 끼우고 돌려서 빼는 이음이다.",
+      "category": "tool",
+      "mech": "Vertical tube A (broken at top) ending inside a socket B (rectangular block with an L-shaped slot cut in its side); a pin on A rides in the slot. Driver = hand: push in, twist, to lock/unlock; no continuous motion."
+    },
+    {
+      "n": 246,
+      "en": "Represents a pantograph for copying, enlarging, and reducing plans, etc. One arm is attached to and turns on the fixed point, C. B is an ivory tracing-point, and A the pencil. Arranged as shown, if we trace the lines of a plan with the point, B, the pencil will reproduce it double the size. By shifting the slide attached to the fixed point, C, and the slide carrying the pencil along their respective arms, the proportion to which the plan is traced will be varied.",
+      "titleKo": "축소·확대 제도기",
+      "ko": "도면 등을 베끼고 확대하고 축소하는 팬터그래프를 나타낸다. 한 팔은 고정점 C에 붙어 그 둘레를 돈다. B는 상아로 된 추적점이고 A는 연필이다. 그림처럼 맞추면 추적점 B로 도면의 선을 따라 그릴 때 연필이 두 배 크기로 그대로 그려 낸다. 고정점 C에 붙은 슬라이드와 연필을 실은 슬라이드를 각자의 팔을 따라 옮기면 도면을 그리는 비율이 달라진다.",
+      "easy": "마름모 모양으로 이어 놓은 막대 한쪽 점을 따라 그리면, 다른 쪽 연필이 같은 모양을 크게 또는 작게 그린다. 슬라이드 위치를 옮겨 배율을 바꿀 수 있다.",
+      "category": "tool",
+      "mech": "Pantograph: four straight bars forming a parallelogram with pivots at the corners (rhombus in the middle); long arms extending out to the lower left (end C, fixed point, ball) and upper left (end A with slide, pencil); tracing point B at the left corner. Driver = hand moving the tracing point B; pencil A moves in the same shape at double scale (ratio set by slides)."
+    },
+    {
+      "n": 247,
+      "en": "A mode of releasing a sounding-weight. When the piece projecting from the bottom of the rod strikes the bottom of the sea, it is forced upward relatively to the rod, and withdraws the catch from under the weight, which drops off and allows the rod to be lifted without it.",
+      "titleKo": "측연추 분리 장치",
+      "ko": "측연(바다 깊이를 재는) 추를 떼어 내는 방법이다. 막대 아래쪽에서 튀어나온 부분이 바다 밑바닥에 닿으면 막대에 대해 위로 밀려 올라가고, 추 밑에 걸린 걸쇠를 빼내서 추가 떨어져 나가며, 막대는 추 없이 들어 올릴 수 있게 된다.",
+      "easy": "바닥에 닿은 막대 끝이 위로 밀리면 걸쇠가 빠져 추가 떨어진다. 그래서 무거운 추는 바다 밑에 두고 가벼운 막대만 끌어 올릴 수 있다.",
+      "category": "tool",
+      "mech": "Vertical rod (tube, broken at top) with a heavy round weight (hatched circle) at the middle held by an internal catch; a spring/projection at the bottom end of the rod, rod end with a small crosspiece. Driver = rod touching the sea bottom pushes the projecting piece upward, retracting the catch; weight drops off."
+    },
+    {
+      "n": 248,
+      "en": "Union coupling. A is a pipe with a small flange abutting against the pipe, C, with a screwed end; B a nut which holds them together.",
+      "titleKo": "유니언 이음",
+      "ko": "유니언 이음(관 이음)이다. A는 작은 플랜지가 있는 관으로, 나사 달린 끝을 가진 관 C에 맞닿아 있고, B는 이 둘을 붙들어 주는 너트이다.",
+      "easy": "두 관의 끝을 맞대고 큰 너트를 나사로 조이면 물이 새지 않게 단단히 이어진다. 풀면 쉽게 떼어 낼 수 있다.",
+      "category": "tool",
+      "mech": "Cross-section: pipe A (upper, with a small flange at its bottom end) inserted into nut B (hexagonal outer, threaded inside) which screws onto the threaded end of pipe C (lower). Driver = turning nut B by hand; clamps the flange against C (static joint)."
+    },
+    {
+      "n": 249,
+      "en": "Ball-and-socket joint, arranged for tubing.",
+      "titleKo": "관용 볼 소켓 이음",
+      "ko": "관(튜브)용으로 만든 볼 앤드 소켓(구형) 이음이다.",
+      "easy": "공 모양의 끝이 오목한 소켓에 끼워진 이음이다. 관을 여러 방향으로 꺾어도 끊기지 않고 이어져 있다.",
+      "category": "tool",
+      "mech": "Two tube ends meeting at a ball-and-socket: a spherical ball (circle, center hole) held in a two-part clamped socket with two bolts at left and right; tubes extend up and down. Driver = none; allows angular movement of the tubes about the ball center."
+    },
+    {
+      "n": 250,
+      "en": "Anti-friction bearing. Instead of a shaft revolving in an ordinary bearing it is sometimes supported on the circumference of wheels. The friction is thus reduced to the least amount.",
+      "titleKo": "마찰 줄이는 바퀴 받침",
+      "ko": "마찰을 줄이는 베어링이다. 축이 보통 베어링 안에서 도는 대신, 바퀴들의 둘레 위에 얹혀 지지되기도 한다. 그러면 마찰이 가장 적은 양으로 줄어든다.",
+      "easy": "축이 미끄러지며 도는 대신 바퀴들 위에 얹혀 같이 구르므로 마찰이 크게 줄어든다.",
+      "category": "tool",
+      "mech": "Frame/pedestal (block with window cut-outs) carrying four spoked friction wheels in a clover arrangement, the wheel rims overlapping in a ring; the shaft rests in the central gap on the rims of the wheels. Driver = shaft rotating; wheels roll with the shaft (rolling contact, low friction)."
+    },
+    {
+      "n": 251,
+      "en": "Releasing-hook, used in pile-driving machines. When the weight, W, is sufficiently raised, the upper ends of the hooks, A, by which it is suspended, are pressed inward by the sides of the slot, B, in the top of the frame; the weight is thus suddenly released, and falls with accumulating force on to the pile-head.",
+      "titleKo": "말뚝 박는 기계의 해제 고리",
+      "ko": "말뚝 박는 기계에 쓰는 해제 고리이다. 추 W가 충분히 올라가면, 추를 매단 고리 A의 윗부분이 틀 꼭대기 홈 B의 옆면에 밀려 안쪽으로 오므라든다. 그러면 추는 갑자기 풀려 쌓인 힘으로 말뚝 머리 위에 떨어진다.",
+      "easy": "추를 줄로 끌어 올리다 틀 꼭대기에서 고리가 오므라들면 추가 갑자기 떨어져 말뚝을 때린다. 높이 올린 만큼 큰 힘으로 말뚝을 박는다.",
+      "category": "tool",
+      "mech": "Two vertical guide posts joined at the top plate with a slot B; a lifting rope/rod through the slot; pair of curved scissor hooks A (tongs) holding the weight W (rectangle below, between the guides) by a ring/hook. Driver = rope raising hooks and weight; at the top the slot squeezes the hooks, releasing W to fall."
+    }
+  ]
+}

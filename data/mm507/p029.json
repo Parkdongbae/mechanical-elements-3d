@@ -1,0 +1,170 @@
+{
+  "platePage": 29,
+  "textPage": 30,
+  "figures": [
+    {
+      "n": 77,
+      "box": [
+        0.075,
+        0.221,
+        0.394,
+        0.415
+      ]
+    },
+    {
+      "n": 78,
+      "box": [
+        0.404,
+        0.221,
+        0.664,
+        0.415
+      ]
+    },
+    {
+      "n": 79,
+      "box": [
+        0.674,
+        0.221,
+        0.989,
+        0.415
+      ]
+    },
+    {
+      "n": 80,
+      "box": [
+        0.075,
+        0.422,
+        0.394,
+        0.605
+      ]
+    },
+    {
+      "n": 81,
+      "box": [
+        0.404,
+        0.422,
+        0.664,
+        0.605
+      ]
+    },
+    {
+      "n": 82,
+      "box": [
+        0.674,
+        0.422,
+        0.989,
+        0.605
+      ]
+    },
+    {
+      "n": 83,
+      "box": [
+        0.075,
+        0.612,
+        0.394,
+        0.799
+      ]
+    },
+    {
+      "n": 84,
+      "box": [
+        0.351,
+        0.612,
+        0.684,
+        0.799
+      ]
+    },
+    {
+      "n": 85,
+      "box": [
+        0.674,
+        0.612,
+        0.989,
+        0.799
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 77,
+      "enStart": "The vibration of the lever",
+      "titleKo": "두 개의 폴 래칫 구동",
+      "ko": "중심(받침점) A를 축으로 한 레버 C가 흔들리면, 번갈아 작용하는 두 개의 폴(걸쇠)에 의해 바퀴 B가 회전한다. 거의 연속적인 운동이다.",
+      "easy": "레버를 좌우로 흔들면 두 걸쇠가 번갈아 톱니바퀴를 밀어 준다. 한쪽이 돌아오는 동안 다른 쪽이 밀기 때문에 바퀴가 거의 끊기지 않고 한 방향으로 돈다.",
+      "category": "ratchet",
+      "mech": "Ratchet wheel B (ring with holes in rim and spokes) on central hub; lever C pivoted at fulcrum A (vertical bar, right); two pawls on C engage rim teeth alternately. Input = oscillating lever; output = near-continuous rotation of wheel in the arrow direction."
+    },
+    {
+      "n": 78,
+      "enStart": "A modification of 77",
+      "titleKo": "폴 래칫 구동 변형",
+      "ko": "77번의 변형이다.",
+      "easy": "77번과 같은 원리이다. 흔들리는 레버 B가 위아래 두 군데의 걸쇠로 톱니바퀴 A를 번갈아 밀어 돌린다.",
+      "category": "ratchet",
+      "mech": "Large ratchet wheel A on an A-frame stand with teeth on rim; rocking lever B at top carries two pawls (hooks hanging down) that push teeth alternately. Input = lever B swinging; output = wheel rotation. Frame ~ wheel radius tall."
+    },
+    {
+      "n": 79,
+      "enStart": "Reciprocating rectilinear motion of",
+      "titleKo": "왕복 막대로 돌리는 래칫",
+      "ko": "막대 B가 직선으로 왕복하면, 흔들리는 방사형 팔 C, C의 끝에 달린 폴(걸쇠)들이 톱니 면이 있는 바퀴 A를 밀어 거의 연속적인 회전 운동을 만든다.",
+      "easy": "막대를 앞뒤로 밀고 당기면 두 팔이 번갈아 바퀴 안쪽 톱니를 걸어 돌린다. 직선 왕복 운동이 한 방향의 회전으로 바뀐다.",
+      "category": "ratchet",
+      "mech": "Ring wheel A with internal ratchet teeth; two radial arms C,C pivoted at centre, pawls at their ends engage inner rim; rod B on the right drives a V-linkage (toggle) joining the arm tips. Input = rod B reciprocating; output = wheel A rotating in arrow direction."
+    },
+    {
+      "n": 80,
+      "enStart": "Rectilinear motion is imparted",
+      "titleKo": "갈고리 폴로 미는 홈 랙",
+      "ko": "레버 C가 흔들리면, 두 개의 갈고리 모양 폴이 번갈아 홈 파인 랙 막대 A의 톱니에 떨어져 걸리면서 막대 A에 직선 운동을 준다.",
+      "easy": "두 개의 갈고리가 X자로 교차해 달려 있고, 레버를 흔들 때마다 번갈아 톱니에 걸려 막대를 한 방향으로 조금씩 밀어 올린다.",
+      "category": "ratchet",
+      "mech": "Vertical slotted rack bar A with saw teeth on both edges; lever C (horizontal, two balls at ends) pivoted at centre carries two crossed hooked pawls. Input = lever C oscillation; output = vertical stepwise translation of bar A."
+    },
+    {
+      "n": 81,
+      "enStart": "Alternate rectilinear motion is",
+      "titleKo": "결손 기어로 미는 랙 막대",
+      "ko": "랙 막대 B는 일부 이가 빠진 평기어 A가 계속 돌아가는 동안 번갈아 직선 운동을 한다. 기어 A가 랙을 벗어나면 코일 스프링 C가 막대를 원래 위치로 되돌린다.",
+      "easy": "이가 일부만 있는 기어가 돌면서 막대의 톱니를 밀어 올리다가, 이가 없는 부분에서는 스프링이 막대를 다시 끌어내린다. 그래서 막대가 오르내리는 왕복 운동을 한다.",
+      "category": "gear",
+      "mech": "Vertical rack rod B with teeth on one side and a collar; coil spring C above pushing the rod back; mutilated spur gear A (teeth only on part of rim) on a horizontal shaft at lower right, rotating continuously (arrow). Output = reciprocating rod, driven stroke by gear, return by spring."
+    },
+    {
+      "n": 82,
+      "enStart": "On motion being given",
+      "titleKo": "발판으로 돌리는 래칫",
+      "ko": "두 개의 발판 D를 번갈아 밟으면, 흔들리는 팔 B와 거기 달린 폴을 통해 래칫 바퀴 A에 거의 연속적인 운동이 전해진다. 각 발판에 매단 사슬이나 띠가 풀리 C를 넘어 가기 때문에, 한쪽 발판이 내려가면 다른 쪽이 올라간다.",
+      "easy": "두 발판을 번갈아 밟아 바퀴를 돌린다. 한쪽을 밟으면 다른 쪽이 올라오고, 두 걸쇠가 번갈아 톱니를 밀어서 바퀴가 끊김 없이 돌아간다.",
+      "category": "ratchet",
+      "mech": "Ratchet wheel A with fine teeth on a shaft; two vibrating arms B with pawls; pulley C above the frame with chain/strap over it; two treadles D (long horizontal levers, pivot at left) at the bottom. Input = alternate foot pressure on treadles; output = rotation of A."
+    },
+    {
+      "n": 83,
+      "enStart": "A nearly continuous rotary",
+      "titleKo": "톱니 부채꼴 두 개로 돌리기",
+      "ko": "래칫 톱니가 있는 부채꼴 호(弧) C 두 개가 래칫 바퀴 D의 양쪽에서 하나씩 작용하여, 바퀴 D에 거의 연속적인 회전 운동을 준다. 이 호들(그림에는 하나만 보인다)은 같은 로커 축 B에 고정되어 있고 톱니는 서로 반대 방향으로 나 있다. 로커 축은 막대 A에 왕복 직선 운동을 주어 움직인다. 호에는 스프링을 달아, 바퀴가 한쪽으로 돌 때 톱니 위를 미끄러져 넘어갈 수 있도록 각 호가 들릴 수 있게 해야 한다.",
+      "easy": "삼각 부채꼴 모양의 톱니 조각이 흔들리며 아래 톱니바퀴를 민다. 반대 방향 톱니를 가진 조각이 바퀴 반대편에도 하나 있어서, 어느 방향으로 흔들어도 바퀴는 같은 방향으로 돈다.",
+      "category": "ratchet",
+      "mech": "Triangular rocker C (with lightening holes) on rock-shaft B; curved ratchet-toothed arc along its lower edge acting on large ratchet wheel D below (teeth on its rim, horizontal axis); rod A drives pin B from upper right. A second arc with reversed teeth is hidden on the other side. Input = rod A reciprocating; output = D rotating."
+    },
+    {
+      "n": 84,
+      "enStart": "The double rack-frame, B,",
+      "titleKo": "엔진 조속기용 이중 랙 틀",
+      "ko": "이중 랙 틀 B는 막대 A에 매달려 있다. 캠 D에는 연속적인 회전 운동을 준다. 캠의 축이 두 랙의 한가운데 있으면 캠은 어느 쪽 랙에도 닿지 않는다. 그러나 막대 A를 올리거나 내리면 아래쪽이나 위쪽 랙이 캠에 닿을 만큼 가까워져 랙 틀이 왼쪽이나 오른쪽으로 움직인다. 이 운동은 기관의 조속기와 함께 쓰인 적이 있는데, 막대 A는 조속기에, 랙 틀은 스로틀(조절 밸브)에 연결되어 있다.",
+      "easy": "캠이 계속 도는 동안, 틀을 위로 올리면 위쪽 랙이, 내리면 아래쪽 랙이 캠에 걸린다. 그래서 틀이 왼쪽 또는 오른쪽으로 밀려 가는데, 조속기의 신호로 엔진의 밸브를 열고 닫는 데 쓰였다.",
+      "category": "governor",
+      "mech": "Horizontal rectangular frame B hanging from vertical rod A (a slot/yoke at top); inside it two toothed racks (upper and lower, facing each other) and a cam D (heart/oval disc) on a fixed shaft midway between them; frame end rods slide in side guides. Input = cam rotation + rod A height; output = frame translating left/right (direction chosen by A)."
+    },
+    {
+      "n": 85,
+      "enStart": "Intermittent alternating rectilinear mo-",
+      "titleKo": "캠으로 들어 올리는 낙하 막대",
+      "ko": "막대 A에 간헐적인 상하 직선 운동이 전해진다. 두 개의 캠(와이퍼)이 달린 축이 계속 돌면서 막대의 돌기 B를 밀어 올린다. 막대는 자기 무게로 떨어진다. 광석을 찧는 스탬퍼나 분쇄기, 해머에 쓰인다.",
+      "easy": "도는 축의 캠이 막대를 위로 들어 올렸다가 놓으면 막대가 중력으로 쿵 하고 떨어진다. 이 동작이 반복되어 광석을 부수거나 망치질하는 데 쓰인다.",
+      "category": "cam",
+      "mech": "Tall cast frame (C-shaped standard with top bracket); vertical stamp rod A in guides with projection (tappet) B; a horizontal shaft with two cams/wipers at the top-left lifts B; stamp head at foot. Input = continuous shaft rotation; output = intermittent lift, drop by gravity."
+    }
+  ]
+}

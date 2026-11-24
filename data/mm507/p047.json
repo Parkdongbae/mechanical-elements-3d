@@ -1,0 +1,170 @@
+{
+  "platePage": 47,
+  "textPage": 48,
+  "figures": [
+    {
+      "n": 155,
+      "box": [
+        0.1099,
+        0.2005,
+        0.3923,
+        0.4281
+      ]
+    },
+    {
+      "n": 156,
+      "box": [
+        0.4011,
+        0.2005,
+        0.667,
+        0.4281
+      ]
+    },
+    {
+      "n": 157,
+      "box": [
+        0.6758,
+        0.2005,
+        0.9692,
+        0.4281
+      ]
+    },
+    {
+      "n": 158,
+      "box": [
+        0.1099,
+        0.4328,
+        0.3923,
+        0.6177
+      ]
+    },
+    {
+      "n": 159,
+      "box": [
+        0.4011,
+        0.4328,
+        0.667,
+        0.6177
+      ]
+    },
+    {
+      "n": 160,
+      "box": [
+        0.6758,
+        0.4328,
+        0.9692,
+        0.6177
+      ]
+    },
+    {
+      "n": 161,
+      "box": [
+        0.1099,
+        0.6216,
+        0.3923,
+        0.8392
+      ]
+    },
+    {
+      "n": 162,
+      "box": [
+        0.4011,
+        0.6216,
+        0.667,
+        0.8392
+      ]
+    },
+    {
+      "n": 163,
+      "box": [
+        0.6758,
+        0.6216,
+        0.9692,
+        0.8392
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 155,
+      "en": "Reciprocating rectilinear motion into intermittent circular motion by means of the pawl attached to the elbow-lever, and operating in the toothed wheel. Motion is given to the wheel in either direction according to the side on which the pawl works. This is used in giving the feed-motion to planing machines and other tools.",
+      "titleKo": "래칫 이송 장치",
+      "ko": "왕복 직선 운동을 간헐 원운동(끊어지는 회전)으로 바꾼다. 엘보 레버에 붙은 폴(pawl)이 톱니바퀴의 이를 밀어서 하는 것이다. 폴이 어느 쪽에서 작용하느냐에 따라 바퀴는 어느 방향으로든 돌 수 있다. 이것은 평삭기(대패 기계)와 다른 공구의 이송 운동에 쓰인다.",
+      "easy": "막대가 왔다 갔다 하면 레버 끝의 폴이 톱니를 한 칸씩 밀어 바퀴를 조금씩 돌린다. 폴을 반대쪽에 걸면 바퀴가 반대로 돈다. 공작 기계에서 공구나 재료를 조금씩 보내는 데 쓴다.",
+      "category": "ratchet",
+      "mech": "Toothed (ratchet) wheel of about 20 square teeth on a center hub; elbow-lever pivoted on the same axis; pawl on the lever engages teeth; reciprocating vertical rod at right connected to the lever end. Driver = rod up/down; wheel advances one tooth per stroke (intermittent), direction set by pawl side."
+    },
+    {
+      "n": 156,
+      "en": "Circular motion into variable alternating rectilinear motion, by the wrist or crank-pin on the rotating disk working in the slot of the bell-crank or elbow-lever.",
+      "titleKo": "홈이 있는 벨 크랭크",
+      "ko": "원운동이 변하는 교대 직선 운동으로 바뀐다. 회전하는 원판의 손목(크랭크 핀)이 벨 크랭크(엘보 레버)의 홈 안에서 움직이기 때문이다.",
+      "easy": "원판의 핀이 레버의 긴 홈 속을 오가며 레버를 흔들고, 레버 끝에 달린 막대는 위아래로 움직인다. 핀의 위치에 따라 막대의 속도가 일정하지 않고 변한다.",
+      "category": "crank",
+      "mech": "Disk with a crank-pin (small stud) working in the long slot of an elbow lever; lever pivoted at lower left; the other arm ends in an eye connected to a vertical rod going down. Driver = disk rotation; rod reciprocates with variable speed."
+    },
+    {
+      "n": 157,
+      "en": "A modification of the movement last described; a connecting-rod being substituted for the slot in the bell-crank.",
+      "titleKo": "연결봉이 있는 벨 크랭크",
+      "ko": "앞에서 설명한 운동의 변형으로, 벨 크랭크의 홈 대신 연결봉을 쓴다.",
+      "easy": "앞의 장치에서 홈 대신 막대(연결봉)로 원판과 레버를 이었다. 원판이 돌면 연결봉이 레버를 흔들어 다른 막대를 움직인다.",
+      "category": "crank",
+      "mech": "Disk on a shaft with a short crank arm whose end is linked by a connecting-rod to a bell-crank; the bell-crank's other arm is linked to a second short rod at the right. Driver = disk rotation; output rod reciprocates."
+    },
+    {
+      "n": 158,
+      "en": "Reciprocating curvilinear motion of the treadle gives a circular motion to the disk. A crank may be substituted for the disk.",
+      "titleKo": "발판과 원판",
+      "ko": "발판(트레들)의 왕복 곡선 운동이 원판에 원운동을 준다. 원판 대신 크랭크를 써도 된다.",
+      "easy": "발판을 밟았다 놓았다 하면 연결봉이 원판의 가장자리를 밀어 당겨서 원판이 빙글빙글 돈다. 재봉틀이나 선반의 발판과 같은 원리이다.",
+      "category": "crank",
+      "mech": "Treadle (long lever) pivoted at the right on a small bracket, lying on the ground; a short connecting-rod from the treadle to the disk crank-pin; disk on a shaft held by a pedestal. Driver = treadle up/down; disk rotates."
+    },
+    {
+      "n": 159,
+      "en": "A modification of 158, a cord and pulley being substituted for the connecting rod.",
+      "titleKo": "줄과 도르래 발판",
+      "ko": "158의 변형으로, 연결봉 대신 줄과 도르래를 쓴다.",
+      "easy": "발판에 매단 줄이 도르래를 거쳐 원판의 핀에 이어져 있다. 발판을 밟으면 줄이 원판을 당겨 돌린다.",
+      "category": "crank",
+      "mech": "Disk on a pedestal with a crank-pin; cord from the pin runs up over a small pulley, then down to a treadle lever pivoted on a bracket at the right. Driver = treadle; pulling the cord turns the disk."
+    },
+    {
+      "n": 160,
+      "en": "Alternating curvilinear motion into alternating circular. When the treadle has been depressed, the spring at the top elevates it for the next stroke; the connecting band passes once round the pulley, to which it gives motion.",
+      "titleKo": "스프링 발판과 띠",
+      "ko": "교대 곡선 운동이 교대 원운동으로 바뀐다. 발판을 밟은 뒤에는 위쪽의 스프링이 발판을 들어 올려 다음 동작을 준비시킨다. 연결하는 띠는 도르래를 한 번 감아 돌아서 도르래를 움직인다.",
+      "easy": "발판을 밟으면 띠가 도르래를 한 바퀴 이내로 돌리고, 발판을 놓으면 위의 휘어진 스프링이 발판을 다시 올려 준다. 그래서 도르래는 앞뒤로 번갈아 돈다.",
+      "category": "crank",
+      "mech": "Long treadle lever pivoted at the lower left; a band (cord) from its end goes up and wraps once around a small pulley (wheel at center); a curved leaf spring above, to which the cord's top end is attached. Driver = treadle; pulley oscillates back and forth."
+    },
+    {
+      "n": 161,
+      "en": "Centrifugal governor for steam engines. The central spindle and attached arms and balls are driven from the engine by the bevel-gears at the top, and the balls fly out from the center by centrifugal force. If the speed of the engine increases, the balls fly out further from the center, and so raise the slide at the bottom and thereby reduce the opening of the regulating-valve which is connected with said slide. A diminution of speed produces an opposite effect.",
+      "titleKo": "원심 조속기",
+      "ko": "증기 기관용 원심 조속기이다. 가운데 축과 거기 붙은 팔, 공은 위쪽의 베벨 기어를 통해 기관으로부터 구동되며, 공은 원심력으로 중심에서 바깥으로 벌어진다. 기관의 속도가 빨라지면 공이 중심에서 더 멀리 벌어져서 아래쪽의 미끄럼 부품(슬라이드)을 들어 올리고, 이 슬라이드에 연결된 조절 밸브의 열림을 줄인다. 속도가 줄어들면 반대 효과가 생긴다.",
+      "easy": "공 두 개가 달린 축이 돌 때 빨리 돌수록 공이 바깥으로 벌어진다. 벌어진 공이 아래 슬라이드를 끌어올려 증기 밸브를 좁혀서 기관이 너무 빨리 도는 것을 막는다.",
+      "category": "governor",
+      "mech": "Vertical spindle driven by a bevel gear pair at the top; two arms hinged at the top with a ball on each (dotted circles show the flown-out position); links from the arms to a sliding collar below; a lever fork at the bottom to the regulating valve. Driver = engine rotation; balls swing out with speed, collar rises."
+    },
+    {
+      "n": 162,
+      "en": "Water-wheel governor acting on the same principle as 161, but by different means. The governor is driven by the top horizontal shaft and bevel-gears, and the lower gears control the rise and fall of the shuttle or gate over or through which the water flows to the wheel. The action is as follows:—The two bevel-gears on the lower part of the center spindle, which are furnished with studs, are fitted loosely to the said spindle and remain at rest so long as the governor has a proper velocity; but immediately that the velocity increases, the balls, flying further out, draw up the pin which is attached to a loose sleeve which slides up and down the spindle, and this pin, coming in contact with the stud on the upper bevel gear, causes that gear to rotate with the spindle and to give motion to the lower horizontal shaft in such a direction as to make it raise the shuttle or gate, and so reduce the quantity of water passing to the wheel. On the contrary, if the speed of the governor decreases below that required, the pin falls and gives motion to the lower bevel-gear, which drives the horizontal shaft in the opposite direction and produces a contrary effect.",
+      "titleKo": "물레방아 조속기 1",
+      "ko": "161과 같은 원리로 작동하지만 방법이 다른 물레방아 조속기이다. 조속기는 위쪽의 수평축과 베벨 기어로 구동되고, 아래쪽 기어들이 물레방아로 흘러가는 물이 넘거나 통과하는 셔틀(수문)의 오르내림을 조절한다. 작동은 이렇다. 가운데 축 아래쪽에 있는, 스터드(돌기)가 달린 두 베벨 기어는 이 축에 헐겁게 끼워져 있어서 조속기가 알맞은 속도일 때는 멈춰 있다. 그러나 속도가 빨라지는 즉시 공이 더 멀리 벌어지면서, 축을 따라 오르내리는 헐거운 슬리브에 붙은 핀을 끌어올린다. 이 핀이 위쪽 베벨 기어의 스터드에 닿으면 그 기어가 축과 함께 돌면서 아래쪽 수평축에 운동을 주어, 수평축이 셔틀(수문)을 올려 물레방아로 가는 물의 양을 줄이게 한다. 반대로 조속기의 속도가 필요한 속도보다 낮아지면 핀이 내려와 아래쪽 베벨 기어에 운동을 주고, 이 기어가 수평축을 반대 방향으로 돌려 반대 효과를 낸다.",
+      "easy": "기계가 너무 빨리 돌면 공이 벌어져 핀이 올라가 위쪽 기어를 돌게 하고, 이것이 수문을 올려 물을 줄인다. 너무 느리면 핀이 내려와 아래쪽 기어를 돌려 수문을 내려 물을 늘린다.",
+      "category": "governor",
+      "mech": "Vertical spindle with a pair of hinged arms and two balls, on a top horizontal shaft with bevel gears; below, a sliding sleeve with a pin, and two bevel gears (loose on the spindle, with studs) mounted in a bracket (clamp), driving a lower horizontal shaft toward the left. Driver = top shaft rotation; ball spread selects which loose gear engages, so the lower shaft turns one way or the other."
+    },
+    {
+      "n": 163,
+      "en": "Another arrangement for a water-wheel governor. In this the governor controls the shuttle or gate by means of the cranked lever, which acts on the strap or belt in the following manner:—The belt runs on one of three pulleys, the middle one of which is loose on the governor spindle and the upper and lower ones fast. When the governor is running at the proper speed the belt is on the loose pulley, as shown; but when the speed increases the belt is thrown on the lower pulley, and thereby caused to act upon suitable gearing for raising the gate or shuttle and decreasing the supply of water. A reduction of the speed of the governor brings the belt on the upper pulley, which acts upon gearing for producing an opposite effect on the shuttle or gate.",
+      "titleKo": "물레방아 조속기 2",
+      "ko": "물레방아 조속기의 다른 방식이다. 여기서는 조속기가 꺾인 레버로 띠(벨트)에 작용하여 셔틀(수문)을 조절한다. 방법은 이렇다. 벨트는 풀리 세 개 중 하나에 걸리는데, 가운데 풀리는 조속기 축에 헐겁게 끼워져 있고 위와 아래 풀리는 축에 고정되어 있다. 조속기가 알맞은 속도로 돌 때는 그림처럼 벨트가 헐거운 풀리에 걸려 있다. 속도가 빨라지면 벨트가 아래 풀리로 밀려가서, 수문을 올려 물의 공급을 줄이는 알맞은 기어 장치에 작용한다. 조속기의 속도가 줄면 벨트가 위 풀리로 옮겨 가서, 수문에 반대 효과를 내는 기어 장치에 작용한다.",
+      "easy": "정상 속도에서는 벨트가 헛도는 풀리에 걸려 아무 일도 하지 않는다. 너무 빠르면 아래 풀리로, 너무 느리면 위 풀리로 벨트가 옮겨 가 수문을 반대 방향으로 움직인다.",
+      "category": "governor",
+      "mech": "Vertical spindle with two hinged arms and balls and a cranked lever at the right that moves a belt fork; three stacked pulleys on the spindle (upper and lower fast, middle loose) at the lower part inside a frame; belt shown on the middle loose pulley, running horizontally to the right. Driver = spindle rotation; ball spread moves the belt among the pulleys."
+    }
+  ]
+}

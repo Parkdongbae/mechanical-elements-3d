@@ -1,0 +1,120 @@
+{
+ "platePage": 125,
+ "textPage": 126,
+ "textPages": [
+  126,
+  127
+ ],
+ "figures": [
+  {
+   "n": 502,
+   "box": [
+    0.133,
+    0.335,
+    0.384,
+    0.532
+   ]
+  },
+  {
+   "n": 503,
+   "box": [
+    0.39,
+    0.335,
+    0.653,
+    0.532
+   ]
+  },
+  {
+   "n": 504,
+   "box": [
+    0.662,
+    0.335,
+    0.973,
+    0.5
+   ]
+  },
+  {
+   "n": 505,
+   "box": [
+    0.13,
+    0.532,
+    0.385,
+    0.71
+   ]
+  },
+  {
+   "n": 506,
+   "box": [
+    0.39,
+    0.532,
+    0.653,
+    0.71
+   ]
+  },
+  {
+   "n": 507,
+   "box": [
+    0.66,
+    0.52,
+    0.973,
+    0.712
+   ]
+  }
+ ],
+ "texts": [
+  {
+   "n": 502,
+   "titleKo": "주전 기어열(에피사이클)",
+   "ko": "\"주전(에피사이클) 기어열\"이다. 기어 바퀴들의 축이 공통의 중심 둘레를 도는 기어열은 모두 이 이름으로 부른다. 이런 기어열에서 양 끝 바퀴가 모두는 아니더라도 한쪽 끝의 바퀴는 언제나 회전하는 틀과 같은 중심에 있다. C는 틀, 곧 기어열을 받치는 팔이다. 이 틀과 중심이 같은 가운데 바퀴 A는 작은 기어 F와 맞물리고, F와 같은 축에 붙은 바퀴 E가 바퀴 B와 맞물린다. 첫 바퀴 A를 고정하고 틀 C를 돌리면 기어열이 고정된 바퀴 둘레를 돌고, 고정 바퀴에 대한 틀의 상대 운동이 기어열을 통해 B에 자기 축의 회전 운동을 전한다. 또는 첫 바퀴와 틀을 서로 다른 속도로 돌려도 되는데, B가 자기 축에서 도는 속도만 다를 뿐 결과는 같다. 이렇게 설명한 기어열에서는 한쪽 끝의 바퀴만 회전하는 틀과 중심이 같다. 그러나 바퀴 E를 B가 아니라 A처럼 틀과 중심이 같은 바퀴 D와 맞물리게 하면, 양 끝 바퀴가 모두 틀과 중심이 같은 기어열이 된다. 이 기어열에서는 팔과 한쪽 끝 바퀴에 구동 운동을 주어 다른 쪽 끝 바퀴에 합쳐진(합성) 회전을 얻을 수도 있고, 양 끝 바퀴 A와 D에 운동을 주어 합성 운동이 팔에 전해지게 할 수도 있다.",
+   "easy": "기어의 축이 한 중심 둘레를 함께 도는 장치를 주전 기어열이라고 한다. 가운데 기어를 고정하고 팔을 돌리면 팔에 달린 기어들이 공전하면서 자전해 출력 바퀴가 돈다. 팔과 바퀴의 속도를 서로 달리 주면 여러 가지 속도 조합을 얻을 수 있다.",
+   "category": "gear",
+   "mech": "Bar-shaped arm C pivots on the axis of its middle wheel; plan view, all axes perpendicular to the page. Three ~20-tooth spur gears in a vertical row: B (top), F/E (middle, dotted, on the arm axis), D (bottom, with A); gears mesh in series. Inputs: arm and/or end wheel; output: the other end wheel. Equal sizes."
+  },
+  {
+   "n": 503,
+   "titleKo": "베벨 기어 주전 기어열",
+   "ko": "주전 기어열의 아주 간단한 형태이다. F, G는 가운데 축 A에 붙은 팔이며, 축 A에는 베벨 기어 C와 D가 헐겁게 끼워져 있다. 팔은 베벨 기어 B의 굴대 모양으로 만들어져 있고, B는 그 위에서 자유롭게 돈다. 두 바퀴 C, D에 운동을 주어 팔에 합성 운동을 일으키거나, 팔과 두 바퀴 가운데 하나에 운동을 주어 다른 바퀴에 합성 운동을 얻을 수 있다.",
+   "easy": "위아래 베벨 기어 C, D 사이에 작은 베벨 기어 B가 끼어 팔 F, G에 달려 있다. 두 기어를 서로 다른 속도로 돌리면 팔이 두 속도를 합한 속도로 돌게 된다. 자동차 차동 장치와 닮은 구조이다.",
+   "category": "gear",
+   "mech": "Horizontal-section view. Central vertical shaft A (visible at top and bottom) with two loose conical bevel wheels C (bottom) and D (top) facing each other; arm F (hub block on the shaft) with a horizontal axle on the right carrying small bevel B that meshes with both; G is the end of the arm. Case-like shape of ~2:1 width to height. Inputs: C and D (opposite directions give arm rotation). Gear ratio 1:1 bevel."
+  },
+  {
+   "n": 504,
+   "titleKo": "퍼거슨의 역설 기어",
+   "ko": "\"퍼거슨의 기계적 역설\"로, 주전 기어열의 신기한 성질을 보여 주려고 만든 장치이다. 바퀴 A는 움직이지 않는 스터드에 고정되어 있고, 그 둘레를 팔 C, D가 돈다. 이 팔에는 핀 M, N 두 개가 있다. 하나(M)에는 A와 맞물리는 두꺼운 바퀴 B가 헐겁게 끼워져 있고, 다른 하나(N)에는 B와 모두 맞물리는 헐거운 바퀴 E, F, G 세 개가 있다. 팔 C, D를 스터드 위에서 돌리면 세 바퀴 E, F, G는 그 공통 축인 핀 N 위에서 운동을 받는다. 세 바퀴는 중간 바퀴 B 및 바퀴 A와 함께 서로 다른 세 개의 주전 기어열을 이룬다. A의 이가 20개, F가 20개, E가 21개, G가 19개라고 하자. 팔을 돌리면 F는 자기 축에서 돌지 않는 것처럼 보이고(둘레의 한 점이 늘 같은 방향을 가리킨다), E는 한 방향으로, G는 반대 방향으로 천천히 도는 것처럼 보인다. 이 겉보기 역설 때문에 이 장치에 그런 이름이 붙었다.",
+   "easy": "고정 기어 A 둘레를 팔이 돌면, 잇수가 다른 세 기어 E, F, G가 같은 축에 있어도 각각 다르게 움직인다. 잇수가 20개로 같은 F는 방향이 변하지 않는 것처럼 보이고, 21개짜리 E는 천천히 한쪽으로, 19개짜리 G는 천천히 반대쪽으로 돈다. 잇수 하나 차이가 만드는 느린 회전 차이이다.",
+   "category": "gear",
+   "mech": "Side view, horizontal: fixed wheel A (left, on a stud/pillar on base plate C) meshing with thick wheel B on pin M; at the right, three thin wheels E, F, G stacked on pin N meshing with B. Arm C-D is a horizontal bar under the wheels, rotating about the stud A axis (vertical). A=20 teeth, F=20, E=21, G=19 teeth. Input: arm rotation; F shows no net rotation, E and G slowly turn in opposite senses."
+  },
+  {
+   "n": 505,
+   "titleKo": "내접·외접 유성 기어",
+   "ko": "주전 기어열의 또 다른 간단한 형태로, 팔 D가 작은 기어 B를 달고 있다. B는 평기어 A와 안쪽에 이가 있는 고리 모양 바퀴 C에 모두 맞물리며, A와 C는 모두 팔의 축과 중심이 같다. A와 C 가운데 어느 한쪽을 고정할 수 있으며, 팔과 작은 기어가 도는 동안 다른 쪽 바퀴가 운동을 받는다.",
+   "easy": "가운데 기어 A, 작은 기어 B, 바깥의 고리 기어 C가 맞물려 있고 팔 D가 B를 실어 나른다. A를 고정하면 C가, C를 고정하면 A가 팔의 회전에 따라 돈다. 오늘날 자동 변속기의 유성 기어와 같은 방식이다.",
+   "category": "gear",
+   "mech": "Plan view, axes perpendicular to page: sun spur gear A at centre (~14 teeth); planet pinion B (~10 teeth, ~0.6 of A) meshing with A and with the internal teeth of the large ring wheel C (~40 teeth); arm D, a straight bar from the centre A out past the ring to the upper right, carrying the pinion B on a pin. Either A or C fixed; arm is the input."
+  },
+  {
+   "n": 506,
+   "titleKo": "두 끝이 모두 도는 기어열",
+   "ko": "첫 바퀴도 끝 바퀴도 고정되지 않은 또 다른 주전 기어열이다. m, n은 축이며, 여기에 기어열을 받치는 팔 k, l이 단단히 고정되어 있다. 팔은 서로 붙어 있되 팔 위에서 따로 도는 두 바퀴 d, e를 싣고 있다. 바퀴 b와 c는 서로 붙어서 함께 돌며 축 m, n 위에서 자유롭게 돈다. 바퀴 f와 g도 서로 붙어 있고 축 m, n 위에서 함께 자유롭게 돈다. 바퀴 c, d, e, f가 주전 기어열을 이루는데 c가 첫 바퀴이고 f가 마지막 바퀴이다. 축 A가 구동축으로, 여기에 바퀴 a와 h 둘이 단단히 붙어 있다. a는 바퀴 b와 맞물려 기어열의 첫 바퀴 c에 운동을 주고, 바퀴 h는 바퀴 g를 돌려 마지막 바퀴 f에 운동을 준다. 이렇게 기어열의 두 끝에 운동을 주면 팔 k, l과 축 m, n에 합성 운동이 생긴다. 이 기어열은 바꿀 수 있다. 예를 들어 g와 f를 떼어 g는 축 m, n에 고정하고 f만 그 위에서 헐겁게 돌게 한다고 하자. 구동축 A는 앞에서처럼 바퀴 a, b를 통해 주전 기어열의 첫 바퀴 c에 운동을 주고, h를 통해 바퀴 g와 축 m, n, 팔 k, l도 함께 돌게 하며, 헐거운 바퀴 f에 합성 회전이 주어진다.",
+   "easy": "구동 축 하나가 바퀴 a, b를 통해 기어열의 첫 바퀴로, 바퀴 h, g를 통해 마지막 바퀴(또는 팔)로 동시에 운동을 전한다. 양 끝의 운동이 합쳐져 팔의 회전이 정해진다.",
+   "category": "gear",
+   "mech": "Section view with L-shaped bracket frame on a base. Handle crank A on horizontal driver shaft at left with bevel a and h; vertical axis m (bottom) - n (top) is the epicyclic main shaft. Bevel wheels: b, c united (lower), d, e small on arm axis k-l (horizontal arm with end l), f, g united (upper). Driver A feeds c via a/b and g via h; arm k-l rotates about the m-n axis. Many bevels ~ same size (ratio ~1)."
+  },
+  {
+   "n": 507,
+   "titleKo": "아주 느린 회전의 기어열",
+   "ko": "아주 느린 운동을 얻으려고 만든 또 다른 형태의 주전 기어열이다. m은 고정된 축이고, 그 위에 긴 대롱(슬리브)이 헐겁게 끼워져 있다. 대롱의 아래 끝에는 바퀴 D가, 위 끝에는 바퀴 E가 붙어 있다. 이 긴 대롱 위에 더 짧은 대롱이 끼워져 있고, 그 양 끝에 바퀴 A와 H가 달려 있다. 바퀴 C는 D와 A에 모두 맞물리고, 축 m, p 위에서 자유롭게 도는 기어열 팔 m, n은 n 지점의 스터드에 서로 붙은 바퀴 F와 G를 싣고 있다. A가 10개, C가 100개, D가 10개, E가 61개, F가 49개, G가 41개, H가 51개의 이를 가지면, 바퀴 C가 한 바퀴 도는 동안 기어열 팔 m, n은 25,000바퀴를 돈다.",
+   "easy": "잇수가 조금씩만 다른 여러 기어를 이어 붙이면 그 차이가 겹쳐서 엄청난 속도비가 생긴다. 이 장치에서는 바퀴 C가 한 바퀴 돌 때 팔 m, n이 25,000바퀴를 돈다고 책은 설명한다.",
+   "category": "gear",
+   "mech": "Elevation. Vertical fixed shaft m (base at bottom, labelled p/n). Long sleeve with wheel D at bottom, E at top; short sleeve outside it with A at the lower part and H at the top; wheel C (large, vertical, on the right) meshes with D and A, driven by shaft a at right. Arm m-n (horizontal at the top: n at left end, m at right) carries united wheels F and G on stud n. Teeth: A10, C100, D10, E61, F49, G41, H51. Input: C; output: arm m-n, extremely slow (1 turn per 25,000 turns of C).",
+   "enFix": [
+    {
+     "wrong": "G 4 J",
+     "right": "G 41"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,170 @@
+{
+  "platePage": 83,
+  "textPage": 84,
+  "figures": [
+    {
+      "n": 313,
+      "box": [
+        0.0629,
+        0.2,
+        0.3918,
+        0.4188
+      ]
+    },
+    {
+      "n": 314,
+      "box": [
+        0.3966,
+        0.2,
+        0.6614,
+        0.4188
+      ]
+    },
+    {
+      "n": 315,
+      "box": [
+        0.6663,
+        0.2,
+        0.977,
+        0.4188
+      ]
+    },
+    {
+      "n": 316,
+      "box": [
+        0.0629,
+        0.4239,
+        0.3918,
+        0.6094
+      ]
+    },
+    {
+      "n": 317,
+      "box": [
+        0.3966,
+        0.4239,
+        0.6614,
+        0.6094
+      ]
+    },
+    {
+      "n": 318,
+      "box": [
+        0.6663,
+        0.4239,
+        0.977,
+        0.6094
+      ]
+    },
+    {
+      "n": 319,
+      "box": [
+        0.0629,
+        0.6137,
+        0.3918,
+        0.8444
+      ]
+    },
+    {
+      "n": 320,
+      "box": [
+        0.3966,
+        0.6137,
+        0.6614,
+        0.8444
+      ]
+    },
+    {
+      "n": 321,
+      "box": [
+        0.6663,
+        0.6137,
+        0.977,
+        0.8444
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 313,
+      "en": "Chronometer escapement, the form now commonly constructed. As the balance rotates in the direction of the arrow, the tooth, V, on the verge, presses the passing-spring against the lever, pressing aside the lever and removing the detent from the tooth of the escape-wheel. As balance returns, tooth, V, presses aside and passes spring without moving lever, which then rests against the stop, E. P is the only pallet upon which impulse is given.",
+      "titleKo": "크로노미터 탈진기",
+      "ko": "지금 흔히 만들어지는 형태의 크로노미터 탈진기이다. 균형 바퀴가 화살표 방향으로 돌면 버지(축)에 달린 이 V가 통과 스프링을 레버에 눌러 붙이고, 레버를 옆으로 밀어 탈진 바퀴 이에서 멈춤쇠(디텐트)를 떼어 낸다. 균형 바퀴가 되돌아올 때는 이 V가 스프링을 옆으로 밀고 레버를 움직이지 않은 채 지나가며, 레버는 멈추개 E에 기대어 쉰다. 충격은 오직 팔레트 P에서만 받는다.",
+      "easy": "균형 바퀴가 한쪽으로 돌 때만 작은 스프링이 레버를 밀어 톱니바퀴를 풀어 주고, 돌아올 때는 그냥 스치고 지나간다. 균형 바퀴가 거의 방해받지 않아서 배에서 쓰는 정밀 시계(크로노미터)에 쓰인다.",
+      "category": "escapement",
+      "mech": "Large escape wheel (about 14 sharp teeth, 4 spokes) at left; at upper right a balance/verge disc (circle with arrow, tooth V) with a pallet P; a long vertical lever with detent T near the wheel, passing-spring B, and stops D, E at lower right. Input: wheel torque; balance rotation (arrow) unlocks the lever once per cycle; output: one tooth released per oscillation. Wheel diameter about 1.6x balance disc."
+    },
+    {
+      "n": 314,
+      "en": "Lever chronometer escapement. In this the pallets, A, B, and lever, look like those of the lever escapement 296: but these pallets only lock the escape-wheel, having no impulse. Impulse is given by teeth of escape-wheel directly to a pallet, C, attached to balance.",
+      "titleKo": "레버 크로노미터 탈진기",
+      "ko": "레버 크로노미터 탈진기이다. 여기서 팔레트 A, B와 레버는 296의 레버 탈진기의 것과 비슷하게 생겼지만, 이 팔레트들은 탈진 바퀴를 잠글 뿐 충격은 주지 않는다. 충격은 탈진 바퀴의 이가 균형 바퀴에 붙은 팔레트 C에 직접 주는 것이다.",
+      "easy": "레버의 팔레트는 바퀴를 잡았다 놓는 일만 하고, 균형 바퀴를 밀어 주는 힘은 톱니바퀴의 이가 균형 바퀴의 팔레트 C를 직접 쳐서 준다.",
+      "category": "escapement",
+      "mech": "Escape wheel (4 spokes, ~12 hooked teeth) at left; a lever arm A pivoted at upper right center with two stone-type pallets (A, B) at lower end near the wheel (curved wedge); balance disc at top right with pallet C and center pin. Input: wheel torque; balance oscillation; output: wheel releases tooth per half cycle; impulse goes directly to balance pallet C. Wheel diameter about 1.3x lever length."
+    },
+    {
+      "n": 315,
+      "en": "Conical pendulum, hung by a thin piece of round wire. Lower end connected with and driven in a circle by an arm attached to a vertical rotating spindle. The pendulum-rod describes a cone in its revolution.",
+      "titleKo": "원뿔 진자",
+      "ko": "가는 둥근 철사로 매단 원뿔 진자이다. 아래쪽 끝은 세로로 도는 스핀들에 붙은 팔과 이어져, 그 팔에 이끌려 원을 그리며 돈다. 진자의 막대는 돌면서 원뿔을 그린다.",
+      "easy": "추가 앞뒤로 흔들리는 대신 원을 그리며 돈다. 그래서 추를 매단 막대가 원뿔 모양을 그린다. 회전하는 축에 연결해 일정한 속도로 도는 것을 이용한다.",
+      "category": "governor",
+      "mech": "Thin wire hung from a T-shaped support at top; a long straight rod runs down at a slant with a cylindrical bob (weight) on its lower part; lower end connected to a small arm on a vertical spindle with a gear/pulley at its foot. Input: spindle rotation; output: pendulum rod sweeps a cone. Rod length about 4x bob length; cone half-angle about 10 deg."
+    },
+    {
+      "n": 316,
+      "en": "Mercurial compensation pendulum. A glass jar of mercury is used for the bob or weight. As the pendulum-rod is expanded lengthwise by increased temperature, the expansion of mercury in jar carries it to a greater height therein, and so raises its center of gravity relatively to the rod sufficiently to compensate for downward expansion of the rod. As rod is contracted by a reduction of temperature, contraction of mercury lowers it relatively to rod. In this way the center of oscillation is always kept in the same place, and the effective length of pendulum always the same.",
+      "titleKo": "수은 보상 진자",
+      "ko": "수은 보상 진자이다. 추로 수은이 든 유리병을 쓴다. 온도가 올라 진자 막대가 길이 방향으로 늘어나면, 병 속의 수은도 팽창해 더 높은 곳까지 차오르므로, 막대에 대한 수은의 무게 중심이 올라가 막대가 아래쪽으로 늘어난 것을 상쇄한다. 온도가 내려 막대가 줄어들면 수은도 수축해 막대에 대해 무게 중심이 내려간다. 이렇게 하여 진동 중심은 늘 같은 자리에 있게 되고, 진자의 유효 길이도 늘 같게 유지된다.",
+      "easy": "더우면 막대는 길어져 추를 아래로 내리지만, 수은도 부풀어 올라 무게 중심을 위로 올린다. 두 효과가 맞물려 진자의 실제 길이가 변하지 않으므로 시계가 계절이 바뀌어도 정확하게 간다.",
+      "category": "escapement",
+      "mech": "Vertical glass jar (cylinder, about 2.5x taller than wide) half-filled with mercury (hatched), suspended from a horizontal clamp bar with a vertical threaded rod at top and a stirrup/yoke hooks on both sides; inner rod runs down inside jar. Input: temperature; output: center of gravity shifts relative to the rod. Static element (pendulum); jar diameter about 0.4 of height."
+    },
+    {
+      "n": 317,
+      "en": "Compound bar compensation pendulum. C is a compound bar of brass and iron or steel, brazed together with brass downward. As brass expands more than iron, the bar will bend upward as it gets warmer, and carry the weights, W, W, up with it, raising the center of the aggregate weight, M, W, to raise the center of oscillation as much as elongation of the pendulum rod would let it down.",
+      "titleKo": "복합 막대 보상 진자",
+      "ko": "복합 막대 보상 진자이다. C는 황동과 철 또는 강을 맞붙여 땜질한 복합 막대로, 황동이 아래쪽에 있다. 황동은 철보다 더 많이 늘어나므로 막대는 따뜻해지면 위쪽으로 휘면서 추 W, W를 함께 위로 올린다. 그래서 전체 무게 M, W의 중심이 올라가, 진자 막대가 늘어나 내려가는 만큼 진동 중심을 올려 준다.",
+      "easy": "서로 다르게 늘어나는 두 금속을 붙인 막대는 더워지면 휜다. 막대 끝의 작은 추들이 위로 올라가 무거운 추 M이 처지는 것을 상쇄하므로 온도가 변해도 진자의 길이가 같게 유지된다.",
+      "category": "escapement",
+      "mech": "Vertical pendulum rod from top; large bell-shaped weight M (cylinder with rounded top) at lower middle with a short screw below; horizontal compound bar C across the top of M (arched slightly upward, ends with small blocks W, W that hold weights). Input: temperature; output: compound bar curvature raises the small weights. Bar span about 1.6x M width."
+    },
+    {
+      "n": 318,
+      "en": "Watch regulator. The balance-spring is attached at its outer end to a fixed stud, R, and at its inner end to staff of balance. A neutral point is formed in the spring at P by inserting it between two curb-pins in the lever, which is fitted to turn on a fixed ring concentric with staff of balance, and the spring only vibrates between this neutral point and staff of balance. By moving lever to the right, the curb-pins are made to reduce the length of acting part of spring, and the vibrations of balance are made faster ; and by moving it to the left an opposite effect is produced.",
+      "titleKo": "시계 속도 조절기",
+      "ko": "시계 조속(레귤레이터) 장치이다. 균형 스프링은 바깥쪽 끝이 고정된 스터드 R에, 안쪽 끝이 균형 바퀴 축에 붙어 있다. 균형 바퀴 축과 같은 중심의 고정 고리 위에서 돌 수 있게 만든 레버의 두 개의 커브 핀 사이에 스프링을 끼워 P에 중립점을 만들어, 스프링은 이 중립점과 균형 바퀴 축 사이에서만 진동한다. 레버를 오른쪽으로 옮기면 커브 핀이 스프링의 작용 부분 길이를 줄여 균형 바퀴의 진동이 빨라지고, 왼쪽으로 옮기면 반대 효과가 생긴다.",
+      "easy": "소용돌이 모양의 가는 스프링의 한 점을 두 개의 작은 핀으로 잡아 주면 스프링의 움직이는 부분이 짧아져 시계가 빨리 간다. 레버를 'SLOW'와 'FAST' 사이에서 옮겨 시계의 빠르기를 조절한다.",
+      "category": "escapement",
+      "mech": "Large balance wheel (rim with 3 spokes, center staff) with a spiral hairspring at center (outer end at stud R); regulator lever pivoted on a fixed ring concentric with the staff, pointing down with an arm to the scale labeled SLOW (left) and FAST (right), curb-pins at P. Input: lever position by hand; output: change in effective hairspring length. Balance diameter about 0.65 of scale width."
+    },
+    {
+      "n": 319,
+      "en": "Compensation balance. t, a, t', is the main bar of balance, with timing screws for regulation at the ends. t and t' are two compound bars, of which the outside is brass and the inside steel, carrying weights, b, b'. As heat increases, these bars are bent inward by the greater expansion of the brass, and the weights are thus drawn inward, diminishing the inertia of the balance. As the heat diminishes, an opposite effect is produced. This balance compensates both for its own expansion and contraction, and that of the balance-spring.",
+      "titleKo": "보상 균형 바퀴",
+      "ko": "보상 균형 바퀴이다. t, a, t'는 균형 바퀴의 주 막대이고 양 끝에 속도 조절용 나사가 있다. t와 t'는 두 개의 복합 막대로, 바깥쪽은 황동이고 안쪽은 강이며 추 b, b'를 달고 있다. 열이 늘면 황동이 더 많이 늘어나므로 이 막대들이 안쪽으로 휘고, 추가 안쪽으로 끌려 들어와 균형 바퀴의 관성(회전하기 어려운 정도)이 줄어든다. 열이 줄면 반대 효과가 생긴다. 이 균형 바퀴는 자신의 팽창·수축과 균형 스프링의 팽창·수축을 모두 보상한다.",
+      "easy": "더워지면 반원 모양의 두 금속 막대가 안으로 휘어 추가 가운데로 모이고, 차가워지면 바깥으로 벌어진다. 온도가 변해 스프링이 약해지거나 세지는 것을 이렇게 상쇄해 시계가 정확하게 간다.",
+      "category": "escapement",
+      "mech": "Balance bar t-a-t' vertical through center hub a with small blocks at both ends (timing screws); two semicircular bimetal arcs (compound bars) attached at t and t' curving away from the bar, each carrying a block weight (b' upper left, b lower right) near the free end. Input: temperature; output: arcs flex radially, shifting weights toward/away from the center. Arc radius about 0.8 of overall bar length/2."
+    },
+    {
+      "n": 320,
+      "en": "Endless chain, maintaining power on going-barrel, to keep a clock going while winding, during which operation the action of the weight or main-spring is taken off the barrel. The wheel to the right is the \"going-wheel,\" and that to the left the \"striking-wheel.\" P is a pulley fixed to the great wheel of the going part, and roughened, to prevent a rope or chain hung over it from slipping. A similar pulley rides on another arbor, p, which may be the arbor of the great wheel of the striking part, and attached by a ratchet and click to that wheel, or to clock-frame, if there is no striking part. The weights are hung, as may be seen, the small one being only large enough to keep the rope or chain on the pulleys. If the part, b, of the rope or chain is pulled down, the ratchet-pulley runs under the click, and the great weight is pulled up by c, without taking its pressure off the going-wheel at all.",
+      "titleKo": "끝없는 사슬 보조 동력",
+      "ko": "시계를 감는 동안에도 시계가 계속 가도록, 가는 통(고잉 배럴)에 동력을 유지해 주는 끝없는(이음매 없는) 사슬이다. 감는 동안에는 추나 주 태엽의 작용이 통에서 떨어져 나간다. 오른쪽의 바퀴는 '가는 바퀴', 왼쪽의 바퀴는 '치는(타종) 바퀴'이다. P는 가는 부분의 큰 바퀴에 고정된 도르래로, 그 위에 건 밧줄이나 사슬이 미끄러지지 않도록 표면을 거칠게 했다. 비슷한 도르래가 다른 축 p에 걸려 있는데, 이 축은 타종 부분의 큰 바퀴의 축일 수 있으며 래칫과 걸쇠로 그 바퀴에, 타종 부분이 없으면 시계 틀에 붙어 있다. 추들은 그림과 같이 달려 있고, 작은 추는 밧줄이나 사슬이 도르래에서 벗어나지 않을 만큼만 크면 된다. 밧줄이나 사슬의 b 부분을 잡아당기면 래칫 도르래가 걸쇠 밑에서 헛돌고, 큰 추는 c에 의해 올라가므로 가는 바퀴를 누르는 힘이 조금도 사라지지 않는다.",
+      "easy": "사슬을 도르래 두 개에 걸고 큰 추와 작은 추를 매단다. 사슬을 잡아당겨 시계를 감는 동안에도 큰 추가 계속 가는 바퀴를 눌러 주므로 시계가 멈추지 않는다. 래칫 도르래가 한쪽 방향으로만 돌게 해 준다.",
+      "category": "belt",
+      "mech": "Two side-by-side pulleys: left one with a small sawtooth ratchet wheel on the front (ratchet-pulley, with a click), right one a plain roughened pulley P (going-wheel) with arrow; an endless chain a-b-c-d loops around both and under two hanging weights: a small weight w on the left loop, a larger block weight W on the right below a lower pulley. Input: pulling chain at b to wind; output: great weight W keeps driving going-wheel continuously. Right pulley diameter about the same as the left."
+    },
+    {
+      "n": 321,
+      "en": "Harrison's \"going-barrel.\" Larger ratchet-wheel, to which the click, R, is attached, is connected with the great wheel, G, by a spring, S, S'. While the clock is going, the weight acts upon the great wheel, G, through the spring ; but as soon as the weight is taken off by winding, the click, T, whose pivot is set in the frame, prevents the larger ratchet from falling back, and so the spring, S, S', still drives the great wheel during the time the clock takes to wind, as it need only just keep the escapement going, the pendulum taking care of itself for that short time. Good watches have a substantially similar apparatus.",
+      "titleKo": "해리슨의 가는 통",
+      "ko": "해리슨의 '가는 통(고잉 배럴)'이다. 걸쇠 R이 붙어 있는 큰 래칫 바퀴는 스프링 S, S'로 큰 바퀴 G와 연결되어 있다. 시계가 가는 동안에는 추가 스프링을 통해 큰 바퀴 G에 힘을 준다. 그러나 감느라 추의 힘이 사라지면, 축이 틀에 고정된 걸쇠 T가 큰 래칫 바퀴가 뒤로 돌아가지 못하게 막으므로, 스프링 S, S'가 시계를 감는 동안에도 큰 바퀴를 계속 돌린다. 이때는 탈진기만 겨우 움직이게 하면 되고, 그 짧은 시간 동안 추는 스스로 알아서 흔들리기 때문이다. 좋은 시계는 실질적으로 비슷한 장치를 갖추고 있다.",
+      "easy": "시계태엽을 감는 동안에는 추의 힘이 잠깐 끊긴다. 이때 안에 든 스프링이 대신 큰 톱니바퀴를 밀어 시계가 멈추지 않게 한다. 래칫과 걸쇠가 스프링의 힘이 새어 나가지 않게 막아 준다.",
+      "category": "escapement",
+      "mech": "Large wheel G with ~42 fine external teeth (outer ring), inside it a larger ratchet wheel with ~16 sawtooth teeth carrying click R, a smaller ratchet B concentric at the center barrel, and a curved spring S, S' joining the barrel to the great wheel; a fixed click T on the frame pivot at the upper left; weight hangs by a cord from the lower rim; a pinion/bar at upper right with a ball T. Input: weight drives G via spring; during winding spring keeps driving. Outer wheel diameter about 1.0 cell width."
+    }
+  ]
+}

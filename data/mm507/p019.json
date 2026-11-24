@@ -1,0 +1,162 @@
+{
+  "platePage": 19,
+  "textPage": 20,
+  "figures": [
+    {
+      "n": 31,
+      "box": [
+        0.1149,
+        0.2436,
+        0.4027,
+        0.4342
+      ]
+    },
+    {
+      "n": 32,
+      "box": [
+        0.4087,
+        0.2436,
+        0.6723,
+        0.4342
+      ]
+    },
+    {
+      "n": 33,
+      "box": [
+        0.6784,
+        0.2436,
+        0.9734,
+        0.4342
+      ]
+    },
+    {
+      "n": 34,
+      "box": [
+        0.1149,
+        0.4385,
+        0.4027,
+        0.6222
+      ]
+    },
+    {
+      "n": 35,
+      "box": [
+        0.4087,
+        0.4385,
+        0.6723,
+        0.6222
+      ]
+    },
+    {
+      "n": 36,
+      "box": [
+        0.6784,
+        0.4385,
+        0.9734,
+        0.6222
+      ]
+    },
+    {
+      "n": 37,
+      "box": [
+        0.1149,
+        0.6282,
+        0.4027,
+        0.812
+      ]
+    },
+    {
+      "n": 38,
+      "box": [
+        0.4087,
+        0.6282,
+        0.6723,
+        0.812
+      ]
+    },
+    {
+      "n": 39,
+      "box": [
+        0.6784,
+        0.6282,
+        0.9734,
+        0.812
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 31,
+      "titleKo": "웜과 웜기어",
+      "ko": "웜, 곧 끝없는 나사와 웜휠이다. 29와 같은 결과를 내며, 만들기가 더 쉬워서 더 자주 쓰인다.",
+      "easy": "나사 모양의 웜이 한 바퀴 돌면 웜휠은 톱니 한 개만큼 돈다. 속도를 크게 줄일 수 있고, 만들기도 쉬워서 자주 쓴다.",
+      "category": "gear",
+      "mech": "Worm (screw) on a horizontal shaft above a spur-type worm wheel (axis perpendicular to page); axes at right angles. One worm turn advances wheel one tooth."
+    },
+    {
+      "n": 32,
+      "titleKo": "마찰 바퀴",
+      "ko": "마찰 바퀴다. 이 바퀴들의 표면은 되도록 잘 물리게 거칠게 만든다. 하나에는 가끔 가죽을, 더 낫게는 경화 고무를 씌운다.",
+      "easy": "톱니 없이 바퀴 표면의 마찰만으로 회전을 전한다. 표면을 거칠게 하거나 고무를 씌울수록 덜 미끄러진다.",
+      "category": "gear",
+      "mech": "Two plain discs of different diameter (small left, large right) in rim contact on parallel axes; opposite rotation; drive by friction, ratio = diameters."
+    },
+    {
+      "n": 33,
+      "titleKo": "타원 기어",
+      "ko": "타원형 평기어다. 속도가 변하는 회전 운동이 필요한 곳에 쓰이며, 속도의 변화는 타원의 긴 축과 짧은 축의 길이 관계로 정해진다.",
+      "easy": "타원 모양 기어 두 개가 맞물려 돌면 한 바퀴 안에서 속도가 빨라졌다 느려졌다 한다. 속도 변화의 크기는 타원이 얼마나 길쭉한지로 정해진다.",
+      "category": "gear",
+      "mech": "Two identical elliptical spur gears meshing, each pivoted at an ellipse focus (axes perpendicular to page); output angular speed varies cyclically within each revolution."
+    },
+    {
+      "n": 34,
+      "titleKo": "내접 기어",
+      "ko": "안쪽에 톱니가 난 평기어와 피니언이다. 24처럼 보통의 평기어에서는 회전 방향이 반대이지만, 내접 기어에서는 두 기어가 같은 방향으로 돈다. 또 톱니의 세기가 같으면 더 많은 톱니가 맞물리므로 더 큰 힘을 전할 수 있다.",
+      "easy": "큰 바퀴의 안쪽에 톱니를 내고 그 안에 작은 기어를 넣어 맞물린다. 두 기어가 같은 방향으로 돌고, 맞물린 톱니가 많아 힘을 더 잘 전한다.",
+      "category": "gear",
+      "mech": "Large ring gear with internal teeth and a small pinion inside, meshing at the left side; axes parallel, both rotate the same direction; ratio = teeth ratio (~14:34)."
+    },
+    {
+      "n": 35,
+      "titleKo": "슬롯 막대 달린 타원 기어",
+      "ko": "균일한 회전 운동으로 변하는 회전 운동을 만든다. 작은 평기어 피니언이 타원 기어의 축에 헐겁게 도는 막대의 홈 안에서 움직인다. 피니언 축의 베어링에는 스프링이 달려 톱니를 맞물린 채로 유지하고, 막대의 홈은 타원 기어 반지름의 길이 변화를 받아들이기 위한 것이다.",
+      "easy": "일정한 속도로 도는 작은 기어가 타원 기어를 돌리면 타원 기어의 속도가 주기적으로 변한다. 막대의 홈은 작은 기어가 타원의 가까운 곳과 먼 곳을 따라 움직이게 해 준다.",
+      "category": "gear",
+      "mech": "Elliptical gear on a fixed shaft (at its focus); a slotted bar swinging loosely on that shaft carries a small spur pinion running in the slot, spring-loaded to stay engaged; pinion driven at constant speed."
+    },
+    {
+      "n": 36,
+      "titleKo": "맹글 휠과 피니언",
+      "ko": "맹글 휠과 피니언이다. 맹글(주름 펴는 기계)에 쓰이는 데서 그렇게 불린다. 피니언의 연속적인 회전 운동을 휠의 왕복하는 회전 운동으로 바꾼다. 피니언의 축은 진동 운동을 하며, 세워진 고정 막대에 곧게 판 홈 안에서 일하여 피니언이 오르내리고 바퀴 톱니의 안쪽과 바깥쪽을 번갈아 움직이게 한다. 맹글 휠 면에 윤곽을 따라 판 홈은 피니언 축을 받아 안내하고 피니언이 계속 맞물리게 한다.",
+      "easy": "작은 기어가 톱니가 난 닫힌 길을 따라 안과 밖을 번갈아 돌면 큰 바퀴가 정방향과 역방향으로 번갈아 돈다. 작은 기어는 계속 한 방향으로 돌지만 바퀴는 왔다 갔다 한다.",
+      "category": "gear",
+      "mech": "Large wheel with a continuous racetrack-shaped (double-spiral) toothed track on its face, plus a slot following the outline; pinion on a shaft that slides in a straight vertical slot in a fixed upright bar and is guided by the face slot. Pinion constant rotation; wheel oscillates."
+    },
+    {
+      "n": 37,
+      "titleKo": "원뿔 스터드 기어",
+      "ko": "균일한 회전을 변하는 회전으로 바꾼다. 왼쪽의 베벨 휠(피니언)은 톱니가 면의 전체 폭에 걸쳐 파여 있다. 이는 원뿔형 바퀴 위에 나선 모양으로 늘어선 일련의 스터드(돌기)와 맞물린다.",
+      "easy": "일정한 속도로 도는 피니언이 원뿔 바퀴의 나선 돌기를 차례로 밀어 준다. 돌기의 간격이 달라서 원뿔 바퀴의 속도가 변한다.",
+      "category": "gear",
+      "mech": "Left: long-faced bevel pinion/cone on a vertical shaft; right: a conical wheel (cut-away frustum) on a parallel vertical shaft studded with a spiral row of studs engaged by the pinion teeth. Constant in, variable out."
+    },
+    {
+      "n": 38,
+      "enStart": "A means of converting rotary",
+      "titleKo": "부분 이 기어 변속",
+      "ko": "회전 운동을 바꾸는 수단으로, 한 바퀴 중 일부에서는 속도를 일정하게 하고 다른 부분에서는 속도를 변하게 한다.",
+      "easy": "한 쌍의 기어에서 톱니가 일부분에만 있게 하면, 한 바퀴 돌 때 어떤 구간은 일정하게 돌고 어떤 구간은 속도가 바뀐다.",
+      "category": "gear",
+      "mech": "Two partial-toothed (mutilated) gears on parallel axes joined by a link bar (arm) between their centres; each has a toothed arc plus a flat or stepped section; drive speed uniform during part of revolution and varying during the rest."
+    },
+    {
+      "n": 39,
+      "titleKo": "태양-유성 기어",
+      "ko": "태양-유성 운동이다. 오른쪽의 평기어는 유성 기어라 하며, 팔에 의해 다른 기어(태양 기어)의 중심에 묶여 있어 두 중심 사이의 거리가 일정하게 유지된다. 제임스 와트는 다른 사람이 크랭크의 특허를 얻은 뒤, 증기 기관에서 크랭크를 대신해 이것을 썼다. 연결봉에 단단히 붙은 유성 기어가 한 번 돌 때마다 플라이휠 축에 고정된 태양 기어는 두 번 돈다.",
+      "easy": "유성 기어가 팔에 매달려 태양 기어 둘레를 돌면서 태양 기어를 돌린다. 연결봉이 한 번 오르내릴 때 태양 기어, 곧 플라이휠 축은 두 바퀴 돈다.",
+      "category": "gear",
+      "mech": "Sun gear on the flywheel shaft (left, fixed centre) and planet gear (right) held at constant centre distance by an arm and rigidly attached to the connecting rod (vertical, above right). One planet revolution = 2 sun revolutions (1:2 per text)."
+    }
+  ]
+}

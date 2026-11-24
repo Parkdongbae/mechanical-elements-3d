@@ -1,0 +1,170 @@
+{
+  "platePage": 89,
+  "textPage": 90,
+  "figures": [
+    {
+      "n": 340,
+      "box": [
+        0.0726,
+        0.2051,
+        0.3966,
+        0.4248
+      ]
+    },
+    {
+      "n": 341,
+      "box": [
+        0.4015,
+        0.2051,
+        0.6602,
+        0.4248
+      ]
+    },
+    {
+      "n": 342,
+      "box": [
+        0.6651,
+        0.2051,
+        0.9746,
+        0.4248
+      ]
+    },
+    {
+      "n": 343,
+      "box": [
+        0.0726,
+        0.4308,
+        0.3966,
+        0.6137
+      ]
+    },
+    {
+      "n": 344,
+      "box": [
+        0.4015,
+        0.4308,
+        0.6602,
+        0.6137
+      ]
+    },
+    {
+      "n": 345,
+      "box": [
+        0.6651,
+        0.4308,
+        0.9746,
+        0.6137
+      ]
+    },
+    {
+      "n": 346,
+      "box": [
+        0.0726,
+        0.6188,
+        0.3966,
+        0.8085
+      ]
+    },
+    {
+      "n": 347,
+      "box": [
+        0.4015,
+        0.6188,
+        0.6602,
+        0.8085
+      ]
+    },
+    {
+      "n": 348,
+      "box": [
+        0.6651,
+        0.6188,
+        0.9746,
+        0.8085
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 340,
+      "en": "Another parallel motion. Beam, D, C, with joggling pillar-support, B, F, which vibrates from the center, F. The piston-rod is connected at C. The radius-bar, E, A, produces the parallel motion.",
+      "titleKo": "흔들 기둥 평행 운동",
+      "ko": "또 다른 평행 운동이다. 빔 D, C는 흔들리는 기둥 받침 B, F에 지지되어 있고, 이 기둥은 중심 F를 축으로 흔들린다. 피스톤 막대는 C에 연결된다. 반지름 막대 E, A가 평행 운동을 만들어 낸다.",
+      "easy": "빔을 받치는 기둥이 아래의 한 점을 축으로 흔들리고, 반지름 막대가 피스톤 막대가 달린 점을 곧은 선 가까이로 이끈다.",
+      "category": "steam",
+      "mech": "Rocking pillar B-F (inclined bar pivoted at bottom F, round bearing) with a beam D-C above: the beam pivots at B (round bearing) and the D end at left holds a vertical rod; piston rod at C (right). Radius bar E-A: from a fixed pin E on the wall at right to point A on the beam. Dotted horizontal and arc show the paths. Input: beam rocking; output: C on near-vertical straight line."
+    },
+    {
+      "n": 341,
+      "en": "\"Grasshopper\" beam engine. The beam is attached at one end to a rocking-pillar, A, and the shaft arranged as near to the cylinder as the crank will work. B is the radius-bar of the parallel motion.",
+      "titleKo": "메뚜기 빔 기관",
+      "ko": "'그래스호퍼(메뚜기)' 빔 기관이다. 빔의 한쪽 끝은 흔들 기둥 A에 연결되어 있고, 축은 크랭크가 움직일 수 있는 한 실린더에 가깝게 배치되어 있다. B는 평행 운동의 반지름 막대이다.",
+      "easy": "빔의 한쪽 끝은 흔들리는 막대(기둥)에 매달려 있어서 메뚜기 다리처럼 움직인다. 반지름 막대가 피스톤 막대를 곧게 안내한다.",
+      "category": "steam",
+      "mech": "Beam (long thin bar, about 4x cylinder height) with pivot at upper left end (hatched wall support B on radius bar) and the right end hung from a long rocking pillar A to ground at the lower right; piston rod from the beam near the left going down into a cylinder (rectangle at lower left); connecting rod from the beam to a crank (round) at the lower left. Input: piston reciprocation; output: crank rotation."
+    },
+    {
+      "n": 342,
+      "en": "Old-fashioned single-acting beam pumping engine on the atmospheric principle, with chain connection between piston-rod and a segment at end of beam. The cylinder is open at top. Very low pressure steam is admitted below piston, and the weight of pump-rod, etc., at the other end of beam, helps to raise piston. Steam is then condensed by injection, and a vacuum thus produced below piston, which is then forced down by atmospheric pressure thereby drawing up pump-rod.",
+      "titleKo": "옛 대기압 빔 양수 기관",
+      "ko": "대기압 원리를 쓰는 옛 방식의 단동 빔 양수 기관으로, 피스톤 막대와 빔 끝의 부채꼴 사이를 사슬로 연결한다. 실린더는 위쪽이 열려 있다. 아주 낮은 압력의 증기를 피스톤 아래로 들여보내면, 빔 반대쪽 끝에 달린 펌프 막대 등의 무게가 피스톤을 들어 올리는 것을 돕는다. 그 다음 증기를 물을 뿌려 응결시키면 피스톤 아래에 진공이 생기고, 피스톤은 대기압에 의해 아래로 눌려 내려가며 그 힘으로 펌프 막대를 끌어올린다.",
+      "easy": "증기로 피스톤을 들어 올린 뒤 찬물을 뿌려 증기를 물로 만들면 실린더 속이 진공이 된다. 그러면 바깥 공기의 압력이 피스톤을 눌러 내리고, 그 힘이 빔을 움직여 펌프를 끌어올린다.",
+      "category": "steam",
+      "mech": "Beam (heavy tilted bar on a pivot at right, with a fork at the right end) with a toothed arc/segment (sector with chain, shown as a curved bar with a vertical chain) at the left end hanging down to the piston rod; a vertical cylinder below in a masonry opening (top open); a screw/rod down to a base; wall at right. Input: steam/vacuum piston motion; output: pump rod up/down at far end of the beam."
+    },
+    {
+      "n": 343,
+      "en": "Parallel motion for upright engine. A, A, are radius-rods connected at one end with the framing and at the other with a vibrating piece on top of piston-rod.",
+      "titleKo": "직립 기관 평행 운동",
+      "ko": "직립(세로형) 기관을 위한 평행 운동이다. A, A는 반지름 막대로, 한쪽 끝은 틀에 연결되고 다른 쪽 끝은 피스톤 막대 위에 달린 흔들리는 부품에 연결된다.",
+      "easy": "피스톤 막대 위의 이음 부품이 두 반지름 막대에 매달려 있어, 막대의 호를 그리는 움직임이 서로 상쇄되어 피스톤 막대가 곧게 오르내린다.",
+      "category": "steam",
+      "mech": "Upright engine: frame of two vertical columns with a top beam, flywheel (large spoked ring) behind; at the top a bearing block with crank; vertical piston rod with a crosspiece at its top and two radius rods A, A pivoting to the frame, a connecting rod to the crank above; base block at bottom. Input: piston up/down; output: crank rotation; piston rod guided straight by radius rods."
+    },
+    {
+      "n": 344,
+      "en": "Oscillating engine. The cylinder has trunnions at the middle of its length working in fixed bearings, and the piston-rod is connected directly with the crank, and no guides are used.",
+      "titleKo": "요동 기관",
+      "ko": "요동(진동) 기관이다. 실린더는 길이의 한가운데에 트러니언(옆으로 나온 축)이 있어서 고정된 베어링 안에서 움직이고, 피스톤 막대가 크랭크에 바로 연결되어 있으며 안내 장치는 쓰지 않는다.",
+      "easy": "실린더가 옆의 축을 중심으로 시계추처럼 흔들리며 피스톤 막대가 크랭크를 직접 돌린다. 막대를 곧게 안내하는 부품이 따로 필요 없어서 구조가 간단하다.",
+      "category": "steam",
+      "mech": "Cylinder tilted about 20 deg, with trunnions at the middle (round bearing blocks on a fixed horizontal plate, left and right); piston rod going up to a crank disc (round with pin) at the top left on a shaft. Input: steam to piston; output: crank rotation while the cylinder rocks about its trunnions. Cylinder length about 1.8x diameter."
+    },
+    {
+      "n": 345,
+      "en": "Inverted oscillating or pendulum engine. The cylinder has trunnions at its upper end and swings like a pendulum. The crank-shaft is below, and the piston-rod connected directly with crank.",
+      "titleKo": "거꾸로 요동 기관",
+      "ko": "거꾸로 놓인 요동(진자) 기관이다. 실린더는 위쪽 끝에 트러니언이 있어서 진자처럼 흔들린다. 크랭크 축은 아래에 있고, 피스톤 막대가 크랭크에 바로 연결된다.",
+      "easy": "실린더가 위쪽 축에 매달려 추처럼 흔들리고, 아래로 나온 피스톤 막대가 아래의 크랭크를 직접 돌린다.",
+      "category": "steam",
+      "mech": "Cylinder hung from trunnions at its top end (small round bearing on a horizontal plate), tilted about 15 deg; piston rod down to a crank (disc with pin) on a base at the bottom. Input: steam; output: crank rotation, cylinder swings like a pendulum. Cylinder height about 2.2x diameter."
+    },
+    {
+      "n": 346,
+      "en": "Table engine. The cylinder is fixed on a table-like base. The piston-rod has a cross-head working in straight slotted guides fixed on top of cylinder, and is connected by two side connecting-rods with two parallel cranks on shaft under the table.",
+      "titleKo": "탁자형 기관",
+      "ko": "탁자형 기관이다. 실린더는 탁자 모양의 받침 위에 고정되어 있다. 피스톤 막대에는 십자머리가 있어 실린더 위에 고정된 곧은 홈 안내 안에서 움직이고, 두 개의 옆 연결봉으로 탁자 밑 축에 있는 두 개의 나란한 크랭크에 연결된다.",
+      "easy": "실린더 위로 나온 피스톤 막대의 십자머리가 곧은 홈을 따라 오르내린다. 양쪽 옆의 연결봉이 아래 크랭크를 돌려 회전 운동을 만든다.",
+      "category": "steam",
+      "mech": "Table-shaped base (flat top with side legs) with a cylinder on top; above it a tall slotted guide (inverted U-shaped yoke, about 2x cylinder height) in which a cross-head on the piston rod slides; two side connecting rods go down both sides to two parallel cranks on a shaft under the table (round crank at the bottom left). Input: piston reciprocation; output: shaft rotation."
+    },
+    {
+      "n": 347,
+      "en": "Section of disk engine. Disk piston, seen edgewise, has a motion substantially like a coin when it first falls after being spun in the air. The cylinder-heads are cones. The piston-rod is made with a ball to which the disk is attached, said ball working in concentric seats in cylinder-heads, and the left-hand end is attached to the crank-arm or fly-wheel on end of shaft at left. Steam is admitted alternately on either side of piston.",
+      "titleKo": "원판 기관(단면)",
+      "ko": "원판 기관의 단면이다. 옆에서 본 원판 피스톤은 공중에서 돌린 동전이 처음 떨어질 때와 거의 같은 흔들리는 운동을 한다. 실린더 뚜껑은 원뿔 모양이다. 피스톤 막대에는 공이 달려 있고 여기에 원판이 붙어 있는데, 이 공은 실린더 뚜껑의 같은 중심 받침 안에서 움직이며, 왼쪽 끝은 왼쪽 축 끝의 크랭크 팔이나 플라이휠에 연결된다. 증기는 피스톤의 양쪽에 번갈아 들어간다.",
+      "easy": "원판 모양의 피스톤이 동전이 팽그르르 쓰러질 때처럼 기울어져 흔들리면서 돈다. 그 흔들림이 크랭크를 통해 축을 돌린다. 증기는 원판의 양쪽 면에 번갈아 들어간다.",
+      "category": "steam",
+      "mech": "Wedge-section cylinder (hatched walls, two conical heads) with a thin disc piston at an angle, hub with ball joint (concentric ball seats) at the center; rod through the left head ending in a crank arm at the far left (post with hole). Input: steam alternate sides; output: crank rotation at left; disc wobbles (nutates) about the ball. Disc diameter about 1.4x the cell height."
+    },
+    {
+      "n": 348,
+      "en": "Mode of obtaining two reciprocating movements of a rod by one revolution of a shaft, patented in 1836 by B. F. Snyder, has been used for operating the needle of a sewing machine, by J. S. McCurdy, also for driving a gang of saws. The disk, A, on the central rotating shaft has two slots, a, a, crossing each other at a right angle in the center, and the connecting-rod, B, has attached to it two pivoted slides, c, c, one working in each slot.",
+      "titleKo": "축 한 바퀴에 두 번 왕복",
+      "ko": "축이 한 바퀴 도는 동안 막대가 두 번 왕복하게 하는 방법으로, 1836년에 B. F. 스나이더가 특허를 냈으며, J. S. 맥커디가 재봉틀의 바늘을 움직이는 데 썼고 여러 톱날을 한꺼번에 움직이는 데도 쓰였다. 가운데 회전축에 있는 원판 A에는 중심에서 직각으로 서로 엇갈리는 두 개의 홈 a, a가 있고, 연결봉 B에는 핀으로 이은 두 개의 미끄럼쇠 c, c가 붙어 각각 한 홈 안에서 움직인다.",
+      "easy": "원판의 십자 모양 홈 두 개에 막대의 미끄럼쇠 두 개가 끼어 있다. 원판이 한 바퀴 돌면 막대는 위아래로 두 번 왕복한다. 재봉틀 바늘이나 여러 톱날을 움직이는 데 쓰였다.",
+      "category": "crank",
+      "mech": "Disc A on a central rotating shaft (circle) with two straight slots a, a crossing at 90 deg at the center (a 4-armed cross); a long connecting rod B (vertical bar from the top) with two pivoted slides c, c, one in each slot. Input: disc rotation (one turn); output: rod reciprocates twice per revolution (vertical). Disc diameter about 0.9 of the cell width; slot length ~ disc diameter."
+    }
+  ]
+}

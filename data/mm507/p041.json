@@ -1,0 +1,170 @@
+{
+  "platePage": 41,
+  "textPage": 42,
+  "figures": [
+    {
+      "n": 128,
+      "box": [
+        0.075,
+        0.244,
+        0.415,
+        0.426
+      ]
+    },
+    {
+      "n": 129,
+      "box": [
+        0.424,
+        0.244,
+        0.696,
+        0.426
+      ]
+    },
+    {
+      "n": 130,
+      "box": [
+        0.706,
+        0.244,
+        0.999,
+        0.426
+      ]
+    },
+    {
+      "n": 131,
+      "box": [
+        0.075,
+        0.433,
+        0.415,
+        0.621
+      ]
+    },
+    {
+      "n": 132,
+      "box": [
+        0.424,
+        0.433,
+        0.696,
+        0.621
+      ]
+    },
+    {
+      "n": 133,
+      "box": [
+        0.706,
+        0.433,
+        0.999,
+        0.621
+      ]
+    },
+    {
+      "n": 134,
+      "box": [
+        0.075,
+        0.627,
+        0.415,
+        0.822
+      ]
+    },
+    {
+      "n": 135,
+      "box": [
+        0.424,
+        0.627,
+        0.696,
+        0.822
+      ]
+    },
+    {
+      "n": 136,
+      "box": [
+        0.706,
+        0.627,
+        0.999,
+        0.822
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 128,
+      "enStart": "A continuous rotary motion",
+      "titleKo": "세 날개 캠과 사각 틀",
+      "ko": "세 개의 와이퍼(날개)가 달린 축이 계속 회전하면 직사각형 틀이 왕복 직선 운동을 한다. 부품이 그림과 같은 위치에 있으려면 축이 화살표 방향으로 돌아야 한다.",
+      "easy": "별 모양의 세 날개가 도는 동안 틀 안쪽 면을 차례로 밀어서, 직사각형 틀이 좌우로 오간다. 틀의 모양이 날개와 맞물리도록 설계되어 있어서 정해진 방향으로만 돌아야 한다.",
+      "category": "cam",
+      "mech": "Rectangular frame (rounded, with lugs at both ends) enclosing a three-armed wiper (three arms with balls at ends, 120 deg apart) on a shaft; inner frame outline has curved cut-outs the wipers push against. Input = wiper shaft rotation (one direction only, arrow); output = frame reciprocating horizontally."
+    },
+    {
+      "n": 129,
+      "enStart": "Chinese windlass. This embraces",
+      "titleKo": "중국식 윈들러스",
+      "ko": "중국식 윈들러스(권양기)이다. 111번의 마이크로미터 나사와 같은 원리를 담고 있다. 윈들러스를 한 바퀴 돌릴 때 도르래의 이동 거리는 윈들러스 통의 큰 둘레와 작은 둘레의 차이의 절반과 같다.",
+      "easy": "굵기가 다른 두 통에 줄을 반대로 감아 도르래에 걸어 둔다. 한 바퀴 돌릴 때 줄이 감기는 길이와 풀리는 길이의 차이만큼만 도르래가 올라가므로, 아주 무거운 물건도 작은 힘으로 천천히 들어 올릴 수 있다.",
+      "category": "tool",
+      "mech": "Frame with two uprights; horizontal drum made of a large and a small barrel (different diameters) side by side, rope wound opposite ways on each and hanging in a bight under a movable pulley with a hook and load; handle not shown. Input = drum rotation; output = pulley lifting speed = half the difference of circumferences per turn."
+    },
+    {
+      "n": 130,
+      "enStart": "Shears for cutting iron",
+      "titleKo": "쇠판 자르는 가위",
+      "ko": "쇠판 따위를 자르는 가위(전단기)이다. 위쪽 날의 긴 팔의 무게로 날이 벌어지고, 캠이 돌면서 날이 닫힌다.",
+      "easy": "캠이 돌아 위 날을 눌러 내리면 쇠판이 잘리고, 캠이 지나가면 긴 팔의 무게 때문에 다시 벌어진다. 회전을 이용해 큰 힘으로 자르는 장치이다.",
+      "category": "tool",
+      "mech": "Fixed lower blade (anvil-like jaw with a long base) and a movable upper blade pivoted at the pointed end, with a long rear arm carrying a counterweight ball at the left; a cam (not fully shown) pushes the arm. Input = cam rotation; output = blade opening and closing."
+    },
+    {
+      "n": 131,
+      "enStart": "On rotating the disc carrying",
+      "titleKo": "홈 팔과 톱니 부채꼴",
+      "ko": "크랭크 핀이 달린 원판이 회전하여 핀이 홈이 파인 팔 안에서 움직이면, 톱니 부채꼴(섹터)이 진동하고, 그에 따라 아래쪽의 랙이 왕복 직선 운동을 한다.",
+      "easy": "원판의 핀이 길쭉한 홈을 위아래로 미끄러지면서 팔을 좌우로 흔든다. 팔 끝의 부채꼴 기어가 같이 흔들리며 맞물린 랙을 좌우로 밀고 당긴다.",
+      "category": "crank",
+      "mech": "Disc at upper left with crank pin; long slotted arm pivoted at the toothed sector (fan-shaped gear at the lower end, pivot centre hub); rack bar horizontal below with end brackets. Input = disc rotation; output = rack reciprocating horizontally."
+    },
+    {
+      "n": 132,
+      "enStart": "This is a motion which",
+      "titleKo": "프레스용 비스듬한 막대",
+      "ko": "프레스에서 압반(플래튼)에 필요한 압력을 만들어 내기 위해 쓰인 운동이다. 위쪽 원판을 돌리는 레버의 팔에 수평 방향 운동을 준다. 위 원판과 아래 원판 사이에는 두 막대가 있는데, 막대는 원판의 구멍에 끼워져 있다. 프레스가 작동하지 않을 때는 그림처럼 이 막대들이 비스듬하게 놓여 있다. 그러나 위 원판을 돌리면 막대들이 수직에 가까워지면서 아래 원판을 아래로 밀어 낸다. 위 원판은 회전만 할 수 있을 뿐 위치는 단단히 고정되어 있어야 한다.",
+      "easy": "위 원판을 돌리면 두 원판 사이의 비스듬한 막대가 점점 곧게 일어서면서 아래 원판을 아래로 눌러 낸다. 레버의 작은 힘이 큰 압력으로 바뀌므로 프레스에 쓰였다.",
+      "category": "tool",
+      "mech": "Four-post press frame with top plate; upper disc turned by a long horizontal lever arm at the right; two oblique bars (X shape, hourglass profile) between the upper and lower discs; lower disc (platen) pushed down; base. Input = horizontal force on lever; output = vertical press stroke (rods tilting toward the vertical)."
+    },
+    {
+      "n": 133,
+      "enStart": "A simple press motion is",
+      "titleKo": "피니언·부채꼴 프레스",
+      "ko": "간단한 프레스 운동이다. 피니언 축에 달린 손잡이(핸드 크랭크)로 힘을 주면, 피니언이 톱니 부채꼴(섹터)에 운동을 전하고, 부채꼴이 연결 막대를 통해 압반(플래튼)을 움직인다.",
+      "easy": "손잡이를 돌리면 작은 기어가 큰 부채꼴 기어를 천천히 돌려, 연결 막대를 통해 위의 압반을 눌러 내린다. 기어로 속도를 줄인 만큼 힘이 커진다.",
+      "category": "tool",
+      "mech": "Press frame (two posts, top beam); platen sliding between posts; toothed sector (about quarter of a large gear, right) with pivot at lower left and link rod up to platen; small pinion with hand crank at upper right meshing the sector. Input = hand crank; output = platen descending, force multiplied by gear ratio."
+    },
+    {
+      "n": 134,
+      "enStart": "Uniform circular motion into",
+      "titleKo": "드럼과 밧줄",
+      "ko": "일정한 원운동을 밧줄이나 띠로 직선 운동으로 바꾼다. 밧줄이나 띠는 드럼 둘레에 한 번 또는 여러 번 감겨 있다.",
+      "easy": "바퀴(드럼)를 돌리면 감긴 밧줄이 당겨져서 물건이 직선으로 움직인다. 우물의 두레박이나 윈치처럼 회전을 직선 운동으로 바꾼다.",
+      "category": "belt",
+      "mech": "Spoked drum (rim with cleats/segments) on a central hub with four spokes, resting on a base line; rope or band wound around the drum (not drawn). Input = drum rotation; output = rope speed = rim speed."
+    },
+    {
+      "n": 135,
+      "enStart": "Modification of the triangular",
+      "titleKo": "삼각 편심 변형",
+      "ko": "삼각 편심 91번의 변형으로, 파리 조폐국의 증기 기관에 쓰였다. 뒤쪽의 원판이 삼각 태핏(밀대)을 달고, 이 태핏이 밸브 막대에 번갈아 왕복 직선 운동을 전한다. 밸브는 한 번 움직임이 끝날 때마다 잠깐 쉬었다가, 재빠르게 증기구를 가로질러 다음 끝까지 밀려 간다.",
+      "easy": "둥근 틀 안에서 삼각형 캠이 돌아 밸브 막대를 위아래로 움직인다. 행정의 끝에서 잠시 멈췄다가 빠르게 옮겨 가므로 증기 구멍을 재빨리 열고 닫을 수 있다.",
+      "category": "cam",
+      "mech": "Circular disc at the back (large circle) with a rectangular frame in front; triangular tappet (Reuleaux-like, with square hole for the shaft) inside the frame; vertical valve rod above and below (hex nuts). Input = tappet rotation; output = valve rod reciprocating vertically with a brief dwell at each end."
+    },
+    {
+      "n": 136,
+      "enStart": "A cam-wheel -- of which",
+      "titleKo": "톱니 모양 캠 바퀴",
+      "ko": "옆모습을 그린 캠 바퀴는 둘레가 톱니 모양으로 되어 있거나, 원하는 모양의 윤곽으로 만들 수 있다. 오른쪽의 막대는 둘레의 톱니나 가장자리에 계속 눌러 붙게 되어 있다. 바퀴가 돌면 막대에는 번갈아 하는 직선 운동이 전해진다. 톱니 모양이나 가장자리의 윤곽을 바꾸면 이 운동의 성질을 달리할 수 있다.",
+      "easy": "바퀴 가장자리의 톱니 모양대로 막대가 앞뒤로 움직인다. 스프링이 막대를 바퀴 쪽으로 계속 눌러 주므로, 가장자리 모양을 바꾸면 움직임의 빠르기와 크기도 바꿀 수 있다.",
+      "category": "cam",
+      "mech": "Cam wheel seen edge-on: vertical plate with large sawtooth profile on its right edge, mounted on a horizontal shaft to the left; follower rod to the right with a coil spring pressing the tip against the teeth, supported in a bracket on the right wall. Input = wheel rotation; output = rod advancing and retreating, profile-dependent (sawtooth gives slow rise and quick fall)."
+    }
+  ]
+}

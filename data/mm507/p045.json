@@ -1,0 +1,170 @@
+{
+  "platePage": 45,
+  "textPage": 46,
+  "figures": [
+    {
+      "n": 146,
+      "box": [
+        0.0681,
+        0.244,
+        0.3813,
+        0.4297
+      ]
+    },
+    {
+      "n": 147,
+      "box": [
+        0.3945,
+        0.244,
+        0.6604,
+        0.4297
+      ]
+    },
+    {
+      "n": 148,
+      "box": [
+        0.667,
+        0.244,
+        0.9516,
+        0.4297
+      ]
+    },
+    {
+      "n": 149,
+      "box": [
+        0.0681,
+        0.4336,
+        0.3813,
+        0.6177
+      ]
+    },
+    {
+      "n": 150,
+      "box": [
+        0.3945,
+        0.4336,
+        0.6604,
+        0.6177
+      ]
+    },
+    {
+      "n": 151,
+      "box": [
+        0.667,
+        0.4336,
+        0.9516,
+        0.6177
+      ]
+    },
+    {
+      "n": 152,
+      "box": [
+        0.0681,
+        0.6216,
+        0.3813,
+        0.8159
+      ]
+    },
+    {
+      "n": 153,
+      "box": [
+        0.3945,
+        0.6216,
+        0.6604,
+        0.8159
+      ]
+    },
+    {
+      "n": 154,
+      "box": [
+        0.667,
+        0.6216,
+        0.9516,
+        0.8159
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 146,
+      "en": "Continuous rotary motion of the disk produces reciprocating rectilinear motion of the yoke-bar, by means of the wrist or crank-pin on the disk working in the groove of the yoke. The groove may be so shaped as to obtain a uniform reciprocating rectilinear motion.",
+      "titleKo": "요크 막대 왕복 장치",
+      "ko": "원판이 계속 회전하면, 원판 위의 손목(크랭크 핀)이 요크의 홈 안에서 움직여 요크 막대를 직선으로 왕복시킨다. 홈의 모양을 알맞게 만들면 일정한 속도의 왕복 직선 운동을 얻을 수 있다.",
+      "easy": "원판 위에 달린 핀이 요크의 홈 속을 오르내리면, 요크 막대가 위아래로 왔다 갔다 한다. 회전 운동이 직선 왕복 운동으로 바뀌는 대표적인 방법이다.",
+      "category": "crank",
+      "mech": "Disk on a horizontal shaft (center hub) with a crank-pin near its rim (dotted outlines show the pin path); a rounded yoke frame surrounds the disk with a groove across it; yoke bar extends up and down. Driver = disk rotating; yoke bar reciprocates vertically, stroke about 2x pin radius."
+    },
+    {
+      "n": 147,
+      "en": "Steam engine governor. The operation is as follows:—On engine starting the spindle revolves and carries round the cross-head to which fans are attached, and on which are also fitted two friction-rollers which bear on two circular inclined planes attached securely to the center shaft, the cross-head being loose on the shaft. The cross-head is made heavy, or has a ball or other weight attached, and is driven by the circular inclined planes. As the speed of the center shaft increases, the resistance of the air to the wings tends to retard the rotation of the cross-head; the friction-rollers therefore run up the inclined planes and raise the cross-head, to the upper part of which is connected a lever operating upon the regulating-valve of the engine.",
+      "titleKo": "공기 날개 조속기",
+      "ko": "증기 기관의 조속기이다. 작동은 이렇다. 기관이 돌기 시작하면 축이 회전하면서 날개(팬)가 달린 십자머리를 함께 돌린다. 십자머리에는 마찰 롤러 두 개가 달려 있어 중심축에 단단히 붙은 두 개의 둥근 경사면에 닿아 있으며, 십자머리는 축에 헐겁게 끼워져 있다. 십자머리는 무겁게 만들거나 공이나 다른 추를 달며, 둥근 경사면에 의해 구동된다. 중심축의 속도가 빨라지면 날개에 대한 공기의 저항이 십자머리의 회전을 늦추려 하므로, 마찰 롤러가 경사면을 타고 올라가 십자머리를 들어 올린다. 십자머리의 윗부분에는 기관의 조절 밸브를 움직이는 레버가 연결되어 있다.",
+      "easy": "축이 빨리 돌수록 공기 저항을 받는 날개가 뒤처지고, 그 바람에 롤러가 경사면을 타고 올라가 십자머리가 위로 올라간다. 이 움직임이 레버로 전해져 증기 밸브를 조절하고, 기관 속도를 일정하게 유지한다.",
+      "category": "governor",
+      "mech": "Vertical center shaft with a bulb-shaped weighted cross-head; horizontal arm with two flat fans (wings) on either side; two friction-rollers on the cross-head ride on circular inclined planes (bottom, hatched block). A lever (handle at top right) goes to the regulating valve. Driver = vertical shaft rotation; faster speed -> cross-head rises along the slope, lever moves."
+    },
+    {
+      "n": 148,
+      "en": "Continuous circular motion of the spur-gears produces alternate circular motion of the crank attached to the larger gear.",
+      "titleKo": "교대 회전 기어 장치",
+      "ko": "스퍼 기어(평기어)의 계속되는 원운동이 큰 기어에 붙은 크랭크의 교대 원운동(왔다 갔다 하는 회전)을 만든다.",
+      "easy": "기어가 계속 한 방향으로 돌아도, 큰 기어에 붙은 크랭크는 한쪽으로 돌았다가 다시 반대쪽으로 돌아오기를 되풀이한다.",
+      "category": "gear",
+      "mech": "Large spur gear (about 40 teeth) with spokes and a looped (oval) track inside; a crank arm pivoted near the center connected to a link to the right block; small spur pinion at far left on a block. Driver = continuous rotation of the gears; the crank attached to the large gear swings back and forth (alternating)."
+    },
+    {
+      "n": 149,
+      "en": "Uniform circular converted, by the cams acting upon the levers, into alternating rectilinear motions of the attached rods.",
+      "titleKo": "캠과 레버 장치",
+      "ko": "일정한 원운동이 캠이 레버에 작용함으로써, 거기 붙은 막대의 교대 직선 운동으로 바뀐다.",
+      "easy": "돌아가는 캠이 레버를 밀면 레버에 붙은 막대가 위아래로 움직인다. 일정하게 도는 캠으로 막대의 왕복 운동을 만든다.",
+      "category": "cam",
+      "mech": "Two oval/egg-shaped cams at right; two pivoted levers (long lever to the left with a joint, a second short link) and two vertical rods hanging downward from the lever joints. Driver = cam rotation; each lever follows its cam and the attached rods move up and down alternately."
+    },
+    {
+      "n": 150,
+      "en": "A valve motion for working steam expansively. The series of cams of varying throw are movable lengthwise of the shaft so that either may be made to act upon the lever to which the valve-rod is connected. A greater or less movement of the valve is produced, according as a cam of greater or less throw is opposite the lever.",
+      "titleKo": "계단식 캠 밸브 장치",
+      "ko": "증기를 팽창시켜 쓰기 위한 밸브 장치이다. 행정(던짐)이 서로 다른 여러 개의 캠이 축의 길이 방향으로 움직일 수 있어서, 그중 어느 것이든 밸브 막대에 연결된 레버에 작용하게 할 수 있다. 행정이 큰 캠이 레버 맞은편에 오느냐 작은 캠이 오느냐에 따라 밸브가 더 많이 또는 더 적게 움직인다.",
+      "easy": "계단처럼 크기가 다른 캠을 축 위에서 옆으로 밀어 레버에 닿는 캠을 바꾼다. 캠이 클수록 밸브가 크게 움직여 증기가 들어오는 양이 달라진다.",
+      "category": "steam",
+      "mech": "Horizontal shaft seen end-on (hatched circle) with a stepped series of cams of increasing radius; a lever pivoted above with a link, valve-rod hanging down at right. Driver = shaft rotation; shaft slides axially to choose a cam; valve rod moves according to the cam throw."
+    },
+    {
+      "n": 151,
+      "en": "Continuous circular into continuous but much slower rectilinear motion. The worm on the upper shaft, acting on the toothed wheel on the screw-shaft, causes the right and left hand screw-threads to move the nuts upon them toward or from each other according to the direction of rotation.",
+      "titleKo": "웜과 좌우 나사",
+      "ko": "계속되는 원운동이 훨씬 느린 연속 직선 운동으로 바뀐다. 위 축의 웜이 나사 축의 톱니바퀴에 작용하면, 오른나사와 왼나사가 그 위의 너트를 회전 방향에 따라 서로 가까워지거나 멀어지게 한다.",
+      "easy": "웜이 톱니바퀴를 돌리면 나사 축이 돌고, 좌우로 반대 방향 나사가 새겨져 있어 두 너트가 마주 보고 모이거나 벌어진다. 회전 속도에 비해 직선 이동은 아주 느리다.",
+      "category": "gear",
+      "mech": "Horizontal screw-shaft with a right-hand thread on one half and a left-hand thread on the other, a nut at each end; a toothed wheel fixed at the middle; a worm on a shaft above (end-on circle at top). Driver = worm shaft; screw shaft rotates slowly; the two nuts translate toward or away from each other."
+    },
+    {
+      "n": 152,
+      "en": "An ellipsograph. The traverse bar (shown in an oblique position) carries two studs which slide in the grooves of the cross-piece. By turning the traverse bar an attached pencil is made to describe an ellipse by the rectilinear movement of the studs in the grooves.",
+      "titleKo": "타원 그리개",
+      "ko": "타원을 그리는 기구이다. 가로막대(비스듬히 놓인 모습)에 두 개의 스터드(작은 돌기)가 있어 십자 모양 부품의 홈 안에서 미끄러진다. 가로막대를 돌리면 막대에 붙은 연필이 홈 속 스터드의 직선 운동에 따라 타원을 그린다.",
+      "easy": "십자 모양 홈 안에서 막대의 두 점이 각각 직선으로만 미끄러지게 하면, 막대 위의 다른 점은 타원 모양을 그리며 움직인다. 이 점에 연필을 달아 타원을 그린다.",
+      "category": "tool",
+      "mech": "Cross-shaped pair of perpendicular grooves (slots) in a plate inside an oval outline; a straight bar lying obliquely with three holes; two studs slide one in each slot, pencil at the third point. Driver = bar rotated by hand; studs move rectilinearly along perpendicular slots; pencil traces an ellipse."
+    },
+    {
+      "n": 153,
+      "en": "Circular motion into alternating rectilinear motion. The studs on the rotating disk strike the projection on the under side of the horizontal bar, moving it one direction. The return motion is given by means of the bell-crank or elbow-lever, one arm of which is operated upon by the next stud, and the other strikes the stud on the front of the horizontal bar.",
+      "titleKo": "스터드로 미는 왕복 장치",
+      "ko": "원운동이 교대 직선 운동으로 바뀐다. 회전하는 원판의 스터드가 가로막대 아랫면의 돌출부를 쳐서 막대를 한쪽 방향으로 움직인다. 돌아오는 운동은 벨 크랭크(엘보 레버)가 만든다. 이 레버의 한쪽 팔은 다음 스터드에 의해 움직이고, 다른 팔은 가로막대 앞면의 스터드를 친다.",
+      "easy": "돌아가는 원판의 돌기들이 막대를 밀어 보내고, 꺾인 레버가 돌기에 눌려 막대를 반대로 밀어 되돌린다. 이렇게 막대가 좌우로 왔다 갔다 한다.",
+      "category": "crank",
+      "mech": "Horizontal bar guided by two small rollers (top) with a projection underneath and a stud in front; rotating disk below with studs near the rim; an elbow (bell-crank) lever pivoted at left. Driver = disk rotation; bar slides horizontally back and forth, one stud pushing it each way."
+    },
+    {
+      "n": 154,
+      "en": "Circular motion into alternating rectilinear motion, by the action of the studs on the rotary disk upon one end of the bell-crank, the other end of which has attached to it a weighted cord passing over a pulley.",
+      "titleKo": "추를 올리는 벨 크랭크",
+      "ko": "원운동이 교대 직선 운동으로 바뀐다. 회전 원판의 스터드가 벨 크랭크의 한쪽 끝에 작용하고, 다른 쪽 끝에는 도르래를 넘어가는 추 달린 줄이 매달려 있다.",
+      "easy": "돌아가는 원판의 돌기가 꺾인 레버를 눌러 추를 끌어 올리고, 돌기가 지나가면 추가 내려오며 레버를 원래대로 돌려 놓는다. 그래서 추가 위아래로 오르내린다.",
+      "category": "crank",
+      "mech": "Rotating disk with studs near the rim, mounted on a bracket on the ground; bell-crank lever pivoted to the right of the disk; the far arm is linked to a cord over a small pulley carrying a hanging ball weight. Driver = disk rotation; a stud presses one end of the lever, the weight rises and falls."
+    }
+  ]
+}

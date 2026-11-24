@@ -1,0 +1,170 @@
+{
+  "platePage": 57,
+  "textPage": 58,
+  "figures": [
+    {
+      "n": 198,
+      "box": [
+        0.1055,
+        0.2269,
+        0.3956,
+        0.4289
+      ]
+    },
+    {
+      "n": 199,
+      "box": [
+        0.4055,
+        0.2269,
+        0.667,
+        0.4289
+      ]
+    },
+    {
+      "n": 200,
+      "box": [
+        0.6747,
+        0.2269,
+        0.9692,
+        0.4289
+      ]
+    },
+    {
+      "n": 201,
+      "box": [
+        0.1055,
+        0.4367,
+        0.3956,
+        0.6177
+      ]
+    },
+    {
+      "n": 202,
+      "box": [
+        0.4055,
+        0.4367,
+        0.667,
+        0.6177
+      ]
+    },
+    {
+      "n": 203,
+      "box": [
+        0.6747,
+        0.4367,
+        0.9692,
+        0.6177
+      ]
+    },
+    {
+      "n": 204,
+      "box": [
+        0.1055,
+        0.6232,
+        0.3956,
+        0.8329
+      ]
+    },
+    {
+      "n": 205,
+      "box": [
+        0.4055,
+        0.6232,
+        0.667,
+        0.8329
+      ]
+    },
+    {
+      "n": 206,
+      "box": [
+        0.6747,
+        0.6232,
+        0.9692,
+        0.8329
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 198,
+      "en": "A modification of 197. In this the pinion revolves, but does not rise and fall as in the former figure. The portion of the frame carrying the rack is jointed to the main portion of the frame by rods, so that when the pinion arrives at the end it lifts the rack by its own movement, and follows on the other side.",
+      "titleKo": "관절 달린 맹글 랙",
+      "ko": "197의 변형이다. 여기서는 피니언이 회전하기는 하지만 앞의 그림처럼 위아래로 움직이지는 않는다. 랙이 달린 틀 부분은 막대들로 틀의 주 부분과 이어져 있어서, 피니언이 끝에 이르면 자신의 움직임으로 랙을 들어 올리고 반대편으로 따라간다.",
+      "easy": "피니언은 제자리에서 돌기만 하고, 랙 부분이 막대로 연결되어 들렸다 내려오면서 피니언이 반대편 이로 넘어가게 해 준다. 틀이 앞뒤로 왕복한다.",
+      "category": "gear",
+      "mech": "Rectangular frame; an inner stadium-shaped rack (teeth on both long sides) hinged to the frame by four short rods; a small pinion (about 8 teeth) inside at the left; guide rollers (small circles) above and below the frame. Driver = pinion rotating at a fixed position; frame/rack lifts at the ends so the pinion switches sides; reciprocation."
+    },
+    {
+      "n": 199,
+      "en": "Another form of mangle-rack. The lantern-pinion revolves continuously in one direction, and gives reciprocating motion to the square frame, which is guided by rollers or grooves. The pinion has only teeth in less than half of its circumference, so that while it engages one side of the rack, the toothless half is directed against the other. The large tooth at the commencement of each rack is made to insure the teeth of the pinion being properly in gear.",
+      "titleKo": "랜턴 피니언 맹글 랙",
+      "ko": "맹글 랙의 또 다른 형태이다. 랜턴 피니언(원통형 살 기어)이 한 방향으로 계속 돌면서 네모난 틀에 왕복 운동을 준다. 틀은 롤러나 홈의 안내를 받는다. 피니언은 둘레의 절반이 안 되는 부분에만 이가 있어서, 랙의 한쪽 면과 맞물리는 동안 이가 없는 쪽 반은 다른 쪽 면을 향한다. 각 랙의 시작 부분에 있는 큰 이는 피니언의 이가 제대로 맞물리도록 하기 위한 것이다.",
+      "easy": "둥근 기어 둘레의 절반에만 이가 있고, 틀 안쪽 양쪽에 이가 줄지어 있다. 기어가 한쪽 줄과 맞물리면 반대쪽은 이가 없는 부분이 마주 보아서, 기어가 계속 한 방향으로 돌아도 틀이 앞뒤로 움직인다.",
+      "category": "gear",
+      "mech": "Rectangular frame with an inner slot having toothed (notched) tracks on the top and bottom sides, large tooth at the start of each rack; a lantern pinion (round disc with a ring of pins, teeth on less than half the circumference) at the right inside; four guide rollers outside. Driver = lantern pinion rotating one way; frame reciprocates horizontally."
+    },
+    {
+      "n": 200,
+      "en": "A mode of obtaining two different speeds on the same shaft from one driving-wheel.",
+      "titleKo": "한 바퀴로 두 속도",
+      "ko": "하나의 구동 바퀴에서 같은 축에 서로 다른 두 가지 속도를 얻는 방법이다.",
+      "easy": "축에 크기가 다른 두 개의 베벨 기어를 달고 하나의 구동 기어로 위나 아래 기어와 맞물리게 하면, 같은 방향으로 도는 속도가 두 가지로 달라진다.",
+      "category": "gear",
+      "mech": "Vertical shaft with two bevel gears (upper and lower) facing each other; a driving bevel wheel on an inclined/horizontal shaft at the right meshes with one of them. Driver = the single driving bevel; the vertical shaft gets two speeds (and directions) depending on which gear is engaged."
+    },
+    {
+      "n": 201,
+      "en": "A continual rotation of the pinion (obtained through the irregular shaped gear at the left) gives a variable vibrating movement to the horizontal arm, and a variable reciprocating movement to the rod, A.",
+      "titleKo": "불규칙 기어와 진동 팔",
+      "ko": "피니언의 계속되는 회전(왼쪽의 불규칙한 모양의 기어를 통해 얻는다)이 수평 팔에는 변하는 진동 운동을, 막대 A에는 변하는 왕복 운동을 준다.",
+      "easy": "모양이 불규칙한 기어가 돌면 피니언 속도가 변하고, 그에 따라 팔이 흔들리는 속도도 변한다. 팔에 연결된 막대 A는 일정하지 않은 속도로 오간다.",
+      "category": "gear",
+      "mech": "Two small gears at the top left (one irregular/oval, one round pinion) with a belt/band (arrow) around to a large disc (pulley) below; a slotted vibrating arm from the pinion down to the left with a horizontal arm and a rod A at the bottom. Driver = continuous pinion rotation; the arm vibrates with variable speed, the rod A reciprocates."
+    },
+    {
+      "n": 202,
+      "en": "Worm or endless screw and worm-wheel. Modification of 30, used when steadiness or great power is required.",
+      "titleKo": "웜과 웜휠",
+      "ko": "웜(끝없는 나사)과 웜휠이다. 30번의 변형으로, 안정된 운동이나 큰 힘이 필요할 때 쓴다.",
+      "easy": "나사 모양의 웜을 돌리면 큰 톱니바퀴(웜휠)가 천천히 돈다. 속도는 크게 줄고 힘은 크게 늘어나 안정적으로 큰 힘을 전할 수 있다.",
+      "category": "gear",
+      "mech": "Large wheel (about 60 fine teeth) with a hatched hub and a worm (screw cylinder with a helical thread) below it on a horizontal shaft extending left and right. Driver = worm; wheel turns one tooth per worm revolution (very high reduction)."
+    },
+    {
+      "n": 203,
+      "en": "A regular vibrating movement of the curved slotted arm gives a variable vibration to the straight arm.",
+      "titleKo": "굽은 홈 팔의 진동",
+      "ko": "굽은 홈이 있는 팔의 규칙적인 진동 운동이 곧은 팔에 변하는 진동을 준다.",
+      "easy": "굽은 모양의 홈이 있는 팔이 일정하게 흔들리면, 그 홈 속의 핀이 곧은 팔을 밀어 곧은 팔의 흔들리는 속도가 일정하지 않게 변한다.",
+      "category": "crank",
+      "mech": "A curved (hook-shaped) arm with a slot pivoted at the lower left; a straight arm with a pin sliding in the slot pivoted at the upper right (hub circle with a hole). Driver = the curved arm oscillating regularly; the straight arm oscillates with variable angular speed."
+    },
+    {
+      "n": 204,
+      "en": "An illustration of the transmission of rotary motion from one shaft to another, arranged obliquely to it, by means of rolling contact.",
+      "titleKo": "비스듬한 축의 구름 접촉",
+      "ko": "한 축에서 이에 비스듬하게 놓인 다른 축으로 회전 운동을 구름 접촉으로 전달하는 모습을 보여 준다.",
+      "easy": "가운데가 잘록한 두 원통(쌍곡면)이 서로 닿은 채 구르며 돈다. 서로 평행하지 않고 엇갈려 놓인 두 축 사이에서도 미끄러지지 않고 회전을 전할 수 있다.",
+      "category": "gear",
+      "mech": "Two hyperboloid (waisted) rollers touching along a line, shafts crossing obliquely (skew axes), pin-like shaft ends visible at both ends of each. Driver = either roller; rolling contact transmits rotation between skew axes (hyperboloidal friction gears)."
+    },
+    {
+      "n": 205,
+      "en": "Represents a wheel driven by a pinion of two teeth. The pinion consists in reality of two cams, which gear with two distinct series of teeth on opposite sides of the wheel, the teeth of one series alternating in position with those of the other.",
+      "titleKo": "두 이빨 피니언",
+      "ko": "두 개의 이로 된 피니언으로 구동하는 바퀴를 나타낸다. 이 피니언은 사실 두 개의 캠으로 되어 있으며, 바퀴 양쪽 면에 있는 서로 다른 두 줄의 이와 맞물린다. 한 줄의 이는 다른 줄의 이와 위치가 엇갈려 있다.",
+      "easy": "작은 피니언에 이가 단 두 개뿐인데, 큰 바퀴의 앞면과 뒷면에 엇갈리게 이를 달아 두면 바퀴를 매끄럽게 돌릴 수 있다. 피니언이 한 바퀴 돌면 바퀴는 이 몇 칸만 돈다.",
+      "category": "gear",
+      "mech": "Wheel (about 8 in) with a hub and a ring of radial rectangular teeth (about 20) around the rim, alternating on the front and back faces; a pinion at the lower right made of two egg-shaped cams (two teeth) on a shaft. Driver = pinion; each pinion revolution advances the wheel by 2 teeth."
+    },
+    {
+      "n": 206,
+      "en": "A continuous circular movement of the ratchet-wheel, produced by the vibration of the lever carrying two pawls, one of which engages the ratchet-teeth in rising and the other in falling.",
+      "titleKo": "두 폴 래칫",
+      "ko": "래칫 바퀴의 연속적인 원운동이다. 두 개의 폴(pawl)을 단 레버가 진동하면, 한 폴은 올라갈 때, 다른 폴은 내려갈 때 래칫의 이를 건다.",
+      "easy": "레버가 위로 올라갈 때와 아래로 내려올 때 각각 다른 폴이 이를 밀기 때문에 레버가 왔다 갔다 하는 내내 래칫 바퀴가 같은 방향으로 계속 돈다.",
+      "category": "ratchet",
+      "mech": "Large ratchet wheel (about 70 saw teeth) with a hub; a curved lever pivoted at the upper right carrying two pawls (one on each side of the lever arm) that engage the teeth, one pushing on the upstroke and the other on the downstroke. Driver = lever oscillation; wheel advances in one direction continuously."
+    }
+  ]
+}

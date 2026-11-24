@@ -1,0 +1,135 @@
+{
+  "platePage": 81,
+  "textPage": 82,
+  "note": "도판 쪽 배치가 달라 310과 311은 가운데·오른쪽 열의 두 칸 높이를 차지하고, 312는 왼쪽 열 맨 아래에 있다.",
+  "figures": [
+    {
+      "n": 306,
+      "box": [
+        0.0605,
+        0.2051,
+        0.3821,
+        0.4154
+      ]
+    },
+    {
+      "n": 307,
+      "box": [
+        0.3894,
+        0.2051,
+        0.653,
+        0.4154
+      ]
+    },
+    {
+      "n": 308,
+      "box": [
+        0.6602,
+        0.2051,
+        0.9746,
+        0.4154
+      ]
+    },
+    {
+      "n": 309,
+      "box": [
+        0.0605,
+        0.4188,
+        0.3821,
+        0.6094
+      ]
+    },
+    {
+      "n": 310,
+      "box": [
+        0.3894,
+        0.4188,
+        0.653,
+        0.8017
+      ]
+    },
+    {
+      "n": 311,
+      "box": [
+        0.6602,
+        0.4188,
+        0.9746,
+        0.8017
+      ]
+    },
+    {
+      "n": 312,
+      "box": [
+        0.0605,
+        0.6128,
+        0.3821,
+        0.8017
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 306,
+      "en": "Three-legged pendulum escapement. The pallets are formed in an opening in a plate attached to the pendulum, and the three teeth of the escape-wheel operate on the upper and lower pallets alternately. One tooth is shown in operation on the upper pallet.",
+      "titleKo": "세 다리 추 탈진기",
+      "ko": "세 다리 추 탈진기이다. 팔레트는 추에 붙은 판의 구멍 안에 만들어져 있고, 탈진 바퀴의 세 개의 이가 위쪽 팔레트와 아래쪽 팔레트에 번갈아 작용한다. 그림에는 이 하나가 위쪽 팔레트에 작용하는 모습이 나타나 있다.",
+      "easy": "추에 붙은 판의 구멍 안에 세 갈래 별 모양의 바퀴가 들어 있다. 판이 좌우로 움직일 때 바퀴의 갈래가 위쪽 가장자리와 아래쪽 가장자리를 번갈아 밀어 한 칸씩 돈다.",
+      "category": "escapement",
+      "mech": "Rectangular plate (horizontal slide, arrow below pointing right) with screw holes at both ends, and an S-shaped opening cut in it; inside the opening a three-legged star wheel (escape wheel with 3 teeth) on a vertical axis. Input: star wheel rotation; plate attached to the pendulum swings horizontally; output: step advance of wheel one tooth per half swing. Plate about 2x wider than tall."
+    },
+    {
+      "n": 307,
+      "en": "A modification of the above with long stopping teeth, D and E. A and B are the pallets.",
+      "titleKo": "세 다리 탈진기 변형",
+      "ko": "위의 것을 조금 바꾼 것으로, 긴 멈춤 이 D와 E가 있다. A와 B는 팔레트이다.",
+      "easy": "306을 고친 형태로, 팔레트 옆에 긴 멈춤 이를 달아 바퀴가 제멋대로 돌지 못하게 잡아 준다.",
+      "category": "escapement",
+      "mech": "Bell-shaped (vase) plate hanging from a stem at top, with an oval opening; in the opening a three-legged wheel (center hub, legs) with two pallets A (upper) and B (lower) and two long stopping teeth D (left) and E (right) on small horizontal bars. Input: plate/pendulum swing; output: stepped rotation of the 3-leg wheel. Plate width about 1.5x the wheel diameter."
+    },
+    {
+      "n": 308,
+      "en": "A detached pendulum escapement, leaving the pendulum, P, free or detached from the escape-wheel, except at the time of receiving the impulse and unlocking the wheel. There is but one pallet, I, which receives impulse only during the vibrations of the pendulum to the left. The lever, Q, locks the escape-wheel until just before the time for giving the impulse, when it is unlocked by the click, C, attached to the pendulum. As the pendulum returns to the right, the click, which oscillates on a pivot, will be pushed aside by the lever.",
+      "titleKo": "분리형 추 탈진기",
+      "ko": "분리형 추 탈진기이다. 추 P는 충격을 받는 때와 바퀴의 잠금을 푸는 때를 빼고는 탈진 바퀴와 떨어져 자유롭다. 팔레트 I는 하나뿐이며 추가 왼쪽으로 흔들릴 때에만 충격을 받는다. 레버 Q는 충격을 줄 때가 되기 직전까지 탈진 바퀴를 잠가 두었다가, 추에 붙은 걸쇠 C가 풀어 준다. 추가 오른쪽으로 되돌아올 때는, 핀을 축으로 흔들리는 걸쇠가 레버에 밀려 옆으로 비켜난다.",
+      "easy": "추가 대부분의 시간 동안 톱니바퀴와 떨어져 자유롭게 흔들리고, 왼쪽으로 갈 때만 걸쇠로 바퀴의 잠금을 풀어 한 번 힘을 받는다. 오른쪽으로 돌아올 때는 걸쇠가 옆으로 비켜서 방해하지 않는다.",
+      "category": "escapement",
+      "mech": "Two curved vertical pendulum-bob arms (P, P) at left and right joined by a horizontal U-shaped bar (pendulum crossbar); between them, a small mechanism plate at top center with a locking lever Q, pallet I, and a pivoted click C. Arrow indicates leftward motion. Input: pendulum swing; output: single impulse per cycle. Small mechanism about 1/5 of crossbar width."
+    },
+    {
+      "n": 309,
+      "en": "Mudge's gravity escapement. The pallets, A, B, instead of being on one arbor, are on two, as shown at C. The pendulum plays between the fork-pins, P, Q, and so raises one of the weighted pallets out of the wheel at each vibration. When the pendulum returns the pallet falls with it, and the weight of the pallet gives the impulse.",
+      "titleKo": "머지 중력 탈진기",
+      "ko": "머지의 중력 탈진기이다. 팔레트 A, B는 하나의 축이 아니라 C에서 보듯 두 개의 축에 따로 달려 있다. 추는 포크 핀 P와 Q 사이에서 움직이며, 한 번 흔들릴 때마다 무게가 실린 팔레트 하나를 바퀴에서 들어 올린다. 추가 되돌아올 때 그 팔레트가 추와 함께 떨어지면서, 팔레트의 무게가 충격을 준다.",
+      "easy": "추가 흔들리면서 무거운 팔레트를 하나씩 들어 올렸다가 내려놓는다. 팔레트가 떨어지며 추를 밀어 주기 때문에 태엽이나 추의 힘이 바퀴를 통해 흔들림에 주는 영향이 일정하다. 정밀한 큰 시계에 쓰인다.",
+      "category": "escapement",
+      "mech": "Big escape wheel (~34 sharp teeth, 4 spokes) at lower center; two pivot arms hanging from a common top pivot C, each carrying a weighted pallet (A, B) with round weights at the outer ends (small circles at upper left/right); two long pendulum fork pins P and Q hang downward. Input: wheel torque; output: alternate lifting of the pallets by the pendulum, gravity impulse back. Wheel diameter about 0.7 of the V-frame width."
+    },
+    {
+      "n": 310,
+      "en": "Three-legged gravity escapement. The lifting of the pallets, A and B, is done by the three pins near the center of the escape-wheel, the pallets vibrating from two centers near the point of suspension of the pendulum. The escape-wheel is locked by means of stops, D and E, on the pallets.",
+      "titleKo": "세 다리 중력 탈진기",
+      "ko": "세 다리 중력 탈진기이다. 팔레트 A와 B를 들어 올리는 일은 탈진 바퀴 중심 가까이에 있는 세 개의 핀이 한다. 팔레트는 추를 매단 점 가까이의 두 중심을 축으로 흔들린다. 탈진 바퀴는 팔레트에 달린 멈추개 D와 E로 잠긴다.",
+      "easy": "가운데의 세 갈래 바퀴가 돌며 핀으로 두 팔레트를 번갈아 들어 올리고, 팔레트는 내려오면서 추에 힘을 준다. 팔레트의 멈추개가 바퀴를 잡아 두었다가 놓아 준다.",
+      "category": "escapement",
+      "mech": "Tall slender frame (about 4x taller than wide): at top a block clamp on a crossbar (pendulum suspension point), two long arms descending to a lower U-shaped yoke; middle: three-legged wheel (center hub A with three pins) between two weighted pallet arms B and (right) with stops D and E; pendulum rod runs down the center line (dashed) to a clamp and a rod with arrow at the bottom. Input: wheel torque via 3-pin wheel; pallets swing from two pivots near top; output: gravity impulse to the pendulum."
+    },
+    {
+      "n": 311,
+      "en": "Double three-legged gravity escapement. Two locking-wheels, A, B, C, and a, b, c, are here used with one set of lifting-pins between them. The two wheels are set wide enough apart to allow the pallets to lie between them. The teeth of the first-mentioned locking-wheel are stopped by a stop-tooth, D, on one pallet, and those of the other one by a stop-tooth, E, on the other pallet.",
+      "titleKo": "겹 세 다리 중력 탈진기",
+      "ko": "겹 세 다리 중력 탈진기이다. 여기서는 두 개의 잠금 바퀴 A, B, C와 a, b, c를 쓰고, 그 사이에 한 벌의 들어올림 핀을 둔다. 두 바퀴는 팔레트가 그 사이에 놓일 수 있을 만큼 넓게 떨어져 있다. 먼저 말한 잠금 바퀴의 이는 한쪽 팔레트의 멈춤 이 D에, 다른 바퀴의 이는 다른 팔레트의 멈춤 이 E에 걸려 멈춘다.",
+      "easy": "세 갈래 바퀴가 둘로 겹쳐 있고, 가운데에 있는 핀이 팔레트를 들어 올린다. 두 바퀴가 번갈아 팔레트의 멈춤 이에 걸려 멈추므로 바퀴가 한 번에 한 갈래씩만 돈다.",
+      "category": "escapement",
+      "mech": "Diamond/rhomboid frame (about 1.6x taller than wide) hanging from a crossbar at top (pendulum suspension), two long arms from top meeting at points E (left), C (right) and joining again at bottom B around a vertical rod with arrow. Center: two three-legged star wheels A,B,C and a,b,c on one axis (3 legs each, long) with a central lifting-pin hub; a pendulum 'FLY' line runs diagonally. Input: wheel torque; output: gravity impulses to the pendulum rod."
+    },
+    {
+      "n": 312,
+      "en": "Bloxam's gravity escapement. The pallets are lifted alternately by the small wheel, and the stopping is done by the action of the stops, A and B, on the larger wheel. E and F are the fork-pins which embrace the pendulum.",
+      "titleKo": "블록섬 중력 탈진기",
+      "ko": "블록섬의 중력 탈진기이다. 팔레트는 작은 바퀴가 번갈아 들어 올리고, 멈춤은 큰 바퀴에 대한 멈추개 A와 B의 작용으로 이루어진다. E와 F는 추를 껴안고 있는 포크 핀이다.",
+      "easy": "작은 바퀴가 팔레트를 번갈아 들어 올리고, 큰 바퀴는 멈추개에 걸려 멈춘다. 이렇게 바퀴가 풀리고 걸리기를 되풀이하며 추에 일정한 힘을 준다.",
+      "category": "escapement",
+      "mech": "Narrow triangular pivot frame from top pivot C; two arms descending to stops A (left) and B (right) at rim of a larger spoked wheel (~10 spokes with flat teeth on the rim) with a small wheel (hub) concentric at center; fork-pins E and F near the bottom of the wheel embrace the pendulum. Dashed vertical line = pendulum center line. Input: wheel torque; output: alternate lifting/stopping. Large wheel diameter about 0.6 of frame height."
+    }
+  ]
+}

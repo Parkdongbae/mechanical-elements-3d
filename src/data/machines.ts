@@ -28,6 +28,26 @@ import { Winch } from '../machines/Winch';
 import { Conveyor } from '../machines/Conveyor';
 import { Microwave } from '../machines/Microwave';
 import { DrumWasher } from '../machines/DrumWasher';
+import { Fan } from '../machines/Fan';
+import { SwivelChair } from '../machines/SwivelChair';
+import { ClickPen } from '../machines/ClickPen';
+import { Stapler } from '../machines/Stapler';
+import { PencilSharpener } from '../machines/PencilSharpener';
+import { AutoUmbrella } from '../machines/AutoUmbrella';
+import { PianoKey } from '../machines/PianoKey';
+import { Printer } from '../machines/Printer';
+import { DoorHandle } from '../machines/DoorHandle';
+import { KickScooter } from '../machines/KickScooter';
+import { SchoolDesk } from '../machines/SchoolDesk';
+import { Swing } from '../machines/Swing';
+import { Seesaw } from '../machines/Seesaw';
+import { BasketballHoop } from '../machines/BasketballHoop';
+import { ClassroomDoor } from '../machines/ClassroomDoor';
+import { SlidingWindow } from '../machines/SlidingWindow';
+import { SlidingBoard } from '../machines/SlidingBoard';
+import { SchoolGate } from '../machines/SchoolGate';
+import { Flagpole } from '../machines/Flagpole';
+import { FoldingLadder } from '../machines/FoldingLadder';
 import type { CameraView } from '../scene/SceneSetup';
 
 export interface StepDef {
@@ -36,13 +56,14 @@ export interface StepDef {
 }
 
 /** 홈 화면 미션 묶음 */
-export type MachineGroupId = 'life' | 'car' | 'drivetrain' | 'build';
+export type MachineGroupId = 'life' | 'car' | 'drivetrain' | 'build' | 'structure';
 
 export const MACHINE_GROUPS: { id: MachineGroupId; name: string; desc: string }[] = [
   { id: 'life', name: '생활 속 기계', desc: '매일 쓰는 물건 속 기계요소' },
   { id: 'car', name: '자동차 장치', desc: '조향·제동·와이퍼의 원리' },
   { id: 'drivetrain', name: '자동차 구동방식', desc: '엔진·모터의 힘이 바퀴까지' },
-  { id: 'build', name: '기어와 구조물', desc: '기어 장치와 철골 구조' }
+  { id: 'build', name: '기어와 구조물', desc: '기어 장치와 철골 구조' },
+  { id: 'structure', name: '학교와 집의 구조물', desc: '교실·운동장·집에서 만나는 구조물' }
 ];
 
 export interface MachineDef {
@@ -498,6 +519,326 @@ export const MACHINES: MachineDef[] = [
       { partId: 'spring', label: '스프링' }
     ],
     create: () => new DrumWasher()
+  },
+  {
+    id: 'fan',
+    view: { pos: [3.6, 2.8, 3], target: [0, 1.6, -0.1] },
+    group: 'life',
+    summary: '날개가 돌면서 목도 좌우로 돌아요',
+    name: '선풍기',
+    icon: '🌀',
+    missionText: '날개는 도는데 목이 돌지 않는 선풍기! 모터의 빠른 회전을 크게 줄이는 기어와, 그 회전을 좌우 왕복 운동으로 바꾸는 기계요소를 찾아 조립하세요!',
+    hint: '큰 감속비가 필요할 때 쓰는 나사 모양의 전동용 기어를 먼저 끼우고, 막대를 핀으로 이어 운동을 바꾸는 전동용 기계요소를 이어서 끼워 주세요!',
+    completeText: '웜 기어가 속도를 줄이고 링크가 선풍기 목을 좌우로 움직여요 🌀',
+    steps: [
+      { partId: 'wormGear', label: '웜과 웜 기어' },
+      { partId: 'link', label: '링크' }
+    ],
+    create: () => new Fan()
+  },
+  {
+    id: 'swivelchair',
+    view: { pos: [3.4, 2, 5.2], target: [0, 1.9, 0] },
+    group: 'life',
+    summary: '빙글 돌고 높이도 오르내려요',
+    name: '회전의자',
+    icon: '🪑',
+    missionText: '뻑뻑해서 돌지 않고 앉으면 덜컹거리는 회전의자! 좌판을 매끄럽게 돌게 하는 기계요소와, 앉을 때 충격을 줄이고 높이를 받쳐 주는 기계요소를 찾아 조립하세요!',
+    hint: '구슬이 굴러 마찰을 줄이는 축용 기계요소를 먼저 끼우고, 눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 이어서 끼워 주세요!',
+    completeText: '볼 베어링 덕분에 부드럽게 돌고 스프링이 충격을 받아 줘요 🪑',
+    steps: [
+      { partId: 'bearing', label: '볼 베어링' },
+      { partId: 'spring', label: '스프링' }
+    ],
+    create: () => new SwivelChair()
+  },
+  {
+    id: 'clickpen',
+    view: { pos: [0.3, 1.9, 2.9], target: [-0.05, 0.85, 0] },
+    group: 'life',
+    summary: '딸깍 누르면 심이 나왔다 들어가요',
+    name: '노크식 볼펜',
+    icon: '🖊️',
+    missionText: '눌러도 심이 나오지 않는 볼펜! 심을 뒤로 밀어 주는 기계요소와, 누를 때마다 심의 위치를 바꿔 주는 기계요소를 찾아 조립하세요!',
+    hint: '눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 먼저 끼우고, 회전 운동을 왕복 운동으로 바꾸는 전동용 기계요소를 이어서 끼워 주세요!',
+    completeText: '캠이 심의 위치를 바꾸고 스프링이 심을 밀어 올려요 🖊️',
+    steps: [
+      { partId: 'spring', label: '스프링' },
+      { partId: 'cam', label: '캠' }
+    ],
+    create: () => new ClickPen()
+  },
+  {
+    id: 'stapler',
+    view: { pos: [2.6, 2.2, 3.4], target: [0, 0.4, 0] },
+    group: 'life',
+    summary: '누르면 심이 박히고 다시 올라와요',
+    name: '스테이플러',
+    icon: '📎',
+    missionText: '위아래가 분리되고 눌러도 올라오지 않는 스테이플러! 위아래 몸체를 이어 회전 중심이 되는 기계요소와, 누른 뒤 다시 올려 주는 기계요소를 찾아 조립하세요!',
+    hint: '굵기가 일정한 결합용 핀를 먼저 끼우고, 눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 이어서 끼워 주세요!',
+    completeText: '핀을 중심으로 몸체가 움직이고 스프링이 제자리로 돌려요 📎',
+    steps: [
+      { partId: 'pinParallel', label: '평행 핀' },
+      { partId: 'spring', label: '스프링' }
+    ],
+    create: () => new Stapler()
+  },
+  {
+    id: 'sharpener',
+    view: { pos: [1, 3, 8.6], target: [0.2, 1.6, 0] },
+    group: 'life',
+    summary: '손잡이를 돌리면 나선 칼날이 깎아요',
+    name: '연필깎이',
+    icon: '✏️',
+    missionText: '손잡이를 돌려도 연필이 깎이지 않는 연필깎이! 손잡이의 회전을 전달하는 축과, 이가 비스듬히 나 있는 원통 칼날 기어를 찾아 조립하세요!',
+    hint: '회전체와 함께 돌며 동력을 전달하는 축(축용)를 먼저 끼우고, 이가 비스듬한 전동용 기어를 이어서 끼워 주세요!',
+    completeText: '손잡이의 회전이 축을 타고 나선 칼날을 돌려 연필을 깎아요 ✏️',
+    steps: [
+      { partId: 'driveShaft', label: '전동축' },
+      { partId: 'helicalGear', label: '헬리컬 기어' }
+    ],
+    create: () => new PencilSharpener()
+  },
+  {
+    id: 'umbrella',
+    view: { pos: [2.6, 1.5, 3.4], target: [0, 1.85, 0] },
+    group: 'life',
+    summary: '버튼을 누르면 살이 활짝 펴져요',
+    name: '자동 우산',
+    icon: '☂️',
+    missionText: '버튼을 눌러도 펴지지 않는 자동 우산! 우산을 밀어 올리는 힘을 내는 기계요소와, 그 움직임을 우산살이 펴지는 운동으로 바꾸는 기계요소를 찾아 조립하세요!',
+    hint: '눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 먼저 끼우고, 막대를 핀으로 이어 운동을 바꾸는 전동용 기계요소를 이어서 끼워 주세요!',
+    completeText: '스프링이 밀어 올리고 링크가 우산살을 활짝 펴 줘요 ☂️',
+    steps: [
+      { partId: 'spring', label: '스프링' },
+      { partId: 'link', label: '링크' }
+    ],
+    create: () => new AutoUmbrella()
+  },
+  {
+    id: 'piano',
+    view: { pos: [2, 2.3, 3.6], target: [-0.6, 1, 0] },
+    group: 'life',
+    summary: '건반을 누르면 해머가 현을 쳐요',
+    name: '피아노 건반',
+    icon: '🎹',
+    missionText: '건반을 눌러도 소리가 나지 않는 피아노! 건반의 움직임을 해머에 전달하는 기계요소와, 해머와 건반을 제자리로 돌려보내는 기계요소를 찾아 조립하세요!',
+    hint: '막대를 핀으로 이어 운동을 바꾸는 전동용 기계요소를 먼저 끼우고, 눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 이어서 끼워 주세요!',
+    completeText: '링크가 해머를 튕겨 현을 치고 스프링이 제자리로 돌려요 🎹',
+    steps: [
+      { partId: 'link', label: '링크' },
+      { partId: 'spring', label: '스프링' }
+    ],
+    create: () => new PianoKey()
+  },
+  {
+    id: 'printer',
+    view: { pos: [2.2, 3.2, 3.8], target: [0, 0.6, 0.1] },
+    group: 'life',
+    summary: '롤러가 종이를 넣고 헤드가 오가요',
+    name: '프린터',
+    icon: '🖨️',
+    missionText: '종이도 들어가지 않고 헤드도 움직이지 않는 프린터! 종이를 눌러 마찰로 밀어 넣는 기계요소와, 모터의 회전으로 헤드를 좌우로 끌어 주는 기계요소를 찾아 조립하세요!',
+    hint: '접촉면의 마찰력으로 회전을 전달하는 전동용 기계요소를 먼저 끼우고, 두 축의 거리가 멀 때 쓰는 전동용 기계요소를 이어서 끼워 주세요!',
+    completeText: '마찰차가 종이를 밀어 넣고 벨트가 헤드를 좌우로 움직여요 🖨️',
+    steps: [
+      { partId: 'frictionWheel', label: '마찰차' },
+      { partId: 'beltPulley', label: '벨트와 풀리' }
+    ],
+    create: () => new Printer()
+  },
+  {
+    id: 'doorhandle',
+    view: { pos: [1.5, 2.8, 8.5], target: [-1, 1.8, 0] },
+    group: 'life',
+    summary: '손잡이를 돌리면 걸쇠가 들어가요',
+    name: '문 손잡이',
+    icon: '🚪',
+    missionText: '손잡이를 돌려도 걸쇠가 움직이지 않는 문! 손잡이의 회전을 걸쇠의 직선 운동으로 바꾸는 기계요소와, 손을 놓으면 걸쇠를 다시 내보내는 기계요소를 찾아 조립하세요!',
+    hint: '회전 운동을 왕복 운동으로 바꾸는 전동용 기계요소를 먼저 끼우고, 눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 이어서 끼워 주세요!',
+    completeText: '캠이 걸쇠를 당기고 스프링이 다시 밀어내요 🚪',
+    steps: [
+      { partId: 'cam', label: '캠' },
+      { partId: 'spring', label: '스프링' }
+    ],
+    create: () => new DoorHandle()
+  },
+  {
+    id: 'scooter',
+    view: { pos: [4.4, 2.4, 5.6], target: [0.1, 1.35, 0] },
+    group: 'life',
+    summary: '바퀴가 매끄럽게 굴러요',
+    name: '킥보드',
+    icon: '🛴',
+    missionText: '바퀴가 빠져 굴러가지 않는 킥보드! 바퀴의 회전 중심을 받쳐 주는 축과, 바퀴가 매끄럽게 돌게 해 주는 기계요소를 찾아 조립하세요!',
+    hint: '몸체에 고정되어 바퀴만 회전하게 하는 축(축용)를 먼저 끼우고, 구슬이 굴러 마찰을 줄이는 축용 기계요소를 이어서 끼워 주세요!',
+    completeText: '차축이 바퀴를 받치고 볼 베어링 덕분에 매끄럽게 굴러가요 🛴',
+    steps: [
+      { partId: 'axle', label: '차축' },
+      { partId: 'bearing', label: '볼 베어링' }
+    ],
+    create: () => new KickScooter()
+  },
+  {
+    id: 'desk',
+    view: { pos: [3.6, 2.8, 5], target: [0, 1, 0.6] },
+    group: 'structure',
+    summary: '볼트로 조이고 핀으로 높이 조절',
+    name: '교실 책걸상',
+    icon: '📚',
+    missionText: '다리가 흔들리고 높이를 맞출 수 없는 책상! 프레임을 단단히 결합하는 기계요소와, 구멍에 끼워 높이를 고정하는 기계요소를 찾아 조립하세요!',
+    hint: '수나사와 암나사가 맞물리는 결합용 기계요소를 먼저 끼우고, 굵기가 일정한 결합용 핀를 이어서 끼워 주세요!',
+    completeText: '볼트와 너트가 프레임을 조이고 핀이 높이를 고정해요 📚',
+    steps: [
+      { partId: 'bolt', label: '나사(볼트와 너트)' },
+      { partId: 'pinParallel', label: '평행 핀' }
+    ],
+    create: () => new SchoolDesk()
+  },
+  {
+    id: 'swing',
+    view: { pos: [6.5, 2.8, 5.5], target: [0, 1.5, 0] },
+    group: 'structure',
+    summary: '베어링 걸이와 체인으로 흔들흔들',
+    name: '그네',
+    icon: '🎠',
+    missionText: '매달 수 없어 탈 수 없는 그네! 가로대에서 그네가 매끄럽게 흔들리게 해 주는 기계요소와, 좌판을 매다는 기계요소를 찾아 조립하세요!',
+    hint: '구슬이 굴러 마찰을 줄이는 축용 기계요소를 먼저 끼우고, 스프로킷에 걸려 미끄럼 없이 동력을 전달하는 전동용 기계요소를 이어서 끼워 주세요!',
+    completeText: '볼 베어링 걸이가 부드럽게 돌고 체인이 좌판을 매달아요 🎠',
+    steps: [
+      { partId: 'bearing', label: '볼 베어링' },
+      { partId: 'chain', label: '체인' }
+    ],
+    create: () => new Swing()
+  },
+  {
+    id: 'seesaw',
+    view: { pos: [3.2, 2.4, 4.4], target: [0, 0.7, 0] },
+    group: 'structure',
+    summary: '가운데 축을 중심으로 오르락내리락',
+    name: '시소',
+    icon: '⚖️',
+    missionText: '널빤지가 받침에서 떨어져 있는 시소! 널빤지의 회전 중심을 받쳐 주는 축과, 땅에 닿을 때 충격을 줄여 주는 기계요소를 찾아 조립하세요!',
+    hint: '몸체에 고정되어 바퀴만 회전하게 하는 축(축용)를 먼저 끼우고, 눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 이어서 끼워 주세요!',
+    completeText: '차축을 중심으로 오르내리고 스프링이 충격을 줄여요 ⚖️',
+    steps: [
+      { partId: 'axle', label: '차축' },
+      { partId: 'spring', label: '스프링' }
+    ],
+    create: () => new Seesaw()
+  },
+  {
+    id: 'hoop',
+    view: { pos: [-2.1, 3.5, 5.9], target: [-0.2, 2.4, 0] },
+    group: 'structure',
+    summary: '볼트로 고정하고 림은 스프링으로',
+    name: '농구 골대',
+    icon: '🏀',
+    missionText: '백보드가 떨어질 듯 흔들리는 농구 골대! 백보드와 기둥을 단단히 결합하는 기계요소와, 덩크할 때 림이 꺾였다 돌아오게 하는 기계요소를 찾아 조립하세요!',
+    hint: '수나사와 암나사가 맞물리는 결합용 기계요소를 먼저 끼우고, 눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 이어서 끼워 주세요!',
+    completeText: '볼트와 너트가 백보드를 고정하고 스프링이 림을 되돌려요 🏀',
+    steps: [
+      { partId: 'bolt', label: '나사(볼트와 너트)' },
+      { partId: 'spring', label: '스프링' }
+    ],
+    create: () => new BasketballHoop()
+  },
+  {
+    id: 'door',
+    view: { pos: [2.6, 2.4, 4.6], target: [0, 1.5, 0.2] },
+    group: 'structure',
+    summary: '경첩으로 열리고 저절로 닫혀요',
+    name: '교실 문',
+    icon: '🚪',
+    missionText: '문틀에서 떨어져 있고 열어도 닫히지 않는 문! 경첩의 회전 중심이 되는 기계요소와, 열린 문을 다시 닫아 주는 기계요소를 찾아 조립하세요!',
+    hint: '굵기가 일정한 결합용 핀를 먼저 끼우고, 눌렀다 놓으면 원래대로 돌아오는 제어용 기계요소를 이어서 끼워 주세요!',
+    completeText: '경첩 핀을 중심으로 열리고 스프링이 문을 다시 닫아요 🚪',
+    steps: [
+      { partId: 'pinParallel', label: '평행 핀' },
+      { partId: 'spring', label: '스프링' }
+    ],
+    create: () => new ClassroomDoor()
+  },
+  {
+    id: 'window',
+    view: { pos: [2.4, 2.0, 4.4], target: [0, 1.3, 0.2] },
+    group: 'structure',
+    summary: '레일 위를 바퀴로 스르륵',
+    name: '미닫이 창문',
+    icon: '🪟',
+    missionText: '뻑뻑해서 열리지 않는 미닫이 창문! 창틀 바퀴(호차)의 회전 중심을 받치는 축과, 바퀴가 매끄럽게 돌게 하는 기계요소를 찾아 조립하세요!',
+    hint: '몸체에 고정되어 바퀴만 회전하게 하는 축(축용)를 먼저 끼우고, 구슬이 굴러 마찰을 줄이는 축용 기계요소를 이어서 끼워 주세요!',
+    completeText: '차축이 호차를 받치고 볼 베어링 덕분에 창이 스르륵 열려요 🪟',
+    steps: [
+      { partId: 'axle', label: '차축' },
+      { partId: 'bearing', label: '볼 베어링' }
+    ],
+    create: () => new SlidingWindow()
+  },
+  {
+    id: 'board',
+    view: { pos: [5, 3.4, 5.4], target: [0, 1.8, 0] },
+    group: 'structure',
+    summary: '두 칠판이 균형을 이루며 오르내려요',
+    name: '상하 이동 칠판',
+    icon: '📋',
+    missionText: '올리면 다시 내려와 버리는 칠판! 위쪽에서 체인과 맞물려 도는 톱니바퀴와, 두 칠판을 이어 서로 균형을 잡게 하는 기계요소를 찾아 조립하세요!',
+    hint: '체인의 이와 맞물리는 전동용 톱니바퀴를 먼저 끼우고, 스프로킷에 걸려 미끄럼 없이 동력을 전달하는 전동용 기계요소를 이어서 끼워 주세요!',
+    completeText: '체인이 두 칠판을 이어 한쪽을 올리면 다른 쪽이 내려가요 📋',
+    steps: [
+      { partId: 'sprocket', label: '스프로킷' },
+      { partId: 'chain', label: '체인' }
+    ],
+    create: () => new SlidingBoard()
+  },
+  {
+    id: 'gate',
+    view: { pos: [4.2, 3, 5.5], target: [0.9, 1, 0] },
+    group: 'structure',
+    summary: '모터가 교문을 옆으로 밀어요',
+    name: '슬라이딩 교문',
+    icon: '🏫',
+    missionText: '모터가 돌아도 움직이지 않는 교문! 모터의 회전을 교문의 직선 운동으로 바꾸는 기어와, 교문 아래 바퀴를 받쳐 주는 축을 찾아 조립하세요!',
+    hint: '회전 운동과 직선 운동을 서로 바꾸는 전동용 기어를 먼저 끼우고, 몸체에 고정되어 바퀴만 회전하게 하는 축(축용)를 이어서 끼워 주세요!',
+    completeText: '래크와 피니언이 교문을 밀고 차축 위의 바퀴가 레일을 굴러요 🏫',
+    steps: [
+      { partId: 'rackPinion', label: '래크와 피니언' },
+      { partId: 'axle', label: '차축' }
+    ],
+    create: () => new SchoolGate()
+  },
+  {
+    id: 'flagpole',
+    view: { pos: [5, 3.6, 10.5], target: [0.3, 3.5, 0.3] },
+    group: 'structure',
+    summary: '손잡이를 돌려 깃발을 올려요',
+    name: '국기 게양대',
+    icon: '🚩',
+    missionText: '줄을 당겨도 깃발이 올라가지 않는 게양대! 꼭대기에서 줄의 방향을 바꿔 주는 기계요소와, 손잡이를 놓아도 깃발이 내려오지 않게 감속해 주는 기어를 찾아 조립하세요!',
+    hint: '두 축의 거리가 멀 때 쓰는 전동용 기계요소를 먼저 끼우고, 큰 감속비가 필요할 때 쓰는 나사 모양의 전동용 기어를 이어서 끼워 주세요!',
+    completeText: '풀리가 줄의 방향을 바꾸고 웜 기어가 천천히 감아 올려요 🚩',
+    steps: [
+      { partId: 'beltPulley', label: '벨트와 풀리' },
+      { partId: 'wormGear', label: '웜과 웜 기어' }
+    ],
+    create: () => new Flagpole()
+  },
+  {
+    id: 'ladder',
+    view: { pos: [3.8, 2.4, 5.8], target: [0, 1.5, 0] },
+    group: 'structure',
+    summary: '펴고 나면 벌어지지 않게 고정',
+    name: '접이식 사다리',
+    icon: '🪜',
+    missionText: '펼치면 주저앉아 버리는 사다리! 두 다리를 이어 벌어지는 각도를 잡아 주는 기계요소와, 그것이 빠지지 않게 끝을 벌려 고정하는 기계요소를 찾아 조립하세요!',
+    hint: '막대를 핀으로 이어 운동을 바꾸는 전동용 기계요소를 먼저 끼우고, 끝이 두 갈래로 갈라진 결합용 핀를 이어서 끼워 주세요!',
+    completeText: '링크가 벌어짐을 잡아 주고 분할 핀이 빠지지 않게 고정해요 🪜',
+    steps: [
+      { partId: 'link', label: '링크' },
+      { partId: 'pinSplit', label: '분할 핀' }
+    ],
+    create: () => new FoldingLadder()
   }
 ];
 

@@ -111,6 +111,16 @@ node scripts/thumbs.mjs [id ...]                          # 홈 카드 썸네일
 검증할 때는 `npm run dev -- --port 5273 --strictPort`로 띄운다(`.claude/launch.json`도 같은 설정). `smoke.mjs`는 미션 27종과 학습 모드·탐구 실험 10개 화면을 모두 연다.
 번들 크기: JS 약 1.6MB(gzip 약 0.5MB) — 실험이 늘어 커졌다. 더 늘면 실험별 동적 import로 나누는 것을 검토.
 
+### 0-7. v2.2 추가 (2026-11-24) — 가정·학교 미션 20종 (총 47종)
+지시서 `docs/work-orders/14-가정·학교-20종.md`. 홈에 새 묶음 **'학교와 집의 구조물'**(`group: 'structure'`).
+- 생활 속 기계 10종: fan, swivelchair, clickpen, stapler, sharpener, umbrella, piano, printer, doorhandle, scooter
+- 구조물 10종: desk, swing, seesaw, hoop, door, window, board, gate, flagpole, ladder
+- 구현 담당: Opus 5 · Sonnet 7 · Haiku 2 · GLM 6(glm-5.3 1, glm-5.3-flash 5). 이후 Opus가 20종 전부를 캡처로 검수·수정했다.
+- 검수에서 고친 것: 킥보드 발판이 바닥(y=0)에 놓이던 버그·바닥 침목 방향, 농구 골대 팔 끝 고정판(볼트가 떠 있던 문제)·1단계 슬롯이 백보드에 가리던 시점, 미닫이 창문 확대 모형 앞판 반투명·1단계 슬롯 위치, 접이식 사다리 축소(다리 5 → 3.4, 반경 3 기준), 태극기 괘 중심을 규격 위치(태극에서 지름의 1/4)로, GLM 담당 6종 카메라 `view`.
+- 20종 모두 `ui-flow.mjs`로 정답 순서 완료 확인, 썸네일 재생성, 스모크 테스트 ALL PASS.
+- 남은 소견: 그네의 베어링 행어가 실물보다 크다(학습용 강조로 둠). 연필깎이 몸체는 상자형 단순화.
+- 큰 기계(게양대·사다리)는 기준(반경 3)과 실물 비례의 절충이다.
+
 ---
 
 ## 1. 프로젝트 개요

@@ -538,11 +538,15 @@ export class WindCar {
   private rubberM: THREE.Material;
   private coverM: THREE.Material;
   private mirrorGlass: THREE.Material;
+  private coverPlateM: THREE.Material;
+  private finM: THREE.Material;
   private wheelProto: THREE.Group;
   cfg: Config | null = null;
   colorMode: 'paint' | 'pressure' = 'paint';
   pressureCtx: PressureCtx = { wake: 0.5, under: 0 };
   spots: NoiseSpot[] = [];
+  /** '하부 보기'에서 붙일 이름표(차 기준 좌표) */
+  underLabels: { text: string; pos: THREE.Vector3 }[] = [];
   /** 큰 윙의 위치(유동 거리 함수에 넣는다) */
   wing: { x0: number; x1: number; y0: number; y1: number; hz: number } | null = null;
 
@@ -561,7 +565,9 @@ export class WindCar {
     this.rubberM = rubber();
     this.coverM = aluminum({ color: 0xb9c0c9, roughness: 0.3 });
     this.mirrorGlass = chrome({ color: 0xa9c2dc });
-    this.mats.push(this.bodyMat, this.partPaint, this.chromeM, this.blackM, this.trimM, this.steelM, this.ironM, this.darkM, this.rubberM, this.coverM, this.mirrorGlass);
+    this.coverPlateM = plastic(0x6b7480, { roughness: 0.6 });
+    this.finM = plastic(0x2b3038, { roughness: 0.45 });
+    this.mats.push(this.bodyMat, this.partPaint, this.chromeM, this.blackM, this.trimM, this.steelM, this.ironM, this.darkM, this.rubberM, this.coverM, this.mirrorGlass, this.coverPlateM, this.finM);
     this.shape = new BodyShape(0, 0);
     this.group.add(this.parts);
 
@@ -625,6 +631,7 @@ export class WindCar {
     disposeGeoms(this.parts);
     this.parts.clear();
     this.spots = [];
+    this.underLabels = [];
     this.buildHandles(cfg.handle);
     this.buildMirrors(cfg.mirror);
     this.buildPillarTrim(cfg.pillar);
@@ -818,6 +825,32 @@ export class WindCar {
       tank.position.set(0.75, c - 0.035, -0.12);
       const pan = this.add(roundedBox(0.4, 0.08, 0.36, 0.03), this.ironM);
       pan.position.set(-1.35, c - 0.04, 0);
+      // 바닥 철판의 가로 보강 리브와 가운데 터널(요철)
+      for (let x = -0.85; x <= 1.0; x += 0.3) {
+        const rib = this.add(roundedBox(0.05, 0.03, 1.1, 0.01), this.darkM);
+        rib.position.set(x, c - 0.012, 0);
+      }
+      const tunnel = this.add(roundedBox(1.9, 0.05, 0.16, 0.025), this.darkM);
+      tunnel.position.set(-0.1, c - 0.02, -0.02);
+      // 스페어 타이어 자리(트렁크 바닥이 아래로 볼록)
+      const well = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.27, 0.07, 32), this.ironM);
+      well.position.set(1.45, c - 0.03, -0.18);
+      this.parts.add(well);
+      // 뒤 서스펜션 트레일링 암
+      for (const sz of [1, -1]) {
+        const arm = this.add(roundedBox(0.7, 0.04, 0.05, 0.015), this.darkM);
+        arm.position.set(WHEEL_X[1] - 0.35, c - 0.03, sz * 0.45);
+      }
+      const lab = (text: string, x: number, y: number, z: number): void => {
+        this.underLabels.push({ text, pos: new THREE.Vector3(x, y, z) });
+      };
+      lab('배기관', 0.35, c - 0.2, 0.3);
+      lab('머플러', 1.35, c - 0.22, 0.42);
+      lab('연료 탱크', 0.75, c - 0.2, -0.32);
+      lab('서스펜션 암', WHEEL_X[0], c - 0.2, -0.42);
+      lab('오일 팬', -1.35, c - 0.22, 0.05);
+      lab('스페어 타이어 자리', 1.5, c - 0.2, -0.4);
+      lab('울퉁불퉁 → 공기가 엉켜요', -0.6, c - 0.34, 0.45);
       for (const wx of WHEEL_X) {
         for (const sz of [1, -1]) {
           const a = new THREE.Vector3(wx - 0.05, c - 0.02, sz * 0.18);
@@ -836,13 +869,17 @@ export class WindCar {
       return;
     }
     // 언더커버: 바닥 전체를 덮는 평평한 판
-    const plate = this.add(roundedBox(3.05, 0.016, 1.14, 0.008), this.blackM);
+    const plate = this.add(roundedBox(3.05, 0.016, 1.14, 0.008), this.coverPlateM);
     plate.position.set(-0.05, c - 0.006, 0);
+    this.underLabels.push({ text: choice === 1 ? '평평한 언더커버' : '언더커버', pos: new THREE.Vector3(-0.2, c - 0.22, 0) });
+    if (choice === 1) this.underLabels.push({ text: '매끈한 판 → 공기가 곧게', pos: new THREE.Vector3(0.7, c - 0.3, 0.25) });
     if (choice === 2) {
+      this.underLabels.push({ text: '디퓨저(뒤로 갈수록 위로 꺾임)', pos: new THREE.Vector3(1.62, c - 0.08, 0.1) });
+      this.underLabels.push({ text: '세로 핀', pos: new THREE.Vector3(1.6, c - 0.12, -0.45) });
       // 디퓨저: 뒤쪽을 위로 벌린 판 + 세로 핀(스트레이크)
       const len = 0.48;
       const ang = 0.3;
-      const ramp = this.add(roundedBox(len, 0.014, 1.06, 0.006), this.blackM);
+      const ramp = this.add(roundedBox(len, 0.014, 1.06, 0.006), this.finM);
       ramp.position.set(1.47 + (len / 2) * Math.cos(ang) - len / 2 + 0.02, c + (len / 2) * Math.sin(ang), 0);
       ramp.rotation.z = ang;
       for (const zz of [-0.36, -0.12, 0.12, 0.36]) {
@@ -852,7 +889,7 @@ export class WindCar {
         s.lineTo(len, -0.01);
         s.lineTo(0, -0.04);
         s.closePath();
-        const fin = this.add(new THREE.ExtrudeGeometry(s, { depth: 0.012, bevelEnabled: false }), this.blackM);
+        const fin = this.add(new THREE.ExtrudeGeometry(s, { depth: 0.014, bevelEnabled: false }), this.coverPlateM);
         fin.position.set(1.36, c - 0.004, zz - 0.006);
       }
     }

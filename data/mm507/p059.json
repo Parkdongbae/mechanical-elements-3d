@@ -1,0 +1,170 @@
+{
+  "platePage": 59,
+  "textPage": 60,
+  "figures": [
+    {
+      "n": 207,
+      "box": [
+        0.1099,
+        0.2331,
+        0.3923,
+        0.4227
+      ]
+    },
+    {
+      "n": 208,
+      "box": [
+        0.4022,
+        0.2331,
+        0.6615,
+        0.4227
+      ]
+    },
+    {
+      "n": 209,
+      "box": [
+        0.6703,
+        0.2331,
+        0.9692,
+        0.4227
+      ]
+    },
+    {
+      "n": 210,
+      "box": [
+        0.1099,
+        0.4289,
+        0.3923,
+        0.6138
+      ]
+    },
+    {
+      "n": 211,
+      "box": [
+        0.4022,
+        0.4289,
+        0.6615,
+        0.6138
+      ]
+    },
+    {
+      "n": 212,
+      "box": [
+        0.6703,
+        0.4289,
+        0.9692,
+        0.6138
+      ]
+    },
+    {
+      "n": 213,
+      "box": [
+        0.1099,
+        0.6185,
+        0.3923,
+        0.8003
+      ]
+    },
+    {
+      "n": 214,
+      "box": [
+        0.4022,
+        0.6185,
+        0.6615,
+        0.8003
+      ]
+    },
+    {
+      "n": 215,
+      "box": [
+        0.6703,
+        0.6185,
+        0.9692,
+        0.8003
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 207,
+      "en": "A modification of 195 by means of two worms and worm-wheels.",
+      "titleKo": "웜 두 개로 구동",
+      "ko": "195의 변형으로, 웜 두 개와 웜휠 두 개를 쓴다.",
+      "easy": "한 축에 웜 두 개를 달아 두 웜휠을 돌린다. 195처럼 한 축으로 두 바퀴를 한꺼번에 돌릴 수 있다.",
+      "category": "gear",
+      "mech": "One horizontal shaft carrying two worms (screw threads), each meshing with a worm-wheel (toothed wheel with arrows showing rotation) above it; two identical wheels side by side. Driver = worm shaft; both wheels turn."
+    },
+    {
+      "n": 208,
+      "en": "A pin-wheel and slotted pinion, by which three changes of speed can be obtained. There are three circles of pins of equal distance on the face of the pin-wheel, and by shifting the slotted pinion along its shaft, to bring it in contact with one or the other of the circles of pins, a continuous rotary motion of the wheel is made to produce three changes of speed of the pinion, or vice versa.",
+      "titleKo": "핀 휠과 홈 피니언",
+      "ko": "3단 속도 변환이 가능한 핀 휠과 홈이 있는 피니언이다. 핀 휠의 면에는 같은 간격의 핀이 늘어선 원이 세 개 있고, 홈 피니언을 축을 따라 옮겨서 그중 한 핀의 원과 닿게 하면, 바퀴의 연속적인 회전이 피니언에는 세 가지로 다른 속도를 만들며, 그 반대도 마찬가지이다.",
+      "easy": "핀이 박힌 바퀴에 핀 줄이 세 줄 있다. 홈이 있는 작은 막대(피니언)를 옆으로 옮겨 어느 줄의 핀과 맞물리게 하느냐에 따라 회전 속도가 세 단계로 달라진다.",
+      "category": "gear",
+      "mech": "Large disc with three concentric rings of pins (about 20, 13 and 8 pins) on its face, hub in center; a slotted pinion (long drum with slots, lantern-like) on a horizontal shaft crossing the disc's face and slidable along its shaft. Driver = disc rotation; slide pinion radially to select a pin circle: three speeds."
+    },
+    {
+      "n": 209,
+      "en": "Represents a mode of obtaining motion from rolling contact. The teeth are for making the motion continuous, or it would cease at the point of contact shown in the figure. The forked catch is to guide the teeth into proper contact.",
+      "titleKo": "타원 구름 접촉",
+      "ko": "구름 접촉에서 운동을 얻는 방법을 나타낸다. 이는 운동을 계속 이어 가게 하기 위한 것으로, 이가 없으면 그림에 나타난 접촉점에서 운동이 멈출 것이다. 갈래진 걸쇠는 이가 제대로 맞물리도록 안내한다.",
+      "easy": "타원형 바퀴 두 개가 닿은 채 구르며 돈다. 이를 새겨 두어 미끄러지지 않고 계속 맞물리고, 갈래진 걸쇠가 이가 제자리를 찾게 돕는다.",
+      "category": "gear",
+      "mech": "Two elliptical (egg-shaped) wheels with teeth on parts of their edges, pivoted at their foci (hub circles), touching at a point; a forked catch (small hook) attached to one wheel guides the teeth into mesh. Driver = either wheel; speed ratio varies through each revolution."
+    },
+    {
+      "n": 210,
+      "en": "By turning the shaft carrying the curved slotted arm, a rectilinear motion of variable velocity is given to the vertical bar.",
+      "titleKo": "굽은 홈 팔과 직선 막대",
+      "ko": "굽은 홈이 있는 팔을 단 축을 돌리면 세로 막대에 속도가 변하는 직선 운동이 전해진다.",
+      "easy": "굽은 홈이 있는 팔이 돌면 홈 속의 핀을 따라 세로 막대가 위아래로 움직이는데, 홈의 모양 때문에 막대의 속도가 일정하지 않고 변한다.",
+      "category": "cam",
+      "mech": "Vertical guide bar (with ends/stops at top and bottom, a pin in the arm slot); a curved S-shaped slotted arm fixed on a shaft with a hatched hub at the center. Driver = shaft rotating the curved slotted arm; the vertical bar reciprocates with variable speed."
+    },
+    {
+      "n": 211,
+      "en": "A continuous rotary motion of the large wheel gives an intermittent rotary motion to the pinion-shaft. The part of the pinion shown next the wheel is cut of the same curve as the plain portion of the circumference of the wheel, and therefore serves as a lock while the wheel makes a part of a revolution, and until the pin upon the wheel strikes the guide-piece upon the pinion, when the pinion-shaft commences another revolution.",
+      "titleKo": "간헐 회전 기어",
+      "ko": "큰 바퀴의 연속된 회전이 피니언 축에 간헐 회전 운동(멈췄다 도는 회전)을 준다. 바퀴에 가까운 피니언 부분은 바퀴 둘레의 이가 없는 부분과 같은 곡선으로 깎여 있어서, 바퀴가 한 바퀴의 일부를 도는 동안, 그리고 바퀴의 핀이 피니언의 안내 부분을 칠 때까지 자물쇠처럼 작용한다. 핀이 안내 부분을 치면 피니언 축은 다시 한 바퀴를 돌기 시작한다.",
+      "easy": "큰 바퀴의 이가 없는 부분이 작은 기어의 둥근 부분에 닿아 있는 동안 작은 기어는 멈춘다. 바퀴의 핀이 작은 기어의 안내 조각을 치면 작은 기어가 한 바퀴 돈다.",
+      "category": "ratchet",
+      "mech": "Large wheel (hatched hub, arrow showing direction) with teeth on only part of its circumference and a plain (smooth) arc; small pinion (about 11 teeth) at the left with a curved guide-piece/locking face (cut to the plain arc curve) and a pin on the wheel to strike it. Driver = large wheel continuous; pinion advances one revolution each cycle, then locks."
+    },
+    {
+      "n": 212,
+      "en": "What is called the \"Geneva-stop,\" used in Swiss watches to limit the number of revolutions in winding-up; the convex curved part, a, b, of the wheel, B, serving as the stop.",
+      "titleKo": "제네바 스톱",
+      "ko": "'제네바 스톱(Geneva-stop)'이라고 부르는 것으로, 스위스 시계에서 태엽을 감을 때 돌릴 수 있는 횟수를 제한하는 데 쓴다. 바퀴 B의 볼록하게 굽은 부분 a, b가 멈추개 역할을 한다.",
+      "easy": "태엽을 감을 때 별 모양 바퀴가 둥근 바퀴에 한 칸씩 밀려 돌다가, 볼록한 부분에 막히면 더는 돌 수 없다. 그래서 태엽을 너무 많이 감는 것을 막는다.",
+      "category": "escapement",
+      "mech": "Disc A (circle with a notch cut in its edge and a pin/finger, hatched hub) engaging a star-shaped wheel B (five arms: slotted arms with convex curved parts a, b between them, hatched hub). Driver = disc A one revolution per advance; wheel B steps one slot each turn until the convex stop blocks it."
+    },
+    {
+      "n": 213,
+      "en": "Another kind of stop for the same purpose.",
+      "titleKo": "다른 종류의 멈추개",
+      "ko": "같은 목적에 쓰이는 다른 종류의 멈추개이다.",
+      "easy": "212와 같은 일을 한다. 톱니 있는 바퀴가 한 칸씩 움직이다가, 이가 없는 부분이 오면 더는 돌지 않고 멈춘다.",
+      "category": "escapement",
+      "mech": "Upper disc with a ring-shaped rim, a radial slot, and a few teeth along part of the rim; lower saw-toothed wheel (with square center hole) engaging it. Driver = lower toothed wheel turned; the upper disc steps until its toothless/blocking part stops it."
+    },
+    {
+      "n": 214,
+      "en": "Other modifications of the stop, the operations of which will be easily understood by a comparison with 212.",
+      "titleKo": "멈추개 변형 1",
+      "ko": "멈추개의 다른 변형으로, 작동은 212와 비교하면 쉽게 이해할 수 있다.",
+      "easy": "두 개의 이 빠진 기어가 맞물려 돌다가 한쪽의 막힌 부분이 오면 더는 돌지 못하고 멈춘다.",
+      "category": "escapement",
+      "mech": "Two small toothed wheels (about 8 teeth each, with square center holes) side by side, each with a curved finger/stopper element near the center that eventually blocks the other. Driver = either; limited number of turns, stop action as in 212."
+    },
+    {
+      "n": 215,
+      "en": "Other modifications of the stop, the operations of which will be easily understood by a comparison with 212.",
+      "titleKo": "멈추개 변형 2",
+      "ko": "멈추개의 다른 변형으로, 작동은 212와 비교하면 쉽게 이해할 수 있다.",
+      "easy": "둥근 바퀴의 오목한 부분에 별 모양 바퀴의 이가 들어갔다 나오며 한 칸씩 돌다가, 막힌 부분에서 멈춘다.",
+      "category": "escapement",
+      "mech": "Left: a circular wheel/ring with a square center hole and a crescent-shaped cut-out in its rim; right: a small star (six-notched) wheel with a hub, meshing with it. Driver = left wheel; the star wheel steps and is stopped by the full rim portion."
+    }
+  ]
+}

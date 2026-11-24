@@ -1,0 +1,171 @@
+{
+  "platePage": 99,
+  "textPage": 100,
+  "note": "393의 원문은 쪽 끝에서 마침표 없이 'body'로 끝나며, 다음 본문 쪽(102)은 394로 시작해 이어지는 문장이 없다(스캔에서 잘렸거나 원문이 그렇게 끝남). 끝에 [?] 표시.",
+  "figures": [
+    {
+      "n": 385,
+      "box": [
+        0.0701,
+        0.2085,
+        0.3881,
+        0.4282
+      ]
+    },
+    {
+      "n": 386,
+      "box": [
+        0.393,
+        0.2085,
+        0.6554,
+        0.4282
+      ]
+    },
+    {
+      "n": 387,
+      "box": [
+        0.6602,
+        0.2085,
+        0.9722,
+        0.4282
+      ]
+    },
+    {
+      "n": 388,
+      "box": [
+        0.0701,
+        0.4333,
+        0.3881,
+        0.6154
+      ]
+    },
+    {
+      "n": 389,
+      "box": [
+        0.393,
+        0.4333,
+        0.6554,
+        0.6154
+      ]
+    },
+    {
+      "n": 390,
+      "box": [
+        0.6602,
+        0.4333,
+        0.9722,
+        0.6154
+      ]
+    },
+    {
+      "n": 391,
+      "box": [
+        0.0701,
+        0.6205,
+        0.3881,
+        0.8085
+      ]
+    },
+    {
+      "n": 392,
+      "box": [
+        0.393,
+        0.6205,
+        0.6554,
+        0.8085
+      ]
+    },
+    {
+      "n": 393,
+      "box": [
+        0.6602,
+        0.6205,
+        0.9722,
+        0.8085
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 385,
+      "en": "Contrivance employed in Russia for shutting doors. One pin is fitted to and turns in socket attached to door, and the other is similarly attached to frame. In opening the door, pins are brought together, and weight is raised. Weight closes door by depressing the joint of the toggle toward a straight line, and so widening the space between the pins.",
+      "titleKo": "무게로 문 닫는 토글",
+      "ko": "러시아에서 문을 닫는 데 쓰는 장치이다. 한 핀은 문에 붙은 소켓에 끼워져 돌고, 다른 핀은 마찬가지로 틀에 붙어 있다. 문을 열면 두 핀이 가까워지며 추가 올라간다. 추는 토글(무릎 모양 관절)의 이음 부분을 직선에 가깝게 눌러 내려 두 핀 사이의 거리를 넓히며 문을 닫는다.",
+      "easy": "문을 열면 두 개의 막대가 접히며 추가 올라간다. 놓으면 추가 내려오면서 막대를 펴서 문을 저절로 닫는다. 추의 무게가 문을 닫는 힘이 된다.",
+      "category": "crank",
+      "mech": "Two straight arms jointed at the top with a ring pivot, forming an inverted V (toggle); the lower ends pivot on two pins/sockets at left and right (small circles on vertical posts, one on the door, one on the frame); a pear-shaped weight hanging from the top joint by a hook. Input: door opening (pins brought together); output: weight descent straightens the toggle and pushes the pins apart, closing the door. Arm length about 1.5x the gap."
+    },
+    {
+      "n": 386,
+      "en": "Folding library ladder. It is shown open, partly open, and closed ; the rounds are pivoted to the side-pieces, which are fitted together to form a round pole when closed, the rounds shutting up inside.",
+      "titleKo": "접이식 서재 사다리",
+      "ko": "접이식 서재 사다리이다. 펼친 모양, 반쯤 펼친 모양, 닫은 모양을 함께 나타냈다. 가로대(발판)는 옆판에 핀으로 이어져 있고, 옆판들은 닫았을 때 서로 맞물려 둥근 장대 하나가 되며 가로대는 그 안에 접혀 들어간다.",
+      "easy": "사다리의 가로대가 옆판에 핀으로 달려 있어서 접으면 옆판이 합쳐져 둥근 기둥이 되고, 가로대는 그 안으로 쏙 들어간다. 펼치면 다시 사다리가 된다.",
+      "category": "crank",
+      "mech": "Three views side by side: open ladder (two vertical side rails with horizontal rungs, 4 rungs), partly open (rungs tilted about 30 deg like a parallelogram linkage), and closed (a round pole with the rungs folded inside, two segments). Rungs pivoted at both ends to the rails. Input: pushing the rails; output: parallelogram folding of rungs. Rung length about 0.3 of the ladder width in the whole view."
+    },
+    {
+      "n": 387,
+      "en": "Self-adjusting step-ladder for wharfs at which there are rise and fall of tide. The steps are pivoted at one edge into wooden bars forming string-pieces, and their other edge is supported by rods suspended from bars forming hand-rails. The steps remain horizontal whatever position the ladder assumes.",
+      "titleKo": "조수에 맞는 부두 계단",
+      "ko": "조수(밀물과 썰물)로 물의 높이가 오르내리는 부두를 위한 스스로 조절되는 계단이다. 발판은 한쪽 가장자리가 옆 널(스트링 피스) 구실을 하는 나무 막대에 핀으로 이어져 있고, 다른 가장자리는 난간 구실을 하는 막대에 매달린 막대들이 받친다. 계단이 어떤 기울기가 되더라도 발판은 늘 수평을 유지한다.",
+      "easy": "발판이 평행사변형으로 이어져 있어서 물이 빠져 계단이 비스듬히 누워도 발판은 항상 수평이다. 조수에 따라 높이가 변하는 부두에서 편하게 오르내릴 수 있다.",
+      "category": "crank",
+      "mech": "Two views: upper high-tide position (nearly horizontal walkway with a hand-rail frame, rods hanging vertically between rails and treads like a parallelogram linkage) and lower low-tide position (the ladder inclined about 25 deg, treads still horizontal); a floating boat/float at the lower end left; a fixed quay with an X-braced railing at the right. Input: tide level change; output: treads remain horizontal via parallelogram links. Tread count 8-9."
+    },
+    {
+      "n": 388,
+      "en": "Feed-motion of Woodworth's planing machine, a smooth supporting roller, and a toothed top roller.",
+      "titleKo": "우드워스 대패 기계의 이송 롤러",
+      "ko": "우드워스 대패 기계의 이송 장치로, 매끈한 받침 롤러와 톱니가 있는 위쪽 롤러로 이루어진다.",
+      "easy": "아래의 매끈한 롤러가 널빤지를 받치고, 위의 톱니 롤러가 널빤지를 물고 굴려서 앞으로 밀어 보낸다. 대패질할 나무를 일정하게 보내는 장치이다.",
+      "category": "tool",
+      "mech": "Horizontal plank (thick bar, arrow pointing right) passing between a toothed upper roller (about 14 teeth, hub with center pin, diameter about 1/4 of cell width) and a smooth lower supporting roller (plain disc, same size, center bolt). Input: roller rotation; output: plank advances at roller surface speed."
+    },
+    {
+      "n": 389,
+      "en": "Lifting-jack operated by an eccentric, pawl, and ratchet. The upper pawl is a stop.",
+      "titleKo": "편심 래칫 잭",
+      "ko": "편심(캠), 걸쇠, 래칫으로 움직이는 들어올림 잭이다. 위쪽 걸쇠는 멈추개이다.",
+      "easy": "손잡이로 편심을 돌리면 걸쇠가 톱니 기둥을 한 칸씩 밀어 올린다. 위쪽 걸쇠가 되돌아가지 못하게 잡아 주므로 무거운 것을 조금씩 들어 올릴 수 있다.",
+      "category": "ratchet",
+      "mech": "Tall stepped pedestal (heavy cast base with tapering steps) with a vertical toothed rack bar (ratchet column, saw teeth, about 3x pedestal width tall) and a cup/saddle at the top; at the middle right an eccentric (round cam) with a lever and a lifting pawl, plus a stop pawl at the top. Input: eccentric lever oscillation; output: step-by-step raising of the rack/load."
+    },
+    {
+      "n": 390,
+      "en": "Device for converting oscillating into rotary motion. The semicircular piece, A, is attached to a lever which works on a fulcrum, a, and it has attached to it the ends of two bands, C and D, which run around two pulleys, loose on the shaft of the fly-wheel, B. Band, C, is open, and band, D, crossed. The pulleys have attached to them pawls which engage with two ratchet-wheels fast on the fly-wheel shaft. One pawl acts on its ratchet-wheel when the piece, A, turns one way, and the other when the said piece turns the other way, and thus a continuous rotary motion of the shaft is obtained.",
+      "titleKo": "흔들림을 회전으로 바꾸는 장치",
+      "ko": "흔들리는 운동을 회전 운동으로 바꾸는 장치이다. 반원 모양 부품 A는 받침점 a에서 움직이는 레버에 붙어 있고, 이 부품에는 두 개의 띠 C와 D의 끝이 붙어 있어서 이 띠들은 플라이휠 B의 축에 헐겁게 끼워진 두 개의 도르래를 돌아 지나간다. 띠 C는 열려 있고(바르게 걸림) 띠 D는 엇걸려 있다. 도르래에는 걸쇠가 붙어 있어서, 플라이휠 축에 단단히 고정된 두 개의 래칫 바퀴와 맞물린다. 부품 A가 한쪽으로 돌 때는 한쪽 걸쇠가, 반대쪽으로 돌 때는 다른 쪽 걸쇠가 자기 래칫 바퀴를 밀어, 축은 계속 한 방향으로 도는 회전 운동을 얻는다.",
+      "easy": "반원 모양 부품이 좌우로 흔들리면 두 띠가 번갈아 도르래를 반대 방향으로 감아 돌린다. 각 도르래의 걸쇠가 한쪽 방향 회전만 바퀴에 전달하므로, 큰 바퀴는 흔들림에도 같은 방향으로 계속 돈다.",
+      "category": "ratchet",
+      "mech": "Top: straight lever bar through a fulcrum ring a at the center top; semicircular arc A (quadrant, hanging under the lever, radius about 0.45 of the width) with two bands C and D running down to two loose pulleys on the flywheel shaft (center); flywheel B (spoked, about 0.6 of cell width) with two ratchet wheels fast on its shaft and pawls on the pulleys. Input: lever oscillation; output: continuous one-way rotation of the flywheel. Band C open, band D crossed."
+    },
+    {
+      "n": 391,
+      "en": "Reciprocating into rotary motion. The weighted racks, A, A1, are pivoted to the end of a piston-rod, and pins at the end of the said racks work in fixed guide-grooves, b, b, in such manner that one rack operates upon the cog-wheel in ascending and the other in descending, and so continuous rotary motion is produced. The elbow lever, C, and spring, d, are for carrying the pin of the right-hand rack over the upper angle in its guide-groove, b.",
+      "titleKo": "두 랙으로 왕복을 회전으로",
+      "ko": "왕복 운동을 회전 운동으로 바꾼다. 무게가 달린 랙 A, A1은 피스톤 막대 끝에 핀으로 이어져 있고, 이 랙들 끝의 핀은 고정된 안내 홈 b, b 안에서 움직인다. 그래서 한 랙은 올라갈 때, 다른 랙은 내려갈 때 톱니바퀴에 힘을 주어 연속적인 회전 운동이 생긴다. 팔꿈치 레버 C와 스프링 d는 오른쪽 랙의 핀이 안내 홈 b의 위쪽 모서리를 넘어가게 해 준다.",
+      "easy": "피스톤이 오르내리면 두 랙이 번갈아 톱니바퀴를 맞물려 돌린다. 한 랙은 올라갈 때, 다른 랙은 내려갈 때 일하므로 톱니바퀴는 계속 같은 방향으로 돈다.",
+      "category": "gear",
+      "mech": "Central cog-wheel (gear with a hub bolt, about 0.35 of cell width) between two long racks A (left) and A' (right), each rack bar with teeth on the inner side and weights at the lower end (balls at lower left a, circle at right a'); racks pivoted at the lower ends (piston-rod end) and pins at the upper ends riding in fixed oval guide-grooves b, b (left and right); elbow lever C with spring d at the top right. Input: piston rod up/down; output: continuous rotation of the cog-wheel. Rack length about 2.5x gear diameter."
+    },
+    {
+      "n": 392,
+      "en": "Gig-saw, the lower end connected with a crank which works it, and the upper end connected with a spring which keeps it strained without a gate.",
+      "titleKo": "실톱 기계",
+      "ko": "실톱(지그소)이다. 아래쪽 끝은 톱을 움직이는 크랭크에 연결되어 있고, 위쪽 끝은 스프링에 연결되어 있어서 톱날 틀(게이트) 없이도 톱날이 팽팽하게 당겨진 채로 유지된다.",
+      "easy": "아래 크랭크가 톱날을 위아래로 움직이고, 위쪽 스프링이 톱날을 계속 팽팽하게 당겨 준다. 곡선을 자르는 작은 톱 기계이다.",
+      "category": "crank",
+      "mech": "Vertical thin saw blade through a horizontal table plate (the slab at mid-height), the upper end held in a slider with a spring on a bracket arm (L-shaped arm to upper right with a spring, hatched pieces) and the lower end connected to a small crank-and-wheel (crank disc with connecting rod and wheel at the bottom). Input: crank rotation; output: vertical saw reciprocation with the spring keeping tension. Saw stroke about 0.3 of height."
+    },
+    {
+      "n": 393,
+      "en": "Contrivance for polishing lenses and bodies of spherical form. The polishing material is in a cup connected by a ball-and-socket joint and bent piece of metal with a rotating upright shaft set concentric to the body to be polished. The cup is set eccentric, and by that means is caused to have an independent rotary motion about its axis on the universal joint, as well as to revolve about the common axis of the shaft and the body to be polished. This prevents the parts of the surface of the cup from coming repeatedly in contact with the same parts of surface of the lens or other body [?]",
+      "titleKo": "렌즈 연마 장치",
+      "ko": "렌즈나 공 모양의 물체를 닦는 장치이다. 연마재가 든 컵은 볼 조인트(공과 구멍 이음)와 구부러진 금속 조각으로, 닦을 물체와 같은 중심에 놓인 회전하는 세로 축에 연결되어 있다. 컵은 중심에서 벗어나게 놓여 있어서, 만능 이음 위에서 자기 축을 중심으로 독립된 회전 운동을 하는 동시에, 축과 닦을 물체의 공통 축을 중심으로도 돈다. 이렇게 하면 컵 표면의 같은 부분이 렌즈나 다른 물체 표면의 같은 부분에 되풀이해서 닿는 것을 막을 수 있다.",
+      "easy": "연마 컵이 한가운데 축을 중심으로 돌면서 동시에 자기 축으로도 스스로 돈다. 그래서 컵의 한 부분만 렌즈의 한 부분을 계속 문지르지 않고 고르게 닦인다.",
+      "category": "misc",
+      "mech": "Vertical shaft with a knob/handle top (round cap) rotating about a vertical axis; a bent metal piece (elbow) at the lower end carries a ball-and-socket joint holding a polishing cup (dome-shaped) set eccentrically; the work (lens) is on a bench (wooden table with a diagonal brace). Input: shaft rotation; output: cup revolves about the shaft axis and spins independently on its universal joint. Cup diameter about 0.45 of cell width."
+    }
+  ]
+}

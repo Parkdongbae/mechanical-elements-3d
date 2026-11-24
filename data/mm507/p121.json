@@ -1,0 +1,170 @@
+{
+  "platePage": 121,
+  "textPage": 122,
+  "figures": [
+    {
+      "n": 484,
+      "box": [
+        0.1125,
+        0.2333,
+        0.3773,
+        0.4333
+      ]
+    },
+    {
+      "n": 485,
+      "box": [
+        0.3894,
+        0.253,
+        0.6518,
+        0.4393
+      ]
+    },
+    {
+      "n": 486,
+      "box": [
+        0.6566,
+        0.253,
+        0.9383,
+        0.4393
+      ]
+    },
+    {
+      "n": 487,
+      "box": [
+        0.1125,
+        0.4427,
+        0.3652,
+        0.6111
+      ]
+    },
+    {
+      "n": 488,
+      "box": [
+        0.3894,
+        0.4427,
+        0.6058,
+        0.6231
+      ]
+    },
+    {
+      "n": 489,
+      "box": [
+        0.6566,
+        0.4427,
+        0.8888,
+        0.6145
+      ]
+    },
+    {
+      "n": 490,
+      "box": [
+        0.0931,
+        0.6282,
+        0.3821,
+        0.8026
+      ]
+    },
+    {
+      "n": 491,
+      "box": [
+        0.3894,
+        0.6282,
+        0.6518,
+        0.7752
+      ]
+    },
+    {
+      "n": 492,
+      "box": [
+        0.6566,
+        0.6282,
+        0.9166,
+        0.8077
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 484,
+      "en": "A spiral wound round a cylinder to convert the motion of the wind or a stream of water into rotary motion.",
+      "titleKo": "나선 날개 회전체",
+      "ko": "원통 둘레에 나선을 감아, 바람이나 물의 흐름의 운동을 회전 운동으로 바꾸는 장치이다.",
+      "easy": "원통에 나사 모양의 날개를 감아 두면 바람이나 물이 날개를 비스듬히 밀어 원통이 돈다. 풍차나 수차의 날개를 단순하게 만든 것이다.",
+      "category": "misc",
+      "mech": "Horizontal cylinder (drum) on a horizontal axle held by two wooden posts; a broad helical vane wound once around the cylinder (about 1 turn). Flow along the axis pushes the spiral and the cylinder rotates about its long axis. Diameter of vane ~2x cylinder."
+    },
+    {
+      "n": 485,
+      "en": "Common wind-mill, illustrating the production of circular motion by the direct action of the wind upon the oblique sails.",
+      "titleKo": "보통의 풍차",
+      "ko": "보통의 풍차로, 비스듬한 날개(돛)에 바람이 직접 작용하여 원운동이 생기는 모습을 보여 준다.",
+      "easy": "바람이 비스듬하게 기울어진 날개를 밀면 날개가 빙글빙글 돈다. 꼬리처럼 달린 부분은 풍차의 머리를 바람 방향으로 돌려 준다.",
+      "category": "misc",
+      "mech": "Tower mill: tapered round tower with a rotating cap (dome) carrying a horizontal shaft with four lattice sails (each ~ 1/2 tower height) set obliquely; a tail vane at the back. Sails rotate about a near-horizontal axis facing the wind."
+    },
+    {
+      "n": 486,
+      "en": "Plan of a vertical wind-mill. The sails are so pivoted as to present their edges in returning toward the wind, but to present their faces to the action of the wind, the direction of which is supposed to be as indicated by the arrow.",
+      "titleKo": "수직축 풍차(평면)",
+      "ko": "수직축 풍차의 평면도이다. 날개는 바람 쪽으로 되돌아올 때는 옆면(가장자리)을 보이고, 바람의 작용을 받을 때는 넓은 면을 내밀도록 축에 달려 있다. 바람의 방향은 화살표와 같다고 본다.",
+      "easy": "수직 기둥에 달린 날개가 바람을 받을 때는 활짝 펴서 밀리고, 바람을 거슬러 돌아올 때는 접혀서 저항이 작다. 그래서 한 방향으로 계속 돈다.",
+      "category": "misc",
+      "mech": "Plan view of a vertical shaft (square hub) with eight arms, each carrying a pivoted sail (flat blade) that swings against stops/limit pins: sails on the windward side swing open flat, on the return side they feather. Wind from below (arrow). Rotation about the vertical axis."
+    },
+    {
+      "n": 487,
+      "en": "Common paddle-wheel for propelling vessels; the revolution of the wheel causes the buckets to press backward against the water and so produce the forward movement of the vessel.",
+      "titleKo": "보통의 외륜",
+      "ko": "배를 나아가게 하는 보통의 외륜(물갈퀴 바퀴)이다. 바퀴가 회전하면 날개(버킷)가 물을 뒤로 밀어서 배가 앞으로 나아가게 한다.",
+      "easy": "바퀴 둘레의 널판이 물을 뒤로 밀면, 그 반작용으로 배가 앞으로 간다. 옛날 증기선의 바퀴이다.",
+      "category": "misc",
+      "mech": "Wheel with eight spokes, a rim ring (inner), and eight radial flat paddle boards projecting past the rim; hub on a horizontal axle. Rotates driven by engine (counterclockwise in the figure); only the lower paddles dip in water. Paddle length ~ 1/4 of overall diameter."
+    },
+    {
+      "n": 488,
+      "en": "Screw propeller. The blades are sections of a screw-thread, and their revolution in the water has the same effect as the working of a screw in a nut, producing motion in the direction of the axis and so propelling the vessel.",
+      "titleKo": "스크루 프로펠러",
+      "ko": "스크루 프로펠러이다. 날개는 나사산의 일부분이며, 날개가 물속에서 회전하는 것은 너트 속에서 나사가 움직이는 것과 같은 효과를 내어 축 방향으로 움직임을 만들어 배를 나아가게 한다.",
+      "easy": "프로펠러의 날개는 나사 모양의 일부이다. 나사를 돌려 나무에 박듯이 물속에서 돌면 배가 축 방향으로 앞으로 나간다.",
+      "category": "misc",
+      "mech": "Horizontal propeller shaft with a hub carrying two broad twisted blades (helicoidal pitch), shown from the side; shaft on bearings. Rotates about the shaft axis; thrust along the axis. Blade diameter ~ 4x hub diameter."
+    },
+    {
+      "n": 489,
+      "en": "Vertical bucket paddle-wheel. The buckets, a, a, are pivoted into the arms, b, b, at equal distances from the shaft. To the pivots are attached cranks, c, c, which are pivoted at their ends to the arms of a ring, d, which is fitted loosely to a stationary eccentric, e. The revolution of the arms and buckets with the shaft causes the ring, d, also to rotate upon the eccentric, and the action of this ring on the cranks keeps the buckets always upright, so that they enter the water and leave it edgewise without resistance or lift, and while in the water are in the most effective position for propulsion.",
+      "titleKo": "수직 날개 외륜",
+      "ko": "수직 버킷 외륜이다. 버킷 a, a는 축에서 같은 거리에 있는 팔 b, b에 피벗으로 달려 있다. 피벗에는 크랭크 c, c가 붙어 있고, 이 크랭크의 끝은 고정된 편심 e에 헐겁게 끼워진 고리 d의 팔에 피벗으로 연결된다. 팔과 버킷이 축과 함께 회전하면 고리 d도 편심 위에서 회전하고, 이 고리가 크랭크에 작용하여 버킷이 항상 수직으로 서 있게 한다. 그래서 버킷은 물에 들어가고 나올 때 가장자리부터 들어가 저항이나 들어 올리는 힘이 생기지 않고, 물속에 있는 동안에는 추진에 가장 효과적인 자세가 된다.",
+      "easy": "바퀴가 돌아도 널판(버킷)이 늘 수직을 유지하도록 편심 고리와 크랭크로 조절한다. 물에 들어갈 때는 칼날처럼 들어가 저항이 작고, 물속에서는 똑바로 서서 물을 뒤로 민다.",
+      "category": "crank",
+      "mech": "Central shaft with four arms b (cross) carrying buckets a (long vertical blades) pivoted at the arm ends; each pivot has a short crank c linked to a ring d floating on a fixed eccentric e (offset from the shaft). Arms rotate; ring d rotates about the eccentric, keeping the buckets vertical (parallelogram-like). Bucket length ~ 1.5x arm length."
+    },
+    {
+      "n": 490,
+      "en": "Ordinary steering apparatus. Plan view. On the shaft of the hand-wheel there is a barrel on which is wound a rope which passes round the guide-pulleys and has its opposite ends attached to the “tiller” or lever on the top of the rudder; by turning the wheel, one end of the rope is wound on and the other let off, and the tiller is moved in one or the other direction, according to the direction in which the wheel is turned.",
+      "titleKo": "배의 조타 장치",
+      "ko": "보통의 조타 장치의 평면도이다. 핸드휠의 축에는 통(드럼)이 있고 그 위에 감긴 밧줄이 안내 도르래들을 돌아 양 끝이 키 윗부분의 \"키 손잡이(틸러)\"라는 지렛대에 연결된다. 휠을 돌리면 밧줄의 한쪽 끝은 감기고 다른 쪽 끝은 풀려 나가며, 휠을 돌리는 방향에 따라 틸러가 한쪽 또는 반대쪽으로 움직인다.",
+      "easy": "조타 핸들을 돌리면 드럼이 밧줄을 한쪽에서 감고 다른 쪽에서 풀어 준다. 그 밧줄이 키 손잡이를 좌우로 당겨 키의 방향을 바꾼다.",
+      "category": "belt",
+      "mech": "Plan: a horizontal drum (barrel) on the hand-wheel shaft (crank handle at the right, square end); rope wound on the drum goes to two guide pulleys (upper and lower) and its ends to a rack/tiller bar at the left (vertical bar with 3 holes). Wheel rotates; tiller bar slides sideways (+/- ~1 drum circumference)."
+    },
+    {
+      "n": 491,
+      "en": "Capstan. The cable or rope wound on the barrel of the capstan is hauled in by turning the capstan on its axis by means of hand-spikes or bars inserted into holes in the head. The capstan is prevented from turning back by a pawl attached to its lower part and working in a circular ratchet on the base.",
+      "titleKo": "캡스턴(닻 감는 기계)",
+      "ko": "캡스턴(수직 윈치)이다. 캡스턴의 통에 감긴 굵은 줄이나 밧줄은, 머리 부분의 구멍에 막대(핸드 스파이크)를 꽂아 캡스턴을 축을 중심으로 돌려서 끌어당긴다. 캡스턴은 아래쪽에 붙은 걸쇠가 받침대의 원형 톱니바퀴(래칫)에 걸려서 뒤로 돌아가지 못하게 된다.",
+      "easy": "여러 사람이 긴 막대를 밀며 둥근 통을 돌려 닻줄을 감는다. 아래쪽의 걸쇠와 톱니가 닻줄이 되감기는 것을 막아 준다.",
+      "category": "ratchet",
+      "mech": "Vertical drum (barrel with flared ends) on a vertical spindle; head with bar holes (three squares) and long bars inserted horizontally; rope wound three turns; at the base a circular ratchet ring with a pawl fixed on the drum's bottom. Rotates about the vertical axis; one-way ratchet."
+    },
+    {
+      "n": 492,
+      "en": "Boat-detaching hook (Brown & Level's [?]). The upright standard is secured to the boat, and the tongue hinged to its upper end enters an eye in the lever which works on a fulcrum at the middle of the standard. A similar apparatus is applied at each end of the boat. The hooks of the tackles hook into the tongues, which are secure until it is desired to detach the boat, when a rope attached to the lower end of each lever is pulled in such a direction as to slip the eye at the upper end of the lever from off the tongue, which being then liberated slips out of the hook of the tackle and detaches the boat.",
+      "titleKo": "보트 분리 고리",
+      "ko": "보트 분리 고리(브라운과 레벨스[?]의 특허)이다. 곧추선 기둥은 보트에 고정되고, 그 위쪽 끝에 경첩으로 달린 혀(텅)가 기둥 가운데의 받침점에서 움직이는 지렛대의 고리에 끼워진다. 비슷한 장치가 보트의 양 끝에 하나씩 달린다. 도르래 장치(태클)의 갈고리는 이 혀에 걸리며, 보트를 떼어 내고 싶을 때까지는 안전하게 걸려 있다. 떼어 낼 때에는 각 지렛대의 아래 끝에 붙은 밧줄을 알맞은 방향으로 당기면 지렛대 윗끝의 고리가 혀에서 벗겨지고, 풀려난 혀가 도르래의 갈고리에서 빠져나가 보트가 분리된다.",
+      "easy": "배에서 구명보트를 내릴 때 양쪽 고리를 한꺼번에 풀어 주는 장치이다. 밧줄을 당기면 지렛대가 움직여 걸려 있던 고리가 벗겨지고, 보트가 한꺼번에 물에 내려앉는다.",
+      "category": "crank",
+      "mech": "Vertical standard (threaded rod at the bottom, bolt into boat) with a pivoted lever (fulcrum at the middle) whose upper end has an eye; a hinged tongue at the top end (3-pronged hook shape) engages the eye; the lever's lower end has a rope (pulled to release). Lever rotates about 30 deg."
+    }
+  ]
+}

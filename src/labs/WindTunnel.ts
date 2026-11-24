@@ -50,6 +50,7 @@ import { Tunnel, Ripples, ForceArrow } from './wind/tunnel';
 import { CornerTest, CrosswindTest } from './wind/tests';
 import { WindAudio } from './wind/audio';
 import { DragChart, Spectrum } from './wind/charts';
+import { UnderView } from './wind/underView';
 
 type Tab = 'drag' | 'stab' | 'noise';
 type Sub = 'force' | 'corner' | 'cross';
@@ -57,7 +58,9 @@ type Sub = 'force' | 'corner' | 'cross';
 const NARROW = '(max-width: 819px)';
 const DISCLAIMER = '학습용 맛보기 모델이에요. 수치는 경향을 보여 주기 위한 값이며 실제 자동차의 측정값이 아닙니다.';
 
-const VIEWS: Record<'side' | 'force' | 'corner' | 'cross', { wide: CameraView; narrow: CameraView }> = {
+const VIEWS: Record<'side' | 'force' | 'corner' | 'cross' | 'under', { wide: CameraView; narrow: CameraView }> = {
+  // 하부 보기: 들어 올린 차 밑에서 비스듬히 올려다봄(차 바닥 높이 ≈ LIFT + 0.13)
+  under: { wide: { pos: [-3.5, -1.7, 4.3], target: [0.1, 1.15, 0] }, narrow: { pos: [-3.3, -1.5, 3.9], target: [0.3, 0.35, 0] } },
   side: { wide: { pos: [-4.4, 3.1, 9.0], target: [1.0, 0.4, 0] }, narrow: { pos: [-4.9, 3.0, 11.0], target: [0.25, -2.1, 0] } },
   force: { wide: { pos: [0.2, 2.5, 7.6], target: [0.25, 0.95, 0] }, narrow: { pos: [0.2, 3.0, 12.0], target: [0.25, -2.0, 0] } },
   corner: { wide: { pos: [0, 16.2, 5.2], target: [0, 0, 0.4] }, narrow: { pos: [0, 16.8, 3.6], target: [0, 0, 3.4] } },
@@ -97,6 +100,9 @@ export class WindTunnel implements AppMode {
   private corner: CornerTest | null = null;
   private cross: CrosswindTest | null = null;
   private testGhostMat: THREE.Material | null = null;
+  private under: UnderView | null = null;
+  private underLight: THREE.DirectionalLight | null = null;
+  private underBtns: HTMLButtonElement[] = [];
   private wheelAngle = 0;
   private time = 0;
 
@@ -169,6 +175,13 @@ export class WindTunnel implements AppMode {
     };
     for (const o of [this.tunnel.group, this.car.group, this.flow.group, this.ripples.group, this.corner.group, this.cross.group, ...this.arrows.map((a) => a.group)]) ctx.sceneMgr.add(o);
     this.audio = new WindAudio();
+    this.under = new UnderView();
+    // 들어 올린 차 바닥을 비추는 아래쪽 보조광(하부 보기 동안만 켬)
+    this.underLight = new THREE.DirectionalLight(0xe8f0ff, 0);
+    this.underLight.position.set(0.5, -6, 2.5);
+    this.under.posts.add(this.underLight);
+    ctx.sceneMgr.add(this.under.lifted);
+    ctx.sceneMgr.add(this.under.posts);
 
     this.buildDom(ctx.root);
     this.applyConfig(false);
@@ -178,6 +191,8 @@ export class WindTunnel implements AppMode {
     window.addEventListener('resize', this.onResize);
     this.onResize();
     (window as unknown as Record<string, unknown>).__windDebug = () => this.debugState();
+    // 검증용: 하부 보기 후 카메라 제한·공용 바닥 복원 확인(컨트롤·씬 참조를 돌려준다)
+    (window as unknown as Record<string, unknown>).__windUnderDebug = () => ({ controls: ctx.sceneMgr.controls, scene: ctx.sceneMgr.scene, on: this.under?.on ?? false });
   }
 
   exit(): void {
@@ -185,8 +200,19 @@ export class WindTunnel implements AppMode {
     this.narrowMq?.removeEventListener('change', this.onNarrow);
     this.narrowMq = null;
     delete (window as unknown as Record<string, unknown>).__windDebug;
+    delete (window as unknown as Record<string, unknown>).__windUnderDebug;
     this.audio?.dispose();
     this.audio = null;
+    // 하부 보기 원상 복구(카메라 아래 각도 제한·공용 바닥) — 다른 화면에서 카메라가 바닥 밑으로 가지 않게
+    if (this.under) {
+      this.under.reset();
+      this.ctx?.sceneMgr.remove(this.under.lifted);
+      this.ctx?.sceneMgr.remove(this.under.posts);
+      this.under.dispose();
+    }
+    this.under = null;
+    this.underLight = null;
+    this.underBtns = [];
     const ctx = this.ctx;
     const objs = [this.tunnel?.group, this.car?.group, this.flow?.group, this.ripples?.group, this.corner?.group, this.cross?.group, ...this.arrows.map((a) => a.group)];
     if (ctx) for (const o of objs) if (o) ctx.sceneMgr.remove(o);
@@ -287,7 +313,11 @@ export class WindTunnel implements AppMode {
         row.appendChild(b);
       });
       this.chips.set(item.id, list);
-      box.append(lab, row);
+      if (item.id === 'under') {
+        const head = el('div', 'wind-item-head');
+        head.append(lab, this.underButton('wind-under-btn wind-under-sm'));
+        box.append(head, row);
+      } else box.append(lab, row);
       this.leftBody.appendChild(box);
     }
     this.tipEl = el('p', 'wind-tip', '부품을 눌러 바꿔 보세요. 3D 자동차와 공기 흐름이 바로 바뀌어요.');
@@ -379,7 +409,8 @@ export class WindTunnel implements AppMode {
         this.pressure = on;
         this.refreshPaint();
       }),
-      this.toggle('xray', '차체 투시(하부 보기)', (on) => {
+      this.underButton('wind-under-btn'),
+      this.toggle('xray', '차체 투시', (on) => {
         this.xray = on;
         this.car?.setXray(on);
       }),
@@ -403,6 +434,7 @@ export class WindTunnel implements AppMode {
     }
     c2.append(
       seg,
+      this.underButton('wind-under-btn'),
       button('wind-btn wind-btn-soft', '다시 출발', () => {
         this.corner?.restart();
         this.cross?.restart();
@@ -424,7 +456,7 @@ export class WindTunnel implements AppMode {
     this.abBtn = button('wind-btn wind-btn-soft', 'A/B 번갈아 듣기', () => this.toggleAB());
     this.abBtn.setAttribute('aria-pressed', 'false');
     this.abLabel = el('span', 'wind-ab', '');
-    c3.append(this.soundBtn, vol, this.abBtn, this.abLabel);
+    c3.append(this.soundBtn, vol, this.abBtn, this.underButton('wind-under-btn'), this.abLabel);
     // A를 저장하기 전에는 비교 기능을 쓸 수 없다
     this.toggles.get('ghost')?.setAttribute('disabled', '');
     this.abBtn.disabled = true;
@@ -494,6 +526,7 @@ export class WindTunnel implements AppMode {
     this.field.configure(car.shape, this.cfg, car.wing);
     this.flow.rebuild();
     this.rebuildRipples();
+    this.under?.setLabels(car.underLabels);
     for (const [id, list] of this.chips) {
       list.forEach((b, i) => {
         const on = this.cfg[id] === i;
@@ -536,6 +569,7 @@ export class WindTunnel implements AppMode {
   private setTab(t: Tab, immediate = false): void {
     const leaving = this.tab;
     this.tab = t;
+    if (t === 'stab' && this.sub !== 'force') this.setUnder(false, false);
     if (leaving === 'noise' && t !== 'noise') this.stopSound();
     for (const [k, b] of this.tabBtns) {
       b.classList.toggle('is-active', k === t);
@@ -562,6 +596,7 @@ export class WindTunnel implements AppMode {
 
   private setSub(s: Sub): void {
     this.sub = s;
+    if (s !== 'force') this.setUnder(false, false);
     this.applyScene();
     this.flyView(false);
     this.renderAll();
@@ -599,7 +634,7 @@ export class WindTunnel implements AppMode {
 
   private flyView(immediate: boolean): void {
     if (!this.ctx) return;
-    const key = this.tab === 'stab' ? (this.sub === 'force' ? 'force' : this.sub) : 'side';
+    const key = this.under?.on ? 'under' : this.tab === 'stab' ? (this.sub === 'force' ? 'force' : this.sub) : 'side';
     const v = VIEWS[key];
     this.ctx.sceneMgr.flyTo(window.matchMedia(NARROW).matches ? v.narrow : v.wide, immediate);
   }
@@ -954,6 +989,7 @@ export class WindTunnel implements AppMode {
     this.time += h;
     const kmh = this.tab === 'stab' ? this.driveKmh : this.tunnelKmh;
     const tests = this.tab === 'stab' && this.sub !== 'force';
+    this.updateLift(h);
     if (!tests) {
       // 풍동 안: 이동 벨트 위에서 바퀴도 풍속에 맞춰 돈다(화면에서는 느리게)
       this.wheelAngle += (kmhToMs(kmh) / (WHEEL_R * 1.3)) * h * 0.25;
@@ -998,8 +1034,46 @@ export class WindTunnel implements AppMode {
     }
   }
 
-  private updateArrows(): void {
-    const car = this.car;
+  /** '하부 보기' 버튼(여러 곳에 두고 상태를 함께 맞춘다) */
+  private underButton(cls: string): HTMLButtonElement {
+    const b = button(cls, '하부 보기', () => this.setUnder(!this.under?.on, true));
+    b.setAttribute('aria-pressed', 'false');
+    b.title = '차를 리프트로 들어 올려 아래에서 올려다봐요';
+    this.underBtns.push(b);
+    return b;
+  }
+
+  private setUnder(on: boolean, fly: boolean): void {
+    const u = this.under;
+    if (!u || !this.ctx || u.on === on) return;
+    if (on && this.tab === 'stab' && this.sub !== 'force') {
+      this.sub = 'force';
+      this.applyScene();
+    }
+    u.set(on, this.ctx.sceneMgr);
+    this.tunnel?.setSeeThrough(on);
+    if (this.underLight) this.underLight.intensity = on ? 1.6 : 0;
+    for (const b of this.underBtns) {
+      b.setAttribute('aria-pressed', String(on));
+      b.textContent = on ? '하부 보기 끄기' : '하부 보기';
+    }
+    this.wrap?.classList.toggle('is-under', on);
+    if (on) this.tipEl.textContent = '차를 리프트로 들어 올렸어요. 화면을 끌어 돌려 보며 하부 처리(노출·언더커버·디퓨저)를 바꿔 비교해 보세요.';
+    if (fly || !on) this.flyView(false);
+  }
+
+  /** 들어 올린 높이를 차·유선·물결에 똑같이 적용 */
+  private updateLift(h: number): void {
+    const u = this.under;
+    if (!u) return;
+    u.update(h);
+    const y = u.lift;
+    if (this.car) this.car.group.position.y = y;
+    if (this.flow) this.flow.group.position.y = y;
+    if (this.ripples) this.ripples.group.position.y = y;
+  }
+
+  private updateArrows(): void {    const car = this.car;
     if (!car) return;
     const a = aero(this.cfg);
     const v = this.driveKmh;
@@ -1007,9 +1081,10 @@ export class WindTunnel implements AppMode {
     const fx = WHEEL_X[0];
     const rx = WHEEL_X[1];
     const [af, ar] = this.arrows;
-    af?.set(new THREE.Vector3(fx, sh.yT(fx) + 0.02, 0), liftN(a.clf, v) / 2000);
+    const ly = this.under?.lift ?? 0;
+    af?.set(new THREE.Vector3(fx, sh.yT(fx) + 0.02 + ly, 0), liftN(a.clf, v) / 2000);
     // 뒤 화살표는 윙이 있으면 윙 위에서
-    const ry = car.wing ? car.wing.y1 + 0.02 : sh.yT(rx) + 0.02;
+    const ry = (car.wing ? car.wing.y1 + 0.02 : sh.yT(rx) + 0.02) + ly;
     ar?.set(new THREE.Vector3(car.wing ? (car.wing.x0 + car.wing.x1) / 2 : rx, ry, 0), liftN(a.clr, v) / 2000);
   }
 

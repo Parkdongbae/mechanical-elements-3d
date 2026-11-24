@@ -1,0 +1,170 @@
+{
+  "platePage": 111,
+  "textPage": 112,
+  "figures": [
+    {
+      "n": 439,
+      "box": [
+        0.1415,
+        0.2496,
+        0.399,
+        0.4231
+      ]
+    },
+    {
+      "n": 440,
+      "box": [
+        0.4039,
+        0.247,
+        0.6626,
+        0.4282
+      ]
+    },
+    {
+      "n": 441,
+      "box": [
+        0.6675,
+        0.2453,
+        0.9299,
+        0.4231
+      ]
+    },
+    {
+      "n": 442,
+      "box": [
+        0.0786,
+        0.4316,
+        0.399,
+        0.6145
+      ]
+    },
+    {
+      "n": 443,
+      "box": [
+        0.4039,
+        0.4316,
+        0.6626,
+        0.6145
+      ]
+    },
+    {
+      "n": 444,
+      "box": [
+        0.6675,
+        0.4316,
+        0.9383,
+        0.6145
+      ]
+    },
+    {
+      "n": 445,
+      "box": [
+        0.0786,
+        0.6179,
+        0.399,
+        0.7966
+      ]
+    },
+    {
+      "n": 446,
+      "box": [
+        0.4039,
+        0.6179,
+        0.6626,
+        0.7949
+      ]
+    },
+    {
+      "n": 447,
+      "box": [
+        0.6675,
+        0.6179,
+        0.9395,
+        0.7957
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 439,
+      "en": "A method of obtaining a reciprocating motion from a continuous fall of water, by means of a valve in the bottom of the bucket which opens by striking the ground and thereby emptying the bucket, which is caused to rise again by the action of a counter-weight on the other side of the pulley over which it is suspended.",
+      "titleKo": "물통과 추의 왕복",
+      "ko": "끊임없이 떨어지는 물에서 왕복 운동을 얻는 방법이다. 물통 바닥에 밸브가 있어서 땅에 부딪히면 열려 물통이 비워지고, 그러면 물통이 매달린 도르래 반대쪽의 추의 힘으로 다시 올라간다.",
+      "easy": "물통에 물이 차면 무거워져 내려가고, 바닥에 닿으면 밸브가 열려 물이 쏟아진다. 가벼워진 물통은 반대쪽 추가 끌어당겨 다시 올라가서 같은 일을 되풀이한다.",
+      "category": "misc",
+      "mech": "Fixed pulley at top with rope; bucket (with bottom valve) on one end, counterweight on the other end hanging lower. A water spout fills the bucket from the right. Bucket goes down when full, valve opens on ground contact, empty bucket rises. Vertical reciprocation."
+    },
+    {
+      "n": 440,
+      "en": "Represents a trough divided transversely into equal parts and supported on an axis by a frame beneath. The fall of water filling one side of the division, the trough is vibrated on its axis, and at the same time that it delivers the water the opposite side is brought under the stream and filled, which in like manner produces the vibration of the trough back again. This has been used as a water meter.",
+      "titleKo": "물 계량 시소통",
+      "ko": "가로로 같은 크기의 두 부분으로 나뉜 구유(통)를 아래의 틀 위 축으로 받쳐 놓은 것이다. 떨어지는 물이 칸막이의 한쪽을 채우면 통이 축을 중심으로 기울고, 그와 동시에 그쪽 물을 쏟아 내며 반대쪽이 물줄기 아래로 와서 채워진다. 그러면 같은 방식으로 통이 다시 반대로 기운다. 이것은 물 계량기로 쓰였다.",
+      "easy": "시소처럼 가운데가 받쳐진 두 칸짜리 통이다. 한쪽 칸에 물이 가득 차면 기울어 물을 쏟고, 그 순간 반대쪽 칸이 물줄기 밑으로 와서 채워진다. 기운 횟수를 세면 흘러간 물의 양을 알 수 있어 물 계량기로 쓰였다.",
+      "category": "misc",
+      "mech": "Trough divided by a central partition into two equal compartments, pivoted at its middle on a horizontal axis on a wooden A-frame. Water chute above fills one compartment; trough rocks about the axis (tipping oscillation, about +/-20 deg) alternately. Driver = water inflow."
+    },
+    {
+      "n": 441,
+      "en": "Persian wheel, used in Eastern countries for irrigation. It has a hollow shaft and curved floats, at the extremities of which are suspended buckets or tubs. The wheel is partly immersed in a stream acting on the convex surface of its floats, and as it is thus caused to revolve, a quantity of water will be elevated by each float at each revolution, and conducted to the hollow shaft at the same time that one of the buckets carries its fill of water to a higher level, where it is emptied by coming in contact with a stationary pin placed in a convenient position for tilting it.",
+      "titleKo": "페르시아 수차",
+      "ko": "동방 여러 나라에서 관개에 쓰는 페르시아 수차이다. 속이 빈 축과 굽은 물받이(플로트)가 있고, 물받이 끝에 양동이나 통이 매달려 있다. 바퀴는 일부가 흐르는 물에 잠겨 물받이의 볼록한 면에 물이 작용하여 돌며, 이때 한 바퀴마다 각 물받이가 일정한 양의 물을 퍼 올려 속 빈 축으로 보낸다. 동시에 양동이 하나는 물을 가득 담고 더 높은 곳으로 올라가, 기울이기 알맞은 자리에 세워 둔 고정 핀에 닿아 물을 쏟는다.",
+      "easy": "흐르는 강물이 곡선 모양의 날개를 밀어 바퀴를 돌린다. 바퀴가 도는 동안 날개는 물을 속 빈 축으로 올려 보내고, 끝에 매달린 통들은 물을 떠서 높은 곳에서 쏟아 논에 물을 대는 데 쓴다.",
+      "category": "pump",
+      "mech": "Hollow central shaft (drum with slots) with ~6 spiral curved floats (S-shaped), buckets hung at the ends of the floats (5 shown) on pivots; lower part dips in the stream. Stream turns wheel; floats scoop water into the hollow shaft, buckets lift water and are tipped by a fixed pin at the top. Rotation clockwise per arrow; rim diameter about 4-5x hub."
+    },
+    {
+      "n": 442,
+      "en": "Machine of ancient origin, still employed on the river Eisach, in the Tyrol, for raising water. A current keeping the wheel in motion, the pots on its periphery are successively immersed, filled, and emptied into a trough above the stream.",
+      "titleKo": "물 푸는 항아리 수차",
+      "ko": "티롤 지방의 아이자흐 강에서 지금도 쓰고 있는, 아주 오래된 물 끌어올리는 기계이다. 물의 흐름이 바퀴를 계속 돌리면 바퀴 둘레의 항아리들이 차례로 물에 잠기고 채워져서, 강물 위쪽의 구유에 쏟아 붓는다.",
+      "easy": "강물이 큰 바퀴를 돌리면 바퀴 둘레에 달린 항아리가 차례로 물을 떠서 위로 올라가 구유에 쏟는다. 전기 없이 흐르는 물의 힘만으로 물을 높이 올리는 장치이다.",
+      "category": "pump",
+      "mech": "Large wheel with horizontal axle, standing in a stream; ~12 pots (buckets) fixed obliquely on the rim; a wooden trough/launder above the stream on the left receives the water at the top of the lift. Wheel driven by current (undershot); rotation anticlockwise per arrow."
+    },
+    {
+      "n": 443,
+      "en": "Application of Archimedes's screw to raising water, the supply stream being the motive power. The oblique shaft of the wheel has extending through it a spiral passage, the lower end of which is immersed in water, and the stream, acting upon the wheel at its lower end, produces its revolution, by which the water is conveyed upward continuously through the spiral passage and discharged at the top.",
+      "titleKo": "아르키메데스 나사 수차",
+      "ko": "아르키메데스의 나사를 물 끌어올리기에 응용한 것으로, 공급되는 물의 흐름이 동력이다. 바퀴의 비스듬한 축에는 나선형 통로가 뚫려 있고 그 아래쪽 끝이 물에 잠겨 있다. 아래쪽 끝의 바퀴에 흐르는 물이 작용해 바퀴를 돌리면, 물이 나선 통로를 따라 계속 위로 올라가 꼭대기에서 쏟아진다.",
+      "easy": "비스듬히 놓인 통 속에 나선형 길이 있고, 아래쪽 날개바퀴를 흐르는 물이 돌린다. 통이 돌면 나선 길을 따라 물이 위로 올라가 꼭대기에서 흘러나온다.",
+      "category": "pump",
+      "mech": "Inclined cylindrical drum (about 30-40 deg) containing a spiral (screw) passage; at the lower end a paddle wheel with ~8 blades on the same axis, immersed in the stream; the upper end open at a trough. Whole assembly rotates about its inclined axis (paddles driven by current)."
+    },
+    {
+      "n": 444,
+      "en": "Montgolfier's hydraulic ram. Small fall of water made to throw a jet to a great height or furnish a supply at high level. The right-hand valve being kept open by a weight or spring, the current flowing through the pipe in the direction of the arrow escapes thereby till its pressure, overcoming the resistance of weight or spring, closes it. On the closing of this valve the momentum of the current overcomes the pressure on the other valve, opens it, and throws a quantity of water into the globular air-chamber by the expansive force of the air in which the upward stream from the nozzle is maintained. On equilibrium taking place, the right-hand valve opens and left-hand one shuts. Thus, by the alternate action of the valves, a quantity of water is raised into the air-chamber at every stroke, and the elasticity of the air gives uniformity to the efflux.",
+      "titleKo": "몽골피에의 수격 펌프",
+      "ko": "몽골피에의 수압 램(수격 펌프)이다. 작은 낙차의 물로 아주 높이 물줄기를 뿜거나 높은 곳에 물을 공급한다. 오른쪽 밸브는 추나 용수철 때문에 열려 있어서, 화살표 방향으로 관을 흐르는 물은 이 밸브로 빠져나가다가, 압력이 추나 용수철의 저항을 이기면 밸브를 닫는다. 이 밸브가 닫히면 물이 흐르던 관성이 다른 쪽 밸브에 걸린 압력을 이겨 그 밸브를 열고, 일정한 양의 물을 둥근 공기실로 밀어 넣는다. 공기실 속 공기의 팽창하는 힘으로 노즐에서 위로 솟는 물줄기가 유지된다. 균형이 이루어지면 오른쪽 밸브가 열리고 왼쪽 밸브가 닫힌다. 이처럼 두 밸브가 번갈아 작용하여 한 번 칠 때마다 일정한 양의 물이 공기실로 올라가고, 공기의 탄성이 물줄기를 고르게 만든다.",
+      "easy": "관 속을 흐르던 물이 밸브가 갑자기 닫히면 관성 때문에 세게 부딪혀, 일부 물을 위의 공기실로 밀어 올린다. 밸브가 열렸다 닫히기를 되풀이하며 낮은 곳의 물로 높은 곳까지 물을 올린다. 별도의 동력 없이 물의 흐름만 쓴다.",
+      "category": "pump",
+      "mech": "Supply pipe from the upper left cistern running down and across to a chamber on the right; right-hand waste valve (weighted/spring, opens downward) and left-hand check valve into a spherical air chamber with a vertical delivery nozzle on top. Valves open/close alternately (reciprocating, tens per minute). Driver = flow of water."
+    },
+    {
+      "n": 445,
+      "en": "D'Ectol's oscillating column, for elevating a portion of a given fall of water above the level of the reservoir or head, by means of a machine all the parts of which are absolutely fixed. It consists of an upper and smaller tube, which is constantly supplied with water, and a lower and larger tube, provided with a circular plate below concentric with the orifice which receives the stream from the tube above. Upon allowing the water to descend as shown in 445, it forms itself gradually into a cone on the circular plate, as shown in 446, which cone protrudes into the smaller tube so as to check the flow of water downward; and the regular supply continuing from above, the column in the upper tube rises until the cone on the circular plate gives way. This action is renewed periodically and is regulated by the supply of water. (Text covers both 445 and 446.)",
+      "titleKo": "데콜의 진동 물기둥(1)",
+      "ko": "데콜의 진동 물기둥으로, 모든 부분이 완전히 고정된 기계로, 주어진 낙차의 물 일부를 저수지(머리) 수면보다 높이 끌어올린다. 항상 물이 공급되는 위쪽의 가는 관과, 그 아래 위쪽 관의 물줄기를 받는 구멍과 같은 중심에 둥근 판이 달린 굵은 관으로 이루어진다. 445처럼 물이 내려가게 두면 둥근 판 위에서 점점 원뿔 모양이 되는데, 446에서 보듯 이 원뿔이 위쪽의 가는 관 안으로 불쑥 들어가 아래로 흐르는 물을 막는다. 위에서 물 공급이 계속되면 위쪽 관 속의 물기둥이 올라가다가 둥근 판 위의 원뿔이 무너진다. 이 과정이 주기적으로 되풀이되며 물 공급량으로 조절된다. (445와 446을 함께 설명한 글이다.)",
+      "easy": "움직이는 부품이 하나도 없는데도 물이 스스로 진동하며 일부를 위로 올려 보낸다. 물줄기가 아래 판 위에서 원뿔 모양으로 막혔다가 풀리기를 되풀이하는 것이 핵심이다. 이 그림 445는 물이 쏟아져 내리는 순간이다.",
+      "category": "pump",
+      "mech": "Upper smaller horizontal supply tube turning down into a short vertical tube; below it a larger vertical tube/chamber with a circular plate on a stem concentric with the orifice. State 445: water falls freely over the plate. No moving parts; the water column itself oscillates."
+    },
+    {
+      "n": 446,
+      "en": "D'Ectol's oscillating column, for elevating a portion of a given fall of water above the level of the reservoir or head, by means of a machine all the parts of which are absolutely fixed. It consists of an upper and smaller tube, which is constantly supplied with water, and a lower and larger tube, provided with a circular plate below concentric with the orifice which receives the stream from the tube above. Upon allowing the water to descend as shown in 445, it forms itself gradually into a cone on the circular plate, as shown in 446, which cone protrudes into the smaller tube so as to check the flow of water downward; and the regular supply continuing from above, the column in the upper tube rises until the cone on the circular plate gives way. This action is renewed periodically and is regulated by the supply of water. (Text covers both 445 and 446.)",
+      "titleKo": "데콜의 진동 물기둥(2)",
+      "ko": "445와 같은 장치가 다른 순간에 있는 모습이다. 둥근 판 위에 물이 원뿔 모양으로 쌓여 위쪽 가는 관 안으로 불쑥 올라와 아래로 흐르는 물을 막고 있다. 그러면 위쪽 관의 물기둥이 위로 올라가고, 원뿔이 무너지면 다시 445의 상태가 된다. (445와 446을 함께 설명한 글이다.)",
+      "easy": "같은 장치가 물을 막은 상태이다. 판 위에 솟은 물 원뿔이 위쪽 관의 입구를 막아서 위쪽 관 속의 물기둥이 위로 솟아오른다.",
+      "category": "pump",
+      "mech": "Same as 445 in the blocked state: a water cone stands on the circular plate and protrudes up into the smaller upper tube; spray at the top. Fixed parts only; cyclic oscillation of the water column between the states of 445 and 446."
+    },
+    {
+      "n": 447,
+      "en": "This method of passing a boat from one shore of a river to the other is common on the Rhine and elsewhere, and is effected by the action of the stream on the rudder, which carries the boat across the stream in the arc of a circle, the center of which is the anchor which holds the boat from floating down the stream.",
+      "titleKo": "물살로 건너는 배",
+      "ko": "강의 한쪽 기슭에서 다른 쪽 기슭으로 배를 건네는 이 방법은 라인 강 등지에서 흔하며, 키에 작용하는 물살의 힘으로 이루어진다. 키가 배를 흐름에 가로질러 원호를 그리며 건너게 하는데, 그 원의 중심은 배가 물에 떠내려가지 않도록 붙잡아 주는 닻이다.",
+      "easy": "닻줄로 배를 한곳에 매어 두고 키를 비스듬히 돌리면 흐르는 물이 배를 옆으로 밀어서 배가 닻을 중심으로 반원을 그리며 건너편 기슭에 닿는다. 노를 젓지 않고 물의 힘만 쓴다.",
+      "category": "misc",
+      "mech": "River seen from above; a boat held by a long cable to an anchor upstream (left); rudder angled so the stream pushes the hull sideways. Boat swings across on an arc with the anchor as centre (pendulum-like), arc radius = cable length."
+    }
+  ]
+}

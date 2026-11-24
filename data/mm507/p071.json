@@ -1,0 +1,170 @@
+{
+  "platePage": 71,
+  "textPage": 72,
+  "figures": [
+    {
+      "n": 261,
+      "box": [
+        0.1209,
+        0.237,
+        0.3956,
+        0.4118
+      ]
+    },
+    {
+      "n": 262,
+      "box": [
+        0.3989,
+        0.237,
+        0.5143,
+        0.4056
+      ]
+    },
+    {
+      "n": 263,
+      "box": [
+        0.5143,
+        0.237,
+        0.9604,
+        0.4056
+      ]
+    },
+    {
+      "n": 264,
+      "box": [
+        0.1231,
+        0.4297,
+        0.3978,
+        0.6099
+      ]
+    },
+    {
+      "n": 265,
+      "box": [
+        0.4044,
+        0.4297,
+        0.6681,
+        0.6099
+      ]
+    },
+    {
+      "n": 266,
+      "box": [
+        0.6725,
+        0.4297,
+        0.967,
+        0.6099
+      ]
+    },
+    {
+      "n": 267,
+      "box": [
+        0.1231,
+        0.6154,
+        0.3978,
+        0.7925
+      ]
+    },
+    {
+      "n": 268,
+      "box": [
+        0.4044,
+        0.6154,
+        0.6681,
+        0.7925
+      ]
+    },
+    {
+      "n": 269,
+      "box": [
+        0.6725,
+        0.6154,
+        0.967,
+        0.7925
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 261,
+      "en": "A combination movement, in which the weight, W, moves vertically with a reciprocating movement; the down-stroke being shorter than the up-stroke. B is a revolving disk, carrying a drum which winds round itself the cord, D. An arm, C, is jointed to the disk and to the upper arm, A, so that when the disk revolves the arm, A, moves up and down, vibrating on the point, G. This arm carries with it the pulley, E. Suppose we detach the cord from the drum and tie it to a fixed point, and then move the arm, A, up and down, the weight, W, will move the same distance, and in addition the movement given to it by the cord, that is to say, the movement will be doubled. Now let us attach the cord to the drum and revolve the disk, B, and the weight will move vertically with the reciprocating motion, in which the down-stroke will be shorter than the up-stroke, because the drum is continually taking up the cord.",
+      "titleKo": "복합 운동 추 올리기",
+      "ko": "추 W가 위아래로 왕복하는데 내려가는 거리가 올라가는 거리보다 짧은 복합 운동이다. B는 회전하는 원판이며, 줄 D를 제 몸에 감는 드럼을 달고 있다. 팔 C는 원판과 위쪽 팔 A에 이어져 있어서, 원판이 돌면 팔 A가 점 G를 중심으로 진동하며 위아래로 움직인다. 이 팔은 도르래 E를 함께 나른다. 줄을 드럼에서 떼어 고정된 점에 묶고 팔 A를 위아래로 움직인다고 하자. 그러면 추 W는 같은 거리만큼 움직이고, 거기에 줄이 주는 움직임이 더해져서 움직임이 두 배가 된다. 이번에는 줄을 드럼에 붙이고 원판 B를 돌리면, 추는 위아래로 왕복하되 드럼이 계속 줄을 감아 들이기 때문에 내려가는 거리가 올라가는 거리보다 짧아진다.",
+      "easy": "원판이 돌면 팔이 흔들려 도르래를 오르내리게 하고, 동시에 드럼이 줄을 감는다. 두 움직임이 합쳐져 추가 올라갈 때가 내려올 때보다 더 많이 움직인다.",
+      "category": "crank",
+      "mech": "Revolving disk B (at the lower right, with a drum on its hub) carrying a cord D that runs up over pulley E on the end of the swinging upper arm A (pivoted on the wall at G, right); arm C links disk B to arm A (long link from the disk edge up to the arm); weight W hangs at the left on the cord. Driver = disk B rotating; arm A swings, drum winds cord; W reciprocates with a short down-stroke."
+    },
+    {
+      "n": 262,
+      "en": "The first of these figures is an end view, and the second a side view, of an arrangement of mechanism for obtaining a series of changes of velocity and direction. D is a screw on which is placed eccentrically the cone, B, and C is a friction-roller which is pressed against the cone by a spring or weight. Continuous rotary motion, at a uniform velocity, of the screw, D, carrying the eccentric cone, gives a series of changes of velocity and direction to the roller, C. It will be understood that during every revolution of the cone the roller would press against a different part of the cone, and that it would describe thereon a spiral of the same pitch as the screw, D. The roller, C, would receive a reciprocating motion, the movement in one direction being shorter than that in the other.",
+      "titleKo": "편심 원뿔 (끝면)",
+      "ko": "이 두 그림 중 첫째는 끝에서 본 모습이고 둘째는 옆에서 본 모습이며, 속도와 방향을 여러 번 바꾸는 장치이다. D는 나사이고 그 위에 원뿔 B가 편심으로(중심에서 치우쳐) 놓여 있으며, C는 스프링이나 추로 원뿔에 눌려 붙은 마찰 롤러이다. 편심 원뿔을 단 나사 D가 일정한 속도로 계속 회전하면 롤러 C의 속도와 방향이 여러 번 바뀐다. 원뿔이 한 바퀴 돌 때마다 롤러는 원뿔의 다른 부분을 누르고, 그 위에 나사 D와 같은 피치의 나선을 그리게 된다는 점을 이해하면 된다. 롤러 C는 왕복 운동을 하는데, 한쪽 방향의 움직임이 다른 쪽보다 짧다. (262와 263에 함께 쓰인 설명이다.)",
+      "easy": "원뿔이 한쪽으로 치우쳐 돌고 롤러가 그 옆면을 눌러 따라가므로, 롤러는 앞뒤로 움직이되 한 방향의 거리가 더 짧다. 나사가 일정하게 돌아도 롤러의 속도와 방향이 계속 변한다.",
+      "category": "cam",
+      "mech": "End view: a large round body B (drum with eccentric hub marked D, mounted on a base), friction-roller C (small circle) on top touching it; the cone is eccentric on the screw D. Driver = screw D at uniform rotation; roller C reciprocates with uneven strokes."
+    },
+    {
+      "n": 263,
+      "en": "[Shared paragraph with 262.] The first of these figures is an end view, and the second a side view, of an arrangement of mechanism for obtaining a series of changes of velocity and direction.",
+      "titleKo": "편심 원뿔 (옆면)",
+      "ko": "이 두 그림 중 첫째는 끝에서 본 모습이고 둘째는 옆에서 본 모습으로, 속도와 방향이 여러 번 바뀌는 장치이다. (자세한 설명은 262와 함께 쓰여 있다.)",
+      "easy": "긴 나사 D 위에 비스듬히 놓인 원뿔 B를 옆에서 본 그림이다. 롤러 C가 원뿔 위를 누르며 따라가면 속도와 방향이 바뀐다.",
+      "category": "cam",
+      "mech": "Side view: a tapered cone B (frustum, wide on the left, narrowing to the right) mounted eccentrically on a screw shaft D (threaded part at the right passing through a support/bearing nut E on a pedestal); friction-roller C on top at the left (cross-bar). Driver = screw rotating; roller C follows a spiral on the cone."
+    },
+    {
+      "n": 264,
+      "en": "Two worm-wheels of equal diameter, but one having one tooth more than the other, both in gear with the same worm. Suppose the first wheel has 100 teeth and the second 101, one wheel will gain one revolution over the other during the passage of 100 × 101 teeth of either wheel across the plane of centers, or during 10,100 revolutions of the worm.",
+      "titleKo": "이 수가 하나 다른 웜휠",
+      "ko": "지름이 같지만 한쪽이 이가 하나 더 많은 두 웜휠이 같은 웜에 맞물려 있다. 첫째 바퀴의 이가 100개, 둘째 바퀴가 101개라고 하자. 어느 한 바퀴의 이 100 × 101개가 중심면을 지나는 동안, 곧 웜이 10,100번 도는 동안, 한 바퀴가 다른 바퀴보다 정확히 한 바퀴 더 돈다.",
+      "easy": "두 바퀴의 이 수가 100개와 101개로 딱 하나 달라서, 웜을 1만 번 넘게 돌려야 한 바퀴 차이가 난다. 아주 작은 차이를 만들어 내는 장치이다.",
+      "category": "gear",
+      "mech": "Two worm wheels of equal diameter side by side (a thick cylinder with fine helical teeth shown as one barrel, hub shaft at the top), a worm (slanted rods) at the right meshing with both; shafts horizontal at left. Driver = worm; the two wheels differ by one tooth (100 vs 101) so relative drift = 1 turn per 10,100 worm turns."
+    },
+    {
+      "n": 265,
+      "en": "Variable motion. If the conical drum has a regular circular motion, and the friction-roller is made to traverse lengthwise, a variable rotary motion of the friction-roller will be obtained.",
+      "titleKo": "원뿔 마찰 변속",
+      "ko": "변하는 운동이다. 원뿔 모양 드럼이 규칙적인 원운동을 하고 마찰 롤러가 길이 방향으로 이동하게 하면, 마찰 롤러의 회전 운동이 변하게 된다.",
+      "easy": "원뿔은 한쪽이 굵고 한쪽이 가늘다. 같은 속도로 돌아도 롤러가 닿는 곳의 지름이 달라서 롤러의 회전 속도가 달라진다. 그래서 롤러의 속도를 계속 바꿀 수 있다.",
+      "category": "belt",
+      "mech": "Conical drum (frustum, wide on the left, narrowing toward the right) on a horizontal shaft with ends at both sides; friction-roller (a thin rod) pressed on its slanted surface, movable along the cone. Driver = cone rotating at constant speed; roller speed varies with its contact position."
+    },
+    {
+      "n": 266,
+      "en": "The shaft has two screws of different pitches cut on it, one screwing into a fixed bearing, and the other into a bearing free to move to and fro. Rotary motion of the shaft gives rectilinear motion to the movable bearing, a distance equal to the difference of pitches, at each revolution.",
+      "titleKo": "피치가 다른 두 나사",
+      "ko": "축에 피치가 서로 다른 나사 두 개가 새겨져 있는데, 하나는 고정된 베어링에, 다른 하나는 앞뒤로 움직일 수 있는 베어링에 나사로 끼워진다. 축이 회전하면 움직일 수 있는 베어링이 한 바퀴마다 두 피치의 차이만큼의 거리를 직선으로 움직인다.",
+      "easy": "두 나사의 간격(피치)이 조금 다르기 때문에, 축을 한 바퀴 돌리면 움직이는 쪽 받침이 그 차이만큼만 아주 조금 움직인다. 작은 이동을 정밀하게 만들 수 있다.",
+      "category": "gear",
+      "mech": "Base plate with a fixed standing bearing at the left (with a crank handle on the shaft end) and a movable block at the right; one shaft with two screws of different pitches (left coarse, right fine), the left threaded into the fixed bearing and the right into the movable bearing. Driver = crank handle turning the shaft; movable bearing advances by (pitch1 - pitch2) per turn."
+    },
+    {
+      "n": 267,
+      "en": "Friction pulley. When the rim turns in the opposite direction to the arrow, it gives motion to the shaft by means of the pivoted eccentric arms; but when it turns in the direction of the arrow, the arms turn on their pivots and the shaft is at rest. The arms are held to the rim by springs.",
+      "titleKo": "마찰 풀리(일방향 클러치)",
+      "ko": "마찰 풀리이다. 테두리가 화살표의 반대 방향으로 돌면 회전축에 달린 편심 팔들을 통해 축에 운동을 전한다. 그러나 화살표 방향으로 돌면 팔들이 자기 피벗에서 돌아 버려 축은 멈춰 있다. 팔들은 스프링으로 테두리에 붙어 있다.",
+      "easy": "한쪽으로 돌 때는 팔이 테두리에 걸려 축을 함께 돌리고, 반대로 돌 때는 팔이 미끄러져 축이 안 돈다. 한 방향으로만 힘을 전하는 자전거 뒷바퀴의 프리휠 같은 장치이다.",
+      "category": "ratchet",
+      "mech": "Large rim wheel (outer ring with an inner hub) with four curved pivoted eccentric arms (blades, curved like spokes) fitted around a square hub body (plate with four bosses) on the shaft; arrow marks one direction around the rim; springs hold the arms against the rim. Driver = rim; locks when turned opposite the arrow, free-wheels in the arrow direction."
+    },
+    {
+      "n": 268,
+      "en": "Circular into reciprocating motion by means of a crank and oscillating rod.",
+      "titleKo": "크랭크와 흔들막대",
+      "ko": "크랭크와 흔들리는 막대로 원운동을 왕복 운동으로 바꾼다.",
+      "easy": "원판 위의 핀이 돌면 막대 끝을 움직여서 긴 막대가 위아래로 흔들리고, 막대에 달린 작은 도르래가 따라 움직인다.",
+      "category": "crank",
+      "mech": "Disk at the right with a small crank-pin and short link from the pin to a long rod that extends left, passing a small roller (wheel) at the left; dotted outline shows the rod's other position. Driver = disk rotating; the long rod oscillates (swings about the roller), giving reciprocating motion to its left end."
+    },
+    {
+      "n": 269,
+      "en": "Continued rectilinear movement of the frame with mutilated racks gives an alternate rotary motion to the spur-gear.",
+      "titleKo": "결손 랙 틀",
+      "ko": "이가 일부만 있는 랙을 가진 틀의 계속되는 직선 운동이 평기어에 교대 회전 운동을 준다.",
+      "easy": "틀 안쪽 위아래에 이가 있는 구간이 따로 있다. 틀이 한 방향으로 계속 움직여도 기어는 위쪽 이에 맞물릴 때와 아래쪽 이에 맞물릴 때 반대로 돈다.",
+      "category": "gear",
+      "mech": "Rectangular frame with an inner slot having toothed rack segments along the top and bottom inner edges (teeth only over part of the length, i.e., mutilated racks); a spur gear (about 12 teeth with 4 spokes) fixed in position between the racks; frame extends right into a rod with a flange. Driver = frame moving in a straight line one way; gear turns one way meshing with the top rack and the other way with the bottom rack."
+    }
+  ]
+}

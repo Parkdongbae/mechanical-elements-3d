@@ -1,0 +1,170 @@
+{
+  "platePage": 103,
+  "textPage": 104,
+  "figures": [
+    {
+      "n": 403,
+      "box": [
+        0.0544,
+        0.1983,
+        0.3688,
+        0.4205
+      ]
+    },
+    {
+      "n": 404,
+      "box": [
+        0.3736,
+        0.1983,
+        0.636,
+        0.4205
+      ]
+    },
+    {
+      "n": 405,
+      "box": [
+        0.6409,
+        0.1983,
+        0.9674,
+        0.4205
+      ]
+    },
+    {
+      "n": 406,
+      "box": [
+        0.0544,
+        0.4248,
+        0.3688,
+        0.606
+      ]
+    },
+    {
+      "n": 407,
+      "box": [
+        0.3736,
+        0.4248,
+        0.636,
+        0.606
+      ]
+    },
+    {
+      "n": 408,
+      "box": [
+        0.6409,
+        0.4248,
+        0.9674,
+        0.606
+      ]
+    },
+    {
+      "n": 409,
+      "box": [
+        0.0544,
+        0.6103,
+        0.3688,
+        0.7906
+      ]
+    },
+    {
+      "n": 410,
+      "box": [
+        0.3736,
+        0.6103,
+        0.636,
+        0.7906
+      ]
+    },
+    {
+      "n": 411,
+      "box": [
+        0.6409,
+        0.6103,
+        0.9674,
+        0.7735
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 403,
+      "en": "Cyclograph for describing circular arcs in drawings where the center is inaccessible. This is composed of three straight rules. The chord and versed sine being laid down, draw straight sloping lines from ends of former to top of latter, and to these lines lay two of the rules crossing at the apex. Fasten these rules together, and another rule across them to serve as a brace, and insert a pin or point at each end of chord to guide the apparatus, which, on being moved against these points, will describe the arc by means of pencil in the angle of the crossing edges of the sloping rules.",
+      "titleKo": "원호 그리는 자(사이클로그래프)",
+      "ko": "그림에서 중심에 갈 수 없을 때 원호를 그리는 사이클로그래프이다. 곧은 자 세 개로 이루어진다. 현과 화살(높이)을 정해 그린 뒤, 현의 양 끝에서 화살의 꼭대기로 비스듬한 직선을 긋고, 이 선들에 두 개의 자를 꼭대기에서 엇갈리게 놓는다. 이 자들을 함께 고정하고, 그 위에 다른 자 하나를 버팀대처럼 가로질러 붙인 다음, 현의 양 끝에 핀이나 점을 박아 장치를 이끌게 한다. 이 점들에 닿게 하면서 장치를 움직이면, 비스듬한 두 자가 엇갈리는 모서리의 각에 연필을 대고 있으면 원호가 그려진다.",
+      "easy": "두 점에 핀을 박고 그 점에 닿도록 삼각형으로 고정한 자를 미끄러뜨리면 꼭짓점이 원호 위를 지난다. 이 꼭짓점에 연필을 대면 중심이 멀리 있어도 원호를 그릴 수 있다. 같은 호에 대한 원주각은 일정하다는 성질을 이용한다.",
+      "category": "tool",
+      "mech": "Three thin straight rules: two long rules crossing at the apex at the top (an X-shaped crossing, inclined about 30 deg from horizontal) and a third rule across them as a brace along the chord (the base); the arc drawn is a circular segment (curved dotted/outer arc below the rules). Pins at both chord ends. Input: sliding the frame along the two pins; output: pencil at the apex traces a circular arc."
+    },
+    {
+      "n": 404,
+      "en": "Another cyclograph. The elastic arched bar is made half the depth at the ends that it is at the middle, and is formed so that its outer edge coincides with a true circular arc when bent to its greatest extent. Three points in the required arc being given, the bar is bent to them by means of the screw, each end being confined to the straight bar by means of a small roller.",
+      "titleKo": "휘는 막대 원호 그리개",
+      "ko": "또 다른 사이클로그래프이다. 탄성이 있는 아치형 막대는 끝의 두께를 가운데 두께의 절반으로 만들어, 가장 크게 휘었을 때 바깥 가장자리가 참된 원호와 일치하도록 만든다. 필요한 원호 위의 세 점이 주어지면, 나사로 막대를 그 점들에 맞게 휘며, 각 끝은 작은 롤러로 곧은 막대에 붙들어 매 둔다.",
+      "easy": "곧은 막대 위에 얇은 탄성 막대를 올려 나사로 가운데를 눌러 휘게 하면 원호가 된다. 나사를 돌려 휨 정도를 맞추면 원하는 곡률의 원호를 그릴 수 있다.",
+      "category": "tool",
+      "mech": "Long straight horizontal bar (about 4:1) at the bottom with two short vertical end posts with rollers (plates with two rivets); a thin elastic arched bar above with ends tapered (half thickness at the ends); a central screw (threaded rod with a wing/butterfly thumb nut at the bottom) pushing the arch up in the middle. Input: turning the screw; output: arch curvature (circular arc) variable."
+    },
+    {
+      "n": 405,
+      "en": "Mechanical means of describing hyperbolas, their foci and vertices being given. Suppose the curves two opposite hyperbolas, the points in vertical dotted center line their foci. One end of rule turns on one focus as a center through which one edge ranges. One end of thread being looped on pin inserted at the other focus, and other end held to other end of rule, with just enough slack between to permit height to reach vortex when rule coincides with center line. A pencil held in bight, and kept close to rule while latter is moved from center line, describes one-half of parabola ; the rule is then reversed for the other half.",
+      "titleKo": "쌍곡선 그리는 장치",
+      "ko": "초점과 꼭짓점이 주어졌을 때 쌍곡선을 기계적으로 그리는 방법이다. 곡선이 마주 보는 두 쌍곡선이고, 세로 점선 가운데 선 위의 점들이 그 초점이라고 하자. 자의 한쪽 끝은 한 초점을 중심으로 돌며, 자의 한 가장자리가 이 초점을 지난다. 실의 한쪽 끝은 다른 초점에 박은 핀에 고리로 걸고, 다른 쪽 끝은 자의 다른 쪽 끝에 매어, 자가 가운데 선과 겹칠 때 실이 꼭짓점(원문 vortex)까지 닿을 만큼의 여유만 있게 한다. 실이 굽은 곳(고리)에 연필을 대고 자에 바싹 붙여 가며 자를 가운데 선에서 움직이면 곡선의 절반(원문은 포물선 'parabola'이라 적음)이 그려지고, 자를 뒤집어 나머지 절반을 그린다.",
+      "easy": "한 초점을 중심으로 도는 자와, 두 초점 사이에 걸친 실을 이용해 연필을 자에 붙여 움직이면 쌍곡선이 그려진다. 점에서 두 초점까지 거리의 차가 일정하다는 쌍곡선의 성질을 쓴 것이다.",
+      "category": "tool",
+      "mech": "Two opposite hyperbola curves (upper cup-shaped and lower dome-shaped) with a vertical dotted center line and horizontal dotted lines; a long straight rule (about 3x the curve gap) pivoted at the upper focus (round pin at the vertex region) leaning down to the right; thread from the lower focus pin to the end of the rule with a pencil in the bight. Input: swinging the rule; output: pencil traces a hyperbola branch."
+    },
+    {
+      "n": 406,
+      "en": "Mechanical means of describing parabolas, the base, altitude, focus, and directrix being given. Lay straight edge with near side coinciding with directrix, and square with stock against the same, so that the blade is parallel with the axis, and proceed with pencil in bight of thread, as in the preceding.",
+      "titleKo": "포물선 그리는 장치",
+      "ko": "밑변, 높이, 초점, 준선이 주어졌을 때 포물선을 기계적으로 그리는 방법이다. 곧은 자의 가까운 변이 준선과 겹치도록 놓고, 스톡(손잡이 있는 직각자)을 그 자에 대어 직각으로 맞추어 날(블레이드)이 축과 평행하게 한 다음, 앞의 것과 같이 실의 굽은 곳에 연필을 대고 움직인다.",
+      "easy": "직각자를 준선에 대고 미끄러뜨리면서, 실 한 끝은 초점에, 다른 끝은 직각자 끝에 매고 연필로 실을 팽팽하게 당기며 그린다. 포물선 위의 점은 초점과 준선까지의 거리가 같다는 성질을 이용한다.",
+      "category": "tool",
+      "mech": "T-square: horizontal straight edge (rule) at the top (about 4:1 flat bar) with a vertical blade (stock and blade, narrow bar) attached at right angles on its underside near the left; the parabola curve (bell shape, dome-shaped region) next to the blade with a small pin (focus) on the blade. Input: sliding the stock along the rule; output: pencil in the thread loop draws the parabola."
+    },
+    {
+      "n": 407,
+      "en": "Instrument for describing pointed arches. Horizontal bar is slotted and fitted with a slide having pin for loop of cord. Arch bar of elastic wood is fixed in horizontal at right angles. Horizontal bar is placed with upper edge on springing line, and back of arch bar ranging with jamb of opening, and the latter bar is bent till the upper side meets apex of arch, fulcrum-piece at its base insuring its retaining tangential relation to jamb ; the pencil is secured to arched bar at its connection with cord.",
+      "titleKo": "뾰족 아치 그리는 기구",
+      "ko": "뾰족한 아치(첨두 아치)를 그리는 기구이다. 가로 막대에는 홈이 있고, 끈 고리를 거는 핀이 달린 미끄럼쇠가 끼워져 있다. 탄성 있는 나무로 된 아치 막대는 가로 막대에 직각으로 고정된다. 가로 막대는 윗변이 아치가 시작되는 선(스프링잉 라인)에 닿게 놓고, 아치 막대의 등은 개구부의 문설주와 나란히 놓은 뒤, 아치 막대를 윗면이 아치의 꼭대기에 닿을 때까지 휘며, 그 밑부분의 받침 조각이 문설주와 접선 관계를 유지하게 한다. 연필은 아치 막대에서 끈과 이어진 곳에 붙인다.",
+      "easy": "곧은 막대 위에 얇은 탄성 막대를 직각으로 세워 끈으로 당겨 휘게 하면 뾰족 아치 모양의 곡선이 된다. 연필로 그 곡선을 따라 그리면 건축 도면의 뾰족 아치를 그릴 수 있다.",
+      "category": "tool",
+      "mech": "L-shaped frame: vertical bar at the left (thin rule going up) and a horizontal slotted bar at the bottom (with a slide and pin); an elastic arched bar curves from the base up to the right side where a taut cord (vertical line) ends; fulcrum piece at the base; pencil at the connection with cord. Input: slide position along the slot; output: curve of the pointed arch drawn. Bar length about 1.0 cell width."
+    },
+    {
+      "n": 408,
+      "en": "Centrolinead for drawing lines toward an inaccessible or inconveniently distant point ; chiefly used in perspective. Upper or drawing edge of blade and back of movable legs should intersect center of joint. Geometrical diagram indicates mode of setting instrument, legs forming it may form unequal angles with blade. At either end of dotted line crossing central, a pin is inserted vertically for instrument to work against. Supposing it to be inconvenient to produce the convergent lines until they intersect, even temporarily, for the purpose of setting the instrument as shown, a corresponding convergence may be found between them by drawing a line parallel to and inward from each.",
+      "titleKo": "원점 모으기 자(센트로리니어드)",
+      "ko": "접근할 수 없거나 불편할 만큼 먼 점을 향한 선을 그리는 센트로리니어드로, 주로 원근법 그림에 쓰인다. 날(블레이드)의 윗변 즉 그리는 변과 움직이는 다리의 뒷면은 관절의 중심에서 만나야 한다. 기하학 도형은 기구를 맞추는 방법을 나타내며, 이를 이루는 다리는 날과 서로 다른 각을 이룰 수도 있다. 가운데를 지나는 점선의 양 끝에는 기구가 맞대고 움직일 수 있도록 핀을 세로로 꽂는다. 기구를 그림처럼 맞추기 위해 모이는 선을 잠시라도 만나는 곳까지 연장하는 것이 불편하다고 하면, 그 선들 각각에 평행하게 안쪽으로 선을 그어 대응하는 모임을 찾을 수 있다.",
+      "easy": "세 개의 다리가 한 관절에서 갈라진 자를 맞추면, 아주 먼 곳의 한 점(소실점)으로 모이는 선을 그을 수 있다. 소실점이 종이 밖에 있어도 선을 그릴 수 있어 원근법 그림에 편리하다.",
+      "category": "tool",
+      "mech": "A joint (round hub with a notched/forked head) with three legs radiating: one at top-left, one at bottom-left, and a long blade to the right (an arm/blade about 1.0 cell width) with a dashed continuation; a circle and dotted triangular construction lines at upper right (geometric diagram showing the setting). Input: legs swung to set the angle; output: drawn lines converge to the distant vanishing point."
+    },
+    {
+      "n": 409,
+      "en": "Proportional compasses used in copying drawings on a given larger or smaller scale. The pivot of compasses is secured in a slide which is adjustable in the longitudinal slots of legs, and capable of being secured by a set screw, the dimensions are taken between one pair of points and transferred with the other pair, and thus enlarged or diminished in proportion to the relative distances of the points from the pivot. A scale is provided on one or both legs to indicate the proportion.",
+      "titleKo": "비례 컴퍼스",
+      "ko": "그림을 주어진 크기로 키우거나 줄여서 베끼는 데 쓰는 비례 컴퍼스이다. 컴퍼스의 축(피벗)은 다리의 길이 방향 홈 안에서 조절할 수 있는 미끄럼쇠에 고정되며, 멈춤 나사로 잡아 둘 수 있다. 한 쌍의 끝점 사이의 치수를 재어 다른 쌍의 끝점으로 옮기면, 그 치수는 축에서 각 점까지의 상대적인 거리에 비례해 커지거나 작아진다. 한쪽 또는 양쪽 다리에는 비례를 나타내는 눈금이 있다.",
+      "easy": "X자로 엇갈린 두 다리의 축 위치를 옮기면 한쪽 끝의 벌어진 너비와 반대쪽 끝의 너비의 비가 정해진다. 한쪽으로 잰 길이를 반대쪽으로 옮기면 정해진 비율로 확대하거나 축소한 길이가 된다.",
+      "category": "tool",
+      "mech": "Two X-crossed straight legs (each about 1.6x cell width diagonal, tapering to sharp points at both ends, with long slots) joined by a round pivot hub with a slide in the central slots and a set screw; a scale along one leg. Input: pivot position set along the slots; output: ratio of lengths between the two point pairs (scaling)."
+    },
+    {
+      "n": 410,
+      "en": "Bisecting gauge. Of two parallel cheeks on the cross-bar one is fixed and the other adjustable, and held by thumb-screw. In either cheek is centered one of two short bars of equal length, united by a pivot, having a sharp point for marking. This point is always in a central position between the cheeks, whatever their distance apart, so that any parallel sided solid to which the cheeks are adjusted may be bisected from end to end by drawing the gauge along it. Solids not parallel sided may be bisected in like manner, by leaving one cheek loose, but keeping it in contact with solid.",
+      "titleKo": "이등분 게이지",
+      "ko": "이등분 게이지이다. 가로대 위의 평행한 두 볼(뺨) 가운데 하나는 고정되어 있고 다른 하나는 조절할 수 있으며 손나사로 고정한다. 각 볼의 가운데에는 같은 길이의 짧은 막대 두 개 중 하나씩이 달려 있고, 이 막대들은 핀으로 이어져 있으며 표시용 뾰족한 끝이 있다. 이 끝은 볼 사이의 간격이 얼마든 항상 두 볼의 한가운데 위치에 있어서, 볼을 맞춘 평행한 면을 가진 어떤 물체든 게이지를 끝에서 끝까지 끌면 가운데에 선이 그어져 이등분된다. 평행한 면이 없는 물체도, 한쪽 볼을 느슨하게 두되 물체에 닿게 하면 같은 식으로 이등분할 수 있다.",
+      "easy": "두 개의 같은 길이 막대가 가운데 핀으로 이어져 있어서, 볼 사이가 넓든 좁든 뾰족한 표시 끝은 항상 한가운데에 있다. 나뭇조각 등에 대고 쭉 밀면 정중앙에 선이 그어진다.",
+      "category": "tool",
+      "mech": "A long cross-bar (square wooden bar, 3D perspective) lying across a board/plank (a long flat piece with a stepped edge); two wooden cheeks (blocks) at the ends of the cross-bar, one fixed (left, upper) and the other with a thumb-screw (right, lower), plus a tail block sticking out; two equal short bars hinged at a pivot inside with a marking point at the middle. Input: sliding the gauge along the solid; output: scribed center line."
+    },
+    {
+      "n": 411,
+      "en": "Self-recording level for surveyors. Consists of a carriage, the shape of which is governed by an isosceles triangle having horizontal base. The circumference of each wheel equals the base of the triangle. A pendulum, when the instrument is on level ground, bisects the base, and when on an inclination gravitates to right or left from center accordingly. A drum, rotated by gearing from one of the carriage wheels, carries sectionally ruled paper, upon which pencil on pendulum traces profile corresponding with that of ground traveled over. The drum can be shifted vertically to accord with any given scale, and horizontally, to avoid removal of filled paper.",
+      "titleKo": "자동 기록 수준기",
+      "ko": "측량사를 위한 자동 기록 수준기이다. 수레로 이루어져 있는데, 그 모양은 밑변이 수평인 이등변삼각형이 정한다. 각 바퀴의 둘레는 삼각형의 밑변과 같다. 기구가 평평한 땅에 있을 때 진자는 밑변을 이등분하고, 기울어진 곳에서는 그에 따라 중심에서 오른쪽이나 왼쪽으로 쏠린다. 수레 바퀴 하나에서 기어로 회전하는 드럼은 구획이 그어진 종이를 지니고, 진자에 달린 연필은 그 종이 위에 지나온 땅의 단면과 같은 모양의 선을 그린다. 드럼은 주어진 어떤 축척에도 맞도록 세로로, 또 이미 채워진 종이를 떼지 않도록 가로로도 옮길 수 있다.",
+      "easy": "수레가 언덕을 오르내리면 매달린 추(진자)가 한쪽으로 쏠리고, 연필이 바퀴와 함께 도는 드럼 종이에 땅의 오르내림을 그대로 그린다. 길의 경사를 자동으로 기록하는 기구이다.",
+      "category": "misc",
+      "mech": "Carriage with two wheels (left and right, spoked, wheel base = wheel circumference) and a triangular (isosceles) frame with an arched top bar; a pendulum hanging from the apex (dotted triangle above) with a pencil; a horizontal drum (cylinder with paper) between the wheels driven by gearing from one wheel; a small counter box 'B'. Input: carriage rolling over ground; output: pencil trace of the ground profile on the drum paper."
+    }
+  ]
+}

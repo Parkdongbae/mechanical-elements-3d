@@ -1,0 +1,161 @@
+{
+  "platePage": 25,
+  "textPage": 26,
+  "figures": [
+    {
+      "n": 60,
+      "box": [
+        0.1209,
+        0.2393,
+        0.3966,
+        0.4256
+      ]
+    },
+    {
+      "n": 61,
+      "box": [
+        0.4027,
+        0.2393,
+        0.6711,
+        0.4256
+      ]
+    },
+    {
+      "n": 62,
+      "box": [
+        0.6771,
+        0.2393,
+        0.9794,
+        0.4256
+      ]
+    },
+    {
+      "n": 63,
+      "box": [
+        0.1209,
+        0.4316,
+        0.3966,
+        0.6171
+      ]
+    },
+    {
+      "n": 64,
+      "box": [
+        0.4027,
+        0.4316,
+        0.6711,
+        0.6171
+      ]
+    },
+    {
+      "n": 65,
+      "box": [
+        0.6771,
+        0.4316,
+        0.9794,
+        0.6171
+      ]
+    },
+    {
+      "n": 66,
+      "box": [
+        0.1209,
+        0.6239,
+        0.3966,
+        0.8077
+      ]
+    },
+    {
+      "n": 67,
+      "box": [
+        0.4027,
+        0.6239,
+        0.6711,
+        0.8077
+      ]
+    },
+    {
+      "n": 68,
+      "box": [
+        0.6771,
+        0.6239,
+        0.9794,
+        0.8077
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 60,
+      "titleKo": "벨트 두 단 속도",
+      "ko": "벨트로 두 가지 속도를 전달한다. 아래 축에 풀리가 네 개 있는데, 바깥쪽 둘은 헐겁고 안쪽 둘은 고정되어 있다. 왼쪽 벨트는 헐거운 풀리 위에, 오른쪽 벨트는 고정 풀리 위에 있어서 아래 축에 느린 운동이 전달된다. 오른쪽 벨트를 헐거운 풀리로, 왼쪽 벨트를 고정 풀리로 옮기면 더 빠른 운동이 전달된다.",
+      "easy": "풀리 크기가 다른 두 벨트 중 어느 쪽을 고정 풀리에 걸지에 따라 아래 축이 느리거나 빠르게 돈다.",
+      "category": "belt",
+      "mech": "Upper shaft with two pulleys of different diameter; lower shaft with four pulleys (two outer loose, two inner fast); two belts, each shiftable between loose and fast pulley. Two speeds."
+    },
+    {
+      "n": 61,
+      "titleKo": "차동 두 단 속도",
+      "ko": "두 가지 속도를 전달하는데, 하나는 차동 운동이다. 벨트는 아래 축의 헐거운 풀리 위에 있다. 가운데 풀리는 그 축에 고정되어 있고 허브에 작은 베벨기어가 붙어 있다. 왼쪽 것과 같이 축에 헐겁게 끼워진 오른쪽 풀리는 가로로 또 다른 베벨기어를 지닌다. 축에 헐겁게 끼워진 세 번째 베벨기어는 끝에 추를 단 마찰 밴드로 붙들려 있다. 벨트를 가운데 풀리로 옮기면 단순한 운동이 되지만, 오른쪽 풀리로 옮기면 축에 두 배의 속도가 주어진다. 세 번째 베벨기어의 마찰 밴드(제동대)는 속도가 갑자기 바뀔 때 조금 미끄러지게 하려는 것이다.",
+      "easy": "벨트를 가운데 풀리에 걸면 보통 속도로 돌고, 오른쪽 풀리에 걸면 베벨기어들이 차동으로 작용하여 두 배의 속도로 돈다.",
+      "category": "gear",
+      "mech": "Lower shaft with three pulleys (left loose, middle fast with small bevel gear on its hub, right loose carrying a transverse bevel); third bevel loose on the shaft held by a weighted friction band. Belt on middle: 1x; on right: 2x (differential)."
+    },
+    {
+      "n": 62,
+      "titleKo": "가변 두 단 속도",
+      "ko": "두 가지 속도를 전달하는데, 그중 하나는 다르게 변하는 운동이다. 이것은 앞의 것과 아주 비슷하나, 세 번째 베벨기어가 다른 세 풀리 오른쪽의 네 번째 풀리에 붙어 있고, 위 축의 작은 풀리에서 오는 벨트로 구동되는 점이 다르다. 왼쪽 벨트가 가운데 베벨기어를 지닌 풀리에 있고 오른쪽 풀리가 같은 방향으로 돌면, 세 번째 베벨기어의 회전량을 이 기어가 정지해 있을 때 축이 가졌을 두 배 속도에서 빼야 한다. 반대로 오른쪽 벨트를 엇걸어 풀리를 반대 방향으로 돌리면 그 양을 더해야 한다.",
+      "easy": "61과 비슷하지만 세 번째 베벨기어를 별도의 벨트가 돌린다. 이 기어가 도는 방향에 따라 축의 속도가 줄어들거나 늘어난다.",
+      "category": "gear",
+      "mech": "Like 61 but the third bevel gear is attached to a fourth pulley at the far right, driven by a band from a small pulley on a shaft above; open belt reduces and crossed belt increases the output speed."
+    },
+    {
+      "n": 63,
+      "titleKo": "점프(간헐) 회전 장치",
+      "ko": "도약, 곧 간헐적인 회전 운동이다. 미터기나 회전수 계수기에 쓴다. 왼쪽에서 스프링에 매달린 드롭과 거기에 붙은 폴이 오른쪽 원판의 핀들에 의해 들어 올려진다. 핀이 먼저 폴에서 빠져나가면 폴이 별 모양 바퀴의 다음 틈으로 떨어진다. 핀이 드롭에서 빠져나가면 스프링이 드롭을 갑자기 아래로 내던지고, 드롭에 붙은 핀이 폴을 치며, 폴이 별 모양 바퀴에 작용하여 바퀴를 순식간에 한 바퀴의 일부만큼 돌린다. 핀이 하나 지나갈 때마다 이것이 되풀이된다.",
+      "easy": "원판의 핀이 레버를 천천히 들어 올렸다가 놓치면, 스프링이 레버를 내리쳐서 별 모양 바퀴를 한 칸 갑자기 돌린다. 이것이 되풀이되어 간헐적으로 돈다.",
+      "category": "ratchet",
+      "mech": "Disc at right with pins on its face (driver, continuous rotation); a spring-loaded drop lever at left carrying a pawl lifted by the pins and then snapped down onto an 11-tooth star wheel; star wheel advances in jumps."
+    },
+    {
+      "n": 64,
+      "titleKo": "점프 운동 (웜과 캠)",
+      "ko": "도약 운동의 또 다른 배열이다. 구동축에 고정된 웜(끝없는 나사)이 아래의 웜기어 B에 운동을 전한다. 웜기어가 달린 축을 감싸는 다른 속 빈 축에 캠 A가 고정되어 있고, 이 속 빈 축의 짧은 한 부분은 반쯤 잘려 있다. 웜기어 축에 고정된 핀이 속 빈 축과 캠을 함께 돌린다. 캠을 누르는 스프링은 속 빈 축을 핀 쪽으로 되밀어 붙들고 있다가, 그림에 보인 곳보다 조금 더 가서 압력의 방향이 바뀌면, 캠의 독특한 모양 때문에 캠이 웜휠과 상관없이 갑자기 떨어지고, 핀이 따라잡을 때까지 멈춰 있다. 그러면 같은 동작이 되풀이된다.",
+      "easy": "웜기어가 캠을 천천히 돌려 스프링을 점점 누르다가, 어느 순간 힘의 방향이 바뀌면 캠이 갑자기 한꺼번에 돌아 떨어진다. 이것이 되풀이되어 도약하는 운동이 된다.",
+      "category": "cam",
+      "mech": "Worm on a horizontal driving shaft meshing with worm wheel B (bottom); hollow shaft over the worm-wheel shaft carrying cam A with a half-cut hub, pin fixed in the worm-wheel shaft driving it; spring lever arm (top left, curved) presses on cam. Cam jumps suddenly each cycle."
+    },
+    {
+      "n": 65,
+      "titleKo": "탭핏 구동 간헐 회전",
+      "ko": "왼쪽 원판(바퀴) C가 구동 바퀴이며, 거기에 탭핏(밀개) A가 고정되어 있다. 다른 원판 D에는 그 면에서 튀어나온 같은 간격의 스터드들이 있다. 탭핏이 한 바퀴 돌 때마다 D 바퀴의 스터드 하나를 쳐서 D가 스터드 한 개의 거리만큼 움직인다. 이것이 지나치지 않게 하려고 고정된 중심에 지렛대 모양의 정지구를 두었다. 이 정지구는 C 바퀴에 판 홈에서 움직이며, 탭핏 A가 스터드를 치는 순간 그 홈이 레버와 마주한다. D가 돌면서 스터드 사이 부분은 밀려 나가고 다른 끝은 홈에 들어간다. 그러나 탭핏이 스터드를 떠나는 즉시 레버는 다음 스터드 앞에서 다시 밀려 올라가 C의 둘레가 다른 끝을 누르며 그 자리에 고정된다.",
+      "easy": "구동 바퀴의 탭핏이 한 바퀴에 한 번씩 스터드를 밀어 다른 바퀴를 한 칸씩 돌린다. 지렛대 모양 정지구가 바퀴가 한 칸 이상 돌지 못하게 막아 준다.",
+      "category": "ratchet",
+      "mech": "Left driving disc C (rotating, clockwise arrow) carrying tappet A (arm) and a notch; right disc D with a ring of equidistant studs (10) and a lever-like stop pivoted on a fixed centre below. Each turn the tappet advances D one stud."
+    },
+    {
+      "n": 66,
+      "titleKo": "추를 이용한 점프 운동",
+      "ko": "64를 변형한 것으로, 스프링과 캠 대신 웜기어 축에 고정된 팔에 추 D를 달아 쓴다.",
+      "easy": "64의 스프링과 캠을 쓰는 대신 추를 단 팔을 쓴다. 팔이 올라갔다가 갑자기 떨어지며 도약하는 운동을 만든다.",
+      "category": "cam",
+      "mech": "Worm (bottom) driving worm wheel B; an arm fixed on the worm-wheel shaft carries a weight D (ball) at its end which is raised and then drops; dotted circle shows the hollow-shaft/pin arrangement."
+    },
+    {
+      "n": 67,
+      "titleKo": "텀블러를 이용한 점프 운동",
+      "ko": "64를 변형한 또 다른 것이다. 속 빈 축에 고정된 추 또는 텀블러 E를 스프링과 캠 대신 쓰고, 웜기어 축의 핀 C와 함께 작동한다.",
+      "easy": "스프링과 캠 대신 반달 모양 추(텀블러) E를 속 빈 축에 달아 쓴다. 핀 C가 이것을 올렸다가 놓으면 텀블러가 돌아서 갑자기 떨어진다.",
+      "category": "cam",
+      "mech": "Worm (bottom) driving worm wheel B; crescent-shaped tumbler/weight E fixed on the hollow shaft, operated by pin C in the worm-wheel shaft; tumbler is lifted then tips over (clockwise arrow)."
+    },
+    {
+      "n": 68,
+      "titleKo": "한 톱니 간헐 기어",
+      "ko": "구동 바퀴 B의 단 하나뿐인 톱니 A가 바퀴 C의 홈 속에서 작용하여, 바퀴 B가 한 바퀴 돌 때마다 C를 홈 한 칸의 거리만큼 돌린다. 이 운동에는 정지구가 필요 없다. 구동 바퀴 B가 바퀴 C의 홈 사이의 둘레의 오목한 곳에 맞아 들어가 잠금 구실을 하기 때문이다.",
+      "easy": "한 개의 돌기가 달린 바퀴가 한 바퀴 돌 때마다 홈 있는 바퀴를 한 칸 돌린다. 돌기가 지나가면 둥근 둘레가 홈 사이에 맞아 바퀴를 고정한다.",
+      "category": "ratchet",
+      "mech": "Plain driver disc B with a single tooth A; driven wheel C (notched, 12-ish notches) with circular-arc hollows between the notches; B's rim locks C between steps. Clockwise arrows both; B 1 rev advances C 1 notch."
+    }
+  ]
+}

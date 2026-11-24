@@ -18,3 +18,6 @@ gears.jpg
 .vercel
 .env*
 shots/
+
+# 사용자 원본 자료(PDF) — 저장소에 올리지 않음
+mechanical_movements_507/

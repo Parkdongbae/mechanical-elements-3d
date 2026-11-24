@@ -1,0 +1,170 @@
+{
+  "platePage": 69,
+  "textPage": 70,
+  "figures": [
+    {
+      "n": 252,
+      "box": [
+        0.1209,
+        0.2354,
+        0.3934,
+        0.4242
+      ]
+    },
+    {
+      "n": 253,
+      "box": [
+        0.4033,
+        0.2354,
+        0.6637,
+        0.4242
+      ]
+    },
+    {
+      "n": 254,
+      "box": [
+        0.6714,
+        0.2354,
+        0.9692,
+        0.4242
+      ]
+    },
+    {
+      "n": 255,
+      "box": [
+        0.1209,
+        0.4281,
+        0.3934,
+        0.6099
+      ]
+    },
+    {
+      "n": 256,
+      "box": [
+        0.4033,
+        0.4281,
+        0.6637,
+        0.6099
+      ]
+    },
+    {
+      "n": 257,
+      "box": [
+        0.6714,
+        0.4281,
+        0.9692,
+        0.6099
+      ]
+    },
+    {
+      "n": 258,
+      "box": [
+        0.1209,
+        0.6138,
+        0.3934,
+        0.7964
+      ]
+    },
+    {
+      "n": 259,
+      "box": [
+        0.4033,
+        0.6138,
+        0.6637,
+        0.7964
+      ]
+    },
+    {
+      "n": 260,
+      "box": [
+        0.6714,
+        0.6138,
+        0.9692,
+        0.7964
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 252,
+      "en": "A and B are two rollers which require to be equally moved to and fro in the slot, C. This is accomplished by moving the piece, D, with oblique slotted arms, up and down.",
+      "titleKo": "비스듬한 홈으로 롤러 이동",
+      "ko": "A와 B는 홈 C 안에서 같은 거리만큼 앞뒤로 움직여야 하는 두 개의 롤러이다. 이것은 비스듬한 홈이 있는 팔을 가진 부품 D를 위아래로 움직여서 이룬다.",
+      "easy": "가운데 부품 D를 위아래로 움직이면 비스듬한 홈 속에서 두 롤러가 똑같이 좌우로 벌어지거나 오므라든다.",
+      "category": "crank",
+      "mech": "Slotted bar C (horizontal, with a forked slot) at the top with two rollers A and B (disk wheels with pins) in the slot; piece D at the bottom with two oblique slotted arms (inverted V shape) holding the roller pins. Driver = piece D moved up/down (vertical rod at the bottom); rollers A and B move symmetrically toward/away along slot C."
+    },
+    {
+      "n": 253,
+      "en": "Centrifugal check-hooks, for preventing accidents in case of the breakage of machinery which raises and lowers workmen, ores, etc., in mines. A is a frame-work fixed to the side of the shaft of the mine, and having fixed studs, D, attached. The drum on which the rope is wound is provided with a flange, B, to which the check-hooks are attached. If the drum acquires a dangerously rapid motion, the hooks fly out by centrifugal force, and one or other or all of them catch hold of the studs, D, and arrest the drum and stop the descent of whatever is attached to the rope. The drum ought besides this to have a spring applied to it, otherwise the jerk arising from the sudden stoppage of the rope might produce worse effects than its rapid motion.",
+      "titleKo": "원심 안전 갈고리",
+      "ko": "광산에서 일꾼과 광석 등을 올리고 내리는 기계가 부서졌을 때 사고를 막기 위한 원심 제동 갈고리이다. A는 광산 갱도 옆면에 고정된 틀로, 고정된 스터드 D가 붙어 있다. 밧줄을 감는 드럼에는 플랜지 B가 있고, 여기에 제동 갈고리가 붙어 있다. 드럼이 위험할 만큼 빠르게 움직이면 갈고리가 원심력으로 바깥으로 튀어 나가, 그중 하나 또는 몇 개 또는 전부가 스터드 D에 걸려 드럼을 붙잡고, 밧줄에 매달린 것의 하강을 멈춘다. 이 밖에 드럼에는 스프링도 달아야 한다. 그러지 않으면 밧줄이 갑자기 멈출 때 생기는 충격이 빠른 운동 자체보다 더 나쁜 결과를 낼 수 있다.",
+      "easy": "드럼이 너무 빨리 돌면 원심력으로 갈고리 세 개가 바깥으로 튀어 나가 벽의 기둥(스터드)에 걸린다. 그래서 밧줄이 끊기거나 풀려도 드럼이 멈추어 사람과 물건이 떨어지는 것을 막는다.",
+      "category": "governor",
+      "mech": "Large circular frame A (disc outline) with three fixed studs D (circles) near its inner edge; a central drum (hatched hub with a rope/belt coming down at the bottom) with flange B carrying three pivoted hooks (L-shaped arms with hooked ends, one at upper left, one right, one lower left). Driver = rope drum rotation; at too high a speed the hooks fly outward and catch the studs."
+    },
+    {
+      "n": 254,
+      "en": "A sprocket-wheel to drive or to be driven by a chain.",
+      "titleKo": "체인 스프로킷",
+      "ko": "체인으로 구동하거나 체인에 의해 구동되는 스프로킷 휠이다.",
+      "easy": "체인의 고리가 걸리는 홈이 줄지어 새겨진 바퀴이다. 바퀴가 돌면 체인이 따라 움직이고, 반대로 체인이 움직이면 바퀴가 돈다.",
+      "category": "belt",
+      "mech": "Sprocket wheel seen from the side: a vertical rectangular rim with chain-link-shaped notches (Y and arrow shapes) along it, hub flanges on a horizontal shaft extending left and right. Driver = shaft or chain."
+    },
+    {
+      "n": 255,
+      "en": "A flanged pulley to drive or be driven by a flat belt.",
+      "titleKo": "플랜지 풀리",
+      "ko": "평벨트로 구동하거나 평벨트에 의해 구동되는, 가장자리 턱(플랜지)이 있는 풀리이다.",
+      "easy": "양쪽 가장자리가 솟아 있어서 납작한 벨트가 옆으로 벗어나지 않는다. 벨트로 힘을 주고받는 가장 기본적인 풀리이다.",
+      "category": "belt",
+      "mech": "Pulley seen from the side: a narrow cylindrical drum with flat rim between two raised flanges (rim edges), hub collars on a horizontal shaft with ends extending left and right. Driver = shaft or flat belt."
+    },
+    {
+      "n": 256,
+      "en": "A plain pulley for a flat belt.",
+      "titleKo": "평 풀리",
+      "ko": "평벨트용 보통 풀리이다.",
+      "easy": "테두리가 평평하고 매끈한 원통형 풀리이다. 납작한 벨트가 마찰로 풀리를 돌린다.",
+      "category": "belt",
+      "mech": "Pulley: plain cylindrical drum, wide flat face, no flanges; hub collars on a horizontal shaft, shaft ends extend left and right. Driver = shaft or flat belt."
+    },
+    {
+      "n": 257,
+      "en": "A concave-grooved pulley for a round band.",
+      "titleKo": "둥근 홈 풀리",
+      "ko": "둥근 줄(밴드)을 거는, 오목한 홈이 있는 풀리이다.",
+      "easy": "둥글게 파인 홈에 둥근 끈이나 로프가 들어가 걸린다. 끈이 홈에서 벗어나지 않고 힘을 전한다.",
+      "category": "belt",
+      "mech": "Pulley: drum with a rounded concave groove around the middle (cross-section rim shows a semicircular channel), flanged edges; hub collars on a horizontal shaft. Driver = shaft or round band (cord)."
+    },
+    {
+      "n": 258,
+      "en": "A smooth-surface V-grooved pulley for a round band.",
+      "titleKo": "V홈 풀리",
+      "ko": "둥근 줄(밴드)을 거는, 표면이 매끄러운 V자 홈 풀리이다.",
+      "easy": "V자 모양으로 파인 홈에 줄이 끼어서 쐐기처럼 꽉 물리므로 미끄러지지 않고 힘이 전해진다.",
+      "category": "belt",
+      "mech": "Pulley: drum with a V-shaped groove around the circumference, smooth faces; hub collars on a horizontal shaft. Driver = shaft or band (round cord or V belt), wedge action."
+    },
+    {
+      "n": 259,
+      "en": "A V-grooved pulley having its groove notched to increase the adhesion of the band.",
+      "titleKo": "톱니 V홈 풀리",
+      "ko": "홈에 톱니 모양의 파임을 내어 밴드가 달라붙는 힘을 키운 V홈 풀리이다.",
+      "easy": "V홈의 면에 잔 홈을 새겨 놓아서 줄이 더 꽉 달라붙는다. 그래서 줄이 헛돌지 않는다.",
+      "category": "belt",
+      "mech": "Pulley: drum with a V-shaped groove whose walls carry fine herringbone (chevron) notches; hub collars on a horizontal shaft. Driver = shaft or band; high adhesion."
+    },
+    {
+      "n": 260,
+      "en": "A differential movement. The screw, C, works in a nut secured to the hub of the wheel, E, the nut being free to turn in a bearing in the shorter standard, but prevented by the bearing from any lateral motion. The screw-shaft is secured in the wheel, D. The driving-shaft, A, carries two pinions, F and B. If these pinions were of such size as to turn the two wheels, D and E, with an equal velocity, the screw would remain at rest; but the said wheels being driven at unequal velocities, the screw travels according to the difference of velocity.",
+      "titleKo": "차동 나사",
+      "ko": "차동 운동이다. 나사 C는 바퀴 E의 허브에 고정된 너트 속에서 움직이는데, 이 너트는 낮은 기둥(스탠더드)의 베어링 안에서 자유롭게 돌 수 있지만 베어링 때문에 옆으로는 전혀 움직이지 못한다. 나사 축은 바퀴 D에 고정되어 있다. 구동축 A는 피니언 F와 B를 달고 있다. 이 피니언들의 크기가 두 바퀴 D와 E를 같은 속도로 돌리게 되어 있다면 나사는 가만히 있을 것이다. 그러나 두 바퀴가 서로 다른 속도로 구동되면 나사는 속도의 차이에 따라 이동한다.",
+      "easy": "나사와 너트를 서로 조금 다른 속도로 돌리면 둘의 속도 차이만큼만 나사가 앞으로 나아간다. 그래서 아주 느리고 정밀하게 움직이게 할 수 있다.",
+      "category": "gear",
+      "mech": "Frame with two vertical standards (left tall, right short, with a bracket at the right) on a base; top drive shaft A–B with two pinions F (long wide pinion at left) and B (narrow pinion at right); lower screw shaft C passing through wheels D (large, left-center, fixed on screw shaft) and E (smaller, right, whose hub holds the nut). Driver = shaft A; D and E turn at slightly different speeds so screw C advances by the speed difference."
+    }
+  ]
+}

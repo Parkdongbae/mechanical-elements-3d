@@ -1,0 +1,227 @@
+{
+  "platePage": 15,
+  "textPage": 16,
+  "figures": [
+    {
+      "n": 11,
+      "box": [
+        0.1149,
+        0.2436,
+        0.3942,
+        0.4359
+      ]
+    },
+    {
+      "n": 12,
+      "box": [
+        0.3942,
+        0.2436,
+        0.5453,
+        0.4359
+      ]
+    },
+    {
+      "n": 13,
+      "box": [
+        0.5453,
+        0.2436,
+        0.6602,
+        0.4359
+      ]
+    },
+    {
+      "n": 14,
+      "box": [
+        0.6675,
+        0.2436,
+        0.9674,
+        0.4359
+      ]
+    },
+    {
+      "n": 15,
+      "box": [
+        0.1149,
+        0.4402,
+        0.3942,
+        0.6197
+      ]
+    },
+    {
+      "n": 16,
+      "box": [
+        0.4015,
+        0.4402,
+        0.6602,
+        0.6197
+      ]
+    },
+    {
+      "n": 17,
+      "box": [
+        0.6651,
+        0.4402,
+        0.8138,
+        0.6197
+      ]
+    },
+    {
+      "n": 18,
+      "box": [
+        0.8005,
+        0.4402,
+        0.9794,
+        0.6197
+      ]
+    },
+    {
+      "n": 19,
+      "box": [
+        0.1149,
+        0.6256,
+        0.3942,
+        0.812
+      ]
+    },
+    {
+      "n": 20,
+      "box": [
+        0.4015,
+        0.6256,
+        0.6602,
+        0.812
+      ]
+    },
+    {
+      "n": 21,
+      "box": [
+        0.6675,
+        0.6256,
+        0.7739,
+        0.812
+      ]
+    },
+    {
+      "n": 22,
+      "box": [
+        0.7739,
+        0.6256,
+        0.9794,
+        0.812
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 11,
+      "titleKo": "안내 풀리 없는 직각 전동",
+      "ko": "3과 같은 결과를 안내 풀리 없이 얻는 또 다른 방법이다.",
+      "easy": "벨트를 비스듬히 틀어 걸면 안내 풀리 없이도 서로 직각인 축 사이에 운동을 전할 수 있다.",
+      "category": "belt",
+      "mech": "Wide drum on horizontal shaft (top) and a pulley with perpendicular axis below; belt hangs between them in a quarter twist, no guide pulleys."
+    },
+    {
+      "n": 12,
+      "titleKo": "고정 도르래",
+      "ko": "무게를 들어 올리는 데 쓰는 단순한 도르래다. 이 경우 평형을 이루려면 힘이 무게와 같아야 한다.",
+      "easy": "고정된 도르래 하나는 힘의 방향만 바꾼다. 줄을 당기는 힘이 물건의 무게와 같아야 겨우 균형이 맞으므로 힘이 줄지는 않는다.",
+      "category": "belt",
+      "mech": "Single fixed pulley hung from a beam by a hook; rope with weight on one side, hand pulling the other. Force = weight, ratio 1:1."
+    },
+    {
+      "n": 13,
+      "titleKo": "움직도르래",
+      "ko": "이 경우 아래 도르래는 움직도르래다. 줄의 한쪽 끝이 고정되어 있으므로 다른 쪽 끝은 무게보다 두 배 빨리 움직여야 하고, 그에 따라 힘의 이득이 생긴다.",
+      "easy": "아래 도르래가 물건과 함께 움직이면 줄 한쪽이 천장에 매여 있어 힘이 절반으로 든다. 대신 줄은 물건이 올라가는 길이의 두 배를 당겨야 한다.",
+      "category": "belt",
+      "mech": "Fixed pulley on a beam (left) plus one movable pulley carrying the weight on a hook; one rope end fixed to the beam, the other passes over the fixed pulley. Advantage 2; rope speed = 2x weight speed."
+    },
+    {
+      "n": 14,
+      "titleKo": "복활차 (블록과 태클)",
+      "ko": "도르래 블록과 줄이다. 이 장치로 얻는 힘은 다음과 같이 계산한다. 무게를 아래 블록에 있는 도르래 수의 두 배로 나눈다. 그 몫이 무게와 균형을 이루는 데 필요한 힘이다.",
+      "easy": "위아래 도르래 묶음에 줄을 여러 번 감아 놓으면 줄 가닥 수만큼 힘을 아낄 수 있다. 줄 가닥이 많을수록 더 가벼운 힘으로 무거운 것을 든다.",
+      "category": "belt",
+      "mech": "Two multi-sheave blocks (upper fixed with hook, lower movable carrying a ball weight); one rope reeved through four sheaves each. Advantage = number of rope parts at the lower block."
+    },
+    {
+      "n": 15,
+      "enFix": [
+        {
+          "wrong": "proportioa",
+          "right": "proportion"
+        },
+        {
+          "wrong": "a'ncl",
+          "right": "and"
+        }
+      ],
+      "titleKo": "화이트 도르래",
+      "ko": "화이트 도르래라고 알려진 것을 나타낸다. 따로 떨어진 헐거운 도르래들로 만들 수도 있고, 한 덩어리 블록에 줄의 속도에 비례하는 지름으로 일련의 홈을 파서 만들 수도 있다. 즉 한 블록에는 1, 3, 5, 다른 블록에는 2, 4, 6에 해당하는 지름을 둔다. 힘의 비는 1 대 7이다.",
+      "easy": "한 덩어리 도르래 블록에 지름이 서로 다른 홈을 여러 개 파 두면, 한 줄로 여러 번 감을 수 있어 힘을 크게 줄일 수 있다. 홈의 지름은 줄이 움직이는 속도에 맞게 정한다.",
+      "category": "belt",
+      "mech": "Two large grooved drums (upper fixed with hook, lower movable with hook below), each one block with six stepped grooves; one rope laced between them, 7 parts at the lower block; advantage 1:7."
+    },
+    {
+      "n": 16,
+      "enStart": "Are what are known as",
+      "titleKo": "스페인 바턴 (1)",
+      "ko": "16과 17은 스페인 바턴이라고 알려진 것이다.",
+      "easy": "스페인 바턴은 줄과 여러 개의 도르래를 엮어 무거운 짐을 쉽게 들어 올리는 도르래 장치다. 움직도르래를 아래에 달고 줄을 여러 번 걸어 힘을 아낀다.",
+      "category": "belt",
+      "mech": "Rope tackle hung from a beam: two pulleys at different heights on hooks and one movable pulley carrying the weight; rope threaded between them. Advantage about 3-4."
+    },
+    {
+      "n": 17,
+      "enStart": "Are what are known as",
+      "titleKo": "스페인 바턴 (2)",
+      "ko": "16과 17은 스페인 바턴이라고 알려진 것이다.",
+      "easy": "16과 같은 종류의 도르래 장치지만 줄을 거는 순서가 조금 다르다. 위쪽 도르래 둘과 아래의 움직도르래 하나가 줄로 이어져 있다.",
+      "category": "belt",
+      "mech": "Variant of 16: two upper pulleys (one at the beam, one lower at right) and one movable pulley with the weight; rope runs between them and hangs free at right."
+    },
+    {
+      "n": 18,
+      "titleKo": "고정 둘·움직 하나 도르래",
+      "ko": "고정 도르래 둘과 움직도르래 하나를 결합한 것이다.",
+      "easy": "위에 고정 도르래 두 개, 아래에 무게를 단 움직도르래 한 개를 줄로 이었다. 움직도르래 덕분에 힘이 줄어든다.",
+      "category": "belt",
+      "mech": "Two fixed pulleys stacked vertically at the top and one small movable pulley with weight at the bottom; a single rope loops them."
+    },
+    {
+      "n": 19,
+      "titleKo": "도르래 배열 (19)",
+      "ko": "도르래를 여러 가지로 배열한 것이다. 다음 규칙이 적용된다. 각 도르래가 줄에 감싸이고 그 줄의 한쪽 끝은 고정점에, 다른 쪽 끝은 움직도르래의 중심에 매인 도르래 계에서는, 전체의 효과가 숫자 2를 그 계에 있는 움직도르래의 수만큼 거듭 곱한 값과 같다.",
+      "easy": "움직도르래를 하나 더 달 때마다 힘이 절반씩 더 줄어든다. 움직도르래가 3개이면 2를 세 번 곱한 8배의 이득이 생긴다.",
+      "category": "belt",
+      "mech": "Fixed pulley at top on a hook; three movable pulleys in cascade, each with its own rope, ropes ending at the weight bar below. Cascade: advantage 2^n."
+    },
+    {
+      "n": 20,
+      "enStart": "Are different arrangements of",
+      "titleKo": "도르래 배열 (20)",
+      "ko": "도르래를 여러 가지로 배열한 것이다. 다음 규칙이 적용된다. 각 도르래가 줄에 감싸이고 그 줄의 한쪽 끝은 고정점에, 다른 쪽 끝은 움직도르래의 중심에 매인 도르래 계에서는, 전체의 효과가 숫자 2를 그 계에 있는 움직도르래의 수만큼 거듭 곱한 값과 같다.",
+      "easy": "움직도르래를 하나 더 달 때마다 힘이 절반씩 더 줄어든다. 움직도르래가 3개이면 2를 세 번 곱한 8배의 이득이 생긴다.",
+      "category": "belt",
+      "mech": "Fixed pulley on top hook plus two further pulleys cascaded down-left; three vertical ropes drop to a heavy weight bar. Advantage 2^n."
+    },
+    {
+      "n": 21,
+      "enStart": "Are different arrangements of",
+      "titleKo": "도르래 배열 (21)",
+      "ko": "도르래를 여러 가지로 배열한 것이다. 다음 규칙이 적용된다. 각 도르래가 줄에 감싸이고 그 줄의 한쪽 끝은 고정점에, 다른 쪽 끝은 움직도르래의 중심에 매인 도르래 계에서는, 전체의 효과가 숫자 2를 그 계에 있는 움직도르래의 수만큼 거듭 곱한 값과 같다.",
+      "easy": "움직도르래가 하나뿐인 가장 간단한 배열이다. 그래서 힘은 절반으로 줄어든다. 줄 두 가닥이 무게를 받치고 있다.",
+      "category": "belt",
+      "mech": "Fixed pulley at top, one movable pulley at left; two ropes drop to the weight. One movable pulley, advantage 2."
+    },
+    {
+      "n": 22,
+      "enStart": "Are different arrangements of",
+      "titleKo": "도르래 배열 (22)",
+      "ko": "도르래를 여러 가지로 배열한 것이다. 다음 규칙이 적용된다. 각 도르래가 줄에 감싸이고 그 줄의 한쪽 끝은 고정점에, 다른 쪽 끝은 움직도르래의 중심에 매인 도르래 계에서는, 전체의 효과가 숫자 2를 그 계에 있는 움직도르래의 수만큼 거듭 곱한 값과 같다.",
+      "easy": "움직도르래를 하나 더 달 때마다 힘이 절반씩 더 줄어든다. 움직도르래가 3개이면 2를 세 번 곱한 8배의 이득이 생긴다.",
+      "category": "belt",
+      "mech": "Several movable pulleys stepped from upper right down to lower left, ropes from a top bar down to a weight block at the bottom; cascade, advantage 2^n."
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "platePage": 37,
+  "textPage": 38,
+  "figures": [
+    {
+      "n": 111,
+      "box": [
+        0.075,
+        0.259,
+        0.394,
+        0.438
+      ]
+    },
+    {
+      "n": 112,
+      "box": [
+        0.404,
+        0.259,
+        0.667,
+        0.438
+      ]
+    },
+    {
+      "n": 113,
+      "box": [
+        0.677,
+        0.259,
+        0.989,
+        0.438
+      ]
+    },
+    {
+      "n": 114,
+      "box": [
+        0.075,
+        0.445,
+        0.394,
+        0.623
+      ]
+    },
+    {
+      "n": 115,
+      "box": [
+        0.677,
+        0.445,
+        0.989,
+        0.623
+      ]
+    },
+    {
+      "n": 116,
+      "box": [
+        0.075,
+        0.63,
+        0.394,
+        0.803
+      ]
+    },
+    {
+      "n": 117,
+      "box": [
+        0.404,
+        0.445,
+        0.667,
+        0.803
+      ]
+    },
+    {
+      "n": 118,
+      "box": [
+        0.677,
+        0.63,
+        0.989,
+        0.803
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 111,
+      "enStart": "Micrometer screw. Great power",
+      "titleKo": "마이크로미터 나사",
+      "ko": "마이크로미터 나사이다. 이 장치로 큰 힘을 얻을 수 있다. 나사산의 피치(간격)가 서로 다르고 방향도 반대이기 때문에, 안쪽의 더 작은 나사에 맞춘 다이(틈새)나 너트는 바깥 속 빈 나사가 너트 안에서 한 바퀴 돌 때마다 두 피치의 차이만큼만 이동한다.",
+      "easy": "바깥 나사와 안쪽 나사의 간격을 조금 다르게 만들고 방향을 반대로 하면, 한 바퀴 돌려도 두 간격의 차이만큼만 움직인다. 그래서 아주 정밀하게 조금씩 이동시킬 수 있고 큰 힘도 낼 수 있다.",
+      "category": "tool",
+      "mech": "Hollow (outer) screw with coarse thread running in a nut, and a smaller inner screw threaded opposite hand with different pitch inside it; drawn as a single slanted threaded cylinder with double thread bands. Input = rotation of outer screw; output = inner nut advancing by the difference of the two pitches per revolution."
+    },
+    {
+      "n": 112,
+      "enStart": "Persian drill. The stock",
+      "titleKo": "페르시아식 드릴",
+      "ko": "페르시아 드릴이다. 드릴의 몸통(스톡)에는 아주 빠른 나사산이 파여 있어 위쪽 머리 부분에 받쳐진 채 자유롭게 돈다. 머리는 몸에 기대어 쉰다. 나사 중간에 있는 단추(너트)를 손으로 꼭 잡고 몸통 위아래로 재빨리 당기면 몸통이 오른쪽과 왼쪽으로 번갈아 돌게 된다.",
+      "easy": "급하게 감긴 나사산 위로 손잡이 너트를 위아래로 빠르게 밀고 당기면 드릴 축이 오른쪽, 왼쪽으로 번갈아 빙글빙글 돈다. 직선으로 오르내리는 손의 움직임이 드릴 회전이 된다.",
+      "category": "tool",
+      "mech": "Vertical drill stock with a very steep (quick) helical thread; knob/head at the top resting against the body (chest); a hand-held nut (button) on the thread; drill bit point at the bottom, with a flywheel disc near the lower end. Input = pushing the nut up and down; output = alternating rotation of the stock."
+    },
+    {
+      "n": 113,
+      "enStart": "Circular into rectilinear motion,",
+      "titleKo": "랙과 피니언",
+      "ko": "랙과 피니언으로 회전 운동을 직선 운동으로, 또는 그 반대로 바꾼다.",
+      "easy": "작은 톱니바퀴(피니언)가 돌면 맞물린 막대 모양의 톱니(랙)가 앞뒤로 움직인다. 거꾸로 랙을 밀면 피니언이 돈다. 회전과 직선 운동을 서로 바꾸는 가장 기본적인 방법이다.",
+      "category": "gear",
+      "mech": "Straight rack (horizontal bar with teeth facing down, two end rollers/guides) meshing from below with a spur pinion (about 12 teeth, shaft hatched). Input = pinion rotation; output = rack translation; speed = pinion pitch circumference per turn."
+    },
+    {
+      "n": 114,
+      "enStart": "Uniform circular motion into",
+      "titleKo": "결손 피니언과 이중 랙",
+      "ko": "결손 피니언(이가 일부 빠진 작은 기어)으로 일정한 회전 운동을 왕복 직선 운동으로 바꾼다. 이 피니언은 위쪽 랙과 아래쪽 랙을 번갈아 구동한다.",
+      "easy": "이가 일부만 있는 작은 기어가 위쪽 줄과 아래쪽 줄 톱니를 번갈아 밀기 때문에, 한 방향으로만 돌아도 틀이 앞뒤로 오간다.",
+      "category": "gear",
+      "mech": "Oblong frame (like a racetrack) with internal rack teeth on top and bottom sides and rod stubs at both ends; a mutilated spur pinion (teeth on part of rim) on a shaft inside, between the racks. Input = pinion rotation (uniform); output = frame reciprocating horizontally, switching direction when the pinion passes from one rack to the other."
+    },
+    {
+      "n": 115,
+      "enStart": "Rotary motion of the",
+      "titleKo": "두 바퀴로 움직이는 이중 랙",
+      "ko": "톱니바퀴의 회전 운동은 이중 랙의 직선 운동을 낳고, 양쪽에 같은 힘과 속도를 준다. 두 바퀴의 크기가 같아야 한다.",
+      "easy": "둘레에 톱니가 난 타원형 틀 안에 같은 크기의 톱니바퀴 두 개가 위아래로 맞물려 있다. 바퀴가 돌면 틀이 한쪽으로 움직이며 양쪽에 같은 힘과 속도를 준다.",
+      "category": "gear",
+      "mech": "Oblong rack frame with internal teeth top and bottom; two equal spur gears stacked vertically and meshing with each other, upper one engaging the top rack and lower one the bottom rack; small lugs at the frame ends. Input = rotation of the gears; output = frame translating with equal speed on both sides."
+    },
+    {
+      "n": 116,
+      "enStart": "A substitute for the crank.",
+      "titleKo": "크랭크 대신 쓰는 이중 랙",
+      "ko": "크랭크를 대신하는 장치이다. 이중 랙이 달린 틀이 왕복 직선 운동을 하면 피니언 축이 일정한 회전 운동을 한다. 각 랙마다 따로 피니언이 하나씩 쓰이며, 두 랙은 서로 다른 평면에 있다. 두 피니언은 축 위에서 헐겁게 돌고, 각 피니언 바깥쪽의 축에는 래칫 바퀴가 고정되어 있으며 피니언에는 거기에 걸리는 폴이 붙어 있다. 한 래칫 바퀴의 톱니는 한 방향으로, 다른 래칫 바퀴의 톱니는 반대 방향으로 나 있다. 랙들이 한쪽으로 움직이면 한 피니언이 폴과 래칫으로 축을 돌리고, 반대쪽으로 움직이면 다른 피니언이 같은 방향으로 축을 돌린다. 이때 한 피니언은 늘 축 위에서 헐겁게 돈다.",
+      "easy": "틀이 앞뒤로 왕복하면 두 피니언이 번갈아 래칫으로 축을 걸어 돌린다. 어느 쪽으로 움직여도 축은 같은 방향으로 계속 돈다. 왕복 운동이 연속 회전이 되는 크랭크의 대용품이다.",
+      "category": "gear",
+      "mech": "Oblong frame with internal rack teeth on both long sides; pinion with shaft and hub at its centre (drawn as one visible gear); a second pinion on the same shaft in another plane (hidden), each with pawl and ratchet wheel on the shaft. Input = frame reciprocating; output = shaft rotating one way only."
+    },
+    {
+      "n": 117,
+      "enStart": "A cam acting between two",
+      "titleKo": "요크 안의 캠과 롤러",
+      "ko": "요크 안에서 두 마찰 롤러 사이에 작용하는 캠이다. 증기 기관의 밸브를 움직이는 데 쓰인 적이 있다.",
+      "easy": "둥근 모양이 아닌 큰 캠이 돌면서 위아래 두 개의 롤러를 번갈아 밀어, 롤러를 단 틀(요크)이 위아래로 왕복한다. 증기 기관 밸브를 움직이는 데 쓰였다.",
+      "category": "cam",
+      "mech": "Vertical rod (valve stem) with a rectangular yoke frame made of two end plates and two side rods; two small rollers at top and bottom plates; large irregular (egg-shaped) cam on a horizontal shaft (hatched circle) rotating between the rollers; disc at the lower end. Input = cam rotation; output = yoke reciprocating vertically."
+    },
+    {
+      "n": 118,
+      "enStart": "A mode of doubling the",
+      "titleKo": "행정을 두 배로 늘리기",
+      "ko": "피스톤 막대의 행정(움직이는 거리)이나 크랭크의 회전 반지름을 두 배로 늘리는 방법이다. 연결 막대(피트먼)에 붙은 축에서 도는 피니언이 고정 랙과 맞물려 있다. 피니언의 반대쪽에는 위쪽 안내봉에 실려 앞뒤로 자유롭게 움직이는 또 다른 랙이 맞물린다. 연결 막대는 피니언에 행정 전체를 전달하므로, 아래쪽 랙도 움직일 수 있다면 위쪽 랙도 같은 거리만 움직일 것이다. 그러나 아래쪽은 고정되어 있기 때문에 피니언이 회전하게 되고, 그 결과 위쪽 랙은 두 배의 거리를 움직인다.",
+      "easy": "아래 랙은 고정되어 있고 위 랙은 움직일 수 있다. 가운데 피니언을 앞으로 밀면 아래 랙 위를 굴러가면서 위 랙을 두 배로 멀리 밀어 낸다. 짧은 움직임을 두 배로 늘려 주는 장치이다.",
+      "category": "gear",
+      "mech": "Fixed lower rack (long toothed bar with oval slots, bottom); movable upper rack (long straight bar, top) guided horizontally; pinion between them on a spindle, with a pivoting arm/connecting rod attached to the spindle. Input = pinion spindle moves with speed v; output = upper rack moves 2v."
+    }
+  ]
+}

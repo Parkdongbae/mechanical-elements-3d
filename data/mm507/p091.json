@@ -1,0 +1,170 @@
+{
+  "platePage": 91,
+  "textPage": 92,
+  "figures": [
+    {
+      "n": 349,
+      "box": [
+        0.058,
+        0.2034,
+        0.3785,
+        0.4222
+      ]
+    },
+    {
+      "n": 350,
+      "box": [
+        0.3833,
+        0.2034,
+        0.6481,
+        0.4222
+      ]
+    },
+    {
+      "n": 351,
+      "box": [
+        0.653,
+        0.2034,
+        0.9746,
+        0.4222
+      ]
+    },
+    {
+      "n": 352,
+      "box": [
+        0.058,
+        0.4265,
+        0.3785,
+        0.6094
+      ]
+    },
+    {
+      "n": 353,
+      "box": [
+        0.3833,
+        0.4265,
+        0.6481,
+        0.6094
+      ]
+    },
+    {
+      "n": 354,
+      "box": [
+        0.653,
+        0.4265,
+        0.9746,
+        0.6094
+      ]
+    },
+    {
+      "n": 355,
+      "box": [
+        0.058,
+        0.6137,
+        0.3785,
+        0.8051
+      ]
+    },
+    {
+      "n": 356,
+      "box": [
+        0.3833,
+        0.6137,
+        0.6481,
+        0.8051
+      ]
+    },
+    {
+      "n": 357,
+      "box": [
+        0.653,
+        0.6137,
+        0.9746,
+        0.8051
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 349,
+      "en": "Another form of parallel ruler. The arms are jointed in the middle and connected with an intermediate bar, by which means the ends of the ruler, as well as the sides, are kept parallel.",
+      "titleKo": "가운데 막대 평행자",
+      "ko": "평행자의 또 다른 형태이다. 팔들은 가운데에서 관절로 이어지고 중간 막대와 연결되어 있어서, 자의 양 끝은 물론 변도 평행하게 유지된다.",
+      "easy": "꺾인 두 팔이 가운데에서 접히고 펴지면서 위아래 자를 벌렸다 오므린다. 가운데 막대가 함께 움직여서 자의 끝과 변이 늘 평행을 유지한다.",
+      "category": "crank",
+      "mech": "Two wide parallel bars (top and bottom, each about 4:1) and a thin intermediate bar between them with a pointed end at the left; two zigzag (V-shaped) arms jointed in the middle, each pivoted to the top bar, the middle bar, and the bottom bar (circles). Input: pulling/pushing the bars apart; output: bars stay parallel while moving."
+    },
+    {
+      "n": 350,
+      "en": "Traverse or to-and-fro motion. The pin in the upper slot being stationary, and the one in the lower slot made to move in the direction of the horizontal dotted line, the lever will by its connection with the bar give to the latter a traversing motion in its guides, a, a.",
+      "titleKo": "홈 레버 왕복 운동",
+      "ko": "가로 방향의 왕복 운동이다. 위쪽 홈의 핀은 움직이지 않게 고정하고, 아래쪽 홈의 핀을 수평 점선 방향으로 움직이게 하면, 레버는 막대와의 연결을 통해 막대에 안내 a, a 안에서 가로로 왕복하는 운동을 준다.",
+      "easy": "두 홈이 있는 막대 레버에서 위쪽 핀은 고정하고 아래쪽 핀을 옆으로 밀면 레버가 기울어지며 아래 가로 막대를 좌우로 움직인다.",
+      "category": "crank",
+      "mech": "Tilted lever (long bar with elongated slots at both ends and a pivot ring in the middle, inclined about 30 deg) connected to a horizontal bar that slides in guides a, a at the left and right ends; dotted lines show a rectangle path. Input: lower pin moving horizontally; output: bar traverses in a straight line."
+    },
+    {
+      "n": 351,
+      "en": "Stamp. Vertical percussive falls derived from horizontal rotating shaft. The mutilated toothed pinion acts upon the rack to raise the rod until its teeth leave the rack and allow the rod to fall.",
+      "titleKo": "톱니 빠진 피니언 스탬프",
+      "ko": "스탬프(찍개)이다. 가로로 도는 축에서 세로로 떨어지며 때리는 운동을 얻는다. 일부 이가 빠진 피니언이 랙을 밀어 막대를 들어 올리다가, 이가 랙에서 벗어나면 막대가 떨어지도록 한다.",
+      "easy": "이가 일부만 있는 톱니바퀴가 돌면서 톱니 막대를 위로 끌어 올린다. 이가 끝나는 순간 막대가 중력으로 뚝 떨어져 아래를 내리친다. 광석을 부수는 스탬프 등에 쓰인다.",
+      "category": "ratchet",
+      "mech": "Vertical rod (stamp) with a straight rack along the upper part and a heavy head (tapered tool) at the bottom; to the right a small pinion on a horizontal shaft with only a few teeth around part of its circumference (mutilated pinion, round with a hub). Input: continuous rotation of the shaft; output: rod raised then dropped (intermittent). Rack length about 2x pinion diameter."
+    },
+    {
+      "n": 352,
+      "en": "Another arrangement of the Chinese windlass illustrated by 129 of this table.",
+      "titleKo": "중국식 윈들러스(다른 배열)",
+      "ko": "이 표의 129에 나타낸 중국식 윈들러스의 다른 배열이다.",
+      "easy": "굵기가 다른 두 부분의 축에 줄을 반대로 감아, 한 바퀴 돌릴 때 줄이 조금씩만 감기게 하는 윈들러스이다. 도르래에 걸린 추를 아주 큰 힘으로 천천히 끌어올릴 수 있다.",
+      "category": "tool",
+      "mech": "A-frame tripod (two inclined legs joined at the top ring); horizontal axle through the legs with a crank handle at left and two drums of different diameters (left thicker with rope coils, right thinner); chains from the two drums run up and over the top pulleys and down to a movable pulley block carrying a bell-shaped weight. Input: crank turn; output: slow raising of the load (differential windlass). Drum diameter ratio about 1.3:1."
+    },
+    {
+      "n": 353,
+      "en": "A modification of the tilt or trip hammer, illustrated by 7[?]. In this the hammer helve is a lever of the first order. In 74 it is a lever of the third order.",
+      "titleKo": "변형된 기울임(트립) 해머",
+      "ko": "기울임(틸트) 해머 또는 트립 해머를 변형한 것으로, 7[?]에 나와 있다. 여기서는 해머 자루가 제1종 지레이다. 74에서는 제3종 지레이다.",
+      "easy": "회전하는 축의 돌기(캠)가 해머 자루의 한쪽 끝을 눌렀다 놓으면 해머가 들렸다가 떨어진다. 이 그림에서는 자루 가운데의 받침점이 해머와 눌리는 끝 사이에 있는 제1종 지레이다.",
+      "category": "cam",
+      "mech": "Anvil block at lower left; hammer (head on a long helve/lever with a round central fulcrum pivot) pivoted in a bracket; at right a rotating star-shaped cam/wheel with 4-6 projecting teeth on a post with an arrow showing rotation, whose teeth press the tail of the helve. Input: cam rotation; output: hammer lifted and dropped (first-class lever). Helve length about 1.8x cam diameter."
+    },
+    {
+      "n": 354,
+      "en": "A modification of the crank and slotted cross-head, 93. The cross-head contains an endless groove in which the crank-wrist works, and which is formed to produce a uniform velocity of movement of the wrist or reciprocating-rod.",
+      "titleKo": "끝없는 홈 십자머리",
+      "ko": "93의 크랭크와 홈 있는 십자머리를 변형한 것이다. 십자머리에는 끝이 없는 홈이 있어서 그 안에서 크랭크 손목이 움직이는데, 이 홈은 손목 또는 왕복 막대가 일정한 속도로 움직이도록 만들어져 있다.",
+      "easy": "십자머리의 둥근 홈 안을 크랭크 핀이 따라 돌면 십자머리는 위아래로 움직인다. 홈의 모양을 알맞게 하면 왕복 막대의 속도를 일정하게 만들 수 있다.",
+      "category": "crank",
+      "mech": "Rectangular cross-head frame (rounded rectangle with 'ear' lobes at top, bolt-through at the top and bottom axes) containing a big circular endless groove (ring track, ~0.8 of the frame width) with dotted construction lines crossing at the center. Input: crank wrist moving in the groove; output: cross-head vertical reciprocation with near-uniform velocity."
+    },
+    {
+      "n": 355,
+      "en": "The gyroscope or rotascope, an instrument illustrating the tendency of rotating bodies to preserve their plane of rotation. The spindle of the metallic disk, C, is fitted to turn easily in bearings in the ring, A. If the disk is set in rapid rotary motion on its axis, and the pintle, F, at one side of the ring, A, is placed on the bearing in the top of the pillar, G, the disk and ring seem indifferent to gravity, and instead of dropping begin to revolve about the vertical axis.",
+      "titleKo": "자이로스코프",
+      "ko": "회전하는 물체가 자신의 회전면을 유지하려는 성질을 보여 주는 기구인 자이로스코프(로타스코프)이다. 금속 원판 C의 축은 고리 A의 베어링 안에서 쉽게 돌도록 되어 있다. 원판을 축 둘레로 빠르게 돌려 놓고, 고리 A 한쪽의 핀 F를 기둥 G 꼭대기의 받침에 올려 놓으면, 원판과 고리는 중력에 아랑곳하지 않는 듯 아래로 떨어지지 않고 세로 축을 중심으로 돌기 시작한다.",
+      "easy": "빠르게 도는 팽이 같은 원판이 고리 안에 들어 있다. 한쪽 끝만 받침대에 올려놓아도 쓰러지지 않고 받침대를 중심으로 천천히 빙글 돈다. 자이로스코프의 신기한 성질이다.",
+      "category": "misc",
+      "mech": "Thick disc C (flywheel with a conical hub on a spindle) mounted in a vertical ring A (hoop, about 1.4x disc diameter) with bearings; a bent arm with a pintle F at the left of the ring resting on the top bearing of a slender pillar G on a conical base; small knob/handle at the right end of the spindle. Input: rapid disc spin; output: precession about the vertical pillar axis. Ring outer diameter about 0.5 of the pillar height."
+    },
+    {
+      "n": 356,
+      "en": "Bohnenberger's machine illustrating the same tendency of rotating bodies. This consists of three rings, A, A', A2, placed one within the other and connected by pivots at right angles to each other. The smallest ring, A2, contains the bearings for the axis of a heavy ball, B. The ball being set in rapid rotation, its axis will continue in the same direction, no matter how the position of the rings may be altered ; and the ring, A2, which supports it will resist a considerable pressure tending to displace it.",
+      "titleKo": "보넨베르거의 기계",
+      "ko": "회전하는 물체의 같은 성질을 보여 주는 보넨베르거의 기계이다. 세 개의 고리 A, A', A2가 하나씩 안에 들어 있고, 서로 직각으로 놓인 핀으로 연결되어 있다. 가장 작은 고리 A2에는 무거운 공 B의 축을 받는 베어링이 들어 있다. 공을 빠르게 돌려 놓으면, 고리들의 위치를 어떻게 바꾸어도 공의 축은 같은 방향을 계속 가리키며, 공을 받치는 고리 A2는 그것을 밀어내려는 상당한 힘에도 버틴다.",
+      "easy": "바깥 고리, 가운데 고리, 안쪽 고리가 서로 다른 방향으로 돌 수 있게 이어져 있다. 안쪽에서 무거운 공을 빠르게 돌리면 틀을 아무리 기울여도 공의 축이 같은 방향을 가리킨다. 자이로스코프의 원리이다.",
+      "category": "misc",
+      "mech": "Three nested gimbal rings A (outer, fixed on a baluster stand), A' (middle) and A2 (inner) pivoted at right angles; heavy sphere B mounted inside A2 on its axle. Base: turned pedestal. Input: fast spin of the ball B; output: its axis stays fixed in space as rings rotate. Outer ring diameter about 1.0 of the cell width; ball diameter about 0.35 of A."
+    },
+    {
+      "n": 357,
+      "en": "What is called the gyroscope governor, for steam engines, etc., patented by Alban Anderson in 1858. A is a heavy wheel, the axle, B, B', of which is made in two pieces connected together by a universal joint. The wheel, A, is on one piece, B, and a pinion, I, on the other piece, B'. The piece, B, is connected at its middle by a hinge joint with the revolving frame, H, so that variations in the inclination of the wheel, A, will cause the outer end of the piece, B, to rise and fall. The frame, H, is driven by bevel gearing from the engine, and by that means the pinion, I, is carried round the stationary toothed circle, G, and the wheel, A, is thus made to receive a rapid rotary motion on its axis. When the frame, H, and wheel, A, are in motion, the tendency of A, is to assume a vertical position, but this tendency is opposed by a spring, L. The greater the velocity of the governor, the stronger is the tendency above mentioned, and the more it overcomes the force of the spring, and vice versa. The piece, B, is connected with the valve-rod by rods, C, D, and the spring, L, is connected with the said rod by levers, N, and rod, P.",
+      "titleKo": "자이로스코프 조속기",
+      "ko": "증기 기관 등에 쓰이는 자이로스코프 조속기로, 1858년에 앨번 앤더슨이 특허를 냈다. A는 무거운 바퀴이고, 그 축 B, B'는 두 조각으로 이루어져 만능 이음(유니버설 조인트)으로 연결되어 있다. 바퀴 A는 한 조각 B에, 피니언 I는 다른 조각 B'에 붙어 있다. B 조각은 가운데에서 회전하는 틀 H와 경첩으로 연결되어 있어서, 바퀴 A의 기울기가 달라지면 B 조각의 바깥쪽 끝이 오르내린다. 틀 H는 기관에서 베벨 기어로 구동되고, 그에 따라 피니언 I는 고정된 톱니 원 G를 따라 돌아가며, 바퀴 A는 자기 축에서 빠른 회전을 하게 된다. 틀 H와 바퀴 A가 움직일 때 A는 수직 위치를 취하려는 경향이 있는데, 이 경향은 스프링 L이 막는다. 조속기의 속도가 클수록 위의 경향이 더 강해져 스프링의 힘을 더 이기고, 속도가 작으면 그 반대이다. B 조각은 막대 C, D로 밸브 막대에 연결되고, 스프링 L은 레버 N과 막대 P로 그 막대에 연결된다.",
+      "easy": "기관이 빨리 돌수록 안의 무거운 바퀴가 더 세게 일어서려 하고, 이 힘이 스프링을 이겨 밸브 막대를 움직여 증기를 줄인다. 기관이 느려지면 반대로 증기가 늘어난다. 자이로스코프의 성질로 기관의 속도를 일정하게 유지한다.",
+      "category": "governor",
+      "mech": "Bell-shaped frame H revolving about a vertical axis (stand with a belt pulley/bevel gearing at the bottom right, pinion circle G stationary round the frame); inside it a heavy wheel A (cylinder/disc, drawn dark and inclined) on axle B-B' with a universal joint; pinion I meshing with fixed toothed circle G; hinge at the middle of B to H; rods C, D from the top to the valve rod; spring L with lever N and rod P at upper left. Input: engine drives H; output: the tilt of A moves the valve rod (steam regulation)."
+    }
+  ]
+}

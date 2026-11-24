@@ -1093,3 +1093,56 @@
     transition: none;
   }
 }
+
+/* ───────── 하부 보기 ───────── */
+
+.wind-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: 4px;
+}
+
+.wind-item-head .wind-item-name {
+  margin-bottom: 0;
+}
+
+.wind-under-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 2px solid var(--cat-joining);
+  border-radius: var(--radius-m);
+  background: color-mix(in srgb, var(--cat-joining) 12%, var(--panel-solid));
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* 아래에서 올려다보는 눈 모양 표시 */
+.wind-under-btn::before {
+  content: '';
+  width: 14px;
+  height: 8px;
+  border: 2px solid var(--cat-joining);
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+}
+
+.wind-under-btn[aria-pressed='true'] {
+  background: var(--cat-joining);
+  color: #fff;
+}
+
+.wind-under-btn[aria-pressed='true']::before {
+  border-color: #fff;
+}
+
+.wind-under-sm {
+  padding: 0 10px;
+  font-size: 12.5px;
+}

@@ -1,0 +1,152 @@
+{
+  "platePage": 53,
+  "textPage": 54,
+  "figures": [
+    {
+      "n": 181,
+      "box": [
+        0.1374,
+        0.2036,
+        0.3967,
+        0.4219
+      ]
+    },
+    {
+      "n": 182,
+      "box": [
+        0.4033,
+        0.2036,
+        0.6659,
+        0.4219
+      ]
+    },
+    {
+      "n": 183,
+      "box": [
+        0.6725,
+        0.2036,
+        0.9714,
+        0.4219
+      ]
+    },
+    {
+      "n": 184,
+      "box": [
+        0.1374,
+        0.4258,
+        0.3967,
+        0.6115
+      ]
+    },
+    {
+      "n": 185,
+      "box": [
+        0.4033,
+        0.4258,
+        0.9714,
+        0.6115
+      ]
+    },
+    {
+      "n": 186,
+      "box": [
+        0.1374,
+        0.6154,
+        0.3967,
+        0.8174
+      ]
+    },
+    {
+      "n": 187,
+      "box": [
+        0.4033,
+        0.6154,
+        0.6659,
+        0.8174
+      ]
+    },
+    {
+      "n": 188,
+      "box": [
+        0.6725,
+        0.6154,
+        0.9714,
+        0.8174
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 181,
+      "en": "Diagonal catch or hand-gear used in large blowing and pumping engines. In 181 the lower steam-valve and upper eduction-valve are open, while the upper steam-valve and lower eduction-valve are shut; consequently the piston will be ascending. In the ascent of the piston-rod the lower handle will be struck by the projecting tappet, and, being raised, will become engaged by the catch and shut the upper eduction and lower steam valves; at the same time, the upper handle being disengaged from the catch, the back weight will pull the handle up and open the upper steam and lower eduction valves, when the piston will consequently descend.",
+      "titleKo": "비스듬한 걸쇠 밸브 장치 1",
+      "ko": "큰 송풍 기관과 펌프 기관에 쓰이는 비스듬한 걸쇠, 곧 손잡이 장치이다. 181에서는 아래쪽 증기 밸브와 위쪽 배기(에덕션) 밸브가 열려 있고 위쪽 증기 밸브와 아래쪽 배기 밸브는 닫혀 있어서 피스톤이 올라간다. 피스톤 막대가 올라갈 때 튀어나온 태핏이 아래 손잡이를 치면, 손잡이가 올라가면서 걸쇠에 걸려 위쪽 배기 밸브와 아래쪽 증기 밸브를 닫는다. 동시에 위 손잡이는 걸쇠에서 풀려, 뒤쪽의 추가 그 손잡이를 끌어올려 위쪽 증기 밸브와 아래쪽 배기 밸브를 열고, 그러면 피스톤은 내려가게 된다.",
+      "easy": "피스톤 막대에 달린 돌기(태핏)가 손잡이를 치면 걸쇠가 걸리고 풀리면서 증기 밸브와 배기 밸브가 한꺼번에 열리고 닫힌다. 그래서 피스톤이 위로 갔다 아래로 갔다 한다.",
+      "category": "steam",
+      "mech": "Vertical piston-rod bar at left with projecting tappets (rectangular blocks); two handles (curved hand-levers) at left; two diagonal catches/rockers on pivots (hatched eyes) with curved arms; vertical valve rods at right linked to the rocker arms. State shown: lower steam valve and upper eduction valve open. Driver = piston rod moving up/down, tappets flip the handles."
+    },
+    {
+      "n": 182,
+      "en": "[Shared with 181: Diagonal catch or hand-gear used in large blowing and pumping engines.] 182 represents the position of the catchers and handles when the piston is at the top of the cylinder. In going down, the tappet of the piston-rod strikes the upper handle and throws the catches and handles to the position shown in 181.",
+      "titleKo": "비스듬한 걸쇠 밸브 장치 2",
+      "ko": "182는 피스톤이 실린더 맨 위에 있을 때 걸쇠와 손잡이의 위치를 나타낸다. 내려가는 동안에는 피스톤 막대의 태핏이 위 손잡이를 쳐서 걸쇠와 손잡이를 181에 나타난 위치로 던져 보낸다. (181과 같은 문단에서 설명한다.)",
+      "easy": "피스톤이 맨 위에 도착하면 피스톤 막대의 돌기가 위 손잡이를 쳐서 걸쇠가 반대 위치로 휙 넘어간다. 이 순간 밸브들이 바뀌어 피스톤이 내려가기 시작한다.",
+      "category": "steam",
+      "mech": "Same arrangement as 181 with the catches/rockers in the opposite position (piston at top of cylinder); upper handle struck by the tappet on the piston rod during the descent. Driver = piston rod; handles toggle the valves at each end of stroke."
+    },
+    {
+      "n": 183,
+      "en": "183 and 184 represent a modification of 181 and 182, the diagonal catches being superseded by two quadrants.",
+      "titleKo": "사분원 걸쇠 장치 1",
+      "ko": "183과 184는 181과 182의 변형으로, 비스듬한 걸쇠 대신 두 개의 사분원(부채꼴 부품)을 쓴다.",
+      "easy": "앞의 장치에서 비스듬한 걸쇠를 사분원 모양의 부품 두 개로 바꾼 것이다. 하는 일은 같아서 피스톤 막대의 돌기가 손잡이를 치면 밸브가 바뀐다.",
+      "category": "steam",
+      "mech": "Vertical piston rod at left with tappet block; handle at left; two pivoted quadrant (fan-shaped) plates replacing the diagonal catches, one above the other around hatched eyes; valve rod at right linked to the top of the quadrants. Driver = piston rod tappets."
+    },
+    {
+      "n": 184,
+      "en": "183 and 184 represent a modification of 181 and 182, the diagonal catches being superseded by two quadrants.",
+      "titleKo": "사분원 걸쇠 장치 2",
+      "ko": "183과 184는 181과 182의 변형으로, 비스듬한 걸쇠 대신 두 개의 사분원(부채꼴 부품)을 쓴다.",
+      "easy": "183과 같은 장치가 반대 위치에 있는 모습이다. 사분원 두 개가 손잡이와 태핏에 의해 번갈아 걸리면서 밸브를 열고 닫는다.",
+      "category": "steam",
+      "mech": "Same as 183 in the alternate position: upper and lower quadrants on pivots at the right of the piston-rod bar; handle at upper left; thin rod running down to the right. Driver = piston rod tappets."
+    },
+    {
+      "n": 185,
+      "en": "Link-motion valve-gear of a locomotive. Two eccentrics are used for one valve, one for the forward and the other for the backward movement of the engine. The extremities of the eccentric-rods are jointed to a curved slotted bar, or, as it is termed, a link, which can be raised or lowered by an arrangement of levers terminating in a handle as shown. In the slot of the link is a slide and pin connected with an arrangement of levers terminating at the valve-stem. The link, in moving with the action of the eccentrics, carries with it the slide, and thence motion is communicated to the valve. Suppose the link raised so that the slide is in the middle, then the link will oscillate on the pin of the slide, and consequently the valve will be at rest. If the link is moved so that the slide is at one of its extremities, the whole throw of the eccentric connected with that extremity will be given to it, and the valve and steam-ports will be opened to the full, and it will only be toward the end of the stroke that they will be totally shut, consequently the steam will have been admitted to the cylinder during almost the entire length of each stroke. But if the slide is between the middle and the extremity of the slot, as shown in the figure, it receives only a part of the throw of the eccentric, and the steam-ports will only be partially opened, and are quickly closed again, so that the admission of steam ceases some time before the termination of the stroke, and the steam is worked expansively. The nearer the slide is to the middle of the slot the greater will be the expansion, and vice versa.",
+      "titleKo": "기관차 링크 밸브 장치",
+      "ko": "기관차의 링크 운동 밸브 장치이다. 한 개의 밸브에 편심 두 개를 쓰는데, 하나는 기관의 전진용, 다른 하나는 후진용이다. 편심 막대의 끝은 굽은 홈 막대, 곧 링크에 연결되며, 이 링크는 그림처럼 손잡이로 끝나는 레버 장치로 올리거나 내릴 수 있다. 링크의 홈 안에는 슬라이드와 핀이 있고, 이것은 밸브 막대(밸브 스템)로 끝나는 레버 장치에 연결되어 있다. 링크는 편심의 작용에 따라 움직이면서 슬라이드를 함께 움직이고, 그 운동이 밸브로 전해진다. 링크를 올려서 슬라이드가 한가운데에 오게 하면 링크가 슬라이드의 핀 둘레에서 흔들리기만 하므로 밸브는 정지한다. 링크를 움직여 슬라이드가 한쪽 끝에 오게 하면 그 끝에 연결된 편심의 행정 전체가 슬라이드에 전해져 밸브와 증기구가 완전히 열리고, 행정의 거의 끝에 가서야 완전히 닫힌다. 그래서 증기는 매 행정의 거의 전체 길이 동안 실린더로 들어간다. 그러나 그림처럼 슬라이드가 가운데와 끝 사이에 있으면 편심 행정의 일부만 전해져서 증기구가 일부만 열렸다가 빨리 닫히므로, 행정이 끝나기 얼마 전에 증기 공급이 멈추고 증기는 팽창하며 일을 한다. 슬라이드가 홈의 가운데에 가까울수록 팽창이 커지고, 그 반대도 마찬가지이다.",
+      "easy": "편심 두 개가 링크를 흔들고, 링크 속 슬라이드의 위치에 따라 밸브가 움직이는 폭이 달라진다. 가운데에 두면 밸브가 멈추고, 한쪽 끝에 두면 증기가 많이 들어오며 앞으로 또는 뒤로 간다. 기관차의 전진·후진과 속도 조절에 쓰인다.",
+      "category": "steam",
+      "mech": "Left: cylinder/valve chest block with a rocking lever (handle at top left) and curved handle arc; right: large shaft with two eccentrics (hatched crank hub) and two long eccentric rods ending in a curved slotted link (middle right, with pins at both ends); link raised/lowered by a lever arrangement from the handle; slide-block in the link slot connected by levers to the valve stem going left. Driver = shaft rotation; slide position in link selects valve travel/direction."
+    },
+    {
+      "n": 186,
+      "en": "Apparatus for disengaging the eccentric-rod from the valve-gear. By pulling up the spring handle below until it catches in the notch, a, the pin is disengaged from the gab in the eccentric-rod.",
+      "titleKo": "편심 막대 분리 장치",
+      "ko": "편심 막대를 밸브 장치에서 떼어 내는 장치이다. 아래의 스프링 손잡이를 잡아 올려 노치 a에 걸리게 하면, 핀이 편심 막대의 갭(홈)에서 빠져나와 분리된다.",
+      "easy": "스프링이 달린 손잡이를 위로 당겨 홈에 걸어 놓으면 핀이 막대의 홈에서 빠진다. 그러면 편심 막대가 밸브 장치와 분리되어 더 이상 밸브를 움직이지 못한다.",
+      "category": "steam",
+      "mech": "Eccentric-rod (horizontal bar with a forked end, 'gab') at left with a pivot pin; a spring-latch handle (curved loop pointing downward) mounted on the rod, notch labelled a at the right; crank/eccentric arm with hatched eye at the top. Driver = hand pulling the spring handle up to the notch a; pin lifts out of the gab (uncoupling)."
+    },
+    {
+      "n": 187,
+      "en": "Modifications of 186.",
+      "titleKo": "분리 장치 변형 1",
+      "ko": "186의 변형이다.",
+      "easy": "186과 같은 원리로, 손잡이 모양만 다른 형태이다. 스프링 손잡이를 눌러 핀을 편심 막대에서 빼낸다.",
+      "category": "steam",
+      "mech": "Eccentric-rod bar (horizontal) with a gab, pivoted latch with a squeeze (spring) handle at right, pin at the top connected to a small hatched eye. Same function as 186: handle lifts the pin out of the gab."
+    },
+    {
+      "n": 188,
+      "en": "Modifications of 186.",
+      "titleKo": "분리 장치 변형 2",
+      "ko": "186의 변형이다.",
+      "easy": "186의 손잡이를 길고 둥글게 휘어진 모양으로 바꾼 것이다. 이 손잡이를 당기면 핀이 편심 막대에서 빠진다.",
+      "category": "steam",
+      "mech": "Horizontal bar at the lower right with a gab and a roller/pin at its end; a long curved wire-like loop handle (angle a marked) pivoted at the bar and bent upward and over; Driver = pulling the handle; pin releases from the gab."
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "platePage": 27,
+  "textPage": 28,
+  "figures": [
+    {
+      "n": 69,
+      "box": [
+        0.1209,
+        0.2436,
+        0.3773,
+        0.4316
+      ]
+    },
+    {
+      "n": 70,
+      "box": [
+        0.3773,
+        0.2436,
+        0.6711,
+        0.4316
+      ]
+    },
+    {
+      "n": 71,
+      "box": [
+        0.6771,
+        0.2436,
+        0.9794,
+        0.4316
+      ]
+    },
+    {
+      "n": 72,
+      "box": [
+        0.1209,
+        0.4376,
+        0.6711,
+        0.6171
+      ]
+    },
+    {
+      "n": 73,
+      "box": [
+        0.6771,
+        0.4376,
+        0.9794,
+        0.6171
+      ]
+    },
+    {
+      "n": 74,
+      "box": [
+        0.1209,
+        0.6239,
+        0.4002,
+        0.8077
+      ]
+    },
+    {
+      "n": 75,
+      "box": [
+        0.4063,
+        0.6239,
+        0.6711,
+        0.8077
+      ]
+    },
+    {
+      "n": 76,
+      "box": [
+        0.6771,
+        0.6239,
+        0.9794,
+        0.8077
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 69,
+      "titleKo": "한 톱니 정지 바퀴",
+      "ko": "한 개의 톱니가 있는 작은 바퀴 B가 구동 쪽이다. 바퀴 A의 톱니 사이로 들어가는 둘레는, 작은 바퀴의 톱니가 작용하지 않는 동안 잠금 또는 정지구가 된다.",
+      "easy": "톱니 하나인 작은 바퀴가 한 바퀴 돌 때마다 큰 톱니바퀴를 한 칸 돌린다. 작은 바퀴의 둥근 면이 큰 바퀴를 고정해 준다.",
+      "category": "ratchet",
+      "mech": "Large toothed wheel A (about 30 teeth) and a small single-toothed driver wheel B at top right; B's cut-away rim engages the tooth gaps and locks A while its tooth is out of action."
+    },
+    {
+      "n": 70,
+      "titleKo": "스터드 원판 간헐 회전",
+      "ko": "구동 바퀴 C에는 점선으로 보인 테가 있는데, 그 바깥쪽은 탭핏 B가 닿지 않을 때 다른 바퀴 A의 스터드를 받치고 멈추게 한다. 이 테의 틈은 스터드 하나가 들어가고 다른 하나가 나가게 한다. 탭핏은 이 틈의 가운데 맞은편에 있다.",
+      "easy": "구동 바퀴의 테가 틈에서만 스터드를 지나가게 해, 탭핏이 스터드를 칠 때만 바퀴가 한 칸 움직이고 나머지 때는 테가 바퀴를 붙잡아 둔다.",
+      "category": "ratchet",
+      "mech": "Driven disc A with a ring of 8 studs (left); driver disc C (right) with a dotted rim whose outside serves as a bearing/stop for the studs, a gap in the rim for one stud to pass, and a tappet B on a radius arm opposite the gap."
+    },
+    {
+      "n": 71,
+      "titleKo": "안쪽 테 잠금 간헐 회전",
+      "ko": "구동 바퀴 B의 테의 안쪽 둘레(점선으로 표시)는 바퀴 C의 스터드 두 개가 기대는 잠금이 된다. 탭핏 A가 스터드 하나를 칠 때까지 이 상태가 유지되고, 그러면 그 아래의 다음 스터드가 아래쪽 틈으로 보호 테에서 빠져나가고 다른 스터드가 위쪽 틈으로 테 안에 들어온다.",
+      "easy": "구동 바퀴 B의 테 안쪽이 스터드 둘을 붙잡아 두고 있다가, 탭핏이 스터드를 치면 한 칸 움직이게 해 주고 다시 다음 스터드를 잡는다.",
+      "category": "ratchet",
+      "mech": "Driven disc C (left, studs on a ring) and driver wheel B (right) with a thick rim (guard rim) with two notches and a tappet A on a radius; inner circumference of the rim locks two studs of C between steps."
+    },
+    {
+      "n": 72,
+      "titleKo": "경사 해머 (틸트 해머)",
+      "ko": "틸트 해머 운동이다. 캠 또는 와이퍼 휠 B가 회전하며 해머 A를 한 바퀴에 네 번 들어 올린다.",
+      "easy": "네 개의 날개가 달린 캠이 돌아가며 해머 자루 끝을 차례로 밀어 올린다. 해머는 올라갔다가 떨어지며 쇠를 두드린다. 한 바퀴에 네 번 두드린다.",
+      "category": "cam",
+      "mech": "Hammer A (long lever with head at left, fulcrum at right on a block) over an anvil; four-armed wiper cam B on a shaft below the hammer helve; each of 4 arms lifts the helve once per revolution."
+    },
+    {
+      "n": 73,
+      "titleKo": "스프링 래칫 간헐 회전",
+      "ko": "구동 바퀴 D에 굽은 스프링 B가 고정되어 있다. 또 다른 스프링 C는 고정된 받침대에 붙어 있다. 바퀴 D가 돌면 스프링 B가 센 스프링 C 아래로 지나가고, 센 스프링 C는 B를 래칫 휠 A의 톱니 속으로 눌러 래칫 휠이 돌게 한다. 걸이 스프링 B가 센 스프링 C에서 빠져나가면 D가 한 바퀴 더 돌 때까지 바퀴 A는 정지해 있다. 스프링 C는 정지구 구실을 한다.",
+      "easy": "큰 바퀴가 돌 때 붙은 작은 스프링이 래칫의 톱니 하나를 밀어 한 칸 돌리고, 풀려나면 래칫은 다음 바퀴가 돌 때까지 가만히 있다.",
+      "category": "ratchet",
+      "mech": "Large driving wheel D with a bent leaf spring B (catch spring) fixed on it; a strong fixed spring C attached to a support; ratchet wheel A (about 10 teeth) inside the drum. B passes under C, which presses it into a ratchet tooth; spring C also acts as a stop."
+    },
+    {
+      "n": 74,
+      "enStart": "A uniform intermittent rotary motion",
+      "titleKo": "베벨 간헐 역전 장치",
+      "ko": "일정한 간헐 회전 운동이 톱니가 일부 깎여 나간 베벨기어 C에 의해 베벨기어 A와 B에 서로 반대 방향으로 주어진다.",
+      "easy": "톱니가 일부만 있는 작은 베벨기어 C가 돌면서 A와 B를 번갈아 맞물려 서로 반대 방향으로 돌게 한다. C의 톱니가 없는 부분에서는 두 기어가 멈춘다.",
+      "category": "gear",
+      "mech": "Two bevel gears A (left) and B (right) on a common horizontal axis, facing each other; a mutilated (partly toothed) bevel gear C on a vertical shaft between them engages A and B alternately, driving them in opposite directions with intermittent rest."
+    },
+    {
+      "n": 75,
+      "titleKo": "왕복 막대 래칫",
+      "ko": "막대 C의 왕복하는 직선 운동이, 진동 막대 D 끝에 붙은 폴 B에 의해 바퀴 A에 간헐적인 원운동을 전달한다.",
+      "easy": "막대가 앞뒤로 왔다 갔다 하면 흔들리는 막대 끝의 폴이 래칫 톱니를 한 칸씩 밀어 바퀴가 한 방향으로만 조금씩 돈다.",
+      "category": "ratchet",
+      "mech": "Ratchet wheel A (about 30 teeth, pivoted at centre) with a vibrating bar D pivoted on its shaft carrying driving pawl B; pushrod C (reciprocating vertical) moves D to and fro; second (holding) pawl at top right."
+    },
+    {
+      "n": 76,
+      "titleKo": "회전 수 계수기",
+      "ko": "회전수를 기록하거나 세는 또 다른 장치다. 고정된 축 C 위에 지지된 탭핏 B가 있어, 큰 바퀴(일부만 표시)가 한 바퀴 돌 때마다 그 바퀴에 붙은 스터드 D에 맞는다. 그러면 래칫 휠 A에 가까운 탭핏의 끝이 들어 올려져 바퀴가 톱니 하나의 거리만큼 돈다. 스터드 D가 지나간 뒤에는 탭핏이 자기 무게로 원래 위치로 돌아오는데, 래칫 휠의 톱니를 지나갈 수 있도록 끝이 이어져 있다.",
+      "easy": "큰 바퀴가 한 바퀴 돌 때마다 바퀴의 스터드가 레버를 한 번 들어 올려 래칫 바퀴를 한 칸 돌린다. 이렇게 돌아간 칸 수가 바퀴의 회전수가 된다.",
+      "category": "ratchet",
+      "mech": "Large wheel (partly shown, right, curved arc) carrying a stud D; tappet B on a fixed pivot C (jointed end next to the ratchet wheel); ratchet wheel A (about 20 teeth, left). Each revolution of the big wheel advances A one tooth."
+    }
+  ]
+}

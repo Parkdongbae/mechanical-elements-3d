@@ -1,0 +1,170 @@
+{
+  "platePage": 39,
+  "textPage": 40,
+  "figures": [
+    {
+      "n": 119,
+      "box": [
+        0.075,
+        0.244,
+        0.41,
+        0.421
+      ]
+    },
+    {
+      "n": 120,
+      "box": [
+        0.42,
+        0.244,
+        0.686,
+        0.421
+      ]
+    },
+    {
+      "n": 121,
+      "box": [
+        0.695,
+        0.244,
+        0.989,
+        0.421
+      ]
+    },
+    {
+      "n": 122,
+      "box": [
+        0.075,
+        0.428,
+        0.41,
+        0.614
+      ]
+    },
+    {
+      "n": 123,
+      "box": [
+        0.42,
+        0.428,
+        0.686,
+        0.614
+      ]
+    },
+    {
+      "n": 124,
+      "box": [
+        0.695,
+        0.428,
+        0.989,
+        0.614
+      ]
+    },
+    {
+      "n": 125,
+      "box": [
+        0.075,
+        0.621,
+        0.41,
+        0.808
+      ]
+    },
+    {
+      "n": 126,
+      "box": [
+        0.42,
+        0.621,
+        0.686,
+        0.808
+      ]
+    },
+    {
+      "n": 127,
+      "box": [
+        0.695,
+        0.621,
+        0.989,
+        0.808
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 119,
+      "enStart": "Reciprocating rectilinear motion of",
+      "titleKo": "미끄럼 홈의 이중 랙 피니언",
+      "ko": "작은 피니언의 일정한 회전 운동으로 타원형 무한 랙을 단 막대가 왕복 직선 운동을 한다. 피니언은 랙의 위와 아래에서 번갈아 맞물려 일을 한다. 피니언의 축은 홈이 파인 막대(슬롯 막대) 안에서 위아래로 움직이며 그 막대에 안내된다.",
+      "easy": "긴 타원 고리 모양의 랙 안에서 작은 기어가 돈다. 기어가 위쪽 줄에 닿을 때는 랙이 한쪽으로, 아래쪽 줄에 닿을 때는 반대쪽으로 움직이므로, 기어를 한 방향으로만 돌려도 랙이 오간다.",
+      "category": "gear",
+      "mech": "Oblong endless rack seen from the side as a long bar with teeth along its top and bottom inner edges (drawn as two toothed rows with end stubs left and right); pinion between them; vertical slotted bar in the middle guides the pinion shaft; fixed bars above and below. Input = pinion rotation; output = rack bar reciprocating horizontally; pinion shaft shifts up/down in the slot to engage upper or lower rack."
+    },
+    {
+      "n": 120,
+      "enStart": "Each jaw is attached",
+      "titleKo": "집게형 기어 장치",
+      "ko": "각 집게발(턱)은 두 개의 부채꼴 조각(세그먼트) 중 하나에 붙어 있고, 한 조각은 바깥쪽에, 다른 조각은 안쪽에 톱니가 있다. 두 피니언이 달린 축을 돌리면 한 피니언은 한 조각과, 다른 피니언은 다른 조각과 맞물리면서, 집게발이 큰 힘으로 서로 가까워진다.",
+      "easy": "한 개의 축을 돌리면 두 조각이 서로 반대 방향으로 움직여 집게 턱이 동시에 오므라든다. 기어로 힘을 키웠기 때문에 큰 힘으로 물건을 꽉 잡을 수 있다.",
+      "category": "tool",
+      "mech": "Calipers-like clamp: two curved jaws (crescent shape, top) pivoted at a common pin; two toothed segments (one with outside teeth, one with inside teeth, forming a pear-shaped outline) attached to jaws; two pinions on one shaft in the lower middle. Input = shaft rotation; output = jaws closing symmetrically."
+    },
+    {
+      "n": 121,
+      "enStart": "Alternating rectilinear motion of the",
+      "titleKo": "디스크 휠과 클릭",
+      "ko": "디스크 바퀴에 달린 막대의 번갈아 하는 직선 운동이, 디스크 바퀴에 붙은 클릭(걸쇠)을 통해 톱니바퀴(코그휠)에 간헐적인 회전 운동을 만든다. 클릭을 뒤집어 놓으면 방향을 바꿀 수 있는 이 운동은 대패질 기계나 다른 공구의 이송에 쓰인다.",
+      "easy": "막대를 앞뒤로 밀고 당기면 디스크의 걸쇠가 톱니바퀴를 한 칸씩 밀어서 간헐적으로 돌린다. 걸쇠를 뒤집으면 회전 방향이 반대가 되어 기계 공구의 이송에 알맞다.",
+      "category": "ratchet",
+      "mech": "Large circular disc (with rim) on the same axis as a cog-wheel (about 18 teeth, larger toothed ring inside); click (pawl) pivoted on the disc engages the cog teeth; rod attached at upper right to disc edge, drives it back and forth. Input = rod reciprocating (disc oscillates); output = cog-wheel stepping one tooth per stroke."
+    },
+    {
+      "n": 122,
+      "enStart": "The rotation of the",
+      "titleKo": "두 기어로 만드는 가변 왕복",
+      "ko": "크랭크 손잡이가 달린 두 개의 평기어가 회전하면 수평 막대가 변하는 속도로 번갈아 오간다.",
+      "easy": "같은 크기의 두 기어가 맞물려 돌면서, 각 기어에 단 연결봉이 한 막대를 함께 밀고 당긴다. 막대의 속도가 일정하지 않고 변하며 왕복한다.",
+      "category": "crank",
+      "mech": "Two equal spur gears (centres offset diagonally, meshing) each with a crank-wrist/pin near the rim; two links connect the pins to a common horizontal bar (on the right, with bar head). Input = gear rotation (same sense of rotation of the gear pair); output = horizontal bar with variable alternating traverse."
+    },
+    {
+      "n": 123,
+      "enStart": "Intended as a substitute for the",
+      "titleKo": "크랭크 대용 이중 랙",
+      "ko": "크랭크를 대신하려는 것이다. 이중 랙의 왕복 직선 운동이 가운데 기어에 연속 회전을 준다. 랙의 톱니는 두 개의 반원 톱니 부채꼴에 작용하고, 부채꼴에 붙은 평기어들이 가운데 기어를 움직인다. 점선으로 그린 랙의 두 개의 멈춤쇠를 가운데 기어의 굽은 부분이 걸어서 톱니 부채꼴들을 번갈아 이중 랙과 맞물리게 한다.",
+      "easy": "위아래로 왕복하는 이중 랙이 좌우의 부채꼴 기어를 번갈아 돌리고, 이 기어들이 가운데 기어를 같은 방향으로 계속 돌린다. 크랭크 없이도 왕복 운동이 회전이 된다.",
+      "category": "crank",
+      "mech": "Vertical double rack (long vertical toothed bar with teeth on both edges, crossbars at top and bottom); two semicircular toothed sectors one on each side, spur gears on sectors mesh with a centre gear; curved piece on the centre gear catches two dotted stops on the rack. Input = rack reciprocating vertically; output = centre gear rotating continuously."
+    },
+    {
+      "n": 124,
+      "enStart": "Fiddle drill. Reciprocating recti-",
+      "titleKo": "활비비(피들 드릴)",
+      "ko": "피들 드릴이다. 활의 왕복 직선 운동에 따라 활 시위가 드릴을 단 축의 도르래를 감아 돌려, 드릴에 번갈아 방향이 바뀌는 회전 운동을 만든다.",
+      "easy": "활을 앞뒤로 밀고 당기면 시위가 드릴 축의 작은 풀리를 감아 돌려 드릴이 정회전과 역회전을 번갈아 한다. 오래전부터 쓰인 간단한 구멍 뚫는 도구이다.",
+      "category": "tool",
+      "mech": "Bow (curved stick with string, length about 4x the pulley diameter); string wrapped once around a small pulley on the drill spindle (round pulley near the bow's middle). Input = bow moved back and forth along its length; output = alternating rotation of the spindle and drill."
+    },
+    {
+      "n": 125,
+      "enStart": "A modification of the motion",
+      "titleKo": "복잡한 변형 운동",
+      "ko": "122번에 나온 운동의 변형이지만 더 복잡하다.",
+      "easy": "세 개의 기어가 이어져 돌아가면서 연결 막대와 지렛대를 통해 맨 위의 막대 하나를 밀고 당긴다. 122번과 같은 원리를 더 복잡하게 만든 것이다.",
+      "category": "crank",
+      "mech": "Three gears in a row (adjacent, meshing, with crank pins at the rim), two levers with pivot joints and rods linking the gear pins to a top vertical rod. Input = gear rotation; output = top rod reciprocating vertically, variable speed (more complex than 122)."
+    },
+    {
+      "n": 126,
+      "enStart": "A bell-crank lever, used",
+      "titleKo": "벨 크랭크 레버",
+      "ko": "벨 크랭크 레버로, 어떤 힘의 방향이라도 바꾸는 데 쓰인다.",
+      "easy": "L자 또는 ㄱ자 모양으로 꺾인 지렛대를 쓰면, 줄이나 막대로 끌어당기는 방향을 직각 등으로 바꿀 수 있다. 위에서 당긴 힘을 옆으로 전달하는 것이다.",
+      "category": "crank",
+      "mech": "Pulley at upper left with a belt/rope hanging down on the left; zigzag link chain of two levers (bell-cranks) with pin joints leading to a fixed pivot on the floor at the lower right; the rope goes down to the first lever. Input = rope pull (vertical); output = horizontal motion of the second link; direction changed through 90 degrees."
+    },
+    {
+      "n": 127,
+      "enStart": "Motion used in air-pumps.",
+      "titleKo": "공기 펌프용 랙과 피니언",
+      "ko": "공기 펌프에 쓰이는 운동이다. 평기어와 같은 축에 고정된 레버가 흔들리면, 양쪽에 있는 랙에 왕복 직선 운동이 전해진다. 이 랙들은 두 펌프의 피스톤에 붙어 있어, 한 랙이 올라가면 다른 랙은 늘 내려간다.",
+      "easy": "가운데 기어에 붙은 레버를 흔들면 기어 양쪽의 랙이 하나는 올라가고 하나는 내려간다. 랙마다 피스톤이 달려 있어 두 펌프가 번갈아 작동한다.",
+      "category": "pump",
+      "mech": "Central spur gear (about 14 teeth, with spoked hub) on a horizontal shaft, between two vertical racks on its left and right; a lever fixed on the gear shaft pointing up-left and also down-right; racks each carry a piston rod. Input = lever oscillating; output = racks moving in opposite directions."
+    }
+  ]
+}

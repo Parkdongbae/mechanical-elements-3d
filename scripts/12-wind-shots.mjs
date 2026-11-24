@@ -30,6 +30,7 @@ for (let attempt = 0; attempt < 4; attempt++) {
       else if (k === 'tab') await page.locator(`#wind-tab-${v}`).click();
       else if (k === 'sub') await page.locator('.wind-seg-btn', { hasText: { force: '힘 보기', corner: '코너링', cross: '옆바람' }[v] }).click();
       else if (k === 'toggle') await page.locator('.wind-toggle', { hasText: { pressure: '압력', xray: '투시', ghost: '유선 겹치기' }[v] }).click();
+      else if (k === 'under' && v === undefined) await page.locator('.wind-under-btn:visible').first().click();
       else if (k === 'save') await page.locator('.wind-btn', { hasText: 'A로 저장' }).click();
       else if (k === 'speed') await page.locator('#wind-speed').fill(v);
       else if (k === 'wait') await page.waitForTimeout(+v);

@@ -1,0 +1,170 @@
+{
+  "platePage": 51,
+  "textPage": 52,
+  "figures": [
+    {
+      "n": 172,
+      "box": [
+        0.1187,
+        0.2315,
+        0.3879,
+        0.4235
+      ]
+    },
+    {
+      "n": 173,
+      "box": [
+        0.3945,
+        0.2315,
+        0.656,
+        0.4235
+      ]
+    },
+    {
+      "n": 174,
+      "box": [
+        0.6637,
+        0.2315,
+        0.9714,
+        0.4235
+      ]
+    },
+    {
+      "n": 175,
+      "box": [
+        0.1187,
+        0.4281,
+        0.3879,
+        0.6177
+      ]
+    },
+    {
+      "n": 176,
+      "box": [
+        0.3945,
+        0.4281,
+        0.656,
+        0.6177
+      ]
+    },
+    {
+      "n": 177,
+      "box": [
+        0.6637,
+        0.4281,
+        0.9714,
+        0.6177
+      ]
+    },
+    {
+      "n": 178,
+      "box": [
+        0.1187,
+        0.6208,
+        0.3879,
+        0.8376
+      ]
+    },
+    {
+      "n": 179,
+      "box": [
+        0.3945,
+        0.6208,
+        0.656,
+        0.8376
+      ]
+    },
+    {
+      "n": 180,
+      "box": [
+        0.6637,
+        0.6208,
+        0.9714,
+        0.8376
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 172,
+      "en": "A mode of obtaining an egg-shaped elliptical movement.",
+      "titleKo": "달걀형 타원 운동",
+      "ko": "달걀 모양의 타원형 운동을 얻는 방법이다.",
+      "easy": "두 개의 크랭크 사이를 막대로 이어 두고 그 막대 위의 한 점을 보면, 그 점은 원이 아니라 달걀 모양으로 한 바퀴 돈다.",
+      "category": "crank",
+      "mech": "Two small cranks (double-eyed ends) at the left and at the right end of a long connecting bar; a point on the bar draws the dotted egg-shaped curve above it. Driver = the left crank rotating; a point on the bar near the middle traces an egg-shaped orbit."
+    },
+    {
+      "n": 173,
+      "en": "A movement used in silk machinery for the same purpose as that described in 142. On the back of a disk or bevel-gear is secured a screw with a tappet-wheel at one extremity. On each revolution of the disk the tappet-wheel comes in contact with a pin or tappet, and thus receives an intermittent rotary movement. A wrist secured to a nut on the screw enters and works in a slotted bar at the end of the rod which guides the silk on the bobbins. Each revolution of the disk varies the length of stroke of the guide-rod, as the tappet-wheel on the end of the screw turns the screw with it, and the position of the nut on the screw is therefore changed.",
+      "titleKo": "나사로 바뀌는 왕복 거리",
+      "ko": "142번에서 설명한 것과 같은 목적으로 비단 기계에 쓰이는 운동 장치이다. 원판(또는 베벨 기어)의 뒷면에 한쪽 끝에 태핏 바퀴가 달린 나사가 고정되어 있다. 원판이 한 바퀴 돌 때마다 태핏 바퀴가 핀(태핏)에 닿아 간헐 회전 운동을 한다. 나사에 달린 너트에 고정된 손목(핀)이 비단을 실패(보빈)에 감도록 이끄는 막대 끝의 홈 있는 막대 안에서 움직인다. 나사 끝의 태핏 바퀴가 나사를 함께 돌리므로 너트의 위치가 바뀌고, 그래서 원판이 한 바퀴 돌 때마다 안내 막대의 행정 길이가 달라진다.",
+      "easy": "원판이 한 바퀴 돌 때마다 나사가 조금씩 돌아서 너트가 옮겨 간다. 그래서 핀의 위치가 바뀌고 막대가 왕복하는 거리도 조금씩 달라진다. 비단을 실패에 고르게 감는 데 쓰인다.",
+      "category": "crank",
+      "mech": "Disk (or bevel gear) with a slotted radial bar across its face carrying a screw; a nut and wrist on the screw; tappet-wheel (small knurled wheel) at the outer end of the screw, striking a fixed pin; guide-rod at right with slotted end taking the wrist. Driver = disk rotation; screw turns a little each revolution, changing stroke."
+    },
+    {
+      "n": 174,
+      "en": "Carpenters' bench-clamp. By pushing the clamp between the jaws they are made to turn on the screws and clamp the sides.",
+      "titleKo": "목수의 작업대 죔쇠",
+      "ko": "목수의 작업대용 죔쇠(클램프)이다. 죔쇠를 턱 사이로 밀어 넣으면 턱이 나사를 축으로 돌면서 양쪽을 죄어 준다.",
+      "easy": "쐐기 모양의 막대를 두 개의 굽은 턱 사이에 밀어 넣으면, 턱이 나사못을 중심으로 돌면서 닫혀 나무판을 꽉 물고 놓지 않는다.",
+      "category": "tool",
+      "mech": "Two curved, hook-shaped jaws pivoted on two screws set in a bench top (wooden block); a flat wedge-like bar is pushed between the jaw tails from the right; the jaw tips close on the work at the left. Driver = bar pushed in horizontally; jaws rotate about their screws and grip."
+    },
+    {
+      "n": 175,
+      "en": "A means of giving one complete revolution to the crank of an engine to each stroke of the piston.",
+      "titleKo": "한 행정에 한 바퀴",
+      "ko": "기관의 크랭크가 피스톤의 한 행정마다 정확히 한 바퀴를 돌게 하는 방법이다.",
+      "easy": "피스톤이 한 번 왔다 갔다 하는 동안 크랭크가 꼭 한 바퀴 돌도록 만든 장치이다.",
+      "category": "crank",
+      "mech": "Pedestal frame on the ground with a tall rectangular guide (slot) on the right and a hollow window in the base; a crank at upper left (dotted circular path) linked by a diagonal connecting-rod to a slider moving vertically in the guide. Driver = vertical slider up and down; crank makes one revolution per stroke."
+    },
+    {
+      "n": 176,
+      "en": "Contrivance for uncoupling engines. The wrist which is fixed on one arm of the crank (not shown) will communicate motion to the arm of the crank which is represented, when the ring on the latter has its slot in the position shown in 176. But when the ring is turned to bring the slot in the position shown in 177, the wrist passes through the slot without turning the crank to which said ring is attached.",
+      "titleKo": "기관 분리 장치(맞물림)",
+      "ko": "기관을 분리(연결 해제)하는 장치이다. 그림에 나오지 않은 크랭크 한쪽 팔에 고정된 손목(핀)은, 그려진 크랭크 팔의 고리(링)에 있는 홈이 176에 그려진 위치에 있을 때 이 팔에 운동을 전한다. 하지만 고리를 돌려 홈이 177에 그려진 위치에 오게 하면, 손목은 홈을 그냥 통과하여 이 고리가 붙은 크랭크를 돌리지 않는다. (176과 177에 함께 쓰인 설명이다.)",
+      "easy": "고리의 홈이 막힌 방향이면 핀이 크랭크 팔을 밀어 함께 돌린다. 이것이 두 기관(축)이 연결된 상태이다.",
+      "category": "crank",
+      "mech": "Crank arm (long bar) with a hatched big shaft eye at the bottom and a smaller hub at the top surrounded by a rotatable ring with a slot; arrows show the wrist pin on the other crank moving in. In 176 the slot is positioned so that the wrist is caught and pushes the arm (coupled)."
+    },
+    {
+      "n": 177,
+      "en": "But when the ring is turned to bring the slot in the position shown in 177, the wrist passes through the slot without turning the crank to which said ring is attached. [Shared paragraph with 176: \"Contrivance for uncoupling engines.\"]",
+      "titleKo": "기관 분리 장치(풀림)",
+      "ko": "고리를 돌려 홈이 177에 그려진 위치에 오게 하면, 손목(핀)이 홈을 그냥 통과하여 이 고리가 붙은 크랭크를 돌리지 않는다. (176과 같은 문단에 묶인 설명이다.)",
+      "easy": "고리를 돌려 홈이 핀이 지나가는 길과 맞으면 핀이 걸리지 않고 헛돈다. 그러면 크랭크는 돌지 않아 기관이 분리된 상태가 된다.",
+      "category": "crank",
+      "mech": "Same crank as 176 but the slotted ring turned about 90 degrees so the slot lines up with the wrist's path; the wrist passes through without engaging. Coupled/uncoupled state is selected by rotating the ring around the hub."
+    },
+    {
+      "n": 178,
+      "en": "Contrivance for varying the speed of the slide carrying the cutting tool in slotting and shaping machines, etc. The driving-shaft works through an opening in a fixed disk, in which is a circular slot. At the end of the said shaft is a slotted crank. A slide fits in the slot of the crank and in the circular slot; and to the outward extremity of this slide is attached the connecting-rod which works the slide carrying the cutting tool. When the driving-shaft rotates the crank is carried round, and the slide carrying the end of the connecting-rod is guided by the circular slot, which is placed eccentrically to the shaft; therefore, as the slide approaches the bottom, the length of the crank is shortened and the speed of the connecting-rod is diminished.",
+      "titleKo": "속도가 변하는 홈 크랭크",
+      "ko": "슬로팅 기계와 셰이핑 기계 등에서 절삭 공구를 실은 슬라이드의 속도를 바꾸는 장치이다. 구동축은 고정된 원판의 구멍을 지나가는데, 이 원판에는 원형 홈이 있다. 축 끝에는 홈이 있는 크랭크가 있다. 슬라이드는 크랭크의 홈과 원형 홈 양쪽에 끼워지며, 이 슬라이드의 바깥쪽 끝에 절삭 공구를 실은 슬라이드를 움직이는 연결봉이 붙어 있다. 구동축이 돌면 크랭크가 따라 돌고, 연결봉 끝을 실은 슬라이드는 축에서 한쪽으로 치우쳐(편심) 놓인 원형 홈의 안내를 받는다. 따라서 슬라이드가 아래쪽에 가까워질수록 크랭크의 길이가 짧아져 연결봉의 속도가 느려진다.",
+      "easy": "축에서 치우친 원형 홈이 크랭크 슬라이드를 안내해서 크랭크의 유효 길이가 바뀐다. 슬라이드가 아래로 내려오면 연결봉이 느리게, 위에서는 빠르게 움직인다. 공구가 느리게 일하고 빠르게 돌아오게 하는 데 쓰인다.",
+      "category": "crank",
+      "mech": "Fixed disk with a circular groove (eccentric to the shaft) and a bigger outer ring; driving shaft hub at the lower center (small dotted circle); vertical slotted crank with a slide in the slot; connecting-rod to the upper left. Driver = shaft rotation; crank effective radius varies, quick-return to the cutting slide."
+    },
+    {
+      "n": 179,
+      "en": "Reversing-gear for a single engine. On raising the eccentric-rod the valve-spindle is released. The engine can then be reversed by working the upright lever, after which the eccentric-rod is let down again. The eccentric in this case is loose upon the shaft and driven by a projection on the shaft acting upon a nearly semi-circular projection on the side of the eccentric, which permits the eccentric to turn half-way round on the shaft on reversing the valves.",
+      "titleKo": "단일 기관 역전 장치",
+      "ko": "단일 기관용 역전 장치이다. 편심 막대를 들어 올리면 밸브 축이 풀린다. 그러면 세운 레버를 움직여 기관을 반대로 돌릴 수 있고, 그 뒤에 편심 막대를 다시 내려놓는다. 이 경우 편심은 축에 헐겁게 끼워져 있으며, 축에 있는 돌기가 편심 옆의 거의 반원형 돌기를 밀어 구동한다. 그래서 밸브를 반대로 할 때 편심이 축 위에서 반 바퀴 돌 수 있다.",
+      "easy": "편심(바퀴)이 축에 헐겁게 끼워져 있어서, 축이 반대로 돌기 시작하면 편심이 반 바퀴 돌아간 위치에서 다시 맞물린다. 이렇게 해서 밸브의 타이밍이 바뀌어 기관이 반대로 돈다.",
+      "category": "steam",
+      "mech": "Crankshaft with a loose eccentric (ring with notch, hatched shaft hub) at the right; eccentric-rod running left to a hook/latch at the valve-spindle; upright lever pivoted on the ground at the left, bell-crank below. Driver = shaft rotation; the loose eccentric can turn about half a turn between the stops (semi-circular projection), reversing valve timing."
+    },
+    {
+      "n": 180,
+      "en": "This only differs from 174 in being composed of a single pivoted clamp operating in connection with a fixed side-piece.",
+      "titleKo": "한쪽 죔쇠",
+      "ko": "174와 다른 점은 하나의 회전 죔쇠가 고정된 옆판과 함께 작동한다는 것뿐이다.",
+      "easy": "174의 죔쇠에서 한쪽 턱을 고정판으로 바꾼 것이다. 하나의 굽은 죔쇠가 돌면서 나무를 고정판에 대고 누른다.",
+      "category": "tool",
+      "mech": "Vertical fixed side board (wooden strip with two screws); a single curved hook-shaped clamp pivoted on a screw at its upper-middle that swings against the side board to grip the work between them. Driver = pushing the clamp tail; the single jaw rotates about its screw."
+    }
+  ]
+}

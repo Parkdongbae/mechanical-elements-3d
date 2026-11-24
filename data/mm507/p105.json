@@ -1,0 +1,170 @@
+{
+  "platePage": 105,
+  "textPage": 106,
+  "figures": [
+    {
+      "n": 412,
+      "box": [
+        0.0544,
+        0.2,
+        0.3688,
+        0.4197
+      ]
+    },
+    {
+      "n": 413,
+      "box": [
+        0.3736,
+        0.2,
+        0.6348,
+        0.4197
+      ]
+    },
+    {
+      "n": 414,
+      "box": [
+        0.6397,
+        0.2,
+        0.9625,
+        0.4197
+      ]
+    },
+    {
+      "n": 415,
+      "box": [
+        0.0544,
+        0.4239,
+        0.3688,
+        0.606
+      ]
+    },
+    {
+      "n": 416,
+      "box": [
+        0.3736,
+        0.4239,
+        0.6348,
+        0.606
+      ]
+    },
+    {
+      "n": 417,
+      "box": [
+        0.6397,
+        0.4239,
+        0.9625,
+        0.606
+      ]
+    },
+    {
+      "n": 418,
+      "box": [
+        0.0544,
+        0.6103,
+        0.3688,
+        0.7906
+      ]
+    },
+    {
+      "n": 419,
+      "box": [
+        0.3736,
+        0.6103,
+        0.6348,
+        0.7906
+      ]
+    },
+    {
+      "n": 420,
+      "box": [
+        0.6397,
+        0.6103,
+        0.9625,
+        0.7906
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 412,
+      "en": "Wheel-work in the base of capstan. Thus provided, the capstan can be used as a simple or compound machine, single or triple purchase. The drumhead and barrel rotate independently ; the former, being fixed on spindle, turns it round, and when locked to barrel turns it also, forming single purchase ; but when unlocked, wheel-work acts, and drumhead and barrel rotate in opposite directions, with velocities as three to one.",
+      "titleKo": "캡스턴의 유성 기어",
+      "ko": "캡스턴(닻을 감아올리는 장치)의 밑부분에 있는 기어 장치이다. 이렇게 갖추면 캡스턴을 단순한 기계 또는 복합 기계, 곧 단일 또는 3배의 힘(퍼처스)으로 쓸 수 있다. 드럼머리와 배럴(통)은 따로 회전한다. 드럼머리는 스핀들에 고정되어 스핀들을 돌리고, 배럴에 잠기면 배럴도 함께 돌려 단일 힘이 된다. 그러나 잠금을 풀면 기어 장치가 작용해 드럼머리와 배럴이 서로 반대 방향으로 3대 1의 속도로 돈다.",
+      "easy": "닻이나 밧줄을 감는 캡스턴 밑에 숨은 기어 장치로, 잠금을 풀면 속도가 3분의 1로 줄어드는 대신 힘이 세진다. 무거운 닻을 올릴 때처럼 큰 힘이 필요하면 이 기어를 쓴다.",
+      "category": "gear",
+      "mech": "Large internal ring gear (outer ring with fine teeth, about 1.0 cell width) with three planet gears (idler pinions) arranged at 120 deg around a central sun gear; a short pawl/hook lever arms at the upper right and lower right on the ring (to lock). Input: drumhead/sun gear rotation; output: barrel/ring rotation in the opposite direction at 1/3 speed (compound) or locked together (1:1)."
+    },
+    {
+      "n": 413,
+      "en": "J. W. Howlett's patent adjustable frictional gearing. This is an improvement on that shown in 45 of this table. The upper wheel, A, shown in section, is composed of a rubber disk with V-edge, clamped between two metal plates. By screwing up the nut, B, which holds the parts together, the rubber disk is made to expand radially, and greater tractive power may be produced between the two wheels.",
+      "titleKo": "조절식 마찰 바퀴",
+      "ko": "J. W. 하울렛이 특허를 낸 조절할 수 있는 마찰 바퀴이다. 이 표의 45에 나와 있는 것을 개선한 것이다. 단면으로 나타낸 위쪽 바퀴 A는 V자 모양 가장자리를 가진 고무 원판을 두 개의 금속판 사이에 끼워 만든 것이다. 부품들을 함께 잡고 있는 너트 B를 조이면 고무 원판이 지름 방향으로 부풀어, 두 바퀴 사이에 더 큰 끄는 힘(마찰력)이 생길 수 있다.",
+      "easy": "고무 바퀴를 두 금속판으로 끼워 너트로 조이면 고무가 옆으로 눌려 바깥으로 부풀어 오른다. 그러면 아래 바퀴와 더 세게 맞물려 미끄러지지 않고 회전을 전할 수 있다.",
+      "category": "gear",
+      "mech": "Vertical section of a friction wheel pair: upper small wheel A (rubber V-edged disc, clamped between two metal plates on a horizontal shaft with a nut B and a spanner handle) wedging into the V-groove of the lower larger wheel (V-grooved pulley, tall) on a horizontal shaft at the bottom with a hand crank/handle at the lower left. Input: lower wheel rotation; output: upper wheel driven by friction. Upper wheel diameter about 0.6 of the lower."
+    },
+    {
+      "n": 414,
+      "en": "Scroll gear and sliding pinion, to produce an increasing velocity of scroll-plate, A, in one direction, and a decreasing velocity when the motion is reversed. Pinion, B, moves on a feather on the shaft.",
+      "titleKo": "소용돌이 기어와 미끄럼 피니언",
+      "ko": "소용돌이 기어와 미끄럼 피니언으로, 소용돌이 판 A가 한 방향으로 돌 때는 속도가 빨라지고, 운동 방향이 바뀌면 속도가 느려지게 한다. 피니언 B는 축 위의 키(페더)를 따라 움직인다.",
+      "easy": "나선처럼 감긴 톱니 판을 작은 기어가 따라가면, 기어가 판의 안쪽에 있을 때와 바깥쪽에 있을 때 회전 속도비가 달라진다. 기어를 축 방향으로 밀어 속도를 바꾸는 셈이다.",
+      "category": "gear",
+      "mech": "Scroll plate A: a flat disc with a spiral track of radial teeth (gear teeth on a spiral, with a gap/notch) about 1.0 cell width in diameter, mounted on a vertical shaft (long rod B through the centre going up and down); a small pinion B slides on the shaft by a feather and meshes with the scroll teeth at the lower right. Input: shaft rotation; output: scroll plate rotates with changing speed ratio as the pinion moves along the spiral."
+    },
+    {
+      "n": 415,
+      "en": "P. Dickson's patent device for converting an oscillating motion into intermittent circular, in either direction. Oscillating motion communicated to lever, A, which is provided with two pawls, B and C, hinged to its upper side, near shaft of wheel, D. Small crank, E, on upper side of lever, A, is attached by cord to each of pawls, so that when pawl, C, is let into contact with interior of rim of wheel, D, it moves in one direction, and pawl, B, is out of gear. Motion of wheel, D, may be reversed by lifting pawl, C, which was in gear, and letting opposite one into gear by crank, E.",
+      "titleKo": "방향 바꿈 간헐 회전 래칫",
+      "ko": "P. 딕슨이 특허를 낸, 흔들리는 운동을 어느 쪽 방향으로든 끊어지는 원운동으로 바꾸는 장치이다. 흔들리는 운동은 레버 A에 전달되고, 레버에는 바퀴 D의 축 가까운 윗면에 핀으로 달린 두 개의 걸쇠 B와 C가 있다. 레버 A의 윗면에 있는 작은 크랭크 E는 끈으로 각 걸쇠에 연결되어 있어서, 걸쇠 C가 바퀴 D 테두리의 안쪽에 닿게 되면 바퀴는 한 방향으로 움직이고 걸쇠 B는 맞물리지 않는다. 바퀴 D의 운동은 맞물려 있던 걸쇠 C를 들어 올리고 크랭크 E로 반대쪽 걸쇠를 맞물리게 하여 반대 방향으로 바꿀 수 있다.",
+      "easy": "흔들리는 레버에 두 걸쇠가 있어서, 한쪽 걸쇠를 바퀴 테두리의 안쪽 톱니에 걸면 바퀴가 한 방향으로 한 칸씩 돈다. 작은 손잡이를 돌려 다른 걸쇠를 걸면 반대 방향으로 돈다.",
+      "category": "ratchet",
+      "mech": "Large ring wheel D with an internal ratchet rim (inner teeth, about 0.9 cell width) with a hub and shaft at the center; a T-shaped lever A pivoted at the hub extending downward-left to a link D (a bar going right) at the bottom; two pawls B (left) and C (right) hinged on the upper side of the lever; small crank E at the center top with cords to both pawls. Input: lever oscillation; output: stepwise rotation of wheel D, direction selected by crank E."
+    },
+    {
+      "n": 416,
+      "en": "A device for assisting the crank of a treadle motion over the dead-centers. The helical spring, A, has a tendency to move the crank, B, in direction at right-angles to dead-centers.",
+      "titleKo": "사점 넘기는 용수철",
+      "ko": "발판 운동에서 크랭크가 사점(죽은 점)을 넘어가도록 돕는 장치이다. 나선 스프링 A는 크랭크 B를 사점과 직각이 되는 방향으로 움직이려는 경향이 있다.",
+      "easy": "발판으로 크랭크를 돌릴 때 크랭크가 맨 위나 맨 아래 죽은 점에서 멈추기 쉽다. 이때 감겨 있던 소용돌이 스프링이 크랭크를 옆 방향으로 밀어 죽은 점을 넘어가게 도와준다.",
+      "category": "crank",
+      "mech": "Flywheel (large disc with groove, at the upper right, about 0.6 cell width) with a crank pin B on its hub; a coiled spiral (helical) spring A at the left connected by a cord to the crank pin; a connecting rod from the crank pin B down to a long treadle bar (horizontal bar with two pivot circles) at the bottom. Input: treadle up/down; output: wheel rotation, spring pushes through dead centers."
+    },
+    {
+      "n": 417,
+      "en": "Continuous circular motion into a rectilinear reciprocating. The shaft, A, working in a fixed bearing, D, is bent on one end, and fitted to turn in a socket at the upper end of a rod, B, the lower end of which works in a socket in the slide, C. Dotted lines show the position of the rod, B, and slide, when the shaft has made half a revolution from the position shown in bold lines.",
+      "titleKo": "굽은 축으로 왕복 운동",
+      "ko": "연속적인 원운동을 직선 왕복 운동으로 바꾼다. 고정된 베어링 D 안에서 움직이는 축 A는 한쪽 끝이 구부러져 있고, 막대 B의 윗끝에 있는 홈(소켓) 안에서 돌도록 끼워져 있다. 막대 B의 아랫끝은 미끄럼쇠 C의 홈 안에서 움직인다. 점선은 축이 굵은 선으로 나타낸 위치에서 반 바퀴 돌았을 때의 막대 B와 미끄럼쇠의 위치를 보여 준다.",
+      "easy": "손잡이로 굽은 축을 돌리면 끝이 원을 그리며 막대를 밀고 당긴다. 막대 아래의 미끄럼쇠는 직선 레일을 따라 앞뒤로만 왕복한다. 회전이 직선 왕복으로 바뀐다.",
+      "category": "crank",
+      "mech": "Horizontal bent shaft A in a fixed bearing D (a vertical pillar post at the right, with crank handle at the far right); at the left end the bent end sits in a socket at the upper end of a rod B hanging at an angle; its lower end sits in a socket in slide C (block on a horizontal base plate). Dotted lines show the rod and slide after half a turn. Input: shaft rotation; output: slide C reciprocates horizontally."
+    },
+    {
+      "n": 418,
+      "en": "Buchanan & Righter's patent slide-valve motion. Valve, A, is attached to lower end of rod, B, and free to slide horizontally on valve-seat. Upper end of rod, B, is attached to a pin which slides in vertical slots, and a roller, C, attached to the said rod, slides in two suspended and vertically adjustable arcs, D. This arrangement is intended to prevent the valve from being pressed with too great force against its seat by the pressure of steam, and to relieve it of friction.",
+      "titleKo": "뷰캐넌·라이터의 미끄럼 밸브",
+      "ko": "뷰캐넌과 라이터가 특허를 낸 미끄럼 밸브 운동이다. 밸브 A는 막대 B의 아래 끝에 달려 있고 밸브 자리 위에서 가로로 자유롭게 미끄러진다. 막대 B의 윗끝은 세로 홈 안에서 미끄러지는 핀에 붙어 있고, 이 막대에 붙은 롤러 C는 매달려 있고 세로로 조절할 수 있는 두 개의 호 D 안에서 미끄러진다. 이 배열은 증기의 압력 때문에 밸브가 자리에 너무 큰 힘으로 눌리는 것을 막고, 마찰을 덜어 주려는 것이다.",
+      "easy": "밸브를 매단 막대가 위쪽 홈과 휘어진 호 안의 롤러에 의해 안내되어, 밸브가 아래 자리에서 가로로 미끄러지면서도 증기에 너무 세게 눌리지 않는다. 마찰이 줄어 밸브가 덜 닳는다.",
+      "category": "steam",
+      "mech": "Cast bell-shaped steam chest (tapering, hatched section) with a vertical rod B inside (with a pin sliding in vertical slots at the top and a roller C in the middle); two suspended adjustable arcs D (curved guide plates) on both sides; the valve A (small block) at the lower end of rod B sitting on the valve seat at the bottom (a small pedestal below). Input: rod oscillation; output: valve slides horizontally on the seat with reduced pressure."
+    },
+    {
+      "n": 419,
+      "en": "Continuous circular motion converted into a rocking motion. Used in self-rocking cradles. Wheel, A, revolves, and is connected to a wheel, B, of greater radius, which receives an oscillating motion, and wheel, B, is provided with two flexible bands, C, D, which connect each to a standard or post attached to the rocker, E, of the cradle.",
+      "titleKo": "스스로 흔들리는 요람",
+      "ko": "연속적인 원운동을 흔들리는 운동으로 바꾼다. 스스로 흔들리는 요람에 쓰인다. 바퀴 A가 회전하고, 이것은 더 큰 반지름의 바퀴 B와 연결되어 있는데, B는 왔다 갔다 하는 흔들림 운동을 받는다. 바퀴 B에는 두 개의 유연한 띠 C, D가 있어서 각각 요람의 흔들개(로커) E에 붙은 기둥에 연결된다.",
+      "easy": "작은 바퀴가 크랭크처럼 돌면서 큰 바퀴를 좌우로 흔들고, 큰 바퀴에 걸린 두 띠가 요람의 둥근 바닥을 좌우로 굴려 요람이 스스로 흔들린다.",
+      "category": "crank",
+      "mech": "Rocker E (curved cradle base, an arc at the bottom, hatched ground below) with two vertical posts at its ends (C left, D right); a large wheel B (disc, radius about 0.4 cell width) attached to a small crank wheel A at the lower center via a crank arm (A rotates with arrow, driving B's pin); flexible bands from B's top go to the posts C and D. Input: A's continuous rotation; output: oscillation of the rocker E."
+    },
+    {
+      "n": 420,
+      "en": "Arrangement of hammer for striking bells. Spring below the hammer raises it out of contact with the bell after striking, and so prevents it from interfering with the vibration of the metal in the bell.",
+      "titleKo": "종 치는 망치",
+      "ko": "종을 치는 망치의 배열이다. 망치 밑의 스프링은 망치가 종을 친 뒤 종에서 떨어지도록 들어 올려서, 종의 금속이 울리는 것을 망치가 방해하지 않게 한다.",
+      "easy": "망치가 종을 때린 뒤 스프링이 바로 튕겨 올려 종에서 떼어 놓는다. 망치가 계속 붙어 있으면 종의 울림이 막히기 때문이다.",
+      "category": "tool",
+      "mech": "Bell (dome-shaped, hanging at right, about 0.5 cell width) with a hammer on a short lever arm (angled bar with a round head, at upper left) pivoted on a bracket at the lower left; a spring under the hammer arm; a wooden base board. Input: pulling the lever; output: hammer hits the bell then springs back off."
+    }
+  ]
+}

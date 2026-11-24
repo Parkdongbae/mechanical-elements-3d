@@ -1,0 +1,180 @@
+{
+  "platePage": 23,
+  "textPage": 24,
+  "figures": [
+    {
+      "n": 50,
+      "box": [
+        0.1149,
+        0.3248,
+        0.4051,
+        0.4316
+      ]
+    },
+    {
+      "n": 51,
+      "box": [
+        0.1149,
+        0.2436,
+        0.4051,
+        0.3248
+      ]
+    },
+    {
+      "n": 52,
+      "box": [
+        0.4111,
+        0.2436,
+        0.6687,
+        0.4342
+      ]
+    },
+    {
+      "n": 53,
+      "box": [
+        0.6747,
+        0.2436,
+        0.9794,
+        0.4342
+      ]
+    },
+    {
+      "n": 54,
+      "box": [
+        0.1149,
+        0.4385,
+        0.4027,
+        0.6197
+      ]
+    },
+    {
+      "n": 55,
+      "box": [
+        0.4087,
+        0.4385,
+        0.6687,
+        0.6197
+      ]
+    },
+    {
+      "n": 56,
+      "box": [
+        0.6747,
+        0.4385,
+        0.9794,
+        0.6197
+      ]
+    },
+    {
+      "n": 57,
+      "box": [
+        0.1149,
+        0.6256,
+        0.4027,
+        0.812
+      ]
+    },
+    {
+      "n": 58,
+      "box": [
+        0.4087,
+        0.6256,
+        0.6687,
+        0.812
+      ]
+    },
+    {
+      "n": 59,
+      "box": [
+        0.6747,
+        0.6256,
+        0.9794,
+        0.812
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 50,
+      "enStart": "Two kinds ot universal joints",
+      "titleKo": "유니버설 조인트 (1)",
+      "ko": "두 가지 유니버설 조인트다.",
+      "easy": "축이 꺾여 있어도 회전을 전할 수 있는 이음이다. 두 축이 일직선이 아니라 비스듬히 만나도 함께 돈다.",
+      "category": "crank",
+      "mech": "Universal joint type A: two forked shaft ends (right and left) joined through a central link/ring with pivot pins; shafts at an angle (~30 deg)."
+    },
+    {
+      "n": 51,
+      "enStart": "Two kinds ot universal joints",
+      "titleKo": "유니버설 조인트 (2)",
+      "ko": "두 가지 유니버설 조인트다.",
+      "easy": "50과 같은 목적의 다른 모양 이음이다. 서로 걸린 두 개의 고리 모양 부분으로 비스듬한 두 축을 잇는다.",
+      "category": "crank",
+      "mech": "Universal joint type B: two interlocked oval links/forks, each on a shaft end, shafts angled in a V shape (~25 deg), joined with pins at the crossing."
+    },
+    {
+      "n": 52,
+      "titleKo": "핀 원판 클러치",
+      "ko": "또 다른 종류의 클러치 상자다. 오른쪽의 원판 바퀴에는 다른 원판에 고정된 스터드(돌기)에 맞는 구멍이 두 개 있다. 원판을 누르면 스터드가 구멍에 들어가 두 원판이 함께 돈다.",
+      "easy": "돌기가 있는 원판에 구멍이 있는 원판을 눌러 붙이면 돌기가 구멍에 끼어 두 원판이 함께 돈다. 떼면 한쪽만 돈다.",
+      "category": "tool",
+      "mech": "Horizontal shaft: left disc with two studs (fixed to the shaft) and a right disc with two holes that slides on the shaft (key) via a lever fork at bottom right; studs enter holes to lock."
+    },
+    {
+      "n": 53,
+      "titleKo": "양방향 이중 클러치",
+      "ko": "세로축이 가로축을 원하는 어느 방향으로든 구동하도록 만든 것으로, 이중 클러치와 베벨기어를 쓴다. 가로축의 기어들은 헐겁게 끼워져 있고, 세 번째 기어에 의해 서로 반대 방향으로 구동된다. 이중 클러치는 가로축에 고정된 키(깃) 위를 미끄러지며, 클러치가 맞물리는 쪽에 따라 가로축이 오른쪽이나 왼쪽으로 회전한다.",
+      "easy": "위쪽 세로축이 두 베벨기어를 서로 반대로 돌린다. 가운데 클러치를 왼쪽이나 오른쪽 기어에 맞물리면 가로축이 정방향이나 역방향으로 돈다.",
+      "category": "tool",
+      "mech": "Vertical driver shaft with bevel gear C at top meshing with two large bevel gears (left and right, loose on the horizontal shaft, turning in opposite directions); sliding double jaw clutch in the middle, keyed on the horizontal shaft, moved by a bell-crank lever."
+    },
+    {
+      "n": 54,
+      "titleKo": "맹글 스타 휠",
+      "ko": "맹글 또는 별 모양 휠로, 번갈아 하는 회전 운동을 만든다.",
+      "easy": "둘레 안쪽에 일정하게 돌기가 있는 바퀴를 두 개의 작은 부품 A, B가 번갈아 밀어 바퀴가 앞뒤로 왔다 갔다 한다.",
+      "category": "ratchet",
+      "mech": "Large wheel (spokes, hub) with a ring of regularly spaced radial pins/teeth around the rim; two small pawl/drivers A (left, outside) and B (bottom, outside) act on it to give alternating rotation."
+    },
+    {
+      "n": 55,
+      "titleKo": "두 속도 기어 (피니언 D)",
+      "ko": "같은 축 위에 있는 두 기어 A와 C에, 피니언 D가 서로 다른 속도를 준다.",
+      "easy": "한 축에 지름이 다른 두 기어가 있고, 작은 피니언이 한쪽이나 양쪽에 맞물려 서로 다른 속도로 돌린다.",
+      "category": "gear",
+      "mech": "Large internal-tooth ring gear C and a concentric smaller gear A on the same shaft, with a small pinion B (labelled in plate; D in text) meshing with both; gives two different speeds on the same axis."
+    },
+    {
+      "n": 56,
+      "titleKo": "선반 변속 레버",
+      "ko": "선반에서 속도 변환 기어를 맞물리거나 풀어 주는 데 쓴다. 레버를 누르면, 큰 바퀴 축이 미끄러지는 홈이 레버의 중심(받침점)에 대해 한쪽으로 치우치게 파여 있으므로 큰 바퀴의 축이 뒤로 끌려간다.",
+      "easy": "레버를 누르면 홈이 치우쳐 있어서 큰 바퀴의 축이 뒤로 물러나, 바퀴의 톱니가 풀린다. 레버를 올리면 다시 맞물린다. 선반에서 기어를 연결하고 끊는 데 쓴다.",
+      "category": "tool",
+      "mech": "Long upright lever pivoting on a fixed frame with a curved eccentric slot; the large wheel's shaft slides in the slot, so depressing the lever draws the large wheel back out of mesh with the pinion at right. Spur gears, cast bracket base."
+    },
+    {
+      "n": 57,
+      "titleKo": "내접 기어 이중 구동",
+      "ko": "맨 위의 작은 풀리가 구동 쪽이다. 안쪽에 톱니가 난 큰 기어와 그 안쪽의 동심 기어는 벨트로 서로 반대 방향으로 구동되고, 동시에 맨 아래의 중간 피니언에도 운동을 준다. 이 피니언은 자신의 중심을 따라서도, 두 동심 기어의 공통 중심 둘레로도 돈다.",
+      "easy": "위의 작은 풀리가 벨트로 큰 링 기어와 안쪽 기어를 서로 반대 방향으로 돌리고, 그 사이에 낀 작은 피니언은 제자리에서 돌면서 동시에 중심을 따라 돈다.",
+      "category": "gear",
+      "mech": "Small driver pulley at top with crossed belt to two concentric gears (internal-tooth ring gear outside, small gear inside) rotating in opposite directions; an intermediate pinion at bottom engages both, spinning and orbiting the common centre."
+    },
+    {
+      "n": 58,
+      "titleKo": "세 단 속도 기어",
+      "ko": "기어로 세 가지 다른 속도를 전달한다. 벨트의 아래쪽 부분은 헐거운 풀리 위에 있다. 다음 풀리는 주축에 고정되어 있고 그 축의 다른 끝에는 작은 평기어가 고정되어 있다. 다음 풀리는 주축 위를 도는 속 빈 축에 고정되고, 거기에 처음 것보다 큰 두 번째 평기어가 고정된다. 왼쪽의 네 번째이자 마지막 풀리는 마지막 것 위를 헐겁게 도는 또 다른 속 빈 축에 고정되고, 그 다른 끝에는 풀리에 가까이 더 큰 평기어가 고정된다. 벨트를 한 풀리에서 다른 풀리로 옮기면 아래 축에 세 가지 서로 다른 속도가 전달된다.",
+      "easy": "벨트를 옮겨 거는 풀리에 따라 서로 다른 크기의 기어 쌍이 쓰이므로 아래 축이 세 가지 속도로 돈다.",
+      "category": "gear",
+      "mech": "Upper shaft with four pulleys (loose, fixed on main shaft, fixed on hollow shaft, fixed on a second hollow shaft) and three spur gears of increasing size at the other end; lower shaft carries three matching gears meshing with them. A sliding belt selects one of three speed ratios."
+    },
+    {
+      "n": 59,
+      "titleKo": "두 단 속도 기어",
+      "ko": "기어로 두 가지 속도를 전달한다. 벨트는 아래 세 풀리 중 왼쪽의 헐거운 풀리 위에 있다. 가운데 풀리는 작은 피니언과 같은 축에 고정되어 있고, 오른쪽 풀리는 속 빈 축에 고정되어 그 끝에 큰 평기어가 달려 있다. 벨트가 가운데 풀리에 있으면 아래 축에 느린 운동이 전달되고, 오른쪽 풀리에 있으면 기어들의 지름에 비례하는 빠른 속도가 주어진다.",
+      "easy": "벨트를 가운데 풀리에 걸면 느리게, 오른쪽 풀리에 걸면 빠르게 돈다. 속도 차이는 기어 지름의 비로 정해진다.",
+      "category": "gear",
+      "mech": "Upper shaft with a belt pulley and a small gear; lower shaft with three pulleys (left loose, middle fixed with pinion, right fixed to a hollow shaft with large spur gear); two gear pairs give a slow or a fast speed."
+    }
+  ]
+}

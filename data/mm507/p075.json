@@ -1,0 +1,170 @@
+{
+  "platePage": 75,
+  "textPage": 76,
+  "figures": [
+    {
+      "n": 279,
+      "box": [
+        0.0967,
+        0.2068,
+        0.4039,
+        0.4274
+      ]
+    },
+    {
+      "n": 280,
+      "box": [
+        0.4087,
+        0.2068,
+        0.6723,
+        0.4274
+      ]
+    },
+    {
+      "n": 281,
+      "box": [
+        0.6771,
+        0.2068,
+        0.977,
+        0.4274
+      ]
+    },
+    {
+      "n": 282,
+      "box": [
+        0.0967,
+        0.4325,
+        0.4039,
+        0.612
+      ]
+    },
+    {
+      "n": 283,
+      "box": [
+        0.4087,
+        0.4325,
+        0.6723,
+        0.612
+      ]
+    },
+    {
+      "n": 284,
+      "box": [
+        0.6771,
+        0.4325,
+        0.977,
+        0.612
+      ]
+    },
+    {
+      "n": 285,
+      "box": [
+        0.0967,
+        0.6154,
+        0.4039,
+        0.8513
+      ]
+    },
+    {
+      "n": 286,
+      "box": [
+        0.4087,
+        0.6154,
+        0.6723,
+        0.8513
+      ]
+    },
+    {
+      "n": 287,
+      "box": [
+        0.6771,
+        0.6154,
+        0.977,
+        0.8513
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 279,
+      "en": "Crank and slotted cross-head, with Clayton's sliding journal-box applied to the crank-wrist. This box consists of two taper lining pieces and two taper gibs adjustable by screws, which serve at the same time to tighten the box on the wrist and to set it out to the slot in the cross-head as the box and wrist wear.",
+      "titleKo": "홈 있는 십자머리 크랭크",
+      "ko": "크랭크와 홈이 파인 십자머리(크로스헤드)에 클레이턴의 미끄럼 축받이 상자를 크랭크 손잡이(리스트)에 끼운 것이다. 이 상자는 테이퍼진 안감 조각 두 개와 테이퍼진 쐐기(집) 두 개로 이루어져 있고, 쐐기는 나사로 조절한다. 이 나사는 상자를 크랭크 손잡이에 조여 주는 동시에, 상자와 손잡이가 닳아도 십자머리의 홈에 맞게 상자를 밀어 내 준다.",
+      "easy": "크랭크의 핀이 십자머리의 홈 안에서 미끄러지며 회전 운동을 직선 왕복 운동으로 바꾼다. 쐐기를 나사로 조이면 닳아서 생긴 틈을 없앨 수 있다.",
+      "category": "crank",
+      "mech": "Crank disc/arm on a horizontal shaft with a wrist pin; the pin carries a rectangular journal box inside a vertical slot of a cross-head. Two tapered gibs with set screws at the top. Input: crank rotation; output: reciprocating motion of the cross-head perpendicular to the slot (vertical slot, horizontal sliding of the box). Cross-head body is a wide hexagonal frame about 1.5x taller than wide."
+    },
+    {
+      "n": 280,
+      "en": "A mode of working a windlass. By the alternating motion of the long hand-lever to the right, motion is communicated to the short lever, the end of which is in immediate contact with the rim of the wheel. The short lever has a very limited motion upon a pin, which is fixed in a block of cast-iron, which is made with two jaws, each having a flange projecting inward in contact with the inner surface of the rim of the wheel. By the upward motion of the outward end of the short lever, the rim of the wheel is jammed between the end of the lever and the flanges of the block, so as to cause friction sufficient to turn the wheel by the further upward movement of the lever. The backward movement of the wheel is prevented by a common ratchet-wheel and pawls ; as the short lever is pushed down it frees the wheel and slides freely over it.",
+      "titleKo": "마찰로 감는 윈들러스",
+      "ko": "윈들러스(감아올리는 장치)를 돌리는 한 방법이다. 오른쪽의 긴 손잡이 레버를 앞뒤로 움직이면 그 운동이 짧은 레버로 전해지고, 짧은 레버의 끝은 바퀴의 테두리에 바로 닿아 있다. 짧은 레버는 핀 위에서 아주 조금만 움직이는데, 이 핀은 주철 블록에 고정되어 있다. 블록에는 두 개의 턱이 있고, 각 턱에는 바퀴 테두리 안쪽 면에 닿는 안쪽으로 튀어나온 플랜지가 있다. 짧은 레버의 바깥쪽 끝이 위로 움직이면 바퀴 테두리가 레버 끝과 블록의 플랜지 사이에 끼어, 레버가 더 위로 움직이는 동안 바퀴를 돌릴 만큼의 마찰이 생긴다. 바퀴가 뒤로 돌아가는 것은 보통의 래칫 바퀴와 걸쇠로 막는다. 짧은 레버가 아래로 눌릴 때는 바퀴가 풀려 그 위를 자유롭게 미끄러진다.",
+      "easy": "긴 손잡이를 위아래로 흔들면 짧은 레버가 바퀴 테두리를 꽉 물어 마찰로 바퀴를 조금씩 돌린다. 되돌아갈 때는 바퀴를 놓고 미끄러지고, 래칫과 걸쇠가 바퀴가 거꾸로 돌지 않게 막는다. 무거운 것을 감아올리는 윈들러스에 쓰인다.",
+      "category": "ratchet",
+      "mech": "Large wheel (drum) on a horizontal axis at left; frame on the right with a long vertical hand-lever pivoting at its top (round pivot). Short lever on a pin in a two-jaw cast-iron block grips the wheel rim by friction. Input: reciprocating swing of the hand-lever; output: intermittent one-way rotation of the wheel (ratchet and pawl at the wheel prevents reverse). Wheel diameter about 0.6 of the frame height."
+    },
+    {
+      "n": 281,
+      "en": "The revolution of the disk causes the lever at the right to vibrate by the pin moving in the groove in the face of the disk.",
+      "titleKo": "홈 캠 원판과 레버",
+      "ko": "원판이 회전하면 원판 앞면의 홈 속에서 핀이 움직여, 오른쪽의 레버가 흔들린다.",
+      "easy": "회전하는 원판의 굽은 홈 속을 핀이 따라가며 레버를 좌우로 흔든다. 일정한 회전을 왕복 흔들림으로 바꾸는 홈 캠이다.",
+      "category": "cam",
+      "mech": "Disc on a horizontal axle in a wooden A-frame with base board; a kidney/heart-shaped groove cut in the disc face. A long lever pivoting at the top right carries a pin that rides in the groove. Input: disc rotation (constant speed); output: oscillating swing of the lever, one cycle per revolution (shape of groove sets the motion)."
+    },
+    {
+      "n": 282,
+      "en": "By the revolution of the disk in which is fixed a pin working in a slot in the upright bar which turns on a center near the bottom, both ends of the bar are made to traverse, the toothed sector producing alternate rectilinear motion in the horizontal bar at the bottom, and also alternate perpendicular motion of the weight.",
+      "titleKo": "원판과 톱니 부채꼴 레버",
+      "ko": "원판에 고정된 핀이 세워진 막대의 홈 속에서 움직이면, 바닥 근처의 한 점을 중심으로 도는 이 막대의 양 끝이 호를 그리며 움직이게 된다. 톱니 달린 부채꼴이 아래쪽 가로 막대에 번갈아 가는 직선 운동을 일으키고, 또 추에도 번갈아 오르내리는 수직 운동을 일으킨다.",
+      "easy": "원판의 핀이 긴 막대의 홈을 밀면 막대가 아래쪽 받침점을 중심으로 좌우로 흔들린다. 그러면 아래의 톱니 부채꼴이 가로 막대를 앞뒤로 밀고, 위쪽 끝은 줄로 연결된 추를 위아래로 움직인다.",
+      "category": "crank",
+      "mech": "Large disc in a frame with an arched top rail; a pin on the disc moves in a slot of a long upright bar pivoted near the bottom. Bottom end has a toothed sector meshing with a horizontal rack bar; top end carries a pulley with a cord and hanging weight at right. Input: disc rotation; output: bar oscillation -> rack reciprocates horizontally, weight moves up/down. Bar length about 1.5x disc diameter."
+    },
+    {
+      "n": 283,
+      "en": "By a vibratory motion of the handle, motion is communicated by the pinion to the racks. This is used in working small air pumps for scientific experiments.",
+      "titleKo": "손잡이로 구동하는 두 개의 랙",
+      "ko": "손잡이를 흔들면 피니언이 그 운동을 랙들에 전한다. 이것은 과학 실험용 작은 공기 펌프를 움직이는 데 쓰인다.",
+      "easy": "손잡이를 앞뒤로 흔들면 작은 톱니바퀴(피니언)가 돌며 두 개의 톱니 막대(랙)를 번갈아 올렸다 내린다. 작은 공기 펌프의 피스톤을 움직이는 데 쓰였다.",
+      "category": "pump",
+      "mech": "A curved handle with a pinion at its center meshing with a vertical rack; a second rack/gear on the left drives a second piston rod. Two vertical cylinders (pump barrels) on a base with two pistons; rack rods slide in guides above. Input: oscillating handle (arc); output: two racks moving up/down alternately (pistons in opposite phase)."
+    },
+    {
+      "n": 284,
+      "en": "Represents a feeding apparatus for the bed of a sawing machine. By the revolution of the crank at the lower part of the figure, alternate motion is communicated to the horizontal arm of the bell-crank lever whose fulcrum is at a, near the top left-hand corner of the figure. By this means motion is communicated to the catch attached to the vertical arm of the lever, and the said catch communicates motion to the ratchet-wheel, upon the shaft of which is a toothed pinion, working in the rack attached to the side of the carriage. The feed is varied by a screw in the bell-crank lever.",
+      "titleKo": "톱기계 이송 장치",
+      "ko": "톱질 기계의 작업대(베드)를 앞으로 보내는 이송 장치를 나타낸다. 그림 아래쪽의 크랭크가 회전하면 그 운동이, 그림 왼쪽 위 모서리 근처의 a에 받침점이 있는 벨 크랭크 레버의 가로 팔에 번갈아 가는 운동으로 전해진다. 이렇게 해서 레버의 세로 팔에 붙은 걸쇠가 움직이고, 걸쇠는 래칫 바퀴를 움직인다. 래칫 바퀴의 축에는 톱니 달린 피니언이 있어서 수레(캐리지) 옆에 붙은 랙과 맞물려 돈다. 이송량은 벨 크랭크 레버에 달린 나사로 조절한다.",
+      "easy": "크랭크가 돌면 레버가 흔들리고, 걸쇠가 래칫 바퀴를 한 톱니씩 돌린다. 그 회전이 피니언과 랙을 통해 작업대를 조금씩 앞으로 보낸다. 나사로 한 번에 보내는 양을 바꿀 수 있다.",
+      "category": "ratchet",
+      "mech": "Bell-crank lever pivoted at top-left (a): horizontal arm connected by a rod to a crank at lower right; vertical arm carries a catch (pawl) that pushes the ratchet wheel at lower left. Ratchet wheel shaft has a pinion meshing with a long horizontal rack on the carriage. Input: continuous crank rotation; output: intermittent step motion of the rack (feed). Ratchet wheel diameter about 1/4 of rack length."
+    },
+    {
+      "n": 285,
+      "en": "Is the movable head of a turning lathe. By turning the wheel to the right, motion is communicated to the screw, producing rectilinear motion of the spindle in the end of which the center is fixed.",
+      "titleKo": "선반 심압대",
+      "ko": "선반의 움직이는 머리(심압대)이다. 바퀴를 오른쪽으로 돌리면 그 운동이 나사에 전해져, 끝에 센터가 고정된 스핀들이 직선으로 움직인다.",
+      "easy": "손잡이 바퀴를 돌리면 안의 나사가 돌아 스핀들이 앞뒤로 밀려 나온다. 회전을 직선 운동으로 바꾸는 나사의 원리이며, 선반에서 공작물을 뾰족한 센터로 받쳐 주는 데 쓰인다.",
+      "category": "tool",
+      "mech": "Cast base with a bridge-shaped stand and clamping bolt below; on top a horizontal barrel containing a screw and a sliding spindle (pointed center at the left end), a handwheel with crank handle on the right end, and a small clamp lever on top. Input: handwheel rotation; output: axial sliding of the spindle (screw feed). Overall about 2x wider than tall."
+    },
+    {
+      "n": 286,
+      "en": "Toe and lifter for working puppet valves in steam engines. The curved toe on the rock-shaft operates on the lifter attached to the lifting-rod to raise the valve.",
+      "titleKo": "증기 기관 밸브 들개",
+      "ko": "증기 기관의 퍼핏 밸브(들어올림 밸브)를 움직이는 발톱(토)과 들개(리프터)이다. 흔들 축(락 샤프트)에 달린 굽은 발톱이 들어올림 막대에 붙은 들개를 밀어, 밸브를 들어 올린다.",
+      "easy": "축이 조금 흔들릴 때 굽은 발톱이 막대 끝의 받침을 밀어 올려 밸브를 연다. 흔들리는 축의 회전을 밸브의 상하 운동으로 바꾼다.",
+      "category": "steam",
+      "mech": "Vertical lifting rod at right with a rectangular lifter block at its upper end; a curved toe arm projecting from a round rock-shaft (circle at lower left) below the lifter. Input: rock-shaft oscillation (rotation through a small angle); output: vertical lift of the rod/valve. Toe arm length about 1.5x lifter width."
+    },
+    {
+      "n": 287,
+      "en": "Pickering's governor. The balls are attached to springs the upper end of each of which is attached to a collar fixed on the spindle, and the lower end to a collar on the sliding sleeve. The springs yield in a proper degree to the centrifugal force of the balls, and raise the sleeve ; and as the centrifugal force diminishes, they draw the balls toward the spindle and depress the sleeve.",
+      "titleKo": "피커링 조속기",
+      "ko": "피커링의 조속기이다. 공들은 스프링에 달려 있고, 각 스프링의 위쪽 끝은 스핀들에 고정된 칼라에, 아래쪽 끝은 미끄러지는 슬리브의 칼라에 붙어 있다. 스프링은 공의 원심력에 알맞은 정도로 늘어나면서 슬리브를 올리고, 원심력이 줄어들면 공을 스핀들 쪽으로 끌어당기며 슬리브를 내린다.",
+      "easy": "축이 빨리 돌수록 공이 바깥으로 벌어지며 슬리브를 위로 민다. 느려지면 스프링이 공을 다시 끌어당겨 슬리브가 내려온다. 이 움직임으로 기계의 속도를 일정하게 조절한다.",
+      "category": "governor",
+      "mech": "Vertical spindle with a fixed collar at the top and a sliding sleeve with stepped collars at the bottom. Two curved leaf springs bow outward from the top collar to the bottom collar, each carrying a ball (flat oval weight) at mid-length. Input: spindle rotation; output: vertical sleeve displacement growing with speed. Overall about 2.2x taller than wide."
+    }
+  ]
+}

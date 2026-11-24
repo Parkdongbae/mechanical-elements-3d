@@ -1,0 +1,134 @@
+{
+  "platePage": 31,
+  "textPage": 32,
+  "figures": [
+    {
+      "n": 86,
+      "box": [
+        0.075,
+        0.239,
+        0.385,
+        0.421
+      ]
+    },
+    {
+      "n": 87,
+      "box": [
+        0.394,
+        0.239,
+        0.989,
+        0.421
+      ]
+    },
+    {
+      "n": 88,
+      "box": [
+        0.075,
+        0.428,
+        0.385,
+        0.613
+      ]
+    },
+    {
+      "n": 89,
+      "box": [
+        0.394,
+        0.428,
+        0.664,
+        0.613
+      ]
+    },
+    {
+      "n": 90,
+      "box": [
+        0.674,
+        0.428,
+        0.989,
+        0.613
+      ]
+    },
+    {
+      "n": 91,
+      "box": [
+        0.075,
+        0.62,
+        0.385,
+        0.799
+      ]
+    },
+    {
+      "n": 92,
+      "box": [
+        0.394,
+        0.62,
+        0.989,
+        0.799
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 86,
+      "enStart": "A method of working",
+      "titleKo": "회전으로 펌프 작동",
+      "ko": "회전 운동으로 왕복 펌프를 움직이는 방법이다. 펌프 막대를 매단 밧줄이 바퀴 A에 붙어 있고, 이 바퀴는 축 위에서 헐겁게 돈다. 축에는 캠 C가 달려 있어 계속 회전한다. 캠은 한 바퀴 돌 때마다 바퀴에 붙은 갈고리 걸쇠 B를 붙잡아 바퀴를 함께 끌고 돌면서 밧줄을 감아 올린다. 걸쇠의 끝이 위에 있는 고정 멈춤쇠에 부딪히면 걸쇠가 풀리고, 바퀴는 펌프 통의 무게 때문에 되돌아간다.",
+      "easy": "계속 도는 캠이 바퀴를 걸어 끌고 가며 밧줄을 감아 펌프 막대를 들어 올리다가, 멈춤쇠에 걸려 풀리면 막대가 제 무게로 내려간다. 회전 운동이 펌프의 오르내림이 되는 장치이다.",
+      "category": "pump",
+      "mech": "Wheel A (spoked, loose on shaft) in an A-frame stand with a rope wound on it that runs up to a frame/beam on top and a pump rod; hooked catch B on wheel rim; cam C fast on the continuously turning shaft; fixed stop above. Input = shaft rotation; output = pump rod lifted, then dropped by weight."
+    },
+    {
+      "n": 87,
+      "enStart": "A contrivance for a self-reversing",
+      "titleKo": "자동으로 방향이 바뀌는 장치",
+      "ko": "스스로 회전 방향을 뒤바꾸는 장치이다. 기어 B와 C 사이의 베벨기어(원뿔 기어)가 구동 쪽이다. 기어 B와 C는 축 위에서 헐겁게 돌기 때문에, 둘 중 어느 하나가 클러치 상자 D와 맞물릴 때만 움직임이 축에 전달된다. 클러치 D는 축의 키(꽂이) 위를 미끄러지며, 그림에서는 C와 맞물려 있다. 오른쪽의 바퀴 E는 이 기어들과 클러치가 달린 축에서 베벨기어로 구동되며, 벨크랭크 G를 막 치려는 참이다. 그러면 연결 막대가 추 달린 레버 F를 수직 위치 너머로 넘겨 주고, 레버가 갑자기 왼쪽으로 쓰러지면서 클러치를 B와 맞물리게 하여 축의 회전 방향이 반대가 된다. 바퀴 E의 못(스터드)이 반대 방향으로 돌아와 추 달린 레버를 다시 수직 위치 너머로 밀어 주면 운동이 또 뒤바뀐다.",
+      "easy": "축에 헐겁게 끼운 두 기어 중 클러치가 어느 쪽과 맞물리느냐에 따라 회전 방향이 정해진다. 바퀴의 못이 추 달린 레버를 한계점 넘어로 밀면 레버가 툭 넘어지며 클러치를 반대쪽으로 옮겨, 기계가 스스로 정회전과 역회전을 반복한다.",
+      "category": "gear",
+      "mech": "Horizontal main shaft with two bevel gears B and C (loose, facing each other, large rings with teeth) and sliding clutch box D between them on a feather; bevel pair at right drives wheel E (spoked, with stud); bell-crank G, connecting rod and weighted lever F (ball) under the shaft with a pivoting yoke that moves clutch D. Input = driver bevel gear; output = shaft reversing automatically."
+    },
+    {
+      "n": 88,
+      "enStart": "Continuous rotary converted into",
+      "titleKo": "간헐 회전으로 바꾸는 편심 캠",
+      "ko": "연속 회전이 간헐(끊어지는) 회전으로 바뀐다. 멈춤쇠 C, D를 단 원판 바퀴 B는 캠 A와 같은 중심을 쓰는 편심 위에서 돈다. 캠 A에 연속 회전을 주면 바퀴 B에는 간헐적인 회전이 전해진다. 멈춤쇠는 반 바퀴마다 캠의 치우친 부분에서 풀려나며, 캠이 한 바퀴를 마칠 때까지 바퀴 B는 가만히 있다가 마치면 같은 운동이 다시 반복된다.",
+      "easy": "중심이 치우친 캠이 계속 돌면, 큰 원판은 반 바퀴마다 캠에서 풀려 조금씩 돌고 나머지 시간에는 멈춰 있다. 계속되는 회전이 '돌았다 쉬었다' 하는 운동으로 바뀐다.",
+      "category": "ratchet",
+      "mech": "Large disc wheel B concentric around an eccentric cam A (circular disc offset from the shaft hub); two square stops C and D on opposite sides of the inner ring (left and right at the cam's horizontal diameter). Input = steady rotation of cam A (arrow, counter-clockwise); output = wheel B rotates intermittently, half-turn dwell."
+    },
+    {
+      "n": 89,
+      "enStart": "An eccentric generally used",
+      "titleKo": "증기 기관 밸브용 편심",
+      "ko": "크랭크 축에 흔히 설치하는 편심(중심이 어긋난 원판)으로, 증기 기관의 밸브에 왕복 직선 운동을 전하는 데 쓰이며 때로는 펌프질에도 쓰인다.",
+      "easy": "축에서 중심을 비껴 붙인 둥근 원판이 돌면 그것을 감싼 띠(스트랩)가 앞뒤로 움직이고, 거기에 연결된 막대가 왕복한다. 증기 기관의 밸브를 여닫는 데 많이 쓰였다.",
+      "category": "cam",
+      "mech": "Shaft with a circular eccentric disc offset from the shaft centre inside a split circular strap (ring with bolt flanges top/bottom); the strap is extended into a rod on the right with a flange coupling. Input = shaft rotation; output = reciprocating rod, stroke = twice the eccentricity."
+    },
+    {
+      "n": 90,
+      "enStart": "A modification of the",
+      "titleKo": "편심 요크 변형",
+      "ko": "위의 것을 바꾼 것이다. 고정 안내 장치 안에서 움직이는 막대가 진동(옆으로 흔들림)할 필요가 없도록, 원형 띠 대신 길쭉한 요크(틀)를 쓴다.",
+      "easy": "89번의 둥근 띠를 길쭉한 타원형 틀로 바꾸었다. 이 틀 안에서 편심이 돌며 틀을 한 방향으로만 왕복시키므로, 막대가 옆으로 흔들리지 않는다.",
+      "category": "cam",
+      "mech": "Circular eccentric disc on the shaft inside a tall oval (stadium-shaped) yoke frame whose short sides act as sliding faces; a short rod projects from the yoke on both sides horizontally. Input = shaft rotation; output = straight reciprocation of the yoke along the guided axis only."
+    },
+    {
+      "n": 91,
+      "enStart": "Triangular eccentric, giving an",
+      "titleKo": "삼각 편심",
+      "ko": "간헐적인 왕복 직선 운동을 주는 삼각형 편심으로, 프랑스에서 증기 기관의 밸브 운동에 쓰였다.",
+      "easy": "둥근 편심 대신 모서리가 둥근 삼각형 캠을 틀 안에서 돌린다. 틀이 움직이다가 잠깐 멈추는 동작을 반복하므로 증기 밸브를 한 번 열고 닫은 뒤 쉬게 하는 데 알맞다.",
+      "category": "cam",
+      "mech": "Reuleaux-like triangular cam rotating about an off-centre pin inside a rectangular frame (yoke) with two horizontal bars; stems protrude above and below. Input = cam rotation; output = reciprocating frame with dwell at the ends of each stroke."
+    },
+    {
+      "n": 92,
+      "enStart": "Ordinary crank motion",
+      "titleKo": "보통의 크랭크 운동",
+      "ko": "일반적인 크랭크 운동이다.",
+      "easy": "바퀴에 붙은 크랭크 핀을 연결봉(커넥팅 로드)이 잡고 있어, 바퀴가 돌면 오른쪽의 미끄러짐 블록이 직선으로 왕복한다. 반대로 직선 왕복으로 바퀴를 돌릴 수도 있다.",
+      "category": "crank",
+      "mech": "Spoked flywheel with crank pin near the rim; connecting rod to a crosshead sliding in a guide (horizontal rectangular slot, right). Input = wheel rotation; output = crosshead reciprocating (stroke = 2 x crank radius; rod length about 1.5 x wheel diameter)."
+    }
+  ]
+}
