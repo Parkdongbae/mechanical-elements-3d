@@ -12,6 +12,7 @@ import './styles/lab-cycle.css';
 import './styles/lab-engines.css';
 import './styles/lab-steam.css';
 import './styles/lab-pump.css';
+import './styles/mm507.css';
 import { SceneManager, DEFAULT_VIEW } from './scene/SceneSetup';
 import { buildPart, normalizePart, disposeObject } from './models/factory';
 import { ThumbnailFactory } from './models/thumbnails';
@@ -33,6 +34,7 @@ import { EngineCycle } from './labs/EngineCycle';
 import { EngineTypes } from './labs/EngineTypes';
 import { SteamEngines } from './labs/SteamEngines';
 import { HandPump } from './labs/HandPump';
+import { Gallery } from './mm507/Gallery';
 import { loadProgress, saveProgress, clearMachineProgress, clearAllProgress, allMachinesCompleted, type ProgressData } from './state/progress';
 import { guessQuality, loadSettings, saveSettings, type AppSettings } from './state/settings';
 import { playCorrectSound, playWrongSound } from './ui/sound';
@@ -588,7 +590,7 @@ function tick(): void {
 
 // ── 화면 전환 (해시 라우팅: #/ 홈, #/m/<id> 미션, #/enc 도감, #/quiz 퀴즈) ──
 
-type ModeId = 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump';
+type ModeId = 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump' | 'mm';
 type Screen = 'home' | 'mission' | ModeId;
 let screen: Screen = 'home';
 let activeMode: AppMode | null = null;
@@ -602,7 +604,8 @@ const modes: Record<ModeId, { name: string; mode: AppMode }> = {
   'lab/cycle': { name: '엔진의 작동 원리', mode: new EngineCycle() },
   'lab/engines': { name: '엔진의 종류', mode: new EngineTypes() },
   'lab/steam': { name: '증기 기관', mode: new SteamEngines() },
-  'lab/pump': { name: '우물 손펌프', mode: new HandPump() }
+  'lab/pump': { name: '우물 손펌프', mode: new HandPump() },
+  mm: { name: '507 기계 운동', mode: new Gallery() }
 };
 
 const home = new HomeScreen({
@@ -684,6 +687,8 @@ function route(): void {
       thumbs,
       root: modeRoot,
       settings,
+      param: head === 'mm' ? arg : undefined,
+      navigate: (p) => navigate(p),
       toast: (m, kind, duration) => hud.toast(m, kind, duration),
       goHome: () => navigate(''),
       playSound: (kind) => {

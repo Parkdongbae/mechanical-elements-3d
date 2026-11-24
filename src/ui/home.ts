@@ -3,11 +3,13 @@
 import { MACHINES, MACHINE_GROUPS, type MachineDef } from '../data/machines';
 import { getCategory, getPart, PARTS } from '../data/elements';
 import type { ProgressData } from '../state/progress';
+import { listModels } from '../mm507/registry';
+import { mmSeenCount } from '../mm507/Gallery';
 import { ICON } from './icons';
 
 export interface HomeCallbacks {
   onOpenMission: (id: string) => void;
-  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump') => void;
+  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump' | 'mm') => void;
   onOpenSettings: () => void;
   onToggleTheme: () => void;
 }
@@ -184,6 +186,30 @@ export class HomeScreen {
           </div>
         </section>
 
+        <section class="home-group">
+          <header class="home-group-head">
+            <h2>507 기계 운동</h2>
+            <p>1868년 책 속 기계 507가지 열람</p>
+            <span class="home-group-count">3D ${listModels().length} / 507</span>
+          </header>
+          <button type="button" class="home-mm" data-mode="mm">
+            <span class="home-mm-figs" aria-hidden="true">
+              <img src="/mm507/fig/001.png" alt="" loading="lazy" draggable="false" />
+              <img src="/mm507/fig/010.png" alt="" loading="lazy" draggable="false" />
+              <img src="/mm507/fig/033.png" alt="" loading="lazy" draggable="false" />
+            </span>
+            <span class="home-mm-body">
+              <strong>150년 전 책 속 기계 507가지</strong>
+              <small>헨리 T. 브라운의 『507 기계 운동』(1868) 판화를 한글 설명과 함께 열람하고, 3D 완성 번호는 실제로 움직여 봐요.</small>
+              <span class="home-mm-meta">
+                <span>3D 완성 <strong>${listModels().length}</strong> / 507</span>
+                <span>본 것 <strong>${mmSeenCount()}</strong> / 507</span>
+              </span>
+            </span>
+            <span class="home-mm-go">${ICON.play}<span>열람하기</span></span>
+          </button>
+        </section>
+
         ${groups}
 
         <footer class="home-foot">2022 개정 교육과정 기술·가정② '기계의 구성과 동력 전달' 단원 학습용</footer>
@@ -200,6 +226,9 @@ export class HomeScreen {
     // 썸네일이 아직 없으면(로드 실패) 아이콘 대체 화면을 보여 준다
     this.el.querySelectorAll<HTMLImageElement>('.card-thumb img').forEach((img) => {
       img.addEventListener('error', () => img.remove());
+    });
+    this.el.querySelectorAll<HTMLImageElement>('.home-mm-figs img').forEach((img) => {
+      img.addEventListener('error', () => img.closest('.home-mm-figs')?.remove());
     });
   }
 

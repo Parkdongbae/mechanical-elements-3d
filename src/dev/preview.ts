@@ -33,6 +33,8 @@ import { SteamEngines } from '../labs/SteamEngines';
 import '../styles/lab-steam.css';
 import { HandPump } from '../labs/HandPump';
 import '../styles/lab-pump.css';
+import { Gallery } from '../mm507/Gallery';
+import '../styles/mm507.css';
 import { ThumbnailFactory } from '../models/thumbnails';
 import { loadSettings } from '../state/settings';
 import { loadModel } from '../mm507/registry';
@@ -84,7 +86,8 @@ const MODE_CTORS: Record<string, () => AppMode> = {
   cycle: () => new EngineCycle(),
   engines: () => new EngineTypes(),
   steam: () => new SteamEngines(),
-  pump: () => new HandPump()
+  pump: () => new HandPump(),
+  mm: () => new Gallery()
 };
 if (modeArg && MODE_CTORS[modeArg]) {
   const root = document.createElement('div');
@@ -98,6 +101,10 @@ if (modeArg && MODE_CTORS[modeArg]) {
     thumbs: new ThumbnailFactory(),
     root,
     settings: loadSettings(),
+    param: q.get('param') ?? undefined,
+    navigate: (p) => {
+      location.hash = `#/${p}`;
+    },
     toast: (m) => console.log('[toast]', m),
     goHome: () => console.log('[goHome]'),
     playSound: () => {}
