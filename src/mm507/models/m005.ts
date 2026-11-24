@@ -9,13 +9,13 @@ const RB = 0.14; // 조임 풀리 B 반지름
 const E = 0.01; // 벨트 두께 절반 — 접점은 유효 반지름 위에 둔다
 const CA: V2 = [0.25, 2.6]; // A 중심
 const CC: V2 = [0.25, 0.95]; // C 중심
-const PF: V2 = [-0.95, 1.55]; // 레버 받침점 F
-const LB = 0.45; // 받침점→B 거리
-const A0 = 2.2; // 떼었을 때 레버 각 — B가 벨트에서 떨어짐
-const A1 = 0.15; // 눌렀을 때 레버 각 — B가 왼쪽 가닥을 민다
+const PF: V2 = [-0.95, 1.3]; // 레버 받침점 F — 벨트 바깥(왼쪽 아래)
+const LB = 0.95; // 받침점→B 거리
+const A0 = 2.0; // 떼었을 때 레버 각 — B가 왼쪽 위로 물러나 벨트에서 떨어짐
+const A1 = 0.374; // 눌렀을 때 레버 각 — B가 바깥에서 왼쪽 가닥을 안쪽으로 민다
 const Z = 0.25; // 벨트·풀리 면
 const ZBAR = 0.1; // 레버 막대 면 — B 허브와 겹치지 않게 뒤로
-const BULGE = 0.35; // 느슨할 때 왼쪽 가닥의 바깥 불룩함
+const BULGE = 0.21; // 느슨할 때 왼쪽 가닥의 바깥 불룩함 — 느슨한 경로 길이(5.891)가 팽팽한 경로(5.890)와 같게 맞춘 값(줄은 늘지 않는다)
 const PERIOD = 6; // 동작 주기(초)
 // 경로 조각별 점 수: 왼쪽 가닥(선+B호+선) · C호 · 오른쪽 가닥 · A호
 const NL1 = 5;
@@ -67,25 +67,40 @@ function arcPts(out: THREE.Vector3[], c: V2, r: number, a0: number, a1: number, 
   }
 }
 
-/** 팽팽한 경로: A 왼쪽 → B 감김 → C 아래 → 오른쪽 가닥 → A 위 (CCW 닫힌 점열) */
+/** 부호 있는 반지름(+CCW / −CW)으로 푼 접선: c1→c2. 접점 = 중심 + ρ·(ty, −tx) (접선 방향이 감는 방향과 일치) */
+function signedTangent(c1: V2, rho1: number, c2: V2, rho2: number): { p1: V2; p2: V2 } {
+  const dx = c2[0] - c1[0];
+  const dy = c2[1] - c1[1];
+  const D = Math.hypot(dx, dy);
+  const k = Math.max(-0.999, Math.min(0.999, (rho1 - rho2) / D));
+  const th = Math.atan2(dy, dx) + Math.asin(k);
+  const tx = Math.cos(th);
+  const ty = Math.sin(th);
+  return { p1: [c1[0] + rho1 * ty, c1[1] - rho1 * tx], p2: [c2[0] + rho2 * ty, c2[1] - rho2 * tx] };
+}
+
+const angOf = (p: V2, c: V2): number => Math.atan2(p[1] - c[1], p[0] - c[0]);
+
+/** 팽팽한 경로: B 는 벨트 바깥(왼쪽)에서 오른쪽 면으로 벨트를 안쪽으로 민다.
+ *  A(CCW 감김) → 안쪽 접선 → B(CW 감김, 바깥 접촉) → 안쪽 접선 → C(CCW) → 오른쪽 가닥 → A */
 function tightPath(): THREE.Vector3[] {
   const rA = RA + E;
   const rB = RB + E;
   const rC = RC + E;
   const B = bAt(A1);
-  const tAB = tangent(CA, rA, B, rB, -1);
-  const tBC = tangent(B, rB, CC, rC, -1);
-  const tCA = tangent(CC, rC, CA, rA, -1);
-  const aAB = Math.atan2(tAB.n[1], tAB.n[0]);
-  const aBC = Math.atan2(tBC.n[1], tBC.n[0]);
-  const aCA = Math.atan2(tCA.n[1], tCA.n[0]);
+  const tAB = signedTangent(CA, rA, B, -rB);
+  const tBC = signedTangent(B, -rB, CC, rC);
+  const tCA = signedTangent(CC, rC, CA, rA);
   const pts: THREE.Vector3[] = [];
   linePts(pts, tAB.p1, tAB.p2, NL1);
-  arcPts(pts, B, rB, aAB, aAB + norm(aBC - aAB), NB); // B 왼쪽 감김
+  const bIn = angOf(tAB.p2, B);
+  arcPts(pts, B, rB, bIn, bIn - norm(bIn - angOf(tBC.p1, B)), NB); // B 오른쪽 면 — 시계 방향 감김
   linePts(pts, tBC.p1, tBC.p2, NL2);
-  arcPts(pts, CC, rC, aBC, aBC + norm(aCA - aBC), NC); // C 아래 감김
+  const cIn = angOf(tBC.p2, CC);
+  arcPts(pts, CC, rC, cIn, cIn + norm(angOf(tCA.p1, CC) - cIn), NC); // C 아래 감김
   linePts(pts, tCA.p1, tCA.p2, NR);
-  arcPts(pts, CA, rA, aCA, aCA + norm(aAB - aCA), NA); // A 위 감김
+  const aIn = angOf(tCA.p2, CA);
+  arcPts(pts, CA, rA, aIn, aIn + norm(angOf(tAB.p1, CA) - aIn), NA); // A 위 감김
   return pts;
 }
 
@@ -103,7 +118,8 @@ function loosePath(): THREE.Vector3[] {
     const t = i / nl;
     const x = pa[0] + (pc[0] - pa[0]) * t;
     const y = pa[1] + (pc[1] - pa[1]) * t;
-    pts.push(v3(x - BULGE * Math.sin(Math.PI * t), y, Z));
+    const sn = Math.sin(Math.PI * t);
+    pts.push(v3(x - BULGE * sn * sn, y, Z)); // sin² — 양끝이 A·C 접선(수직)으로 매끄럽게 이어진다(꺾임 없음)
   }
   arcPts(pts, CC, rC, Math.PI, Math.PI + norm(aR - Math.PI), NC);
   linePts(pts, tCA.p1, tCA.p2, NR);
@@ -146,14 +162,16 @@ export default function buildM005(): MovementModel {
   g.add(pA, pC);
 
   // 레버(F 받침) + 조임 풀리 B: 스터드 위에서 자유 회전
-  const leverG = lever(0.75, { handle: true });
+  const leverG = lever(LB + 0.06); // B 는 막대 끝, 반대쪽 꼬리가 손잡이
   leverG.position.set(PF[0], PF[1], ZBAR);
+  leverG.rotation.z = A0; // 초기 자세 — 떼어 있음
   const studG = new THREE.Group();
   studG.position.set(LB, 0, Z - ZBAR);
   const pB = pulley(RB, { spokes: 4 });
   studG.add(pB);
   leverG.add(studG);
   leverG.add(rod(v3(LB, 0, -0.08), v3(LB, 0, 0.26), 0.024)); // B 스터드 — 레버판을 관통
+  leverG.add(rod(v3(-0.32, 0, 0), v3(-0.06, 0, 0), 0.03)); // 바깥으로 뻗은 손잡이
   g.add(leverG);
 
   // 벨트: 느슨/팽팽 두 경로를 같은 점 수로 만들어 k로 보간, 매 프레임 갱신
@@ -191,8 +209,8 @@ export default function buildM005(): MovementModel {
       // 절대 자세 계산
       pA.rotation.z = thetaA;
       pC.rotation.z = thetaC;
-      pB.rotation.z = s / (RB + E);
       leverG.rotation.z = A0 + (A1 - A0) * k;
+      pB.rotation.z = -s / (RB + E) - leverG.rotation.z;
       for (let i = 0; i < NPTS; i++) cur[i]!.lerpVectors(loose[i]!, tight[i]!, k);
       belt.setPath(cur);
       belt.setOffset(s);

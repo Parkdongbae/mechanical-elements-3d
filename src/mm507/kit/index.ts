@@ -6,3 +6,6 @@ export * from './belt';
 export * from './gear';
 export * from './misc';
 export * from './rope';
+export * from './gear2';
+export * from './gear4';
+export * from './gear3';

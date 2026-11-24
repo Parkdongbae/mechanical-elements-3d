@@ -1,5 +1,5 @@
 // 010 곡면 원뿔 풀리 — 009 와 같은 배치(축 X 방향, 벨트가 좌우로 이동하며 연속 변속),
-// 풀리 옆선이 곧지 않고 곡선: 위 풀리는 볼록, 아래 풀리는 오목 (판화 10번)
+// 풀리 옆선이 곧지 않고 곡선: 판화대로 위 풀리는 오목(나팔꼴), 아래 풀리는 볼록(종꼴) (판화 10번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { Belt, PILLOW_BOSS_Y, STAGE, displayStand, openBeltPath, pillow, rod, tag, type V2 } from '../kit';
@@ -9,7 +9,7 @@ import { TAU, lathe, mesh, tubeProfile } from '../../models/parts/geom';
 const R0 = 0.5; // 큰 쪽 반지름 (로컬 -X 끝)
 const R1 = 0.22; // 작은 쪽 반지름 (로컬 +X 끝)
 const LEN = 0.9; // 풀리 축방향 길이 — x ∈ [-0.45, 0.45]
-const POW = 1.6; // 곡면 지수 — 설계표: 위 r(u)=r0+(r1−r0)·u^1.6, 아래 1−(1−u)^1.6
+const POW = 1.6; // 곡면 지수 — 위(오목) r(u)=r0+(r1−r0)·(1−(1−u)^1.6), 아래(볼록)는 두 반지름 합이 일정하도록 그 거울상
 const XB = 0.35; // 벨트 이동 폭
 const PERIOD = 10; // 벨트 이동 주기(초) — 009 과 같은 식
 const YT = 2.5; // 구동축(위) 높이
@@ -20,20 +20,39 @@ const E = 0.01; // 벨트 두께 절반 — 접점은 표면 반지름 위에 �
 
 const v3 = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 
-/** 옆선 계수 — t=0(-X, 큰 쪽)→t=1(+X). 위는 볼록(u^1.6), 아래는 오목(1−(1−u)^1.6) */
-const facTop = (t: number): number => Math.pow(t, POW);
-const facBot = (t: number): number => 1 - Math.pow(1 - t, POW);
+/** 옆선 계수 — 로컬 t=0(-X, 큰 쪽)→t=1(+X).
+ *  판화 10번: 위 풀리는 큰 쪽에서 급히 줄다가 완만해지는 오목(나팔꼴), 아래 풀리는 불룩한 볼록(종꼴).
+ *  아래 풀리는 y π 로 뒤집어 달므로 로컬 t = 1 − u — 볼록은 로컬에서 t^1.6 이다 */
+const facTop = (t: number): number => 1 - Math.pow(1 - t, POW);
+const facBot = (t: number): number => Math.pow(t, POW);
 
-/** 벨트 위치 x 의 표면 반지름 — 풀리와 같은 곡선식(직선 보간 대신) */
-function surfAt(x: number): { ru: number; rl: number } {
+/** 벨트 위치 x 의 표면 반지름과 기울기(dr/dx) — 풀리와 같은 곡선식. ru + rl = R0 + R1 로 일정 */
+function surfAt(x: number): { ru: number; rl: number; su: number; sl: number } {
   const u = (x + LEN / 2) / LEN;
-  return { ru: R0 + (R1 - R0) * Math.pow(u, POW), rl: R1 + (R0 - R1) * Math.pow(u, POW) };
+  const ru = R0 + (R1 - R0) * (1 - Math.pow(1 - u, POW));
+  const su = ((R1 - R0) * POW * Math.pow(1 - u, POW - 1)) / LEN;
+  return { ru, rl: R0 + R1 - ru, su, sl: -su };
 }
 
-/** x 위치의 YZ 평면 열린 벨트(008 방식): openBeltPath(z,y) → (x, y, z) */
-function beltPath(x: number): THREE.Vector3[] {
-  const { ru, rl } = surfAt(x);
-  return openBeltPath([Z0, YT], ru + E, [Z0, YB], rl + E).map((p) => v3(x, p[1], p[0]));
+const SEG = 24; // openBeltPath 호 분할 수 — 점 순서: [0]=위 뒤 접점, [1..SEG+1]=아래 풀리, [SEG+2..]=위 풀리
+
+/** x 위치의 YZ 평면 열린 벨트: openBeltPath(z,y) → (x, y, z).
+ *  띠 중심은 표면 법선 방향으로 두께 절반만큼 띄우고, 폭 방향은 그 자리 곡면 기울기를 따른다(009 방식) —
+ *  폭을 X 로만 두면 띠 한쪽 모서리는 곡면에 묻히고 반대쪽은 뜬다. 폭 방향을 안 주면 띠가 풀리 꼭대기에서 반 바퀴 꼬인다 */
+function beltFrame(x: number): { path: THREE.Vector3[]; wd: THREE.Vector3[] } {
+  const { ru, rl, su, sl } = surfAt(x);
+  const pts = openBeltPath([Z0, YT], ru + E * Math.hypot(1, su), [Z0, YB], rl + E * Math.hypot(1, sl), SEG);
+  const path = pts.map((p) => v3(x, p[1], p[0]));
+  const wd = pts.map((p, i) => {
+    const top = i === 0 || i >= SEG + 2;
+    const cy = top ? YT : YB;
+    const k = top ? su : sl;
+    const ry = p[1] - cy;
+    const rz = p[0] - Z0;
+    const l = Math.hypot(ry, rz);
+    return v3(1, (k * ry) / l, (k * rz) / l).normalize();
+  });
+  return { path, wd };
 }
 
 /** 곡선 원뿔 풀리 — 회전축 = 로컬 X, 큰 쪽(R0)이 -X. 키트 conePulley 와 같은 조립(림+허브+표시점).
@@ -85,7 +104,7 @@ export default function buildM010(): MovementModel {
     }
   }
 
-  // 풀리: 위(구동·볼록·큰 쪽 왼쪽) / 아래(종동·오목, 009 처럼 큰 쪽 오른쪽 — y π 로 장착)
+  // 풀리: 위(구동·오목·큰 쪽 왼쪽) / 아래(종동·볼록, 009 처럼 큰 쪽 오른쪽 — y π 로 장착)
   const pTop = makeCone(facTop, true);
   pTop.position.set(0, YT, Z0);
   const pWrap = new THREE.Group();
@@ -96,7 +115,8 @@ export default function buildM010(): MovementModel {
   g.add(pTop, pWrap);
 
   // 벨트: x 위치의 YZ 평면 열린 경로 — 이동할 때마다 같은 식의 반지름으로 setPath
-  const belt = new Belt(beltPath(0), { width: 0.1, style: 'flat' });
+  const f0 = beltFrame(0);
+  const belt = new Belt(f0.path, { width: 0.1, thickness: 2 * E, style: 'flat', widthDirs: f0.wd });
   g.add(belt.group);
 
   g.add(tag('구동 원뿔 풀리', v3(-1.25, YT + 0.32, Z0 + 0.1)));
@@ -120,7 +140,8 @@ export default function buildM010(): MovementModel {
       pTop.rotation.x = -theta;
       // 아래 풀리는 y π 로 뒤집혀 있어 로컬 부호가 반대 — 월드에선 위와 같은 방향
       pBot.rotation.x = thetaD;
-      belt.setPath(beltPath(x));
+      const fr = beltFrame(x);
+      belt.setPath(fr.path, fr.wd);
       belt.setOffset(s);
     }
   };

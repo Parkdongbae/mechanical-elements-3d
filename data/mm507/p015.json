@@ -210,7 +210,7 @@
       "enStart": "Are different arrangements of",
       "titleKo": "도르래 배열 (21)",
       "ko": "도르래를 여러 가지로 배열한 것이다. 다음 규칙이 적용된다. 각 도르래가 줄에 감싸이고 그 줄의 한쪽 끝은 고정점에, 다른 쪽 끝은 움직도르래의 중심에 매인 도르래 계에서는, 전체의 효과가 숫자 2를 그 계에 있는 움직도르래의 수만큼 거듭 곱한 값과 같다.",
-      "easy": "움직도르래가 하나뿐인 가장 간단한 배열이다. 그래서 힘은 절반으로 줄어든다. 줄 두 가닥이 무게를 받치고 있다.",
+      "easy": "책의 설명은 19번과 같은 문단(움직도르래 하나마다 2배 — 2ⁿ 규칙)을 함께 쓴다. 그런데 21번 판화는 줄 두 개가 모두 짐에 매여 있다. 당기는 힘을 T라 하면 움직도르래를 감은 줄이 T, 움직도르래를 매단 줄이 2T로 짐을 끌어 올려 모두 3T — 이득은 3배(2² − 1)다.",
       "category": "belt",
       "mech": "Fixed pulley at top, one movable pulley at left; two ropes drop to the weight. One movable pulley, advantage 2."
     },

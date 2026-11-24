@@ -36,10 +36,17 @@ export function openBeltPath(c1: V2, r1: number, c2: V2, r2: number, seg = 24): 
   const pts: V2[] = [];
   pts.push([c1[0] + r1 * lo[0], c1[1] + r1 * lo[1]]);
   pts.push([c2[0] + r2 * lo[0], c2[1] + r2 * lo[1]]);
-  arc(pts, c2[0], c2[1], r2, aLo, aUp, seg);
+  // 각 풀리의 호는 상대 풀리에서 먼 쪽을 지난다 — 두 후보(정·역) 중 호 가운데가 먼 쪽을 향하는 것
+  // (단순 보간은 r1 < r2 일 때 호가 풀리 사이로 돌거나 한 바퀴 넘게 감기던 버그)
+  const farArc = (a0: number, a1: number, fx: number, fy: number): number => {
+    const d0 = ((((a1 - a0) % TAU) + TAU) % TAU) || TAU; // (0, 2π]
+    const mid = a0 + d0 / 2;
+    return Math.cos(mid) * fx + Math.sin(mid) * fy > 0 ? a0 + d0 : a0 + d0 - TAU;
+  };
+  arc(pts, c2[0], c2[1], r2, aLo, farArc(aLo, aUp, ax, ay), seg);
   pts.push([c2[0] + r2 * up[0], c2[1] + r2 * up[1]]);
   pts.push([c1[0] + r1 * up[0], c1[1] + r1 * up[1]]);
-  arc(pts, c1[0], c1[1], r1, aUp, aLo + TAU, seg);
+  arc(pts, c1[0], c1[1], r1, aUp, farArc(aUp, aLo, -ax, -ay), seg);
   return pts;
 }
 
@@ -64,10 +71,17 @@ export function crossedBeltPath(c1: V2, r1: number, c2: V2, r2: number, seg = 24
   // 아래 가닥 1→2 (기어2 쪽은 반대편 접점 c2 - r2·m)
   pts.push([c1[0] + r1 * mB[0], c1[1] + r1 * mB[1]]);
   pts.push([c2[0] - r2 * mB[0], c2[1] - r2 * mB[1]]);
-  arc(pts, c2[0], c2[1], r2, aB + Math.PI, aA + Math.PI, seg);
+  // 엇걸이에서는 두 풀리 모두 반 바퀴보다 많이(π + 2g) 감긴다 — 짧은 쪽 호가 나오면 긴 쪽으로 바꾼다
+  const longArc = (a0: number, a1: number): number => {
+    let d = a1 - a0;
+    d = ((d % TAU) + TAU) % TAU; // 0..2π
+    if (d > Math.PI) d -= TAU; // -π..π (짧은 쪽)
+    return a0 + (Math.abs(d) < Math.PI ? d - Math.sign(d || 1) * TAU : d);
+  };
+  arc(pts, c2[0], c2[1], r2, aB + Math.PI, longArc(aB + Math.PI, aA + Math.PI), seg);
   pts.push([c2[0] - r2 * mA[0], c2[1] - r2 * mA[1]]);
   pts.push([c1[0] + r1 * mA[0], c1[1] + r1 * mA[1]]);
-  arc(pts, c1[0], c1[1], r1, aA, aB + TAU, seg);
+  arc(pts, c1[0], c1[1], r1, aA, longArc(aA, aB), seg);
   return pts;
 }
 
@@ -351,7 +365,7 @@ export class Belt {
         m.makeBasis(q.n, q.b, q.t);
       } else {
         mk.position.copy(q.p).addScaledVector(q.b, this.thickness / 2 + 0.004);
-        m.makeBasis(q.t, q.n, q.b);
+        m.makeBasis(q.t, q.b, q.n.clone().negate()); // 표시 상자가 띠 면에 눕게(긴 변 = 폭 방향 n)
       }
       mk.quaternion.setFromRotationMatrix(m);
     }

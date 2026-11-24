@@ -1,7 +1,7 @@
 // 009 원뿔 풀리 변속 — 마주 보는 원뿔 풀리 위로 벨트 위치가 이동하며 속도비가 연속(무단) 변한다 (판화 9번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, PILLOW_BOSS_Y, ROPE_R, conePulley, displayStand, openBeltPath, pillow, rod, tag } from '../kit';
+import { Belt, PILLOW_BOSS_Y, conePulley, displayStand, pillow, rod, tag } from '../kit';
 import { bronze, castIron } from '../../models/materials';
 
 const YT = 2.5; // 구동(위) 축 높이
@@ -11,6 +11,7 @@ const SX = 0.8; // 축 반 길이(길이 1.6) — 양끝 필로
 const CL = 0.9; // 원뿔 풀리 길이 (x −0.45 → +0.45)
 const R0 = 0.36; // 벨트 위치 x=0 반지름 — Ru+Rl = 0.72 일정, 벨트 길이 거리 일정
 const K = 0.311; // 원뿔 기울기 (0.28/0.9)
+const E = 0.0105; // 평벨트 두께 절반(0.01)을 경사 보정한 값
 const XR = 0.35; // 벨트 이동 진폭
 const PERIOD = 10; // 벨트 이동 주기(초)
 
@@ -21,9 +22,57 @@ const v3 = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3
 const RuOf = (x: number): number => R0 - K * x;
 const RlOf = (x: number): number => R0 + K * x;
 
-/** 벨트 경로: x 위치의 YZ 평면 열린 벨트. (z,y) 쌍을 3D (x,y,z)로. 로프 중심이 원뿔 표면에 앉도록 +ROPE_R */
-function beltPath(x: number): THREE.Vector3[] {
-  return openBeltPath([Z, YT], RuOf(x) + ROPE_R, [Z, YB], RlOf(x) + ROPE_R).map((p) => v3(x, p[1], p[0]));
+type P2 = [number, number];
+
+/** 열린 벨트 경로(닫힌 점열) — 키트 openBeltPath 와 같은 점 순서·점 수. 단, r1<r2 이면 atan2 각이 뒤집혀
+ *  호가 풀리 사이(안쪽)로 돌아 로프가 원뿔 속으로 파고들던 문제를, 각 증분을 (0, 2π]로 정규화해 피한다.
+ *  own[i] = 점 i 가 속한 풀리(0=c1, 1=c2) */
+function openPath(c1: P2, r1: number, c2: P2, r2: number, seg = 24): { pts: P2[]; own: number[] } {
+  const dx = c2[0] - c1[0];
+  const dy = c2[1] - c1[1];
+  const D = Math.hypot(dx, dy);
+  const ax = dx / D;
+  const ay = dy / D;
+  const lx = -ay;
+  const ly = ax;
+  const sb = Math.max(-0.999, Math.min(0.999, (r1 - r2) / D));
+  const cb = Math.sqrt(1 - sb * sb);
+  const aUp = Math.atan2(sb * ay + cb * ly, sb * ax + cb * lx);
+  const aLo = Math.atan2(sb * ay - cb * ly, sb * ax - cb * lx);
+  const pos = (d: number): number => {
+    const x = d % TAU;
+    return x <= 0 ? x + TAU : x;
+  };
+  const pts: P2[] = [];
+  const own: number[] = [];
+  const add = (c: P2, r: number, a: number, o: number): void => {
+    pts.push([c[0] + Math.cos(a) * r, c[1] + Math.sin(a) * r]);
+    own.push(o);
+  };
+  const d2 = pos(aUp - aLo);
+  const d1 = pos(aLo - aUp);
+  add(c1, r1, aLo, 0);
+  add(c2, r2, aLo, 1);
+  for (let i = 1; i < seg; i++) add(c2, r2, aLo + (d2 * i) / seg, 1);
+  add(c2, r2, aUp, 1);
+  add(c1, r1, aUp, 0);
+  for (let i = 1; i < seg; i++) add(c1, r1, aUp + (d1 * i) / seg, 0);
+  return { pts, own };
+}
+
+/** 평벨트(두께 0.02)가 원뿔 표면에 눕도록: 중심은 표면 법선 방향 E 위, 폭 방향은 표면 경사(축방향 x)를 따른다 */
+function beltFrame(x: number): { path: THREE.Vector3[]; wd: THREE.Vector3[] } {
+  const { pts, own } = openPath([Z, YT], RuOf(x) + E, [Z, YB], RlOf(x) + E);
+  const path = pts.map((p) => v3(x, p[1], p[0]));
+  const wd = pts.map((p, i) => {
+    const cy = own[i] === 0 ? YT : YB;
+    const sl = own[i] === 0 ? -K : K; // dr/dx: 위 원뿔은 줄고, 아래 원뿔은 는다
+    const ry = p[1] - cy;
+    const rz = p[0] - Z;
+    const l = Math.hypot(ry, rz);
+    return v3(1, (sl * ry) / l, (sl * rz) / l).normalize();
+  });
+  return { path, wd };
 }
 
 export default function buildM009(): MovementModel {
@@ -64,7 +113,8 @@ export default function buildM009(): MovementModel {
   g.add(pT, pB);
 
   // 벨트: 매 프레임 경로를 다시 만든다(같은 점 수 — 지오메트리 재사용)
-  const belt = new Belt(beltPath(0), { width: 0.1 });
+  const f0 = beltFrame(0);
+  const belt = new Belt(f0.path, { width: 0.1, thickness: 0.02, style: 'flat', widthDirs: f0.wd });
   g.add(belt.group);
 
   // 이름표
@@ -85,10 +135,13 @@ export default function buildM009(): MovementModel {
       const w = OMEGA * speed;
       theta += w * dt;
       driven += w * (Ru / Rl) * dt; // 종동각: 가변 속도비의 적분 — 각이 튀지 않게 누적
-      beltS += w * Ru * dt; // 벨트 선속도 = 구동 표면 속도
-      pT.rotation.x = theta;
-      pB.rotation.x = driven; // 열린 벨트: 같은 방향
-      belt.setPath(beltPath(x));
+      beltS += w * (Ru + E) * dt; // 벨트 선속도 = 구동 표면 속도(띠 중심선 반지름)
+      // 벨트 경로는 (z, y) 평면 반시계 = X 축 음의 회전(앞 가닥이 올라가고 꼭대기에서 뒤로 넘어간다, 008·010 규약).
+      // 풀리 표면도 같은 쪽으로 돌아야 띠 표시와 표면이 함께 흐른다 — 양의 각이면 띠와 풀리가 반대로 돈다
+      pT.rotation.x = -theta;
+      pB.rotation.x = -driven; // 열린 벨트: 같은 방향
+      const fr = beltFrame(x);
+      belt.setPath(fr.path, fr.wd);
       belt.setOffset(beltS);
     }
   };
