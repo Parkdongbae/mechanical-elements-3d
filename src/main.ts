@@ -13,6 +13,7 @@ import './styles/lab-engines.css';
 import './styles/lab-steam.css';
 import './styles/lab-pump.css';
 import './styles/lab-link.css';
+import './styles/lab-mill.css';
 import './styles/mm507.css';
 import { SceneManager, DEFAULT_VIEW } from './scene/SceneSetup';
 import { buildPart, normalizePart, disposeObject } from './models/factory';
@@ -36,6 +37,7 @@ import { EngineTypes } from './labs/EngineTypes';
 import { SteamEngines } from './labs/SteamEngines';
 import { HandPump } from './labs/HandPump';
 import { Linkage } from './labs/Linkage';
+import { WaterMill } from './labs/WaterMill';
 import { Gallery } from './mm507/Gallery';
 import { loadProgress, saveProgress, clearMachineProgress, clearAllProgress, allMachinesCompleted, type ProgressData } from './state/progress';
 import { guessQuality, loadSettings, saveSettings, type AppSettings } from './state/settings';
@@ -592,7 +594,7 @@ function tick(): void {
 
 // ── 화면 전환 (해시 라우팅: #/ 홈, #/m/<id> 미션, #/enc 도감, #/quiz 퀴즈) ──
 
-type ModeId = 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump' | 'lab/link' | 'mm';
+type ModeId = 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump' | 'lab/link' | 'lab/mill' | 'mm';
 type Screen = 'home' | 'mission' | ModeId;
 let screen: Screen = 'home';
 let activeMode: AppMode | null = null;
@@ -608,6 +610,7 @@ const modes: Record<ModeId, { name: string; mode: AppMode }> = {
   'lab/steam': { name: '증기 기관', mode: new SteamEngines() },
   'lab/pump': { name: '우물 손펌프', mode: new HandPump() },
   'lab/link': { name: '링크 장치', mode: new Linkage() },
+  'lab/mill': { name: '물레방아', mode: new WaterMill() },
   mm: { name: '507 기계 운동', mode: new Gallery() }
 };
 
@@ -668,6 +671,8 @@ function route(): void {
     screen = 'mission';
     home.hide();
     hud.setVisible(true);
+    hud.syncLabels(); // 실험·507에서 바꾼 이름표 설정을 미션 버튼·3D에 반영
+    sceneMgr.setLabelsVisible(settings.showLabels);
     switchMachine(arg);
     return;
   }

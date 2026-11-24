@@ -27,10 +27,27 @@ for (const id of ids) {
   console.log('ok', id);
 }
 // 학습 모드·탐구 실험: 진입해서 패널이 만들어지는지, 에러가 없는지
-for (const r of ['enc', 'quiz', 'lab/bike', 'lab/car', 'lab/power', 'lab/wind', 'lab/cycle', 'lab/engines', 'lab/steam', 'lab/pump', 'lab/link', 'mm', 'mm/1', 'mm/40', 'mm/about']) {
+for (const r of ['enc', 'quiz', 'lab/bike', 'lab/car', 'lab/power', 'lab/wind', 'lab/cycle', 'lab/engines', 'lab/steam', 'lab/pump', 'lab/link', 'lab/mill', 'mm', 'mm/1', 'mm/40', 'mm/about']) {
   const lp = await open(null, '#/' + r, 5000);
   const n = await lp.evaluate(() => document.querySelector('#mode-root').childElementCount);
   if (n === 0) errors.push(`${r}: 화면이 비어 있음`);
+  // 이름표 토글(지시서 18): 실험은 끄고 켜기까지, mm/<번호> 는 버튼만
+  const isMmDetail = r.startsWith('mm/') && r !== 'mm/about';
+  if (r.startsWith('lab/') || isMmDetail) {
+    const btns = await lp.$$('[data-lab="labels-toggle"]');
+    if (btns.length !== 1) errors.push(`${r}: 이름표 버튼 ${btns.length}개`);
+    else if (r.startsWith('lab/')) {
+      const visible = () => lp.evaluate(() => [...document.querySelectorAll('.lab-tag')].filter((e) => e.dataset.always !== 'true' && e.offsetParent !== null).length);
+      const pressed = await btns[0].getAttribute('aria-pressed');
+      if (pressed !== 'true') { await btns[0].click(); await lp.waitForTimeout(400); }
+      const before = await visible();
+      await btns[0].click(); await lp.waitForTimeout(400);
+      const after = await visible();
+      if (after !== 0) errors.push(`${r}: 이름표를 꺼도 ${after}개 보임`);
+      await btns[0].click(); await lp.waitForTimeout(400);
+      if (before > 0 && (await visible()) === 0) errors.push(`${r}: 이름표를 다시 켜도 안 보임`);
+    }
+  }
   await lp.click('#mode-home-btn');
   await lp.waitForTimeout(600);
   if (await lp.evaluate(() => document.querySelector('#home').classList.contains('hidden'))) errors.push(`${r}: 홈으로 돌아가지 못함`);

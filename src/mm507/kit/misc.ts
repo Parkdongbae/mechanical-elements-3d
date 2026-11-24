@@ -77,7 +77,25 @@ export function tag(text: string, pos: THREE.Vector3): THREE.Sprite {
   const w = 0.55 + text.length * 0.14;
   const s = makeLabelSprite(text, '#f2b619', w, 0.34);
   s.position.copy(pos);
+  s.name = 'mm-tag';
+  s.userData.mmTag = true;
   return s;
+}
+
+/** root 아래 tag() 이름표의 visible 만 바꾼다(회전 화살표 등 다른 레이어 1 물체는 그대로) */
+export function setTagsVisible(root: THREE.Object3D, visible: boolean): void {
+  root.traverse((o) => {
+    if (o.userData.mmTag === true) o.visible = visible;
+  });
+}
+
+/** root 아래 tag() 이름표 개수(검사용) */
+export function countTags(root: THREE.Object3D): number {
+  let n = 0;
+  root.traverse((o) => {
+    if (o.userData.mmTag === true) n++;
+  });
+  return n;
 }
 
 /** 두 원의 교점(링크 기구 풀이). up=true면 c1→c2 기준 왼쪽 해. 못 만들면 null */

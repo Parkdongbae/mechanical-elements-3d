@@ -9,6 +9,7 @@ import { el, button } from '../modes/dom';
 import { ENGINES, KEY_SENTENCE, engineDef, interval, type EngineDef, type EngineId } from './engines/data';
 import { EngineModel, type BlockMode } from './engines/model';
 import { layoutIcon } from './engines/icon';
+import { LabLabels, type LabelSpec } from './common/labels';
 
 type ViewId = 'iso' | 'front' | 'top' | 'side';
 
@@ -30,18 +31,6 @@ const RPM_MAX = 90;
 const RPM_DEFAULT = 20;
 const TAU = Math.PI * 2;
 
-interface Tag {
-  el: HTMLElement;
-  model: EngineModel;
-  /** 실린더 인덱스(-1: 뱅크 이름표, -2: 엔진 이름표) */
-  cyl: number;
-  bank: number;
-  x: number;
-  y: number;
-  z: number;
-  fire: boolean;
-}
-
 interface Timeline {
   wrap: HTMLElement;
   cursor: HTMLElement;
@@ -59,15 +48,17 @@ export class EngineTypes implements AppMode {
   private dock!: HTMLElement;
   private listPanel!: HTMLElement;
   private ctrlPanel!: HTMLElement;
+  private viewRow!: HTMLElement;
   private infoPanel!: HTMLElement;
-  private tagLayer!: HTMLElement;
+  private labels: LabLabels | null = null;
+  private bounds = { x0: 0, y0: 0, x1: 0, y1: 0 };
+  private fireOn: (boolean | undefined)[] = [];
   private cardBtns = new Map<EngineId, HTMLButtonElement>();
   private viewBtns: HTMLButtonElement[] = [];
   private blockBtns: HTMLButtonElement[] = [];
   private compareBtn!: HTMLButtonElement;
   private pauseBtn!: HTMLButtonElement;
   private rpmOut!: HTMLElement;
-  private tags: Tag[] = [];
   private timelines: Timeline[] = [];
   private chips: { el: HTMLElement; model: EngineModel; cyl: number }[] = [];
 
@@ -87,7 +78,6 @@ export class EngineTypes implements AppMode {
   private frameT = 0;
   private fitPending = true;
   private fitImmediate = true;
-  private tmp = new THREE.Vector3();
   private baseFov = 40;
   private fov = 40;
   private savedFog: [number, number] | null = null;
@@ -162,9 +152,10 @@ export class EngineTypes implements AppMode {
     }
     for (const m of this.models) m.dispose();
     this.models = [];
+    this.labels?.dispose();
+    this.labels = null;
     this.wrap?.remove();
     this.wrap = null;
-    this.tags = [];
     this.timelines = [];
     this.chips = [];
     this.cardBtns.clear();
@@ -278,6 +269,7 @@ export class EngineTypes implements AppMode {
   private checkFrame(): void {
     if (!this.wrap) return;
     const fr = this.freeRect();
+    this.bounds = fr;
     const key = `${window.innerWidth}x${window.innerHeight}:${Math.round(fr.x0 / 12)},${Math.round(fr.x1 / 12)},${Math.round(fr.y0 / 12)},${Math.round(fr.y1 / 12)}`;
     if (key !== this.frameKey) {
       this.frameKey = key;
@@ -294,8 +286,6 @@ export class EngineTypes implements AppMode {
   private buildDom(root: HTMLElement): void {
     const wrap = el('div', 'eng-wrap');
     this.wrap = wrap;
-    this.tagLayer = el('div', 'eng-tags');
-    this.tagLayer.setAttribute('aria-hidden', 'true');
     this.dock = el('div', 'eng-dock');
 
     // 엔진 목록
@@ -380,15 +370,22 @@ export class EngineTypes implements AppMode {
       this.viewBtns.push(b);
       views.append(b);
     }
-    ctrl.append(play, speed, views);
+    const viewRow = el('div', 'eng-viewrow');
+    viewRow.append(views);
+    this.viewRow = viewRow;
+    ctrl.append(play, speed, viewRow);
 
     // 정보
     this.infoPanel = el('section', 'eng-info eng-panel');
     this.infoPanel.setAttribute('aria-live', 'polite');
 
     this.dock.append(list, ctrl, this.infoPanel);
-    wrap.append(this.tagLayer, this.dock);
+    wrap.append(this.dock);
     root.append(wrap);
+    // 이름표 레이어 + 켜고 끄는 버튼(시점 버튼 옆)
+    const labels = new LabLabels(this.ctx!, wrap, { bounds: () => this.bounds });
+    this.labels = labels;
+    this.viewRow.append(labels.button);
     this.refreshSpeed();
     this.setPaused(false);
   }
@@ -414,7 +411,7 @@ export class EngineTypes implements AppMode {
     this.compareBtn.classList.toggle('is-on', this.compare);
     this.compareBtn.setAttribute('aria-pressed', String(this.compare));
     this.renderInfo();
-    this.buildTags();
+    this.setLabels();
   }
 
   private refreshSpeed(): void {
@@ -665,85 +662,89 @@ export class EngineTypes implements AppMode {
 
   // ───────────────────────── 3D 이름표 ─────────────────────────
 
-  private buildTags(): void {
-    this.tagLayer.replaceChildren();
-    this.tags = [];
-    if (!(this.ctx?.settings.showLabels ?? true)) return;
-    for (const m of this.models) {
+  private setLabels(): void {
+    const labels = this.labels;
+    if (!labels) return;
+    const specs: LabelSpec[] = [];
+    this.fireOn = [];
+    this.models.forEach((m, mi) => {
+      const k = `${mi}`;
+      // 부품 이름은 비교 때도 왼쪽(첫) 엔진에만
+      if (mi === 0) {
+        const part = (key: string, text: string, priority: 1 | 2 | 3, side: 'above' | 'below' | 'left' | 'right'): void => {
+          specs.push({ key: `${key}`, text, side, priority, at: (out) => m.partWorld(key, out) });
+        };
+        part('crank', '크랭크축', 1, 'below');
+        part('piston', '피스톤', 1, 'right');
+        part('rod', '커넥팅 로드', 1, 'left');
+        part('block', '실린더 블록', 2, 'below');
+        part('head', '실린더 헤드', 2, 'above');
+        part('flywheel', '플라이휠', 2, 'above');
+        part('pulley', '크랭크 풀리', 3, 'above');
+        part('support', '받침대(베어링)', 3, 'below');
+      }
       m.cyl.forEach((c, i) => {
         const bank = m.def.banks[c.bank]!;
-        const t = el('div', `eng-tag eng-b-${bank.color}${m.def.banks.length > 1 ? ' is-bank' : ''}`);
-        t.append(el('span', 'eng-tag-l', String(c.num)));
-        this.tagLayer.append(t);
-        this.tags.push({ el: t, model: m, cyl: i, bank: c.bank, x: 0, y: 0, z: 0, fire: false });
+        specs.push({
+          key: `cyl${k}-${c.num}`,
+          text: String(c.num),
+          kind: 'point',
+          priority: 2,
+          tone: bank.color,
+          at: (out) => {
+            m.tagWorld(i, out);
+            return true;
+          }
+        });
       });
       if (m.def.banks.length > 1) {
         m.def.banks.forEach((b, bi) => {
-          const t = el('div', `eng-btag eng-b-${b.color}`);
-          t.append(el('span', 'eng-btag-l', b.name));
-          this.tagLayer.append(t);
-          this.tags.push({ el: t, model: m, cyl: -1, bank: bi, x: 0, y: 0, z: 0, fire: false });
+          specs.push({
+            key: `bank${k}-${bi}`,
+            text: b.name,
+            kind: 'info',
+            priority: 2,
+            tone: b.color,
+            at: (out) => {
+              m.bankWorld(bi, out);
+              return true;
+            }
+          });
         });
       }
       if (this.compare) {
-        const t = el('div', 'eng-ntag');
-        t.append(el('span', 'eng-ntag-l', `${m.def.code} ${m.def.name}`));
-        this.tagLayer.append(t);
-        this.tags.push({ el: t, model: m, cyl: -2, bank: 0, x: 0, y: 0, z: 0, fire: false });
+        specs.push({
+          key: `name${k}`,
+          text: `${m.def.code} ${m.def.name}`,
+          kind: 'info',
+          priority: 1,
+          side: 'above',
+          at: (out) => {
+            const b = m.box;
+            out.set((b.min.x + b.max.x) / 2, b.max.y + 0.55, (b.min.z + b.max.z) / 2).add(m.root.position);
+            return true;
+          }
+        });
       }
-    }
+    });
+    labels.set(specs);
   }
 
-  private updateTags(): void {
-    const ctx = this.ctx;
-    if (!ctx || this.tags.length === 0) return;
-    const cam = ctx.sceneMgr.camera;
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    const camPos = cam.position;
-    for (const t of this.tags) {
-      const m = t.model;
-      if (t.cyl >= 0) m.tagWorld(t.cyl, this.tmp);
-      else if (t.cyl === -1) m.bankWorld(t.bank, this.tmp);
-      else {
-        const b = m.box;
-        this.tmp.set((b.min.x + b.max.x) / 2, b.max.y + 0.12, (b.min.z + b.max.z) / 2).add(m.root.position);
-      }
-      t.z = this.tmp.distanceTo(camPos);
-      const v = this.tmp.project(cam);
-      t.x = (v.x + 1) * 0.5 * W;
-      t.y = (1 - v.y) * 0.5 * H;
-      if (v.z > 1) t.z = Infinity;
-      if (t.cyl >= 0) {
-        const f = (m.fire[t.cyl] ?? 0) > 0.28;
-        if (f !== t.fire) {
-          t.fire = f;
-          t.el.classList.toggle('is-fire', f);
+  /** 점화한 실린더 번호를 불꽃 색으로 */
+  private updateFire(): void {
+    const labels = this.labels;
+    if (!labels) return;
+    let n = 0;
+    this.models.forEach((m, mi) => {
+      m.cyl.forEach((c, i) => {
+        const f = (m.fire[i] ?? 0) > 0.28;
+        if (f !== this.fireOn[n]) {
+          this.fireOn[n] = f;
+          labels.setState(`cyl${mi}-${c.num}`, f ? 'fire' : null);
         }
-      }
-    }
-    // 가까운 것부터 놓고, 이미 놓인 이름표와 겹치면 숨긴다(앞 시점에서 뒤 실린더 번호가 포개지지 않게)
-    const order = [...this.tags].sort((a, b) => (a.cyl === -2 ? -1 : b.cyl === -2 ? 1 : a.z - b.z));
-    const fr = this.freeRect();
-    const placed: Tag[] = [];
-    for (const t of order) {
-      let hidden = !Number.isFinite(t.z) || t.x < 6 || t.x > W - 6 || t.y < 20 || t.y > H - 4 || (t.x < 236 && t.y < 80) || t.x < fr.x0 + 8 || t.x > fr.x1 - 8 || t.y > fr.y1 - 6;
-      if (!hidden) {
-        const r = t.cyl === -1 ? 56 : 21;
-        for (const p of placed) {
-          const rr = Math.max(r, p.cyl === -1 ? 56 : 21);
-          if (Math.abs(p.x - t.x) < rr && Math.abs(p.y - t.y) < (t.cyl === -2 || p.cyl === -2 ? 24 : 20)) {
-            hidden = true;
-            break;
-          }
-        }
-      }
-      t.el.style.visibility = hidden ? 'hidden' : 'visible';
-      if (!hidden) {
-        placed.push(t);
-        t.el.style.transform = `translate(${t.x.toFixed(1)}px, ${t.y.toFixed(1)}px)`;
-      }
-    }
+        n++;
+      });
+    });
   }
 
   // ───────────────────────── 프레임 ─────────────────────────
@@ -792,7 +793,8 @@ export class EngineTypes implements AppMode {
       this.frameT = 0;
       this.checkFrame();
     }
-    this.updateTags();
+    this.updateFire();
+    this.labels?.update();
   }
 }
 

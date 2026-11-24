@@ -66,7 +66,7 @@ async function check(page) {
     const over = document.documentElement.scrollWidth > innerWidth || document.body.scrollWidth > innerWidth;
     // 좌상단 220x64: 패널·시트·이름표 글자가 들어오면 센다(스크롤 안쪽 요소는 바깥 상자로만 본다)
     const topLeft = all.filter((e) => {
-      if (!vis(e) || !e.matches('.lk-list, .lk-side, .lk-ctl, .lk-dock, .lk-topchip, .lk-tag-l')) return false;
+      if (!vis(e) || !e.matches('.lk-list, .lk-side, .lk-ctl, .lk-dock, .lk-topchip, .lab-tag-l')) return false;
       const b = e.getBoundingClientRect();
       return b.left < 220 && b.top < 64 && b.right > 0 && b.bottom > 0;
     }).length;
@@ -85,7 +85,7 @@ async function check(page) {
     const smallRange = [...document.querySelectorAll('.lk-range')].filter((e) => vis(e) && e.getBoundingClientRect().height < 35).length;
     const clipped = all
       .filter((e) => {
-        if (!vis(e) || e.closest('svg') || e.closest('.lk-tags')) return false;
+        if (!vis(e) || e.closest('svg') || e.closest('.lab-tags')) return false;
         const o = getComputedStyle(e).overflowX;
         if (o === 'auto' || o === 'scroll') return false;
         return e.scrollWidth > e.clientWidth + 1 && e.clientWidth > 0 && getComputedStyle(e).display !== 'inline';

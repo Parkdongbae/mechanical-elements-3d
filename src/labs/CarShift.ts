@@ -7,6 +7,7 @@ import { el, button } from '../modes/dom';
 import { CarSim, type DriveMode, type Selector } from './car/model';
 import { SPEC, GEAR_USES, gearRatio, gearLabel, speedFromRpm, rpmFromSpeed, type GearId } from './car/spec';
 import { Powertrain3D } from './car/powertrain3d';
+import { LabLabels, type LabelBounds } from './common/labels';
 import { Gauge } from './car/gauges';
 import { AutoSelector, HShifter, Pedal } from './car/controls';
 import type { CameraView } from '../scene/SceneSetup';
@@ -16,7 +17,8 @@ const fmt = (n: number, d = 0): string => n.toLocaleString('ko-KR', { minimumFra
 
 const VIEW_WIDE: CameraView = { pos: [-2.6, 3.2, -4.7], target: [-0.45, 0.42, -1.7] };
 // 좁은 화면: 3D는 위쪽 40%만 보이므로 카메라를 아래로 숙여 변속기가 화면 위쪽에 오게 한다
-const VIEW_NARROW: CameraView = { pos: [-2.8, 3.7, -5.3], target: [-0.85, -0.95, -2.75] };
+// 좁은 화면: 조금 물러나 클러치가 좌상단 홈 버튼 자리에서 벗어나고 바퀴까지 3D 영역에 들게(지시서 18 검증)
+const VIEW_NARROW: CameraView = { pos: [-3.1, 4.1, -5.9], target: [-0.7, -0.6, -2.7] };
 
 type Tone = 'info' | 'ok' | 'warn';
 
@@ -28,6 +30,10 @@ export class CarShift implements AppMode {
   private mode: DriveMode = 'manual';
   private shownGear: GearId | null = null;
   private narrowMq: MediaQueryList | null = null;
+  private labels: LabLabels | null = null;
+  private bounds: LabelBounds = { x0: 0, y0: 0, x1: 99999, y1: 99999 };
+  private boundsT = 0;
+  private panels: { top: HTMLElement; left: HTMLElement; right: HTMLElement; cockpit: HTMLElement; sheet: HTMLElement } | null = null;
 
   // DOM
   private segBtns = new Map<DriveMode, HTMLButtonElement>();
@@ -67,6 +73,7 @@ export class CarShift implements AppMode {
     this.pt = new Powertrain3D();
     ctx.sceneMgr.add(this.pt.group);
     this.buildDom(ctx.root);
+    this.labels?.set(this.pt.anchors(ctx.sceneMgr.camera));
     this.applyMode('manual');
     this.narrowMq = window.matchMedia(NARROW);
     this.narrowMq.addEventListener('change', this.onNarrow);
@@ -88,6 +95,9 @@ export class CarShift implements AppMode {
       this.pt.dispose();
     }
     this.pt = null;
+    this.labels?.dispose();
+    this.labels = null;
+    this.panels = null;
     this.wrap?.remove();
     this.wrap = null;
     this.segBtns.clear();
@@ -108,6 +118,7 @@ export class CarShift implements AppMode {
     const wrap = el('div', 'car-wrap');
     this.wrap = wrap;
     root.appendChild(wrap);
+    if (this.ctx) this.labels = new LabLabels(this.ctx, wrap, { bounds: () => this.bounds });
 
     // 모드 세그먼트
     const seg = el('div', 'car-seg car-panel');
@@ -252,9 +263,14 @@ export class CarShift implements AppMode {
     hint.dataset.role = 'keys';
     cockpit.append(this.shiftArea, dash, pedals, hint);
 
+    const top = el('div', 'car-top');
+    top.append(seg);
+    if (this.labels) top.append(this.labels.button);
     const sheet = el('div', 'car-sheet');
-    sheet.append(seg, cockpit, right, left);
+    sheet.append(top, cockpit, right, left);
     wrap.append(sheet, this.alertEl);
+    this.panels = { top, left, right, cockpit, sheet };
+    this.measureBounds();
   }
 
   private applyMode(m: DriveMode): void {
@@ -387,6 +403,24 @@ export class CarShift implements AppMode {
 
   // ───────────────────────── 갱신 ─────────────────────────
 
+  /** 이름표를 놓아도 되는 영역: 패널·조작판·하단 시트를 뺀 3D가 보이는 곳 */
+  private measureBounds(): void {
+    const p = this.panels;
+    const w = this.wrap;
+    if (!p || !w) return;
+    const wr = w.getBoundingClientRect();
+    if (window.matchMedia(NARROW).matches) {
+      this.bounds = { x0: 0, y0: 0, x1: wr.width, y1: Math.max(0, p.sheet.getBoundingClientRect().top - wr.top) };
+    } else {
+      this.bounds = {
+        x0: p.left.getBoundingClientRect().right - wr.left,
+        y0: p.top.getBoundingClientRect().bottom - wr.top,
+        x1: p.right.getBoundingClientRect().left - wr.left,
+        y1: Math.min(wr.height, p.cockpit.getBoundingClientRect().top - wr.top)
+      };
+    }
+  }
+
   update(dt: number): void {
     if (!this.pt || !this.wrap) return;
     const h = Math.min(dt, 0.05);
@@ -409,6 +443,17 @@ export class CarShift implements AppMode {
       clutch: this.mode === 'manual' ? sim.clutch : 0,
       speed: sim.v
     });
+    const lb = this.labels;
+    if (lb) {
+      this.boundsT -= h;
+      if (this.boundsT <= 0) {
+        this.boundsT = 0.4;
+        this.measureBounds();
+      }
+      const gt = this.pt.gearText();
+      if (gt) lb.setText('gear', gt);
+      lb.update();
+    }
     this.tach.set(sim.engineRpm, false, fmt(sim.engineRpm));
     this.speedo.set(Math.abs(sim.kmh), false, fmt(Math.abs(sim.kmh)));
     this.clutchPedal.setDepth(sim.clutch);

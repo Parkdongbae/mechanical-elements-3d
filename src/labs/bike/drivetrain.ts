@@ -11,7 +11,7 @@ import { disposeObject } from '../../models/factory';
 import type { BikeSpec } from './spec';
 import { makeBase, solveRig, stateFor, PITCH, ROLLER_R, S, type Base, type DriveState, type Rig } from './layout';
 import { approachPhase, type LoopPoint } from './chainLoop';
-import { makeLabel, setLabelText, disposeLabel } from './labels';
+import { localAnchor, type LabelSpec, type Anchor } from '../common/labels';
 
 const TAU = Math.PI * 2;
 const DEG = Math.PI / 180;
@@ -122,8 +122,6 @@ export class BikeDrive {
   private fdCage: THREE.Group | null = null;
   private fdArm: THREE.Mesh | null = null;
   private fdMount = new THREE.Vector3();
-  private labels: { ring: THREE.Sprite; cog: THREE.Sprite; others: THREE.Sprite[] };
-  private rdLabel: THREE.Sprite;
 
   // 매 프레임 재사용
   private pt: LoopPoint = { x: 0, y: 0, z: 0, tx: 0, ty: 0, tz: 0 };
@@ -163,26 +161,6 @@ export class BikeDrive {
       this.group.add(c);
     }
 
-    const b = this.base;
-    const rMax = b.ringR[b.ringR.length - 1]!;
-    this.labels = {
-      ring: makeLabel('', '#e5484d'),
-      cog: makeLabel('', '#2f8fdd'),
-      others: []
-    };
-    this.labels.ring.position.set(b.bx + 0.05, b.by - rMax - 0.2, 0.3);
-    this.labels.cog.position.set(b.rx - 0.1, b.ry + b.cogR[0]! + 0.32, 0.5);
-    this.rdLabel = makeLabel('뒤 변속기', '#9b5de5');
-    this.labels.others.push(this.rdLabel);
-    if (spec.rings.length > 1) {
-      const fdLabel = makeLabel('앞 변속기', '#9b5de5');
-      const a = SEAT_ANG;
-      fdLabel.position.set(b.bx + Math.cos(a) * (rMax + 0.32) - 0.45, b.by + Math.sin(a) * (rMax + 0.32) + 0.12, 0.5);
-      this.labels.others.push(fdLabel);
-    }
-    this.group.add(this.labels.ring, this.labels.cog, ...this.labels.others);
-    this.updateLabels();
-
     // 초기 위상: 바로 이골에 맞춘다
     this.applyPhases(0, 0, true);
     this.layoutDynamic();
@@ -204,12 +182,88 @@ export class BikeDrive {
     this.rear = rear;
     this.to = stateFor(this.base, front, rear);
     this.shiftT = 0;
-    this.updateLabels();
   }
 
-  private updateLabels(): void {
-    setLabelText(this.labels.ring, `체인링 ${this.spec.rings[this.front]}T`, '#e5484d');
-    setLabelText(this.labels.cog, `스프로킷 ${this.spec.cogs[this.rear]}T`, '#2f8fdd');
+  /** 지금 단의 이름표 글자(변속하면 잇수가 바뀐다) */
+  ringText(): string {
+    return `체인링(앞 스프로킷) ${this.spec.rings[this.front]}T`;
+  }
+
+  cogText(): string {
+    return `뒤 스프로킷 ${this.spec.cogs[this.rear]}T`;
+  }
+
+  /** 이름표 목록(지시서 18 4-1). 기준점은 모두 매 프레임 현재 자세를 읽는다 */
+  anchors(): LabelSpec[] {
+    const b = this.base;
+    const rMax = b.ringR[b.ringR.length - 1]!;
+    const g = this.group;
+    const fixed = (x: number, y: number, z: number): Anchor => (out) => {
+      g.updateWorldMatrix(true, false);
+      out.set(x, y, z).applyMatrix4(g.matrixWorld);
+      return true;
+    };
+    const live = (f: (o: THREE.Vector3) => void): Anchor => (out) => {
+      f(out);
+      g.updateWorldMatrix(true, false);
+      out.applyMatrix4(g.matrixWorld);
+      return true;
+    };
+    const list: LabelSpec[] = [
+      {
+        key: 'ring',
+        text: this.ringText(),
+        // 지금 물린 체인링의 아래쪽 이끝
+        at: live((o) => o.set(b.bx + this.st.ringR * 0.5, b.by - this.st.ringR * 0.866, this.st.ringZ + 0.01)),
+        side: 'below',
+        priority: 1,
+        tone: 'power'
+      },
+      {
+        key: 'cog',
+        text: this.cogText(),
+        // 지금 물린 뒤 스프로킷의 위쪽 이끝
+        at: live((o) => o.set(b.rx - this.st.cogR * 0.5, b.ry + this.st.cogR * 0.866, this.st.cogZ + 0.01)),
+        side: 'above',
+        priority: 1,
+        tone: 'shaft'
+      },
+      {
+        key: 'chain',
+        text: '체인',
+        at: live((o) => o.set((b.bx + b.rx) / 2, (b.by + this.st.ringR + b.ry + this.st.cogR) / 2, (this.st.ringZ + this.st.cogZ) / 2)),
+        side: 'above',
+        priority: 1
+      },
+      {
+        key: 'rd',
+        text: '뒤 변속기',
+        at: live((o) => o.set((this.rig.gx + this.rig.tx) / 2, (this.rig.gy + this.rig.ty) / 2, this.st.cogZ + 0.06)),
+        side: 'below',
+        priority: 2,
+        tone: 'control'
+      }
+    ];
+    if (this.spec.rings.length > 1) {
+      const topR = rMax + 0.12;
+      list.push({
+        key: 'fd',
+        text: '앞 변속기',
+        at: (out) => (this.fdCage ? localAnchor(this.fdCage, Math.cos(SEAT_ANG) * topR, Math.sin(SEAT_ANG) * topR, 0.05)(out) : false),
+        side: 'left',
+        priority: 2,
+        tone: 'control'
+      });
+    }
+    list.push(
+      { key: 'pulley', text: '텐션 풀리', at: live((o) => o.set(this.rig.tx, this.rig.ty, this.st.cogZ + 0.06)), side: 'right', priority: 3, tone: 'control' },
+      { key: 'crank', text: '크랭크', at: localAnchor(this.crank, CRANK_LEN * 0.5, 0, b.ringZ[b.ringZ.length - 1]! + 0.1), side: 'left', priority: 2 },
+      { key: 'pedal', text: '페달', at: (out) => (this.pedals[0] ? localAnchor(this.pedals[0], 0, 0.03, 0.4)(out) : false), side: 'below', priority: 2 },
+      { key: 'wheel', text: '뒷바퀴', at: fixed(b.rx + Math.cos(4.6) * b.wheelR, b.ry + Math.sin(4.6) * b.wheelR, 0), side: 'left', priority: 2 },
+      { key: 'axle', text: '차축(뒷바퀴 축)', at: fixed(b.rx, b.ry, b.hubHalf + 0.07), side: 'right', priority: 2 },
+      { key: 'frame', text: '프레임', at: fixed(b.bx + Math.cos(SEAT_ANG), b.by + Math.sin(SEAT_ANG), 0.07), side: 'left', priority: 3 }
+    );
+    return list;
   }
 
   /** cadence: 페달 rpm, scale: 화면 재생 배속(느리게 보기) */
@@ -267,7 +321,6 @@ export class BikeDrive {
       placeBar(l0, this.bKnuckle.clone().add(V3(0.005, 0.032, 0.012)), pk.clone().add(V3(0.005, 0.032, 0.012)), 0.04, 0.03);
       placeBar(l1, this.bKnuckle.clone().add(V3(-0.005, -0.032, -0.012)), pk.clone().add(V3(-0.005, -0.032, -0.012)), 0.04, 0.03);
     }
-    this.rdLabel.position.set(rig.gx + 0.5, rig.gy - 0.36, this.st.cogZ + 0.3);
 
     // 앞 변속기 케이지
     if (this.fdCage && this.fdArm) {
@@ -297,9 +350,6 @@ export class BikeDrive {
   }
 
   dispose(): void {
-    disposeLabel(this.labels.ring);
-    disposeLabel(this.labels.cog);
-    this.labels.others.forEach(disposeLabel);
     disposeObject(this.group);
   }
 

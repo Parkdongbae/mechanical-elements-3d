@@ -41,6 +41,10 @@ export interface TagDef {
   pos: THREE.Vector3;
   /** 이름표 위치: 기본 위, below 아래, left/right 옆 */
   side?: 'below' | 'left' | 'right';
+  /** 자리가 모자랄 때 접는 순서(3 → 2). 기본 1 */
+  priority?: 1 | 2 | 3;
+  /** true = 블록 뒤에 있어 정면에서는 안 보이는 부품 — 카메라가 엔진 뒤쪽(로컬 z < −0.2)일 때만 이름표를 단다 */
+  backOnly?: boolean;
 }
 
 export interface CycleEngine {

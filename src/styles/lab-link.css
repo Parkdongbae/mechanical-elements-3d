@@ -879,39 +879,6 @@
   display: none;
 }
 
-.lk-tags {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.lk-tag {
-  position: absolute;
-  left: 0;
-  top: 0;
-  will-change: transform;
-}
-
-.lk-tag-l {
-  display: inline-block;
-  transform: translate(8px, -120%);
-  padding: 1px 7px;
-  font-size: 11.5px;
-  font-weight: 700;
-  white-space: nowrap;
-  color: var(--text);
-  background: var(--panel-solid);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-s);
-  box-shadow: var(--shadow-1);
-}
-
-.lk-tag.is-handle .lk-tag-l {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
 /* 좁은 화면 전용 요소 */
 .lk-tabs {
   display: none;

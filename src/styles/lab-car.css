@@ -76,11 +76,18 @@
 
 /* ───────── 모드 세그먼트 ───────── */
 
-.car-seg {
+.car-top {
   position: absolute;
   top: var(--space-4);
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+.car-seg {
   display: flex;
   gap: var(--space-1);
   padding: var(--space-1);
@@ -824,9 +831,21 @@
     box-shadow: none;
   }
 
-  .car-seg {
+  .car-top {
+    position: static;
+    transform: none;
     align-self: center;
     flex: none;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .car-seg {
+    flex: none;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
     border-color: transparent;
   }
 

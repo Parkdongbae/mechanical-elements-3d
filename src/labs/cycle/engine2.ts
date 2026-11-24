@@ -377,13 +377,24 @@ export class Engine2 implements CycleEngine {
       { key: 'transfer', label: '소기 포트', pos: new THREE.Vector3(-0.53, P.trY, 0), side: 'left' },
       { key: 'intake', label: '흡기 포트', pos: new THREE.Vector3(IN_W, P.inBot, -0.36), side: 'right' },
       { key: 'plug', label: '점화 플러그', pos: new THREE.Vector3(0, 3.6, 0) },
-      { key: 'crankcase', label: '크랭크실', pos: new THREE.Vector3(0.42, 0.72, 0), side: 'right' }
+      { key: 'crankcase', label: '크랭크실', pos: new THREE.Vector3(0.42, 0.72, 0), side: 'right' },
+      { key: 'piston', label: '피스톤', pos: new THREE.Vector3(-0.4, 2.4, 0.1), side: 'left' },
+      { key: 'rod', label: '커넥팅 로드', pos: new THREE.Vector3(0.1, 1.9, 0.12), side: 'right' },
+      { key: 'crank', label: '크랭크축', pos: new THREE.Vector3(0, CRANK_Y, 0.36), side: 'left' },
+      { key: 'cylinder', label: '실린더', pos: new THREE.Vector3(0.5, 2.72, 0.05), side: 'right', priority: 2 },
+      { key: 'expipe', label: '배기관·소음기', pos: new THREE.Vector3(1.4, 1.2, 0), side: 'right', priority: 3 }
     ];
   }
 
   tagPos(key: string, out: THREE.Vector3): boolean {
     if (key === 'piston') {
       out.set(-0.4, this.piston.position.y + 0.1, 0.1);
+      return true;
+    }
+    if (key === 'rod') {
+      const py = this.piston.position.y;
+      const a = -this.crank.rotation.z;
+      out.set((CR * Math.sin(a)) / 2, (py + CRANK_Y + CR * Math.cos(a)) / 2, 0.12);
       return true;
     }
     return false;

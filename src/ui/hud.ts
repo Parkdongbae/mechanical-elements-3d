@@ -133,6 +133,11 @@ export class HUD {
     this.nextName = nextName;
   }
 
+  /** 실험·507에서 이름표 설정이 바뀐 뒤 미션으로 돌아올 때 버튼 상태를 맞춘다 */
+  syncLabels(): void {
+    this.updateLabelsButton();
+  }
+
   private updateLabelsButton(): void {
     const btn = this.require('#labels-btn');
     btn.innerHTML = `${ICON.tag}<span>이름표</span>`;

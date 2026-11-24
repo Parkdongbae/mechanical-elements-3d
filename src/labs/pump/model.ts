@@ -721,6 +721,15 @@ export class PumpModel {
       }
       case 'fulcrum':
         return new THREE.Vector3(-A_LEV * Math.cos(this.phi), YB0 + this.yR + A_LEV * Math.sin(this.phi) + 0.06, 0);
+      case 'link': {
+        const px = -A_LEV * Math.cos(this.phi);
+        const py = this.yR + A_LEV * Math.sin(this.phi);
+        return new THREE.Vector3((E[0] + px) / 2, YB0 + (E[1] + py) / 2, 0.095);
+      }
+      case 'rod':
+        return new THREE.Vector3(0, YB0 + (1.29 + this.yR) / 2, 0.03);
+      case 'body':
+        return new THREE.Vector3(0.29, YB0 + 0.5, 0.02);
       case 'water':
         return new THREE.Vector3(1.3, depthY(this.depth), FRONT);
       case 'atm':

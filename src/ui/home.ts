@@ -9,7 +9,7 @@ import { ICON } from './icons';
 
 export interface HomeCallbacks {
   onOpenMission: (id: string) => void;
-  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump' | 'lab/link' | 'mm') => void;
+  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump' | 'lab/link' | 'lab/mill' | 'mm') => void;
   onOpenSettings: () => void;
   onToggleTheme: () => void;
 }
@@ -182,6 +182,10 @@ export class HomeScreen {
             <button type="button" class="mode-card lab-card" data-mode="lab/pump">
               <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-shaft) 16%, transparent);color:var(--cat-shaft)">${ICON.drop}</span>
               <span class="mode-text"><strong>우물 손펌프</strong><small>손잡이를 움직여 물을 끌어 올리는 원리 알아보기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/mill">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-shaft) 16%, transparent);color:var(--cat-shaft)">${ICON.mill}</span>
+              <span class="mode-text"><strong>물레방아</strong><small>떨어지는 물이 바퀴를 돌리고, 누름대가 방아채를 눌러 공이가 찧는 원리</small></span>
             </button>
             <button type="button" class="mode-card lab-card" data-mode="lab/link">
               <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-power) 16%, transparent);color:var(--cat-power)">${ICON.link}</span>

@@ -212,9 +212,14 @@
 
 .cyc-row {
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr) auto;
   gap: var(--space-5);
   align-items: start;
+}
+
+/* 이름표 버튼 — 재생 조작 줄 끝 */
+.cyc-row > .lab-tag-btn {
+  align-self: center;
 }
 
 .cyc-scrub,
@@ -798,129 +803,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ───────── 3D 이름표 ───────── */
-
-.cyc-tags {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.cyc-tag {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  will-change: transform;
-}
-
-.cyc-tag::before {
-  content: '';
-  position: absolute;
-  left: -4px;
-  top: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-  box-shadow: 0 0 0 2px var(--panel-solid);
-}
-
-.cyc-tag::after {
-  content: '';
-  position: absolute;
-  left: -0.5px;
-  bottom: 4px;
-  width: 1px;
-  height: 14px;
-  background: var(--accent);
-}
-
-.cyc-tag-l {
-  position: absolute;
-  left: 0;
-  bottom: 18px;
-  transform: translateX(-50%);
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  background: var(--panel-solid);
-  border: 1px solid var(--line-strong);
-  box-shadow: var(--shadow-1);
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-  color: var(--text);
-}
-
-.cyc-tag.is-below::after {
-  bottom: auto;
-  top: 4px;
-}
-
-.cyc-tag.is-below .cyc-tag-l {
-  bottom: auto;
-  top: 18px;
-}
-
-.cyc-tag.is-left::after,
-.cyc-tag.is-right::after {
-  bottom: auto;
-  top: -0.5px;
-  width: 14px;
-  height: 1px;
-}
-
-.cyc-tag.is-left::after {
-  left: auto;
-  right: 4px;
-}
-
-.cyc-tag.is-right::after {
-  left: 4px;
-}
-
-.cyc-tag.is-left .cyc-tag-l,
-.cyc-tag.is-right .cyc-tag-l {
-  bottom: auto;
-  top: 0;
-  transform: translateY(-50%);
-}
-
-.cyc-tag.is-left .cyc-tag-l {
-  left: auto;
-  right: 18px;
-}
-
-.cyc-tag.is-right .cyc-tag-l {
-  left: 18px;
-}
-
-.cyc-tag.is-open::before,
-.cyc-tag.is-open::after {
-  background: var(--ok);
-}
-
-.cyc-tag.is-open .cyc-tag-l {
-  border-color: var(--ok);
-  color: var(--ok);
-}
-
-.cyc-tag.is-closed .cyc-tag-l {
-  color: var(--text-dim);
-}
-
-.cyc-tag.is-fire::before,
-.cyc-tag.is-fire::after {
-  background: var(--warn);
-}
-
-.cyc-tag.is-fire .cyc-tag-l {
-  border-color: var(--warn);
-  color: var(--warn);
-}
-
 /* ───────── 중간 폭·좁은 화면: 하단 시트 ───────── */
 
 @media (max-width: 1099px) {
@@ -1008,8 +890,16 @@
   }
 
   .cyc-row {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--space-2);
+  }
+
+  .cyc-row > .cyc-scrub {
+    grid-column: 1 / -1;
+  }
+
+  .cyc-row > .lab-tag-btn {
+    align-self: end;
   }
 
   .cyc-stroke {

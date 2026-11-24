@@ -5,6 +5,7 @@
 import type { AppMode, ModeContext } from '../modes/types';
 import { el, button } from '../modes/dom';
 import { BikeDrive } from './bike/drivetrain';
+import { LabLabels, type LabelBounds } from './common/labels';
 import {
   BIKES,
   TASKS,
@@ -44,6 +45,10 @@ export class BikeGears implements AppMode {
   private wrap: HTMLElement | null = null;
   private drive: BikeDrive | null = null;
   private mql: MediaQueryList | null = null;
+  private labels: LabLabels | null = null;
+  private bounds: LabelBounds = { x0: 0, y0: 0, x1: 99999, y1: 99999 };
+  private boundsT = 0;
+  private panels: { info: HTMLElement; side: HTMLElement; dock: HTMLElement; sheet: HTMLElement } | null = null;
 
   private bike: BikeSpec = getBike('city');
   private front = 0;
@@ -127,6 +132,9 @@ export class BikeGears implements AppMode {
       this.drive.dispose();
     }
     this.drive = null;
+    this.labels?.dispose();
+    this.labels = null;
+    this.panels = null;
     this.wrap?.remove();
     this.wrap = null;
     this.typeBtns.clear();
@@ -137,6 +145,35 @@ export class BikeGears implements AppMode {
 
   update(dt: number): void {
     this.drive?.update(dt, this.cadence, this.slow ? 0.25 : 1);
+    const lb = this.labels;
+    if (lb && this.drive) {
+      this.boundsT -= dt;
+      if (this.boundsT <= 0) {
+        this.boundsT = 0.4;
+        this.measureBounds();
+      }
+      lb.setText('ring', this.drive.ringText());
+      lb.setText('cog', this.drive.cogText());
+      lb.update();
+    }
+  }
+
+  /** 이름표를 놓아도 되는 영역: 패널·도크·하단 시트를 뺀 3D가 보이는 곳 */
+  private measureBounds(): void {
+    const p = this.panels;
+    const w = this.wrap;
+    if (!p || !w) return;
+    const wr = w.getBoundingClientRect();
+    if (window.matchMedia(NARROW).matches) {
+      this.bounds = { x0: 0, y0: 0, x1: wr.width, y1: Math.max(0, p.sheet.getBoundingClientRect().top - wr.top) };
+    } else {
+      this.bounds = {
+        x0: p.info.getBoundingClientRect().right - wr.left,
+        y0: 0,
+        x1: p.side.getBoundingClientRect().left - wr.left,
+        y1: Math.min(wr.height, p.dock.getBoundingClientRect().top - wr.top)
+      };
+    }
   }
 
   // ─────────────────────────── 상태 변경 ───────────────────────────
@@ -149,6 +186,7 @@ export class BikeGears implements AppMode {
     }
     this.drive = new BikeDrive(this.bike, this.front, this.rear);
     this.ctx.sceneMgr.add(this.drive.group);
+    this.labels?.set(this.drive.anchors());
   }
 
   private setBike(id: BikeId): void {
@@ -188,6 +226,7 @@ export class BikeGears implements AppMode {
   private buildDom(root: HTMLElement): void {
     const wrap = el('div', 'bike-wrap');
     this.wrap = wrap;
+    if (this.ctx) this.labels = new LabLabels(this.ctx, wrap, { bounds: () => this.bounds });
     const sheet = el('div', 'bike-sheet');
     wrap.append(sheet);
 
@@ -301,7 +340,10 @@ export class BikeGears implements AppMode {
       this.refresh();
     });
     cadFoot.append(el('span', 'bike-cadence-hint', '40'), el('span', 'bike-cadence-hint', '110 rpm'));
-    cad.append(cadHead, this.cadenceInput, cadFoot, this.slowBtn);
+    const btns = el('div', 'bike-cadence-btns');
+    btns.append(this.slowBtn);
+    if (this.labels) btns.append(this.labels.button);
+    cad.append(cadHead, this.cadenceInput, cadFoot, btns);
     dock.append(this.miniEl, this.frontCtl.box, cad, this.rearCtl.box);
 
     // ── 오른쪽: 기어비 표 / 지형 과제 ──
@@ -323,6 +365,8 @@ export class BikeGears implements AppMode {
 
     sheet.append(dock, info, side);
     root.append(wrap);
+    this.panels = { info, side, dock, sheet };
+    this.measureBounds();
   }
 
   /** 자전거 종류가 바뀔 때만 다시 만드는 부분(표, 단 표시 점) */

@@ -77,6 +77,14 @@ export class EngineModel {
   private headSolidMats: THREE.Material[] = [];
   private extraMats: THREE.Material[] = [];
   private pistonTint: THREE.Color[] = [];
+  private mode: BlockMode = 'ghost';
+  /** 실린더별 현재 피스톤 핀 위치(s), 크랭크 핀 위치(py, pz) — 이름표가 움직임을 따라가게 */
+  private readonly sNow: Float32Array;
+  private readonly pyNow: Float32Array;
+  private readonly pzNow: Float32Array;
+  private readonly frontX: number;
+  private readonly rearX: number;
+  private readonly flyR: number;
 
   private readonly m4 = new THREE.Matrix4();
   private readonly q = new THREE.Quaternion();
@@ -90,10 +98,17 @@ export class EngineModel {
     this.def = def;
     this.cyl = cylinders(def);
     this.fire = new Float32Array(this.cyl.length);
+    this.sNow = new Float32Array(this.cyl.length);
+    this.pyNow = new Float32Array(this.cyl.length);
+    this.pzNow = new Float32Array(this.cyl.length);
     const d = def.dims;
+    const xsAll = this.cyl.map((c) => c.x);
+    this.frontX = Math.max(...xsAll) + d.pistonR + 0.13;
+    this.rearX = Math.min(...xsAll) - d.pistonR - 0.13;
     this.uDeck = d.crankR + d.rodL + PIN_TOP + 0.012;
     // 수평대향은 실린더가 옆으로 누우므로 크랭크를 낮게, 나머지는 균형추·팬이 바닥에 닿지 않을 만큼
     this.crankY = def.id === 'b4' ? 0.52 : 0.5;
+    this.flyR = Math.min(0.34, this.crankY - 0.12);
     this.eng.position.y = this.crankY;
     this.root.add(this.eng);
     this.eng.add(this.crank);
@@ -315,7 +330,7 @@ export class EngineModel {
       ),
       darkSteel()
     );
-    const flyR = Math.min(0.34, this.crankY - 0.12);
+    const flyR = this.flyR;
     const fly = new THREE.Mesh(
       latheX(
         [
@@ -408,6 +423,7 @@ export class EngineModel {
   // ───────────────────────── 상태 ─────────────────────────
 
   setBlockMode(mode: BlockMode): void {
+    this.mode = mode;
     const show = mode !== 'hidden';
     this.blockMesh.visible = show;
     this.blockMesh.material = mode === 'solid' ? this.solidBlockMat : this.ghostBlockMat;
@@ -437,6 +453,9 @@ export class EngineModel {
       const pa = py * cb + pz * sb;
       const pb = -py * sb + pz * cb;
       const s = pa + Math.sqrt(L * L - pb * pb);
+      this.sNow[i] = s;
+      this.pyNow[i] = py;
+      this.pzNow[i] = pz;
       const sy = s * cb;
       const sz = s * sb;
       // 피스톤
@@ -487,6 +506,63 @@ export class EngineModel {
     const u = this.uDeck + HEAD_H + 0.08;
     out.set(c.x, u * Math.cos(c.beta), u * Math.sin(c.beta));
     return this.eng.localToWorld(out);
+  }
+
+  /**
+   * 부품 이름표 기준점(월드). 지금 보이지 않는 부품이면 false.
+   * key: crank 크랭크축 · piston/rod 1번 실린더 · block/head 첫 뱅크 · flywheel · pulley · support
+   */
+  partWorld(key: string, out: THREE.Vector3): boolean {
+    const d = this.def.dims;
+    const i1 = Math.max(0, this.cyl.findIndex((c) => c.num === 1));
+    const c1 = this.cyl[i1]!;
+    // 불투명 블록은 속(피스톤·로드)을 가린다
+    const inside = this.mode !== 'solid';
+    const bank0 = this.cyl.filter((c) => c.bank === 0);
+    const beta0 = bank0[0]!.beta;
+    const bx = bank0.reduce((a, c) => a + c.x, 0) / bank0.length;
+    const bore = d.pistonR + 0.008;
+    const uBot = d.rodL - d.crankR - SKIRT + 0.07;
+    // 뱅크 축 기울기(beta)를 적용해 (y, z)를 돌린다
+    const tilt = (x: number, y: number, z: number): THREE.Vector3 => out.set(x, y * Math.cos(beta0) - z * Math.sin(beta0), y * Math.sin(beta0) + z * Math.cos(beta0));
+    switch (key) {
+      case 'crank':
+        out.set(this.frontX - 0.05, 0, 0);
+        break;
+      case 'piston': {
+        if (!inside) return false;
+        const s = this.sNow[i1]!;
+        out.set(c1.x, s * Math.cos(c1.beta), s * Math.sin(c1.beta));
+        break;
+      }
+      case 'rod': {
+        if (!inside) return false;
+        const s = this.sNow[i1]!;
+        out.set(c1.x, (s * Math.cos(c1.beta) + this.pyNow[i1]!) / 2, (s * Math.sin(c1.beta) + this.pzNow[i1]!) / 2);
+        break;
+      }
+      case 'block':
+        if (this.mode === 'hidden') return false;
+        tilt(bx, (this.uDeck + uBot) / 2 - 0.01, bore + 0.03);
+        break;
+      case 'head':
+        if (this.mode === 'hidden') return false;
+        tilt(bx, this.uDeck + HEAD_H / 2 + 0.004, bore + 0.025);
+        break;
+      case 'flywheel':
+        out.set(this.rearX - 0.095, this.flyR, 0);
+        break;
+      case 'pulley':
+        out.set(this.frontX + 0.11, 0.105, 0);
+        break;
+      case 'support':
+        out.set(this.frontX, 0.05 + (this.crankY - 0.05) / 2 - 0.04 - this.crankY, 0);
+        break;
+      default:
+        return false;
+    }
+    this.eng.localToWorld(out);
+    return true;
   }
 
   /** 뱅크 이름표 위치(월드): 헤드 앞끝 바깥 */

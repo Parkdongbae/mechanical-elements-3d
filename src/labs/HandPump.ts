@@ -9,6 +9,7 @@ import { el, button } from '../modes/dom';
 import { PumpModel, PHI_MAX, SPOUT_H_REAL, LEVER_RATIO, type ViewMode } from './pump/model';
 import { PumpPhysics, P0, H_LIMIT, STROKE, VALVE_ABOVE_GROUND, PRIME_L } from './pump/physics';
 import { STAGES, CARDS, BUCKET_L, type ViewKey } from './pump/data';
+import { LabLabels, type LabelBounds, type LabelSpec } from './common/labels';
 
 const VIEWS: Record<ViewKey, { t: [number, number, number]; dir: [number, number, number]; d: number }> = {
   all: { t: [-0.45, 2.95, 0], dir: [0.32, 0.24, 1], d: 9.4 },
@@ -18,12 +19,6 @@ const VIEWS: Record<ViewKey, { t: [number, number, number]; dir: [number, number
 
 const HANDLE_RATE = (PHI_MAX * 2) / 0.9; // 한 번 끝까지 0.9초
 const DEPTH0 = 6;
-
-interface Tag {
-  el: HTMLElement;
-  label: HTMLElement;
-  anchor: string;
-}
 
 type Anim = { kind: 'to'; target: number } | { kind: 'stroke'; phase: 0 | 1 } | { kind: 'auto' } | null;
 
@@ -36,8 +31,10 @@ export class HandPump implements AppMode {
   private guide!: HTMLElement;
   private side!: HTMLElement;
   private stepsBar!: HTMLElement;
-  private tagLayer!: HTMLElement;
-  private tags: Tag[] = [];
+  private labels: LabLabels | null = null;
+  private bounds: LabelBounds = { x0: 0, y0: 0, x1: 99999, y1: 99999 };
+  private tickLayer!: HTMLElement;
+  private valveTxt = { foot: '', piston: '' };
   private ticks: { el: HTMLElement; d: number }[] = [];
   private stepBtns: HTMLButtonElement[] = [];
   private out: Record<string, HTMLElement> = {};
@@ -147,7 +144,8 @@ export class HandPump implements AppMode {
     this.model = null;
     this.wrap?.remove();
     this.wrap = null;
-    this.tags = [];
+    this.labels?.dispose();
+    this.labels = null;
     this.ticks = [];
     this.stepBtns = [];
     this.viewBtns = [];
@@ -244,8 +242,9 @@ export class HandPump implements AppMode {
   private buildDom(root: HTMLElement): void {
     const wrap = el('div', 'pmp-wrap');
     this.wrap = wrap;
-    this.tagLayer = el('div', 'pmp-tags');
-    this.tagLayer.setAttribute('aria-hidden', 'true');
+    if (this.ctx) this.labels = new LabLabels(this.ctx, wrap, { bounds: () => this.bounds, onToggle: () => this.syncTicks() });
+    this.tickLayer = el('div', 'pmp-ticks');
+    this.tickLayer.setAttribute('aria-hidden', 'true');
     this.dock = el('div', 'pmp-dock');
 
     this.stepsBar = el('nav', 'pmp-steps pmp-panel');
@@ -268,15 +267,16 @@ export class HandPump implements AppMode {
     this.side = el('div', 'pmp-side');
     this.side.append(this.buildActions(), this.buildStatus());
     this.dock.append(this.stepsBar, this.side, this.guide);
-    wrap.append(this.tagLayer, this.dock);
+    wrap.append(this.tickLayer, this.dock);
     root.append(wrap);
   }
 
   private buildActions(): HTMLElement {
     const p = el('section', 'pmp-act pmp-panel');
     const head = el('div', 'pmp-act-head');
-    head.append(el('h3', 'pmp-h3', '직접 펌프질'), el('span', 'pmp-hint', '3D 손잡이를 끌어도 돼요'));
-    p.append(head);
+    head.append(el('h3', 'pmp-h3', '직접 펌프질'));
+    if (this.labels) head.append(this.labels.button);
+    p.append(head, el('span', 'pmp-hint', '3D 손잡이를 끌어도 돼요'));
 
     const row = el('div', 'pmp-act-row');
     this.primeBtn = button('pmp-btn pmp-prime', '마중물 붓기', () => this.startPrime());
@@ -664,9 +664,11 @@ export class HandPump implements AppMode {
     const v = VIEWS[key];
     const portrait = window.innerWidth < window.innerHeight;
     const narrow = window.innerWidth < 1100;
-    const d = v.d * (portrait ? (key === 'all' ? 1.08 : 1.2) : narrow ? 1.1 : 1);
+    const d = v.d * (portrait ? (key === 'all' ? 1.12 : 1.2) : narrow ? 1.1 : 1);
     const dir = new THREE.Vector3(...v.dir).normalize();
     const t = new THREE.Vector3(...v.t);
+    // 세로 화면 전체 보기: 손잡이 끝이 좌상단 홈 버튼 자리(이름표가 숨는 곳)에 걸리지 않게 조금 오른쪽·아래로
+    if (portrait && key === 'all') t.add(new THREE.Vector3(-0.35, 0.35, 0));
     const pos = t.clone().addScaledVector(dir, d);
     const view: CameraView = { pos: [pos.x, pos.y, pos.z], target: [t.x, t.y, t.z] };
     ctx.sceneMgr.flyTo(view, immediate);
@@ -691,6 +693,7 @@ export class HandPump implements AppMode {
       y0 = 56;
       y1 = this.dock.getBoundingClientRect().top;
     }
+    this.bounds = { x0, y0, x1, y1 };
     const cx = (x0 + x1) / 2;
     const cy = (y0 + y1) / 2;
     const key = `${W}x${H}:${Math.round(cx)},${Math.round(cy)}`;
@@ -699,67 +702,88 @@ export class HandPump implements AppMode {
     ctx.sceneMgr.camera.setViewOffset(W, H, W / 2 - cx, H / 2 - cy, W, H);
   }
 
+  private anchorOf(name: string): (out: THREE.Vector3) => boolean {
+    return (out) => {
+      const m = this.model;
+      if (!m) return false;
+      const p = m.anchor(name);
+      if (!p) return false;
+      m.root.updateMatrixWorld();
+      out.copy(p).applyMatrix4(m.root.matrixWorld);
+      return true;
+    };
+  }
+
   private buildTags(): void {
-    if (!this.tagLayer) return;
-    this.tagLayer.replaceChildren();
-    this.tags = [];
-    this.ticks = [];
-    if (!this.model || !(this.ctx?.settings.showLabels ?? true)) return;
-    const small = window.innerWidth < 820;
+    const labels = this.labels;
+    if (!labels || !this.model) return;
     const cut = this.view === 'cut';
-    const list: [string, string, string][] = [];
+    const at = (n: string): ((out: THREE.Vector3) => boolean) => this.anchorOf(n);
+    const specs: LabelSpec[] = [];
+    specs.push({ key: 'grip', text: '손잡이(지렛대)', at: at('grip'), priority: 1 });
+    specs.push({ key: 'gripHint', text: '끌어 보세요', at: at('grip'), side: 'below', kind: 'hint', priority: 1, always: true });
+    specs.push({ key: 'fulcrum', text: '받침점', at: at('fulcrum'), priority: 1 });
+    specs.push({ key: 'link', text: '흔들 링크', at: at('link'), priority: 2 });
+    specs.push({ key: 'rod', text: '피스톤 로드', at: at('rod'), side: 'right', priority: 2 });
+    specs.push({ key: 'body', text: '몸통(실린더)', at: at('body'), side: 'right', priority: 2 });
     if (cut) {
-      list.push(['pistonValve', '피스톤 밸브', 'valve'], ['foot', '아래 밸브', 'valve']);
-      if (!small) list.push(['piston', '피스톤(가죽 패킹)', 'below']);
+      specs.push({ key: 'piston', text: '피스톤(가죽 패킹)', at: at('piston'), side: 'below', priority: 1 });
+      specs.push({ key: 'pistonValve', text: '피스톤 밸브 · 닫힘', at: at('pistonValve'), tone: 'power', priority: 1 });
+      specs.push({ key: 'foot', text: '아래 밸브 · 닫힘', at: at('foot'), tone: 'power', priority: 1 });
     }
-    list.push(['grip', '손잡이 — 끌어 보세요', 'grip']);
-    if (!small) list.push(['fulcrum', '받침점', ''], ['spout', '주둥이', ''], ['bucket', '양동이', '']);
-    list.push(['water', '지하수면', 'water'], ['atm', '대기압', 'atm']);
-    if (!small || this.stage === 5) list.push(['limit', '약 10 m 한계', 'limit']);
-    for (const [anchor, text, kind] of list) {
-      const t = el('div', `pmp-tag${kind ? ` is-${kind}` : ''}`);
-      const label = el('span', 'pmp-tag-l', text);
-      t.append(label);
-      this.tagLayer.append(t);
-      this.tags.push({ el: t, label, anchor });
+    specs.push({ key: 'spout', text: '주둥이', at: at('spout'), side: 'right', priority: 2 });
+    specs.push({ key: 'pipe', text: '흡입관', at: at('pipe'), side: 'right', priority: 2 });
+    specs.push({ key: 'bucket', text: '양동이', at: at('bucket'), priority: 3 });
+    specs.push({ key: 'water', text: '지하수면', at: at('water'), kind: 'info', tone: 'shaft', priority: 2 });
+    specs.push({ key: 'atm', text: '대기압', at: at('atm'), side: 'left', kind: 'info', tone: 'control', priority: 2 });
+    specs.push({ key: 'limit', text: '약 10 m 한계', at: at('limit'), kind: 'info', tone: 'power', priority: 3 });
+    this.valveTxt = { foot: '', piston: '' };
+    labels.set(specs);
+
+    this.ticks = [];
+    this.tickLayer.replaceChildren();
+    for (let d = 2; d <= 12; d += 2) {
+      const e = el('div', 'pmp-tick', `${d} m`);
+      this.tickLayer.append(e);
+      this.ticks.push({ el: e, d });
     }
-    if (!small) {
-      for (let d = 2; d <= 12; d += 2) {
-        const e = el('div', 'pmp-tick', `${d} m`);
-        this.tagLayer.append(e);
-        this.ticks.push({ el: e, d });
-      }
-    }
+    this.syncTicks();
+  }
+
+  /** 깊이 눈금은 이름표와 함께 켜고 끈다(폭 820px 이상에서만) */
+  private syncTicks(): void {
+    this.tickLayer.hidden = !(this.labels?.visible ?? true) || window.innerWidth < 820;
   }
 
   private updateTags(): void {
     const ctx = this.ctx;
     const m = this.model;
     if (!ctx || !m) return;
+    const labels = this.labels;
+    if (labels) {
+      for (const [k, name, open] of [['foot', '아래 밸브', this.footOpenT > 0], ['pistonValve', '피스톤 밸브', this.pistonOpenT > 0]] as const) {
+        const txt = `${name} · ${open ? '열림' : '닫힘'}`;
+        const slot = k === 'foot' ? 'foot' : 'piston';
+        if (this.valveTxt[slot] === txt) continue;
+        this.valveTxt[slot] = txt;
+        labels.setText(k, txt);
+        labels.setState(k, open ? 'open' : 'closed');
+      }
+      labels.update();
+    }
+    if (this.tickLayer.hidden) return;
     const cam = ctx.sceneMgr.camera;
     const W = window.innerWidth;
     const H = window.innerHeight;
-    const dockTop = W < 820 ? this.dock.getBoundingClientRect().top : H;
-    const place = (e: HTMLElement, p: THREE.Vector3): void => {
-      const v = this.tmp.copy(p).applyMatrix4(m.root.matrixWorld).project(cam);
+    m.root.updateMatrixWorld();
+    for (const k of this.ticks) {
+      const v = this.tmp.copy(m.tickPos(k.d)).applyMatrix4(m.root.matrixWorld).project(cam);
       const x = (v.x + 1) * 0.5 * W;
       const y = (1 - v.y) * 0.5 * H;
-      const hidden = v.z > 1 || x < 8 || x > W - 8 || y < 30 || y > dockTop - 6 || (x < 240 && y < 84);
-      e.style.visibility = hidden ? 'hidden' : 'visible';
-      if (!hidden) e.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
-    };
-    for (const t of this.tags) {
-      const p = m.anchor(t.anchor);
-      if (!p) continue;
-      place(t.el, p);
-      if (t.anchor === 'foot' || t.anchor === 'pistonValve') {
-        const open = (t.anchor === 'foot' ? this.footOpenT : this.pistonOpenT) > 0;
-        const txt = `${t.anchor === 'foot' ? '아래 밸브' : '피스톤 밸브'} · ${open ? '열림' : '닫힘'}`;
-        if (t.label.textContent !== txt) t.label.textContent = txt;
-        t.el.classList.toggle('is-open', open);
-      }
+      const hidden = v.z > 1 || x < 8 || x > W - 8 || y < 30 || y > H - 6 || (x < 240 && y < 84);
+      k.el.style.visibility = hidden ? 'hidden' : 'visible';
+      if (!hidden) k.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
     }
-    for (const k of this.ticks) place(k.el, m.tickPos(k.d));
   }
 
   // ───────────────────────── 프레임 ─────────────────────────

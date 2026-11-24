@@ -13,16 +13,15 @@ import { WattModel, WATT_SEGS, type Load } from './steam/watt';
 import { LocoModel, LOCO_SEGS } from './steam/loco';
 import { COMPARE, LEGEND, MACHINES, TIMELINE, type MachineDef, type MachineId, type StageDef } from './steam/data';
 import type { Seg } from './steam/common';
+import { LabLabels, type LabelSpec, type LabelBounds } from './common/labels';
 
 const SEGS: Record<MachineId, (Seg | null)[]> = { newcomen: NEWCOMEN_SEGS, watt: WATT_SEGS, loco: LOCO_SEGS };
 const LEGEND_COL: Record<string, number> = { water: COL.water, steam: COL.steam, fire: COL.fire, cold: COL.cold, air: COL.air, used: COL.used };
 
-interface Tag {
-  el: HTMLElement;
-  label: HTMLElement;
-  anchor: string;
+interface ValveTag {
+  key: string;
   text: string;
-  valve?: number;
+  valve: number;
 }
 
 export class SteamEngines implements AppMode {
@@ -39,10 +38,11 @@ export class SteamEngines implements AppMode {
   private stepsBar!: HTMLElement;
   private guide!: HTMLElement;
   private status!: HTMLElement;
-  private tagLayer!: HTMLElement;
+  private labels: LabLabels | null = null;
+  private bounds: LabelBounds = { x0: 0, y0: 0, x1: 99999, y1: 99999 };
   private tabBtns: HTMLButtonElement[] = [];
   private stepBtns: HTMLButtonElement[] = [];
-  private tags: Tag[] = [];
+  private valveTags: ValveTag[] = [];
   private valveRows: { row: HTMLElement; chip: HTMLElement; key: string }[] = [];
   private forceEl!: HTMLElement;
   private liveEl: HTMLElement | null = null;
@@ -59,7 +59,6 @@ export class SteamEngines implements AppMode {
   private maxErr = 0;
   private puff0 = 0;
   private rev0 = 0;
-  private tmp = new THREE.Vector3();
 
   private onKey = (e: KeyboardEvent): void => {
     const t = e.target as HTMLElement | null;
@@ -109,7 +108,9 @@ export class SteamEngines implements AppMode {
     this.disposeModel();
     this.wrap?.remove();
     this.wrap = null;
-    this.tags = [];
+    this.valveTags = [];
+    this.labels?.dispose();
+    this.labels = null;
     this.tabBtns = [];
     this.stepBtns = [];
     this.valveRows = [];
@@ -163,8 +164,6 @@ export class SteamEngines implements AppMode {
   private buildDom(root: HTMLElement): void {
     const wrap = el('div', 'stm-wrap');
     this.wrap = wrap;
-    this.tagLayer = el('div', 'stm-tags');
-    this.tagLayer.setAttribute('aria-hidden', 'true');
     this.dock = el('div', 'stm-dock');
 
     this.tabs = el('div', 'stm-tabs stm-panel');
@@ -188,8 +187,9 @@ export class SteamEngines implements AppMode {
     this.guide.setAttribute('aria-live', 'polite');
     this.status = el('section', 'stm-status stm-panel');
     this.dock.append(this.tabs, this.stepsBar, this.guide, this.status);
-    wrap.append(this.tagLayer, this.dock);
     root.append(wrap);
+    if (this.ctx) this.labels = new LabLabels(this.ctx, wrap, { bounds: () => this.bounds });
+    wrap.append(this.dock);
   }
 
   private buildSteps(): void {
@@ -317,14 +317,12 @@ export class SteamEngines implements AppMode {
     }
     // 이름표 속 밸브 상태
     const vs = m.valves();
-    for (const t of this.tags) {
-      if (t.valve === undefined) continue;
+    for (const t of this.valveTags) {
       const v = vs[t.valve];
       if (!v) continue;
-      const text = `${t.text} · ${v.text ?? (v.open ? '열림' : '닫힘')}`;
-      if (t.label.textContent !== text) t.label.textContent = text;
-      t.el.classList.toggle('is-open', v.open);
-      t.el.classList.toggle('is-closed', !v.open);
+      const state = v.open ? 'open' : 'closed';
+      this.labels?.setText(t.key, `${t.text} · ${v.text ?? (v.open ? '열림' : '닫힘')}`);
+      this.labels?.setState(t.key, state);
     }
   }
 
@@ -503,6 +501,7 @@ export class SteamEngines implements AppMode {
     });
     next.disabled = this.stage === last;
     nav.append(prev, auto, next);
+    if (this.labels) nav.append(this.labels.button);
     return nav;
   }
 
@@ -544,6 +543,7 @@ export class SteamEngines implements AppMode {
       y0 = 56;
       y1 = this.dock.getBoundingClientRect().top;
     }
+    this.bounds = { x0, y0: Math.max(y0, 0), x1, y1 };
     const cx = (x0 + x1) / 2;
     const cy = (y0 + y1) / 2;
     const key = `${W}x${H}:${Math.round(cx)},${Math.round(cy)}`;
@@ -556,54 +556,39 @@ export class SteamEngines implements AppMode {
 
   // ───────────────────────── 3D 이름표 ─────────────────────────
 
-  private buildTags(): void {
-    this.tagLayer.replaceChildren();
-    this.tags = [];
-    if (!this.model || !(this.ctx?.settings.showLabels ?? true)) return;
-    const s = this.def().stages[this.stage];
-    if (!s) return;
-    const small = window.innerWidth < 700;
-    const list = small && this.stage === 0 ? s.tags.slice(0, 4) : s.tags;
-    for (const d of list) {
-      const t = el('div', `stm-tag${d.below ? ' is-below' : ''}${d.v !== undefined ? ' is-valve' : ''}`);
-      const label = el('span', 'stm-tag-l', d.t);
-      t.append(label);
-      this.tagLayer.append(t);
-      this.tags.push({ el: t, label, anchor: d.a, text: d.t, valve: d.v });
-    }
+  private anchorOf(name: string): (out: THREE.Vector3) => boolean {
+    return (out) => {
+      const m = this.model;
+      if (!m) return false;
+      const p = m.anchor(name);
+      if (!p) return false;
+      m.root.updateMatrixWorld();
+      out.copy(p).applyMatrix4(m.root.matrixWorld);
+      return true;
+    };
   }
 
-  private updateTags(): void {
-    const ctx = this.ctx;
-    const m = this.model;
-    if (!ctx || !m || this.tags.length === 0) return;
-    const cam = ctx.sceneMgr.camera;
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    const dockTop = W < 1100 ? this.dock.getBoundingClientRect().top : H;
-    m.root.updateMatrixWorld();
-    // 이름표끼리 겹치면 뒤의 것을 숨긴다(좁은 화면에서 밸브 이름표 두 개가 붙는 경우)
-    const placed: [number, number, number, number][] = [];
-    for (const t of this.tags) {
-      const p = m.anchor(t.anchor);
-      if (!p) {
-        t.el.style.visibility = 'hidden';
-        continue;
-      }
-      const v = this.tmp.copy(p).applyMatrix4(m.root.matrixWorld).project(cam);
-      const x = (v.x + 1) * 0.5 * W;
-      const y = (1 - v.y) * 0.5 * H;
-      let hidden = v.z > 1 || x < 8 || x > W - 8 || y < 30 || y > dockTop - 6 || (x < 240 && y < 90);
-      if (!hidden) {
-        const w = t.label.offsetWidth || 80;
-        const below = t.el.classList.contains('is-below');
-        const r: [number, number, number, number] = [x - w / 2, below ? y + 18 : y - 42, x + w / 2, below ? y + 42 : y - 18];
-        if (placed.some((q) => r[0] < q[2] + 4 && r[2] > q[0] - 4 && r[1] < q[3] + 2 && r[3] > q[1] - 2)) hidden = true;
-        else placed.push(r);
-      }
-      t.el.style.visibility = hidden ? 'hidden' : 'visible';
-      if (!hidden) t.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+  private buildTags(): void {
+    const labels = this.labels;
+    this.valveTags = [];
+    if (!labels || !this.model) return;
+    const s = this.def().stages[this.stage];
+    if (!s) return;
+    const specs: LabelSpec[] = [];
+    const used = new Set<string>();
+    const add = (d: { a: string; t: string; v?: number; below?: boolean }, key: string, priority: 1 | 3): void => {
+      specs.push({ key, text: d.t, at: this.anchorOf(d.a), side: d.below ? 'below' : 'above', priority });
+      if (d.v !== undefined) this.valveTags.push({ key, text: d.t, valve: d.v });
+    };
+    s.tags.forEach((d, i) => {
+      used.add(d.a);
+      add(d, `${d.a}${specs.some((x) => x.key === d.a) ? i : ''}`, 1);
+    });
+    for (const d of this.def().parts) {
+      if (used.has(d.a)) continue;
+      add(d, d.a, 3);
     }
+    labels.set(specs);
   }
 
   // ───────────────────────── 프레임 ─────────────────────────
@@ -623,7 +608,7 @@ export class SteamEngines implements AppMode {
       this.frameT = 0;
       this.updateFrame();
     }
-    this.updateTags();
+    this.labels?.update();
     if (this.auto) {
       this.autoT += dt;
       const dw = this.dwell();

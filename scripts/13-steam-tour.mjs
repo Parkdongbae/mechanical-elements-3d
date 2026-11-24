@@ -39,7 +39,7 @@ async function scene(name, actions, wait = 4200) {
       const r = await page.evaluate(() => {
         const over = document.documentElement.scrollWidth > innerWidth || document.body.scrollWidth > innerWidth;
         const tl = [...document.querySelectorAll('.stm-wrap *')].filter((e) => {
-          if (e.closest('.stm-tags')) return false;
+          if (e.closest('.lab-tags')) return false;
           const b = e.getBoundingClientRect();
           return getComputedStyle(e).visibility !== 'hidden' && b.width > 0 && b.left < 220 && b.top < 64 && b.right > 0 && b.bottom > 0;
         }).length;
