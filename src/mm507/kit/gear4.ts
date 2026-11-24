@@ -72,60 +72,122 @@ export function scrollDisc(R: number, rStart: number, pitch: number, opts: Scrol
   return g;
 }
 
-// ── 사각(4엽) 비원형 기어 (030) ──
+// ── 사각(곧은 변) 비원형 기어 (030) ──
+//
+// 같은 모양 두 기어가 중심 거리 C 에서 미끄럼 없이 구른다. 피치곡선 = 곧은 변 4개(중심에서 거리 a)
+// + 모서리 곡선 4개. 모서리 곡선은 맞은편 기어의 곧은 변과 짝을 이루는 곡선이다:
+//   변 위 점: r = a / cos ψ, 호 길이 a·tan ψ  →  짝 모서리: r = C − a / cos ψ (같은 호 길이)
+//   모서리 극각 G(ψ) = ∫₀^ψ a / (C cos t − a) dt = (2α/√(1−α²))·artanh(tan(ψ/2)·√((1+α)/(1−α))), α = a/C
+// 변 끝(ψ0)에서 r = C/2 이어야 두 식이 겹치지 않고 이어진다 → cos ψ0 = 2α, 변 반쪽 b = a·tan ψ0 = 모서리 반쪽 호 길이.
+// 4겹 대칭이 닫히려면 모서리 끝에서 변 가운데까지 π/4: ψ0 + G(ψ0) = π/4  →  α = 0.4575552 (C 와 무관한 상수).
 
 export interface SquareGearSpec {
   C: number;
-  e: number;
-  P: number;
-  rMax: number;
-  rMin: number;
-  L: number; // 피치곡선 둘레
-  teeth: number; // 잇수(8 의 배수)
+  alpha: number; // a / C
+  rMin: number; // a = 변까지 거리(변 가운데)
+  rMax: number; // C − a (모서리 끝)
+  b: number; // 곧은 변 반쪽 길이 = 모서리 곡선 반쪽 호 길이
+  psi0: number; // 변 끝의 ψ (cos ψ0 = 2α)
+  G0: number; // 모서리 곡선이 차지하는 반쪽 극각 = π/4 − ψ0
+  L: number; // 피치곡선 둘레 = 16 b
+  teeth: number; // 잇수(8 의 배수: 모서리 끝과 변 가운데가 모두 정수 피치)
   pitch: number; // L / teeth
   module: number; // pitch / π
-  /** 호 길이 표(내부용): s[k] = φ = 2πk/N 까지의 누적 길이 */
-  s: number[];
 }
 
-const E_DEFAULT = 3 - 2 * Math.SQRT2;
-const NS = 4096;
+const QUARTER = Math.PI / 4;
 
-const rOf = (P: number, e: number, phi: number): number => P / (1 - e * Math.cos(4 * phi));
+function gCorner(al: number, psi: number): number {
+  return ((2 * al) / Math.sqrt(1 - al * al)) * Math.atanh(Math.tan(psi / 2) / Math.sqrt((1 - al) / (1 + al)));
+}
 
-/** e 기본 3 − 2√2 (rMax/rMin = √2, 최대/최소 속도비 2) */
-export function squareGearSpec(C: number, teeth: number, e: number = E_DEFAULT): SquareGearSpec {
-  const P = (C * (1 - e * e)) / 2;
-  const s: number[] = [0];
-  let px = rOf(P, e, 0);
-  let py = 0;
-  for (let k = 1; k <= NS; k++) {
-    const phi = (TAU * k) / NS;
-    const r = rOf(P, e, phi);
-    const x = r * Math.cos(phi);
-    const y = r * Math.sin(phi);
-    s.push(s[k - 1]! + Math.hypot(x - px, y - py));
-    px = x;
-    py = y;
+/** G(ψ) 의 역함수: 모서리 극각 φ → ψ */
+function psiCorner(al: number, phi: number): number {
+  return 2 * Math.atan(Math.sqrt((1 - al) / (1 + al)) * Math.tanh((phi * Math.sqrt(1 - al * al)) / (2 * al)));
+}
+
+/** ψ0 + G(ψ0) = π/4, cos ψ0 = 2α 를 이분법으로 */
+function solveAlpha(): number {
+  const f = (al: number): number => {
+    const p0 = Math.acos(2 * al);
+    return p0 + gCorner(al, p0) - QUARTER;
+  };
+  let lo = 0.3;
+  let hi = 0.4999;
+  for (let i = 0; i < 100; i++) {
+    const m = (lo + hi) / 2;
+    if (f(lo) * f(m) <= 0) hi = m;
+    else lo = m;
   }
-  const L = s[NS]!;
+  return (lo + hi) / 2;
+}
+
+/** 곧은 변 사각 기어의 상수 α = a/C (≈ 0.4575552) */
+export const SQUARE_GEAR_ALPHA = solveAlpha();
+const AL = SQUARE_GEAR_ALPHA;
+const PSI0 = Math.acos(2 * AL);
+const G0 = QUARTER - PSI0;
+
+/** C = 축 간 거리, teeth = 잇수(8 의 배수) */
+export function squareGearSpec(C: number, teeth: number): SquareGearSpec {
+  const a = AL * C;
+  const b = a * Math.tan(PSI0);
+  const L = 16 * b;
   const pitch = L / teeth;
-  return { C, e, P, rMax: P / (1 - e), rMin: P / (1 + e), L, teeth, pitch, module: pitch / Math.PI, s };
+  return { C, alpha: AL, rMin: a, rMax: C - a, b, psi0: PSI0, G0, L, teeth, pitch, module: pitch / Math.PI };
 }
 
-/** 호 길이 위치 → 극각 φ (표 선형 보간) */
-function phiAt(spec: SquareGearSpec, ssIn: number): number {
-  const ss = ((ssIn % spec.L) + spec.L) % spec.L;
-  const s = spec.s;
-  let lo = 0;
-  let hi = NS;
-  while (hi - lo > 1) {
-    const mid = (lo + hi) >> 1;
-    if (s[mid]! <= ss) lo = mid;
-    else hi = mid;
+/** 피치곡선 반지름 r(φ) (몸 극각, φ = 0 이 모서리 끝, π/4 가 변 가운데) */
+export function squareGearRadius(spec: SquareGearSpec, phiIn: number): number {
+  const h = Math.PI / 2;
+  let phi = ((phiIn % h) + h) % h;
+  if (phi > QUARTER) phi = h - phi;
+  if (phi <= G0) return spec.C - spec.rMin / Math.cos(psiCorner(AL, phi));
+  return spec.rMin / Math.cos(QUARTER - phi);
+}
+
+/** 호 길이 s(모서리 끝 φ = 0 에서 반시계로) → 피치곡선 위 점 Q 와 단위 접선 T(반시계 방향) */
+export function squareGearPoint(spec: SquareGearSpec, sIn: number): { x: number; y: number; tx: number; ty: number } {
+  const { L, b, rMin: a, C } = spec;
+  const Lq = L / 4;
+  let s = sIn - Math.floor(sIn / L) * L; // [0, L)
+  // 모서리 끝마다 사분원: q = round(s / Lq), 그 모서리 기준 부호 있는 호 길이 t ∈ [−L/8, L/8]
+  const q = Math.round(s / Lq);
+  s -= q * Lq;
+  const sign = s < 0 ? -1 : 1;
+  const t = Math.abs(s);
+  let phi: number;
+  let r: number;
+  let rad: number; // dr/ds
+  let tan: number; // r·dφ/ds
+  if (t <= b) {
+    const psi = Math.atan(t / a);
+    phi = gCorner(AL, psi);
+    r = C - a / Math.cos(psi);
+    rad = -Math.sin(psi);
+    tan = Math.cos(psi);
+  } else {
+    const psi = Math.atan((t - 2 * b) / a); // 변 가운데(t = L/8 = 2b) 기준, ≤ 0
+    phi = QUARTER + psi;
+    r = a / Math.cos(psi);
+    rad = Math.sin(psi);
+    tan = Math.cos(psi);
   }
-  const t = (ss - s[lo]!) / (s[lo + 1]! - s[lo]!);
-  return (TAU * (lo + t)) / NS;
+  // s < 0 은 x축 대칭: 위치 = 반사, 접선 = −(반사된 접선) → rad 성분 부호만 바뀜
+  phi *= sign;
+  const cp = Math.cos(phi);
+  const sp = Math.sin(phi);
+  let x = r * cp;
+  let y = r * sp;
+  let tx = sign * rad * cp - tan * sp;
+  let ty = sign * rad * sp + tan * cp;
+  // q·π/2 회전
+  const ang = (q * Math.PI) / 2;
+  const ca = Math.cos(ang);
+  const sa = Math.sin(ang);
+  [x, y] = [x * ca - y * sa, x * sa + y * ca];
+  [tx, ty] = [tx * ca - ty * sa, tx * sa + ty * ca];
+  return { x, y, tx, ty };
 }
 
 const TOOTH: [number, number][] = [
@@ -136,21 +198,15 @@ const TOOTH: [number, number][] = [
   [0.86, -1.25]
 ];
 
-/** 기어 몸 좌표(원점 = 회전축)에서 외곽 점열(반시계). phase 0: 몸 +X 모서리에 이골 가운데, 0.5: 반 피치 어긋남 */
+/** 기어 몸 좌표(원점 = 회전축)에서 외곽 점열(반시계). phase 0: 몸 +X 모서리 끝에 이골 가운데, 0.5: 반 피치 어긋남 */
 export function squareGearOutline(spec: SquareGearSpec, phase: 0 | 0.5): V2[] {
-  const { P, e, pitch, module: m } = spec;
+  const { pitch, module: m } = spec;
   const out: V2[] = [];
   for (let i = 0; i < spec.teeth; i++) {
     for (const [u, h] of TOOTH) {
-      const phi = phiAt(spec, (i + phase + u) * pitch);
-      const d = 1 - e * Math.cos(4 * phi);
-      const r = P / d;
-      const rp = (-4 * e * P * Math.sin(4 * phi)) / (d * d);
-      const tx = rp * Math.cos(phi) - r * Math.sin(phi);
-      const ty = rp * Math.sin(phi) + r * Math.cos(phi);
-      const tl = Math.hypot(tx, ty);
-      // 바깥 법선 = (t_y, −t_x)/|t|
-      out.push([r * Math.cos(phi) + (ty / tl) * h * m, r * Math.sin(phi) - (tx / tl) * h * m]);
+      const p = squareGearPoint(spec, (i + phase + u) * pitch);
+      // 바깥 법선 = (t_y, −t_x)
+      out.push([p.x + p.ty * h * m, p.y - p.tx * h * m]);
     }
   }
   return out;
@@ -169,12 +225,11 @@ export function squareGear(spec: SquareGearSpec, phase: 0 | 0.5, opts: { width?:
     { z: w / 2, s: 0.99, hs: 1.1 }
   ]);
   g.add(mesh(bodyGeo, body));
-  // 안쪽 둥근 네모 테두리 — 피치곡선 모양
+  // 안쪽 둥근 네모 테두리 — 피치곡선 모양(호 길이 등분)
   const pc: V2[] = [];
   for (let k = 0; k < 160; k++) {
-    const phi = (TAU * k) / 160;
-    const r = rOf(spec.P, spec.e, phi);
-    pc.push([r * Math.cos(phi), r * Math.sin(phi)]);
+    const p = squareGearPoint(spec, (spec.L * k) / 160);
+    pc.push([p.x, p.y]);
   }
   const sc = (k: number): V2[] => pc.map(([x, y]) => [x * k, y * k]);
   g.add(
@@ -195,11 +250,30 @@ export function squareGear(spec: SquareGearSpec, phase: 0 | 0.5, opts: { width?:
   return g;
 }
 
-/** 기어 1 이 θ 돌 때 기어 2 가 피치곡선 위에서 더 구른 각 F(θ) */
-export function squareGearAngle(theta: number, e: number = E_DEFAULT): number {
-  const k = (1 + e) / (1 - e);
-  const w = 2 * theta;
-  const a = Math.atan2(k * Math.sin(w), Math.cos(w));
-  const n = Math.round((w - a) / TAU);
-  return 0.5 * (a + TAU * n);
+/**
+ * 기어 1 이 θ 돌 때 기어 2 가 더 구른 각 F(θ). θ = 0 에서 기어 1 은 모서리 끝, 기어 2 는 변 가운데로 닿는다.
+ *  |θ| ≤ G0 (기어 1 모서리 ↔ 기어 2 변): F = ψ, θ = G(ψ)
+ *  G0 ≤ θ ≤ π/4 (기어 1 변 ↔ 기어 2 모서리): F = π/4 − G(π/4 − θ)
+ * 홀함수, F(θ + π/2) = F(θ) + π/2 (연속으로 펼친 값).
+ */
+export function squareGearAngle(theta: number): number {
+  const h = Math.PI / 2;
+  const n = Math.round(theta / h);
+  const t = theta - n * h; // [−π/4, π/4]
+  const at = Math.abs(t);
+  const f = at <= G0 ? psiCorner(AL, at) : QUARTER - gCorner(AL, QUARTER - at);
+  return n * h + Math.sign(t) * f;
+}
+
+/** 속도비 ω2/ω1 = F′(θ) = r1/(C − r1) */
+export function squareGearRatio(theta: number): number {
+  const h = Math.PI / 2;
+  let t = Math.abs(theta - Math.round(theta / h) * h);
+  if (t <= G0) {
+    const c = Math.cos(psiCorner(AL, t));
+    return (1 - AL / c) / (AL / c); // 기어 1 모서리(r = C − a/cosψ), 기어 2 변(a/cosψ)
+  }
+  t = QUARTER - t;
+  const c = Math.cos(t);
+  return AL / c / (1 - AL / c);
 }
