@@ -132,7 +132,7 @@
     },
     {
       "n": 44,
-      "titleKo": "계단식 이 기어",
+      "titleKo": "계단식 톱니 기어",
       "ko": "큰 힘을 전달하고 이에 연속적인 물림을 주려고 쓰는 기어의 한 종류다. 각 바퀴는 둘, 셋, 또는 그 이상의 서로 다른 평기어를 합친 것이다. 이는 일직선으로 늘어서는 대신 계단 모양으로 배열되어 연속적인 물림을 준다. 이 방식은 때로 스크루 추진기를 구동하는 데, 그리고 비슷한 성격의 랙으로 큰 철제 대패 기계의 받침대를 움직이는 데 쓰인다.",
       "easy": "평기어 몇 개를 조금씩 어긋나게 겹쳐 놓으면 톱니가 하나씩 차례로 물려, 큰 힘을 부드럽게 전할 수 있다.",
       "category": "gear",
@@ -173,7 +173,7 @@
     {
       "n": 49,
       "titleKo": "래칫 베벨 기어 전동",
-      "ko": "가로축의 번갈아 하는 원 운동이, 베벨기어에 붙은 래칫 휠을 통해 세로축의 연속적인 회전 운동을 만든다. 두 휠의 래칫 톱니가 서로 반대 방향으로 놓여 있고 클릭(폴)이 반대 방향으로 작용한다. 베벨기어와 래칫 휠은 축에 헐겁게 끼워져 있고, 폴은 축에 단단히 고정된 팔에 붙어 있다.",
+      "ko": "가로축의 번갈아 하는 원 운동이, 베벨기어에 붙은 래칫 휠을 통해 세로축의 연속적인 회전 운동을 만든다. 두 휠의 래칫 톱니가 서로 반대 방향으로 놓여 있고 폴(걸쇠)이 반대 방향으로 작용한다. 베벨기어와 래칫 휠은 축에 헐겁게 끼워져 있고, 폴은 축에 단단히 고정된 팔에 붙어 있다.",
       "easy": "가로축이 앞뒤로 왔다 갔다 해도, 두 개의 래칫이 번갈아 걸려서 위쪽 세로축은 한 방향으로 계속 돈다.",
       "category": "ratchet",
       "mech": "Horizontal shaft with two loose bevel gears each fused with a ratchet wheel (teeth set opposite ways) and pawls on arms fixed to the shaft; both bevels mesh with one bevel gear on the vertical shaft above. Shaft oscillates; vertical shaft turns continuously."
