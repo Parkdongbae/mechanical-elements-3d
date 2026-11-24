@@ -183,7 +183,9 @@ export default function buildM057(): MovementModel {
   g.add(pinion);
 
   // ── 벨트 두 줄 ──
-  const openBelt = new Belt(planar(openBeltPath(T, RB_TOP, C, RB_RING, 48), ZG), { style: 'flat', width: 0.11, thickness: BELT_T });
+  // 평벨트 폭은 풀리 축(Z) 방향 — Belt 기본(경로 평면 안, 반지름 방향)이면 띠가 모로 서서 넓은 면이 림에 닿지 않는다
+  const openPath = planar(openBeltPath(T, RB_TOP, C, RB_RING, 48), ZG);
+  const openBelt = new Belt(openPath, { style: 'flat', width: 0.11, thickness: BELT_T, widthDirs: openPath.map(() => new THREE.Vector3(0, 0, 1)) });
   openBelt.group.name = 'openBelt';
   const crossRope = new Belt(crossedPath3D());
   crossRope.group.name = 'crossRope';

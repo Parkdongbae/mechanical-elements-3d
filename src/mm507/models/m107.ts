@@ -34,10 +34,10 @@ export default function buildM107(): MovementModel {
   // 드럼 축받이 2개(판화에 없는 보충) — 고리 구멍이 X 방향
   g.add(wallBearing(-0.44, CY, ZC, 'x', 0.078), wallBearing(0.36, CY, ZC, 'x', 0.078));
 
-  // 회전 방향 화살표 — 정면에서 타원으로 보이게 60° 만 돌린다
+  // 회전 방향 화살표 — 드럼 축(X)에 수직인 면, 정면에서 세로로 선다
   const arrow = rotArrow(0.22, true);
   arrow.position.set(-0.72, CY, ZC);
-  arrow.rotation.y = Math.PI / 3;
+  arrow.rotation.y = Math.PI / 2;
   g.add(arrow);
 
   // 이름표 — 막대 이름표는 막대를 따라간다
