@@ -1,79 +1,170 @@
 {
-  "platePage": 101, "textPage": 102,
+  "platePage": 101,
+  "textPage": 102,
   "figures": [
-    {"n": 394, "boxpx": [58, 240, 322, 497]},
-    {"n": 395, "boxpx": [326, 240, 542, 497]},
-    {"n": 396, "boxpx": [546, 240, 806, 497]},
-    {"n": 397, "boxpx": [58, 503, 322, 710]},
-    {"n": 398, "boxpx": [326, 503, 542, 710]},
-    {"n": 399, "boxpx": [546, 503, 806, 710]},
-    {"n": 400, "boxpx": [58, 716, 322, 932]},
-    {"n": 401, "boxpx": [326, 716, 542, 932]},
-    {"n": 402, "boxpx": [546, 716, 806, 932]}
+    {
+      "n": 394,
+      "box": [
+        0.0701,
+        0.2051,
+        0.3894,
+        0.4248
+      ]
+    },
+    {
+      "n": 395,
+      "box": [
+        0.3942,
+        0.2051,
+        0.6554,
+        0.4248
+      ]
+    },
+    {
+      "n": 396,
+      "box": [
+        0.6602,
+        0.2051,
+        0.9746,
+        0.4248
+      ]
+    },
+    {
+      "n": 397,
+      "box": [
+        0.0701,
+        0.4299,
+        0.3894,
+        0.6068
+      ]
+    },
+    {
+      "n": 398,
+      "box": [
+        0.3942,
+        0.4299,
+        0.6554,
+        0.6068
+      ]
+    },
+    {
+      "n": 399,
+      "box": [
+        0.6602,
+        0.4299,
+        0.9746,
+        0.6068
+      ]
+    },
+    {
+      "n": 400,
+      "box": [
+        0.0701,
+        0.612,
+        0.3894,
+        0.7966
+      ]
+    },
+    {
+      "n": 401,
+      "box": [
+        0.3942,
+        0.612,
+        0.6554,
+        0.7966
+      ]
+    },
+    {
+      "n": 402,
+      "box": [
+        0.6602,
+        0.612,
+        0.9746,
+        0.7966
+      ]
+    }
   ],
   "texts": [
-    {"n": 394,
-     "en": "C. Parsons's patent device for converting reciprocating motion into rotary, an endless rack provided with grooves on its side gearing with a pinion having two concentric flanges of different diameters. A substitute for crank in oscillating cylinder engines.",
-     "titleKo": "파슨스의 끝없는 랙",
-     "ko": "C. 파슨스가 특허를 낸, 왕복 운동을 회전 운동으로 바꾸는 장치로, 옆면에 홈이 있는 끝없는(고리 모양) 랙이 지름이 서로 다른 두 개의 같은 중심 플랜지를 가진 피니언과 맞물린다. 요동 실린더 기관에서 크랭크를 대신한다.",
-     "easy": "긴 타원 고리 모양의 톱니 틀 안쪽에서 작은 기어가 맞물려 돈다. 틀이 앞뒤로 왔다 갔다 하면 기어는 같은 방향으로 계속 돈다. 크랭크 없이 왕복을 회전으로 바꾼다.",
-     "category": "gear",
-     "mech": "Long oval (stadium-shaped, about 2.5:1) frame with an endless rack (teeth on the inner side, grooves on its side) and a rod/plunger projecting right (piston rod end with flange); a pinion with two concentric flanges inside, near the middle-left. Arrow on top shows the frame moving left. Input: piston rod reciprocation; output: pinion rotation (continuous)."},
-    {"n": 395,
-     "en": "Four-way cock, used many years ago on steam engines to admit and exhaust steam from the cylinder. The two positions represented are produced by a quarter turn of the plug. Supposing the steam to enter at the top, in the upper figure the exhaust is from the right end of the cylinder, and in the lower figure the exhaust is from the left—the steam entering, of course, in the opposite port.",
-     "titleKo": "사방 콕",
-     "ko": "오래전 증기 기관에서 실린더로 증기를 들이고 내보내는 데 쓰던 사방 콕(마개 밸브)이다. 그림의 두 위치는 마개를 4분의 1바퀴 돌려서 만든다. 증기가 위에서 들어온다고 하면, 위쪽 그림에서는 실린더의 오른쪽 끝에서 배기가 되고, 아래쪽 그림에서는 왼쪽에서 배기가 된다. 증기는 물론 반대쪽 구멍으로 들어간다.",
-     "easy": "둥근 마개를 90도 돌리면 증기가 들어오는 구멍과 나가는 구멍이 서로 바뀐다. 이렇게 해서 피스톤의 양쪽에 번갈아 증기를 넣고 뺀다.",
-     "category": "steam",
-     "mech": "Two circular cock bodies (plugs, about 1.0 cell height diameter) drawn overlapping diagonally (upper right and lower left); each plug has two curved passages (arcs at the four sides, dotted circle for the plug) giving four ports. Switching positions is a 90 deg rotation of the plug. Input: quarter turn of the plug; output: swapping which cylinder end gets steam/exhaust."},
-    {"n": 396,
-     "en": "G. P. Reed's patent anchor and lever escapement for watches. The lever is so applied in combination with chronometer escapement that the whole impulse given balance in one direction is transmitted through lever, and whole impulse in opposite direction is transmitted directly to chronometer impulse pallet, locking and unlocking the escape-wheel but once at each impulse given by said wheel.",
-     "titleKo": "리드의 앵커·레버 탈진기",
-     "ko": "G. P. 리드가 시계를 위해 특허를 낸 닻(앵커)·레버 탈진기이다. 레버는 크로노미터 탈진기와 결합되어 있어서, 균형 바퀴가 한 방향으로 받는 모든 충격은 레버를 통해 전해지고, 반대 방향의 모든 충격은 크로노미터의 충격 팔레트에 곧바로 전해진다. 탈진 바퀴는 이 바퀴가 충격을 줄 때마다 한 번만 잠기고 풀린다.",
-     "easy": "앵커·레버와 크로노미터 방식을 섞은 시계 탈진기이다. 균형 바퀴가 한쪽으로 갈 때는 레버를 통해, 반대쪽으로 갈 때는 직접 힘을 받으며, 톱니바퀴는 한 번에 한 이씩만 풀려 나간다.",
-     "category": "escapement",
-     "mech": "Large balance wheel (big ring, thin rim ~1.1x cell height) at the left; at the right a smaller escape wheel (about 16 sharp teeth, 3 spokes, hub) with a lever (T-shaped horizontal anchor lever, ends with a notch at the left and fork bits at the right side); small impulse pallet. Arrow shows wheel rotation. Input: wheel torque; output: balance oscillation and stepped wheel release (one tooth per impulse)."},
-    {"n": 397,
-     "en": "Continuous circular into intermittent rectilinear reciprocating. A motion used on several sewing machines for driving the shuttle. Same motion applied to three-revolution[?] cylinder printing-presses.",
-     "titleKo": "연속 회전을 간헐 왕복으로",
-     "ko": "연속적인 원운동을 끊어지는 직선 왕복 운동으로 바꾼다. 몇몇 재봉틀에서 북(셔틀)을 움직이는 데 쓰이는 운동이다. 같은 운동이 세 바퀴 도는 실린더 인쇄기에도 쓰인다.",
-     "easy": "굽은 막대가 회전하는 암(팔)에 밀려 위 가로 막대를 곧게 밀고 당긴다. 중간에 잠깐씩 멈추는 왕복 운동으로, 재봉틀에서 실이 든 북을 앞뒤로 움직인다.",
-     "category": "crank",
-     "mech": "Fixed base line (hatched ground) at the bottom with a curved S-shaped bar/arm pivoted at the base (lower pivot circle); the bar's middle is cranked and ends in a round knob/crank pin at the right (an arm that rotates, round end), connecting up through a pivot to a horizontal rod at the top (upper bar with a pivot at the left end) that reciprocates. Input: rotation of the knob arm; output: horizontal rod moves back and forth intermittently (with dwell)."},
-    {"n": 398,
-     "en": "Continuous circular motion into intermittent circular—the cam, C, being the driver.",
-     "titleKo": "삼각 캠으로 간헐 회전",
-     "ko": "연속적인 원운동을 끊어지는 원운동으로 바꾼다. 캠 C가 구동 부품이다.",
-     "easy": "세모꼴 캠이 계속 돌면서 연결 막대를 밀어, 오른쪽 바퀴가 돌다 쉬다를 되풀이한다.",
-     "category": "cam",
-     "mech": "Three-lobed (triangular/trefoil) cam C at the left on a shaft, arrow showing rotation; a rod with a follower collar (rectangular slide block between guides) driven by the cam, connected by a link to a crank pin on a large disc/wheel at the right (partly visible, dotted center). Input: continuous cam rotation; output: intermittent rotation of the right wheel (cam diameter about 0.7 of wheel diameter)."},
-    {"n": 399,
-     "en": "A method of repairing chains, or tightening chains used as guys or braces. Link is made in two parts, one end of each is provided with swivel-nut, and other end with screw ; the screw of each part fits into nut of other.",
-     "titleKo": "조임 고리 쇠사슬",
-     "ko": "쇠사슬을 수리하거나, 버팀줄이나 지지대로 쓰는 쇠사슬을 팽팽하게 조이는 방법이다. 고리는 두 부분으로 되어 있고, 각 부분의 한쪽 끝에는 회전 너트가, 다른 쪽 끝에는 나사가 달려 있으며, 각 부분의 나사는 다른 부분의 너트에 끼워진다.",
-     "easy": "쇠사슬 고리를 두 조각으로 만들어 서로 나사로 끼운다. 너트를 돌리면 고리가 짧아져 사슬이 팽팽해진다. 끊어진 사슬을 잇는 데도 쓸 수 있다.",
-     "category": "tool",
-     "mech": "Two U-shaped halves forming a long rounded-oval chain link (about 1.8:1, outer width about 0.35 of the cell width); in each straight side a threaded section with a swivel nut (hatched rectangle with threads) at the middle left and right. Input: turning the swivel nuts; output: link length shortens/lengthens (screw action)."},
-    {"n": 400,
-     "en": "Four-motion feed (A. B. Wilson's patent), used on Wheeler & Wilson's, Sloat's, and other sewing machines. The bar, A, is forked, and has a second bar, B (carrying the spur or feeder), pivoted in the said fork. The bar, B, is lifted by a radial projection on the cam, C, at the same time the two bars are carried forward. A spring produces the return stroke, and the bar, B, drops of its own gravity.",
-     "titleKo": "네 동작 이송 장치",
-     "ko": "A. B. 윌슨의 특허인 네 동작 이송(포 모션 피드)으로, 휠러 앤 윌슨, 슬로트 등 여러 재봉틀에 쓰인다. 막대 A는 갈라져 있고, 그 갈라진 곳에 (박차 또는 이송 이빨을 지닌) 두 번째 막대 B가 핀으로 달려 있다. 캠 C의 반지름 방향 돌기가 막대 B를 들어 올리는 동시에 두 막대가 앞으로 나아간다. 되돌아오는 동작은 스프링이 만들고, 막대 B는 자기 무게로 떨어진다.",
-     "easy": "이송 이빨이 달린 막대가 올라가서 천을 물고, 앞으로 가서 천을 밀고, 내려가고, 뒤로 돌아오는 네 가지 동작을 차례로 한다. 재봉틀이 한 땀씩 천을 보내는 데 쓰인다.",
-     "category": "cam",
-     "mech": "Long flat bar A with a forked end at the left (rectangular fork with a pivot) holding a second bar B pivoted in it, with a toothed feeder (serrations, spurs) at the right end; a cam C on a shaft (round hub with a radial lug) below near the middle; a small arrow showing the up motion. Input: cam rotation (radial lug lifts B while A advances); output: feed teeth trace a box path (up, forward, down, back). Bar A length about 5x its height."},
-    {"n": 401,
-     "en": "E. P. Brownell's patent crank-motion to obviate dead-centers. The pressure on the treadle causes the slotted slide, A, to move forward with the wrist until the latter has passed the center, when the spring, B, forces the slide against the stops until it is again required to move forward.",
-     "titleKo": "사점 없는 크랭크",
-     "ko": "E. P. 브라우넬이 특허를 낸, 사점(죽은 점)을 피하는 크랭크 운동이다. 발판을 누르는 압력은 홈이 있는 미끄럼쇠 A를 크랭크 손목(리스트)과 함께 앞으로 움직이게 하고, 손목이 중심을 지나가면 스프링 B가 미끄럼쇠를 멈추개에 밀어붙이며, 다시 앞으로 움직여야 할 때까지 그대로 둔다.",
-     "easy": "발판으로 크랭크를 돌릴 때 크랭크 핀이 맨 위나 맨 아래의 죽은 점에서 멈춰 버리기 쉽다. 이 장치에서는 홈이 파인 판이 핀과 함께 움직이다가 죽은 점을 지나면 스프링이 되돌려 놓아 계속 돌게 도와준다.",
-     "category": "crank",
-     "mech": "Large flywheel (ring with double rim, about 0.55 of the cell width) with an arrow around the rim (clockwise); inside a slotted slide A (flat rectangular plate with two slots, hatched/white) across the upper hub; spring B near the hub (small circle), crank wrist at the center; a treadle rod from the bottom of the wheel connected via two pivot circles to a treadle bar going right. Input: treadle pressure; output: wheel rotation without dead centers."},
-    {"n": 402,
-     "en": "G. O. Guernsey's patent escapement for watches. In this escapement two balance-wheels are employed, carried by the same driving-power, but oscillating in opposite directions, for the purpose of counteracting the effect of any sudden jar upon a watch or time-piece. The jar which would accelerate motion of one wheel would retard the motion of other. Anchor, A, is secured to lever, B, having an interior and exterior toothed segment at its end, each one of which gears with the pinion of balance-wheels.",
-     "titleKo": "거니의 쌍균형 바퀴 탈진기",
-     "ko": "G. O. 거니가 시계를 위해 특허를 낸 탈진기이다. 이 탈진기에서는 같은 구동력이 움직이는 두 개의 균형 바퀴를 쓰는데, 두 바퀴는 서로 반대 방향으로 흔들려서 시계나 계시기에 갑작스러운 충격이 주는 영향을 상쇄한다. 한 바퀴의 움직임을 빠르게 하는 충격은 다른 바퀴의 움직임을 늦춘다. 닻 A는 레버 B에 붙어 있고, 이 레버 끝에는 안쪽과 바깥쪽에 톱니 부분이 있어서 각각 균형 바퀴들의 피니언과 맞물린다.",
-     "easy": "서로 반대로 흔들리는 두 균형 바퀴를 한 레버가 함께 움직인다. 시계를 갑자기 흔들어도 한 바퀴는 빨라지고 다른 바퀴는 느려져 서로 상쇄되므로 시계가 정확하게 간다.",
-     "category": "escapement",
-     "mech": "Two balance wheels (two circles with spokes, left one small gear at left bottom with its pinion, another larger one overlapping at the upper middle) with pinions; a lever B pivoted in the middle with a curved toothed segment (interior and exterior teeth) at its upper end meshing with both pinions, anchor A at the lower right engaging an escape wheel (ratchet wheel with ~20 teeth, partly cut by the cell boundary at the right). Input: escape wheel torque; output: balance wheels oscillating in opposite directions."}
+    {
+      "n": 394,
+      "en": "C. Parsons's patent device for converting reciprocating motion into rotary, an endless rack provided with grooves on its side gearing with a pinion having two concentric flanges of different diameters. A substitute for crank in oscillating cylinder engines.",
+      "titleKo": "파슨스의 끝없는 랙",
+      "ko": "C. 파슨스가 특허를 낸, 왕복 운동을 회전 운동으로 바꾸는 장치로, 옆면에 홈이 있는 끝없는(고리 모양) 랙이 지름이 서로 다른 두 개의 같은 중심 플랜지를 가진 피니언과 맞물린다. 요동 실린더 기관에서 크랭크를 대신한다.",
+      "easy": "긴 타원 고리 모양의 톱니 틀 안쪽에서 작은 기어가 맞물려 돈다. 틀이 앞뒤로 왔다 갔다 하면 기어는 같은 방향으로 계속 돈다. 크랭크 없이 왕복을 회전으로 바꾼다.",
+      "category": "gear",
+      "mech": "Long oval (stadium-shaped, about 2.5:1) frame with an endless rack (teeth on the inner side, grooves on its side) and a rod/plunger projecting right (piston rod end with flange); a pinion with two concentric flanges inside, near the middle-left. Arrow on top shows the frame moving left. Input: piston rod reciprocation; output: pinion rotation (continuous)."
+    },
+    {
+      "n": 395,
+      "en": "Four-way cock, used many years ago on steam engines to admit and exhaust steam from the cylinder. The two positions represented are produced by a quarter turn of the plug. Supposing the steam to enter at the top, in the upper figure the exhaust is from the right end of the cylinder, and in the lower figure the exhaust is from the left—the steam entering, of course, in the opposite port.",
+      "titleKo": "사방 콕",
+      "ko": "오래전 증기 기관에서 실린더로 증기를 들이고 내보내는 데 쓰던 사방 콕(마개 밸브)이다. 그림의 두 위치는 마개를 4분의 1바퀴 돌려서 만든다. 증기가 위에서 들어온다고 하면, 위쪽 그림에서는 실린더의 오른쪽 끝에서 배기가 되고, 아래쪽 그림에서는 왼쪽에서 배기가 된다. 증기는 물론 반대쪽 구멍으로 들어간다.",
+      "easy": "둥근 마개를 90도 돌리면 증기가 들어오는 구멍과 나가는 구멍이 서로 바뀐다. 이렇게 해서 피스톤의 양쪽에 번갈아 증기를 넣고 뺀다.",
+      "category": "steam",
+      "mech": "Two circular cock bodies (plugs, about 1.0 cell height diameter) drawn overlapping diagonally (upper right and lower left); each plug has two curved passages (arcs at the four sides, dotted circle for the plug) giving four ports. Switching positions is a 90 deg rotation of the plug. Input: quarter turn of the plug; output: swapping which cylinder end gets steam/exhaust."
+    },
+    {
+      "n": 396,
+      "en": "G. P. Reed's patent anchor and lever escapement for watches. The lever is so applied in combination with chronometer escapement that the whole impulse given balance in one direction is transmitted through lever, and whole impulse in opposite direction is transmitted directly to chronometer impulse pallet, locking and unlocking the escape-wheel but once at each impulse given by said wheel.",
+      "titleKo": "리드의 앵커·레버 탈진기",
+      "ko": "G. P. 리드가 시계를 위해 특허를 낸 닻(앵커)·레버 탈진기이다. 레버는 크로노미터 탈진기와 결합되어 있어서, 균형 바퀴가 한 방향으로 받는 모든 충격은 레버를 통해 전해지고, 반대 방향의 모든 충격은 크로노미터의 충격 팔레트에 곧바로 전해진다. 탈진 바퀴는 이 바퀴가 충격을 줄 때마다 한 번만 잠기고 풀린다.",
+      "easy": "앵커·레버와 크로노미터 방식을 섞은 시계 탈진기이다. 균형 바퀴가 한쪽으로 갈 때는 레버를 통해, 반대쪽으로 갈 때는 직접 힘을 받으며, 톱니바퀴는 한 번에 한 이씩만 풀려 나간다.",
+      "category": "escapement",
+      "mech": "Large balance wheel (big ring, thin rim ~1.1x cell height) at the left; at the right a smaller escape wheel (about 16 sharp teeth, 3 spokes, hub) with a lever (T-shaped horizontal anchor lever, ends with a notch at the left and fork bits at the right side); small impulse pallet. Arrow shows wheel rotation. Input: wheel torque; output: balance oscillation and stepped wheel release (one tooth per impulse)."
+    },
+    {
+      "n": 397,
+      "en": "Continuous circular into intermittent rectilinear reciprocating. A motion used on several sewing machines for driving the shuttle. Same motion applied to three-revolution[?] cylinder printing-presses.",
+      "titleKo": "연속 회전을 간헐 왕복으로",
+      "ko": "연속적인 원운동을 끊어지는 직선 왕복 운동으로 바꾼다. 몇몇 재봉틀에서 북(셔틀)을 움직이는 데 쓰이는 운동이다. 같은 운동이 세 바퀴 도는 실린더 인쇄기에도 쓰인다.",
+      "easy": "굽은 막대가 회전하는 암(팔)에 밀려 위 가로 막대를 곧게 밀고 당긴다. 중간에 잠깐씩 멈추는 왕복 운동으로, 재봉틀에서 실이 든 북을 앞뒤로 움직인다.",
+      "category": "crank",
+      "mech": "Fixed base line (hatched ground) at the bottom with a curved S-shaped bar/arm pivoted at the base (lower pivot circle); the bar's middle is cranked and ends in a round knob/crank pin at the right (an arm that rotates, round end), connecting up through a pivot to a horizontal rod at the top (upper bar with a pivot at the left end) that reciprocates. Input: rotation of the knob arm; output: horizontal rod moves back and forth intermittently (with dwell)."
+    },
+    {
+      "n": 398,
+      "en": "Continuous circular motion into intermittent circular—the cam, C, being the driver.",
+      "titleKo": "삼각 캠으로 간헐 회전",
+      "ko": "연속적인 원운동을 끊어지는 원운동으로 바꾼다. 캠 C가 구동 부품이다.",
+      "easy": "세모꼴 캠이 계속 돌면서 연결 막대를 밀어, 오른쪽 바퀴가 돌다 쉬다를 되풀이한다.",
+      "category": "cam",
+      "mech": "Three-lobed (triangular/trefoil) cam C at the left on a shaft, arrow showing rotation; a rod with a follower collar (rectangular slide block between guides) driven by the cam, connected by a link to a crank pin on a large disc/wheel at the right (partly visible, dotted center). Input: continuous cam rotation; output: intermittent rotation of the right wheel (cam diameter about 0.7 of wheel diameter)."
+    },
+    {
+      "n": 399,
+      "en": "A method of repairing chains, or tightening chains used as guys or braces. Link is made in two parts, one end of each is provided with swivel-nut, and other end with screw ; the screw of each part fits into nut of other.",
+      "titleKo": "조임 고리 쇠사슬",
+      "ko": "쇠사슬을 수리하거나, 버팀줄이나 지지대로 쓰는 쇠사슬을 팽팽하게 조이는 방법이다. 고리는 두 부분으로 되어 있고, 각 부분의 한쪽 끝에는 회전 너트가, 다른 쪽 끝에는 나사가 달려 있으며, 각 부분의 나사는 다른 부분의 너트에 끼워진다.",
+      "easy": "쇠사슬 고리를 두 조각으로 만들어 서로 나사로 끼운다. 너트를 돌리면 고리가 짧아져 사슬이 팽팽해진다. 끊어진 사슬을 잇는 데도 쓸 수 있다.",
+      "category": "tool",
+      "mech": "Two U-shaped halves forming a long rounded-oval chain link (about 1.8:1, outer width about 0.35 of the cell width); in each straight side a threaded section with a swivel nut (hatched rectangle with threads) at the middle left and right. Input: turning the swivel nuts; output: link length shortens/lengthens (screw action)."
+    },
+    {
+      "n": 400,
+      "en": "Four-motion feed (A. B. Wilson's patent), used on Wheeler & Wilson's, Sloat's, and other sewing machines. The bar, A, is forked, and has a second bar, B (carrying the spur or feeder), pivoted in the said fork. The bar, B, is lifted by a radial projection on the cam, C, at the same time the two bars are carried forward. A spring produces the return stroke, and the bar, B, drops of its own gravity.",
+      "titleKo": "네 동작 이송 장치",
+      "ko": "A. B. 윌슨의 특허인 네 동작 이송(포 모션 피드)으로, 휠러 앤 윌슨, 슬로트 등 여러 재봉틀에 쓰인다. 막대 A는 갈라져 있고, 그 갈라진 곳에 (박차 또는 이송 이빨을 지닌) 두 번째 막대 B가 핀으로 달려 있다. 캠 C의 반지름 방향 돌기가 막대 B를 들어 올리는 동시에 두 막대가 앞으로 나아간다. 되돌아오는 동작은 스프링이 만들고, 막대 B는 자기 무게로 떨어진다.",
+      "easy": "이송 이빨이 달린 막대가 올라가서 천을 물고, 앞으로 가서 천을 밀고, 내려가고, 뒤로 돌아오는 네 가지 동작을 차례로 한다. 재봉틀이 한 땀씩 천을 보내는 데 쓰인다.",
+      "category": "cam",
+      "mech": "Long flat bar A with a forked end at the left (rectangular fork with a pivot) holding a second bar B pivoted in it, with a toothed feeder (serrations, spurs) at the right end; a cam C on a shaft (round hub with a radial lug) below near the middle; a small arrow showing the up motion. Input: cam rotation (radial lug lifts B while A advances); output: feed teeth trace a box path (up, forward, down, back). Bar A length about 5x its height."
+    },
+    {
+      "n": 401,
+      "en": "E. P. Brownell's patent crank-motion to obviate dead-centers. The pressure on the treadle causes the slotted slide, A, to move forward with the wrist until the latter has passed the center, when the spring, B, forces the slide against the stops until it is again required to move forward.",
+      "titleKo": "사점 없는 크랭크",
+      "ko": "E. P. 브라우넬이 특허를 낸, 사점(죽은 점)을 피하는 크랭크 운동이다. 발판을 누르는 압력은 홈이 있는 미끄럼쇠 A를 크랭크 손목(리스트)과 함께 앞으로 움직이게 하고, 손목이 중심을 지나가면 스프링 B가 미끄럼쇠를 멈추개에 밀어붙이며, 다시 앞으로 움직여야 할 때까지 그대로 둔다.",
+      "easy": "발판으로 크랭크를 돌릴 때 크랭크 핀이 맨 위나 맨 아래의 죽은 점에서 멈춰 버리기 쉽다. 이 장치에서는 홈이 파인 판이 핀과 함께 움직이다가 죽은 점을 지나면 스프링이 되돌려 놓아 계속 돌게 도와준다.",
+      "category": "crank",
+      "mech": "Large flywheel (ring with double rim, about 0.55 of the cell width) with an arrow around the rim (clockwise); inside a slotted slide A (flat rectangular plate with two slots, hatched/white) across the upper hub; spring B near the hub (small circle), crank wrist at the center; a treadle rod from the bottom of the wheel connected via two pivot circles to a treadle bar going right. Input: treadle pressure; output: wheel rotation without dead centers."
+    },
+    {
+      "n": 402,
+      "en": "G. O. Guernsey's patent escapement for watches. In this escapement two balance-wheels are employed, carried by the same driving-power, but oscillating in opposite directions, for the purpose of counteracting the effect of any sudden jar upon a watch or time-piece. The jar which would accelerate motion of one wheel would retard the motion of other. Anchor, A, is secured to lever, B, having an interior and exterior toothed segment at its end, each one of which gears with the pinion of balance-wheels.",
+      "titleKo": "거니의 쌍균형 바퀴 탈진기",
+      "ko": "G. O. 거니가 시계를 위해 특허를 낸 탈진기이다. 이 탈진기에서는 같은 구동력이 움직이는 두 개의 균형 바퀴를 쓰는데, 두 바퀴는 서로 반대 방향으로 흔들려서 시계나 계시기에 갑작스러운 충격이 주는 영향을 상쇄한다. 한 바퀴의 움직임을 빠르게 하는 충격은 다른 바퀴의 움직임을 늦춘다. 닻 A는 레버 B에 붙어 있고, 이 레버 끝에는 안쪽과 바깥쪽에 톱니 부분이 있어서 각각 균형 바퀴들의 피니언과 맞물린다.",
+      "easy": "서로 반대로 흔들리는 두 균형 바퀴를 한 레버가 함께 움직인다. 시계를 갑자기 흔들어도 한 바퀴는 빨라지고 다른 바퀴는 느려져 서로 상쇄되므로 시계가 정확하게 간다.",
+      "category": "escapement",
+      "mech": "Two balance wheels (two circles with spokes, left one small gear at left bottom with its pinion, another larger one overlapping at the upper middle) with pinions; a lever B pivoted in the middle with a curved toothed segment (interior and exterior teeth) at its upper end meshing with both pinions, anchor A at the lower right engaging an escape wheel (ratchet wheel with ~20 teeth, partly cut by the cell boundary at the right). Input: escape wheel torque; output: balance wheels oscillating in opposite directions."
+    }
   ]
 }

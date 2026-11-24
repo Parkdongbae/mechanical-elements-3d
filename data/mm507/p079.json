@@ -1,80 +1,171 @@
 {
-  "platePage": 79, "textPage": 80,
+  "platePage": 79,
+  "textPage": 80,
   "note": "300과 301은 원문이 한 문단(300 and 301.)으로 설명한다. 두 번호의 en에는 같은 문단을 넣었다.",
   "figures": [
-    {"n": 297, "boxpx": [62, 242, 320, 494]},
-    {"n": 298, "boxpx": [326, 242, 544, 494]},
-    {"n": 299, "boxpx": [550, 242, 808, 494]},
-    {"n": 300, "boxpx": [62, 500, 320, 714]},
-    {"n": 301, "boxpx": [326, 500, 544, 714]},
-    {"n": 302, "boxpx": [550, 500, 808, 714]},
-    {"n": 303, "boxpx": [62, 722, 320, 996]},
-    {"n": 304, "boxpx": [326, 722, 544, 996]},
-    {"n": 305, "boxpx": [550, 722, 808, 996]}
+    {
+      "n": 297,
+      "box": [
+        0.075,
+        0.2068,
+        0.3869,
+        0.4222
+      ]
+    },
+    {
+      "n": 298,
+      "box": [
+        0.3942,
+        0.2068,
+        0.6578,
+        0.4222
+      ]
+    },
+    {
+      "n": 299,
+      "box": [
+        0.6651,
+        0.2068,
+        0.977,
+        0.4222
+      ]
+    },
+    {
+      "n": 300,
+      "box": [
+        0.075,
+        0.4274,
+        0.3869,
+        0.6103
+      ]
+    },
+    {
+      "n": 301,
+      "box": [
+        0.3942,
+        0.4274,
+        0.6578,
+        0.6103
+      ]
+    },
+    {
+      "n": 302,
+      "box": [
+        0.6651,
+        0.4274,
+        0.977,
+        0.6103
+      ]
+    },
+    {
+      "n": 303,
+      "box": [
+        0.075,
+        0.6171,
+        0.3869,
+        0.8513
+      ]
+    },
+    {
+      "n": 304,
+      "box": [
+        0.3942,
+        0.6171,
+        0.6578,
+        0.8513
+      ]
+    },
+    {
+      "n": 305,
+      "box": [
+        0.6651,
+        0.6171,
+        0.977,
+        0.8513
+      ]
+    }
   ],
   "texts": [
-    {"n": 297,
-     "en": "An escapement with a lantern wheel. An arm, A, carries the two pallets, B and C.",
-     "titleKo": "랜턴 바퀴 탈진기",
-     "ko": "랜턴 바퀴(핀으로 이루어진 바퀴)를 쓴 탈진기이다. 팔 A가 두 개의 팔레트 B와 C를 지니고 있다.",
-     "easy": "바퀴 면에 둥근 핀이 둘러 박혀 있고, 흔들리는 팔 끝의 두 팔레트가 핀을 번갈아 걸었다 놓는다. 팔이 한 번 흔들릴 때마다 바퀴가 핀 하나만큼 돈다.",
-     "category": "escapement",
-     "mech": "Disc (lantern wheel) with 8 round pins set in a ring near the rim, central hub; a pivoted arm A (above, dotted outline) with two flat pallets B and C, one on each side of the pin circle. Input: wheel rotation (arrow, counterclockwise); output: step advance as arm oscillates. Disc diameter about 1.5x arm length."},
-    {"n": 298,
-     "en": "An old-fashioned watch escapement.",
-     "titleKo": "옛 시계 탈진기(왕관 바퀴)",
-     "ko": "옛날 방식의 시계(회중시계) 탈진기이다.",
-     "easy": "위쪽의 큰 바퀴(균형 바퀴)가 좌우로 돌며 아래쪽 톱니바퀴의 이를 하나씩 걸었다 놓는다. 옛 시계에 쓰이던 방식이다.",
-     "category": "escapement",
-     "mech": "Large horizontal balance wheel C (flat rim and spokes) on a vertical staff at top; below it a small crown-type escape wheel with two pallets on the staff, driven by a worm/gear train at right; a sawtooth ratchet wheel at lower left on a horizontal arbor. Input: spring/weight drive via gears; output: balance oscillation and stepped advance. Balance diameter about 2x ratchet wheel diameter."},
-    {"n": 299,
-     "en": "An old-fashioned clock escapement.",
-     "titleKo": "옛 시계 탈진기(날개형)",
-     "ko": "옛날 방식의 시계(벽·탁상시계) 탈진기이다.",
-     "easy": "뾰족한 톱니가 달린 막대(크라운 바퀴의 일부)에 구부러진 레버가 걸렸다 풀리며 움직임을 한 칸씩 끊어 준다. 옛 시계에 쓰이던 단순한 탈진기이다.",
-     "category": "escapement",
-     "mech": "Straight horizontal strip with a row of large triangular teeth rising from a long base (hatched), shown in front elevation like an unrolled crown wheel; a pivoted bell-crank lever (round pivot at upper right) with a hooked arm that catches the teeth. Input: strip/wheel moves horizontally; output: lever oscillation, intermittent stepping. Strip about 2.5x lever length."},
-    {"n": 300,
-     "en": "300 and 301. A clock or watch escapement ; 300 being a front elevation, and 301 a side elevation. The pallet is acted upon by the teeth of one and the other of two escape-wheels alternately.",
-     "titleKo": "쌍바퀴 탈진기(앞모습)",
-     "ko": "300과 301. 시계 또는 회중시계의 탈진기로, 300은 앞에서 본 모습이고 301은 옆에서 본 모습이다. 팔레트는 두 개의 탈진 바퀴 가운데 한 바퀴의 이와 다른 바퀴의 이에 번갈아 밀린다.",
-     "easy": "톱니바퀴가 두 개 있고, 가운데 팔레트가 한 번은 앞쪽 바퀴의 이에, 다음에는 뒤쪽 바퀴의 이에 번갈아 밀린다. 300은 앞에서, 301은 옆에서 본 그림이다.",
-     "category": "escapement",
-     "mech": "Front elevation: escape wheel with ~12 large hooked (barbed) teeth around an annular rim, three-armed spokes with a ring hub, mounted on a horizontal arbor with a vertical pallet stem hanging below. Input: wheel rotation; output: pallet swings alternately between two wheels (front/back). Wheel diameter about 2x pallet length."},
-    {"n": 301,
-     "en": "300 and 301. A clock or watch escapement ; 300 being a front elevation, and 301 a side elevation. The pallet is acted upon by the teeth of one and the other of two escape-wheels alternately.",
-     "titleKo": "쌍바퀴 탈진기(옆모습)",
-     "ko": "300과 301. 시계 또는 회중시계의 탈진기로, 300은 앞에서 본 모습이고 301은 옆에서 본 모습이다. 팔레트는 두 개의 탈진 바퀴 가운데 한 바퀴의 이와 다른 바퀴의 이에 번갈아 밀린다.",
-     "easy": "300의 장치를 옆에서 본 그림으로, 팔레트가 달린 막대가 길게 서 있고 아래에 둥근 축이 있다. 두 탈진 바퀴 사이에서 팔레트가 흔들린다.",
-     "category": "escapement",
-     "mech": "Side elevation: tall rectangular pallet frame (vertical bar open in the middle, tapering) hanging from a horizontal arbor at the top (cylinder ends visible), semicircular lower end with a round pivot. Shows the two escape wheels' edge position front/back of the pallet. Height about 2.5x width. Motion: pallet frame oscillates about the lower pivot."},
-    {"n": 302,
-     "en": "Balance-wheel escapement. C is the balance ; A, B, are the pallets ; and D is the escape-wheel.",
-     "titleKo": "균형 바퀴 탈진기",
-     "ko": "균형 바퀴 탈진기이다. C는 균형 바퀴, A와 B는 팔레트, D는 탈진 바퀴이다.",
-     "easy": "두 개의 둥근 추(균형 바퀴)가 달린 막대가 수직 축을 중심으로 좌우로 돌며, 가로놓인 톱니 막대(탈진 바퀴)의 이를 팔레트로 하나씩 걸었다 놓는다.",
-     "category": "escapement",
-     "mech": "Horizontal flat bar with a row of sawtooth teeth on top (contrate/crown-wheel edge, D) driven by a pinion below; a vertical staff passes through it carrying two round weights (balance C) one above, one below at opposite ends of a swinging arm and small pallets A and B near the teeth. Input: wheel drive; output: balance oscillation about the vertical staff. Bar length about 3x weight diameter."},
-    {"n": 303,
-     "en": "A dead-beat pendulum escapement. The inner face of the pallet, E, and outer face of D, are concentric with the axis on which the pallets vibrate, and hence there is no recoil.",
-     "titleKo": "정지(데드비트) 추 탈진기",
-     "ko": "정지(데드비트) 방식의 추시계 탈진기이다. 팔레트 E의 안쪽 면과 D의 바깥쪽 면은 팔레트가 흔들리는 축과 같은 중심이므로 되튐이 없다.",
-     "easy": "닻 모양 팔레트의 면이 축과 같은 중심의 호이기 때문에, 톱니가 걸려 있는 동안 바퀴가 뒤로 밀리지 않고 가만히 멈춰 있다. 추시계에 쓰인다.",
-     "category": "escapement",
-     "mech": "Escape wheel with 5 spokes and ~15 pointed teeth, hub with circle at center; anchor (arrow-shaped) pallet arm E and D pivoting at the top (small circle), straddling the upper wheel rim; pendulum rod (PEN.) hanging down to F below the wheel, dashed circles show pallet arcs about the pivot. Input: wheel driven (arrow); output: pendulum swing sets stepped advance. Wheel diameter about 0.5 of overall height."},
-    {"n": 304,
-     "en": "Pin-wheel escapement, somewhat resembling the stud escapement shown by 292. The pins, A, B, of the escape-wheel are of two different forms, but the form of those on the right side is the best. One advantage of this kind of escapement is that if one of the pins is damaged it can easily be replaced, whereas if a tooth is damaged the whole wheel is ruined.",
-     "titleKo": "핀 바퀴 탈진기",
-     "ko": "292에서 본 스터드 탈진기와 어느 정도 비슷한 핀 바퀴 탈진기이다. 탈진 바퀴의 핀 A, B는 두 가지 다른 모양인데, 오른쪽에 있는 모양이 더 좋다. 이런 탈진기의 한 가지 장점은 핀 하나가 망가져도 쉽게 바꿀 수 있다는 것이다. 반면 톱니가 망가지면 바퀴 전체를 못 쓰게 된다.",
-     "easy": "바퀴 테두리에 작은 핀들이 박혀 있고, 위쪽에서 흔들리는 팔레트가 핀을 하나씩 걸었다 놓는다. 핀이 닳거나 부러져도 그 핀만 바꾸면 되므로 고치기 쉽다.",
-     "category": "escapement",
-     "mech": "Spoked wheel (6 spokes, hub with bolts) with pins (small half-round studs) set around the rim; left half has one pin form (A), right half another (B). Pallet arm: a rectangular bar with two round bosses at upper right pivoted at the top, a tall pallet blade dipping down at the right rim. Input: wheel rotation; output: pallet oscillation, stepped advance. Wheel diameter about 1.8x pallet arm length."},
-    {"n": 305,
-     "en": "A single-pin pendulum escapement. The escape-wheel is a very small disk with single eccentric pin ; it makes half a revolution for every beat of the pendulum, giving the impulse on the upright faces of the pallets, the horizontal faces of which are dead ones. This can also be adapted to watches.",
-     "titleKo": "외핀 추 탈진기",
-     "ko": "외핀 추 탈진기이다. 탈진 바퀴는 아주 작은 원판이고 한쪽으로 치우친 핀이 하나 달려 있다. 이 바퀴는 추가 한 번 칠 때마다 반 바퀴를 돌면서 팔레트의 세워진 면에 충격을 주고, 팔레트의 가로 면은 힘을 주지 않는 '죽은' 면이다. 이것은 회중시계에도 적용할 수 있다.",
-     "easy": "작은 원판에 핀이 하나만 박혀 있어, 추가 한 번 흔들릴 때마다 원판이 반 바퀴 돌며 핀으로 팔레트를 한 번 밀어 준다. 구조가 아주 단순하다.",
-     "category": "escapement",
-     "mech": "Pendulum-style long vertical rod (pear/bottle-shaped frame) pivoted at top; inside the lower bulb a tiny disc with one eccentric pin and a pair of stepped pallets (upright faces and horizontal dead faces); two round bosses at the bottom. Input: disc half-turn per beat; output: pendulum impulse. Overall about 3x taller than wide."}
+    {
+      "n": 297,
+      "en": "An escapement with a lantern wheel. An arm, A, carries the two pallets, B and C.",
+      "titleKo": "랜턴 바퀴 탈진기",
+      "ko": "랜턴 바퀴(핀으로 이루어진 바퀴)를 쓴 탈진기이다. 팔 A가 두 개의 팔레트 B와 C를 지니고 있다.",
+      "easy": "바퀴 면에 둥근 핀이 둘러 박혀 있고, 흔들리는 팔 끝의 두 팔레트가 핀을 번갈아 걸었다 놓는다. 팔이 한 번 흔들릴 때마다 바퀴가 핀 하나만큼 돈다.",
+      "category": "escapement",
+      "mech": "Disc (lantern wheel) with 8 round pins set in a ring near the rim, central hub; a pivoted arm A (above, dotted outline) with two flat pallets B and C, one on each side of the pin circle. Input: wheel rotation (arrow, counterclockwise); output: step advance as arm oscillates. Disc diameter about 1.5x arm length."
+    },
+    {
+      "n": 298,
+      "en": "An old-fashioned watch escapement.",
+      "titleKo": "옛 시계 탈진기(왕관 바퀴)",
+      "ko": "옛날 방식의 시계(회중시계) 탈진기이다.",
+      "easy": "위쪽의 큰 바퀴(균형 바퀴)가 좌우로 돌며 아래쪽 톱니바퀴의 이를 하나씩 걸었다 놓는다. 옛 시계에 쓰이던 방식이다.",
+      "category": "escapement",
+      "mech": "Large horizontal balance wheel C (flat rim and spokes) on a vertical staff at top; below it a small crown-type escape wheel with two pallets on the staff, driven by a worm/gear train at right; a sawtooth ratchet wheel at lower left on a horizontal arbor. Input: spring/weight drive via gears; output: balance oscillation and stepped advance. Balance diameter about 2x ratchet wheel diameter."
+    },
+    {
+      "n": 299,
+      "en": "An old-fashioned clock escapement.",
+      "titleKo": "옛 시계 탈진기(날개형)",
+      "ko": "옛날 방식의 시계(벽·탁상시계) 탈진기이다.",
+      "easy": "뾰족한 톱니가 달린 막대(크라운 바퀴의 일부)에 구부러진 레버가 걸렸다 풀리며 움직임을 한 칸씩 끊어 준다. 옛 시계에 쓰이던 단순한 탈진기이다.",
+      "category": "escapement",
+      "mech": "Straight horizontal strip with a row of large triangular teeth rising from a long base (hatched), shown in front elevation like an unrolled crown wheel; a pivoted bell-crank lever (round pivot at upper right) with a hooked arm that catches the teeth. Input: strip/wheel moves horizontally; output: lever oscillation, intermittent stepping. Strip about 2.5x lever length."
+    },
+    {
+      "n": 300,
+      "en": "300 and 301. A clock or watch escapement ; 300 being a front elevation, and 301 a side elevation. The pallet is acted upon by the teeth of one and the other of two escape-wheels alternately.",
+      "titleKo": "쌍바퀴 탈진기(앞모습)",
+      "ko": "300과 301. 시계 또는 회중시계의 탈진기로, 300은 앞에서 본 모습이고 301은 옆에서 본 모습이다. 팔레트는 두 개의 탈진 바퀴 가운데 한 바퀴의 이와 다른 바퀴의 이에 번갈아 밀린다.",
+      "easy": "톱니바퀴가 두 개 있고, 가운데 팔레트가 한 번은 앞쪽 바퀴의 이에, 다음에는 뒤쪽 바퀴의 이에 번갈아 밀린다. 300은 앞에서, 301은 옆에서 본 그림이다.",
+      "category": "escapement",
+      "mech": "Front elevation: escape wheel with ~12 large hooked (barbed) teeth around an annular rim, three-armed spokes with a ring hub, mounted on a horizontal arbor with a vertical pallet stem hanging below. Input: wheel rotation; output: pallet swings alternately between two wheels (front/back). Wheel diameter about 2x pallet length."
+    },
+    {
+      "n": 301,
+      "en": "300 and 301. A clock or watch escapement ; 300 being a front elevation, and 301 a side elevation. The pallet is acted upon by the teeth of one and the other of two escape-wheels alternately.",
+      "titleKo": "쌍바퀴 탈진기(옆모습)",
+      "ko": "300과 301. 시계 또는 회중시계의 탈진기로, 300은 앞에서 본 모습이고 301은 옆에서 본 모습이다. 팔레트는 두 개의 탈진 바퀴 가운데 한 바퀴의 이와 다른 바퀴의 이에 번갈아 밀린다.",
+      "easy": "300의 장치를 옆에서 본 그림으로, 팔레트가 달린 막대가 길게 서 있고 아래에 둥근 축이 있다. 두 탈진 바퀴 사이에서 팔레트가 흔들린다.",
+      "category": "escapement",
+      "mech": "Side elevation: tall rectangular pallet frame (vertical bar open in the middle, tapering) hanging from a horizontal arbor at the top (cylinder ends visible), semicircular lower end with a round pivot. Shows the two escape wheels' edge position front/back of the pallet. Height about 2.5x width. Motion: pallet frame oscillates about the lower pivot."
+    },
+    {
+      "n": 302,
+      "en": "Balance-wheel escapement. C is the balance ; A, B, are the pallets ; and D is the escape-wheel.",
+      "titleKo": "균형 바퀴 탈진기",
+      "ko": "균형 바퀴 탈진기이다. C는 균형 바퀴, A와 B는 팔레트, D는 탈진 바퀴이다.",
+      "easy": "두 개의 둥근 추(균형 바퀴)가 달린 막대가 수직 축을 중심으로 좌우로 돌며, 가로놓인 톱니 막대(탈진 바퀴)의 이를 팔레트로 하나씩 걸었다 놓는다.",
+      "category": "escapement",
+      "mech": "Horizontal flat bar with a row of sawtooth teeth on top (contrate/crown-wheel edge, D) driven by a pinion below; a vertical staff passes through it carrying two round weights (balance C) one above, one below at opposite ends of a swinging arm and small pallets A and B near the teeth. Input: wheel drive; output: balance oscillation about the vertical staff. Bar length about 3x weight diameter."
+    },
+    {
+      "n": 303,
+      "en": "A dead-beat pendulum escapement. The inner face of the pallet, E, and outer face of D, are concentric with the axis on which the pallets vibrate, and hence there is no recoil.",
+      "titleKo": "정지(데드비트) 추 탈진기",
+      "ko": "정지(데드비트) 방식의 추시계 탈진기이다. 팔레트 E의 안쪽 면과 D의 바깥쪽 면은 팔레트가 흔들리는 축과 같은 중심이므로 되튐이 없다.",
+      "easy": "닻 모양 팔레트의 면이 축과 같은 중심의 호이기 때문에, 톱니가 걸려 있는 동안 바퀴가 뒤로 밀리지 않고 가만히 멈춰 있다. 추시계에 쓰인다.",
+      "category": "escapement",
+      "mech": "Escape wheel with 5 spokes and ~15 pointed teeth, hub with circle at center; anchor (arrow-shaped) pallet arm E and D pivoting at the top (small circle), straddling the upper wheel rim; pendulum rod (PEN.) hanging down to F below the wheel, dashed circles show pallet arcs about the pivot. Input: wheel driven (arrow); output: pendulum swing sets stepped advance. Wheel diameter about 0.5 of overall height."
+    },
+    {
+      "n": 304,
+      "en": "Pin-wheel escapement, somewhat resembling the stud escapement shown by 292. The pins, A, B, of the escape-wheel are of two different forms, but the form of those on the right side is the best. One advantage of this kind of escapement is that if one of the pins is damaged it can easily be replaced, whereas if a tooth is damaged the whole wheel is ruined.",
+      "titleKo": "핀 바퀴 탈진기",
+      "ko": "292에서 본 스터드 탈진기와 어느 정도 비슷한 핀 바퀴 탈진기이다. 탈진 바퀴의 핀 A, B는 두 가지 다른 모양인데, 오른쪽에 있는 모양이 더 좋다. 이런 탈진기의 한 가지 장점은 핀 하나가 망가져도 쉽게 바꿀 수 있다는 것이다. 반면 톱니가 망가지면 바퀴 전체를 못 쓰게 된다.",
+      "easy": "바퀴 테두리에 작은 핀들이 박혀 있고, 위쪽에서 흔들리는 팔레트가 핀을 하나씩 걸었다 놓는다. 핀이 닳거나 부러져도 그 핀만 바꾸면 되므로 고치기 쉽다.",
+      "category": "escapement",
+      "mech": "Spoked wheel (6 spokes, hub with bolts) with pins (small half-round studs) set around the rim; left half has one pin form (A), right half another (B). Pallet arm: a rectangular bar with two round bosses at upper right pivoted at the top, a tall pallet blade dipping down at the right rim. Input: wheel rotation; output: pallet oscillation, stepped advance. Wheel diameter about 1.8x pallet arm length."
+    },
+    {
+      "n": 305,
+      "en": "A single-pin pendulum escapement. The escape-wheel is a very small disk with single eccentric pin ; it makes half a revolution for every beat of the pendulum, giving the impulse on the upright faces of the pallets, the horizontal faces of which are dead ones. This can also be adapted to watches.",
+      "titleKo": "외핀 추 탈진기",
+      "ko": "외핀 추 탈진기이다. 탈진 바퀴는 아주 작은 원판이고 한쪽으로 치우친 핀이 하나 달려 있다. 이 바퀴는 추가 한 번 칠 때마다 반 바퀴를 돌면서 팔레트의 세워진 면에 충격을 주고, 팔레트의 가로 면은 힘을 주지 않는 '죽은' 면이다. 이것은 회중시계에도 적용할 수 있다.",
+      "easy": "작은 원판에 핀이 하나만 박혀 있어, 추가 한 번 흔들릴 때마다 원판이 반 바퀴 돌며 핀으로 팔레트를 한 번 밀어 준다. 구조가 아주 단순하다.",
+      "category": "escapement",
+      "mech": "Pendulum-style long vertical rod (pear/bottle-shaped frame) pivoted at top; inside the lower bulb a tiny disc with one eccentric pin and a pair of stepped pallets (upright faces and horizontal dead faces); two round bosses at the bottom. Input: disc half-turn per beat; output: pendulum impulse. Overall about 3x taller than wide."
+    }
   ]
 }

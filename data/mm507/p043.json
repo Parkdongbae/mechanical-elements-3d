@@ -1,0 +1,170 @@
+{
+  "platePage": 43,
+  "textPage": 44,
+  "figures": [
+    {
+      "n": 137,
+      "box": [
+        0.075,
+        0.248,
+        0.4,
+        0.43
+      ]
+    },
+    {
+      "n": 138,
+      "box": [
+        0.41,
+        0.248,
+        0.67,
+        0.43
+      ]
+    },
+    {
+      "n": 139,
+      "box": [
+        0.68,
+        0.248,
+        0.999,
+        0.43
+      ]
+    },
+    {
+      "n": 140,
+      "box": [
+        0.075,
+        0.437,
+        0.4,
+        0.618
+      ]
+    },
+    {
+      "n": 141,
+      "box": [
+        0.41,
+        0.437,
+        0.67,
+        0.618
+      ]
+    },
+    {
+      "n": 142,
+      "box": [
+        0.68,
+        0.437,
+        0.999,
+        0.618
+      ]
+    },
+    {
+      "n": 143,
+      "box": [
+        0.075,
+        0.625,
+        0.4,
+        0.798
+      ]
+    },
+    {
+      "n": 144,
+      "box": [
+        0.41,
+        0.625,
+        0.67,
+        0.798
+      ]
+    },
+    {
+      "n": 145,
+      "box": [
+        0.68,
+        0.625,
+        0.999,
+        0.798
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 137,
+      "enStart": "Expansion eccentric used in",
+      "titleKo": "팽창 편심(프랑스식)",
+      "ko": "프랑스에서 증기 기관의 미끄럼 밸브를 움직이는 데 쓰인 팽창 편심이다. 편심은 크랭크 축에 고정되어 있으며, 갈라진 진동 팔에 운동을 전한다. 이 팔의 아래쪽 끝에 밸브 막대가 붙어 있다.",
+      "easy": "축에 달린 둥근 편심이 도는 동안 갈라진 팔을 흔들어 밸브 막대를 움직인다. 증기를 넣는 시간을 조절해 증기를 아끼려는 장치이다.",
+      "category": "steam",
+      "mech": "Large eccentric disc on the crank shaft (hatched hub, left) inside an oval forked frame; the fork has two guide pins (small circles at top and bottom), a horizontal arm on the right with a pin joint, and a valve rod stub downward. Input = shaft rotation; output = fork swinging, driving the slide valve rod."
+    },
+    {
+      "n": 138,
+      "enStart": "On turning the cam at",
+      "titleKo": "바닥 캠으로 움직이는 막대",
+      "ko": "아래쪽의 캠을 돌리면, 그 위에 얹힌 막대에 변하는 번갈아 하는 직선 운동이 전해진다.",
+      "easy": "삼각에 가까운 캠이 돌면서 위에 얹힌 막대를 위아래로 움직인다. 캠 모양이 일정하지 않으므로 막대의 오르내리는 속도가 일정하지 않다.",
+      "category": "cam",
+      "mech": "Rotating cam (rounded three-lobed shape, e.g. trefoil, hub with ring) in the lower part; vertical rod with two guide collars above resting on its edge. Input = cam rotation; output = rod rising and falling, variable motion set by lobe profile."
+    },
+    {
+      "n": 139,
+      "enStart": "The internal rack, carried by",
+      "titleKo": "내부 랙 틀과 피니언",
+      "ko": "직사각형 틀에 달린 내부 랙은 피니언이 랙의 어느 쪽과도 맞물릴 수 있도록 틀 안에서 일정한 거리만큼 위아래로 미끄러질 수 있다. 피니언이 일정한 원운동을 하면 직사각형 틀이 왕복 직선 운동을 한다.",
+      "easy": "틀 안쪽에 타원 고리 모양의 랙이 있고, 안에서 작은 기어가 돈다. 랙이 조금 위아래로 미끄러지기 때문에 기어가 한 방향으로 돌아도 번갈아 위·아래 줄에 걸려 틀이 좌우로 왕복한다.",
+      "category": "gear",
+      "mech": "Rectangular frame on wheels (four small wheels on two rails) carrying an oblong internal rack that can slide up/down inside; spur pinion at centre; link levers on top (toggle-like parallelograms). Input = pinion rotation; output = frame reciprocating horizontally."
+    },
+    {
+      "n": 140,
+      "enStart": "The toggle-joint arranged for",
+      "titleKo": "펀칭 기계의 토글 조인트",
+      "ko": "구멍 뚫는 기계(펀칭 머신)를 위해 구성한 토글 조인트(무릎 이음)이다. 오른쪽의 레버가 수평 연결 링크에 의해 토글의 관절에 작용하도록 되어 있다.",
+      "easy": "무릎처럼 접히는 두 개의 링크가 거의 일직선이 되면 작은 힘으로도 아주 큰 힘으로 눌러 낼 수 있다. 레버를 내리면 링크가 펴지면서 편치가 쇠판을 뚫는다.",
+      "category": "crank",
+      "mech": "Cast frame (C-shaped standard) on a base plate; toggle: two links joined at a knee pin (upper left) plus a horizontal connecting link to a long lever at right; vertical punch rod with spring below. Input = lever pulled/pressed; output = vertical punch force, max near full extension of the toggle."
+    },
+    {
+      "n": 141,
+      "enStart": "Endless-band saw. Continuous rotary",
+      "titleKo": "띠톱",
+      "ko": "끝이 없는 띠 모양의 톱(띠톱)이다. 풀리들의 연속적인 회전 운동이 톱의 곧은 부분에 연속적인 직선 운동을 낳는다.",
+      "easy": "위아래 두 풀리에 건 톱날 띠가 한 방향으로 쉬지 않고 돈다. 곧게 펴진 부분은 직선으로 움직이므로, 톱질이 끊기지 않고 계속된다.",
+      "category": "tool",
+      "mech": "Cast standard with a curved arm; two pulleys (upper large with spokes, lower beneath a worktable) carrying a continuous saw blade band between them; work table with small support. Input = pulley rotation; output = blade moving linearly in the straight run at the table."
+    },
+    {
+      "n": 142,
+      "enStart": "Movement used for varying the",
+      "titleKo": "변하는 이송 거리 장치",
+      "ko": "비단 기계에서 비단실을 실패(보빈)에 인도하는 안내 막대의 움직이는 길이를 달리 하는 데 쓰이는 운동이다. 중심에서 자유롭게 도는 평기어는 더 큰 원판에 실려 돌아가는데, 이 원판은 고정된 중심 못(스터드) 위에서 돈다. 이 못 끝에는 피니언이 고정되어 있다. 평기어에는 작은 크랭크가 붙어 있고 크랭크에는 안내 막대에 이어진 연결 막대가 걸려 있다. 원판을 돌리면 평기어가 고정 피니언 때문에 자기 중심에서 일부 회전하며, 따라서 크랭크가 원판의 중심에 가까워진다. 원판이 계속 돌면 평기어가 한 바퀴를 돌 것이다. 반 바퀴 동안은 원판이 한 번 돌 때마다 이동 거리가 일정량씩 줄어들고, 나머지 반 바퀴 동안은 같은 비율로 점차 늘어난다.",
+      "easy": "큰 원판이 돌면, 그 위의 작은 기어가 고정된 중심 기어에 맞물려 스스로 돌면서 크랭크의 위치를 조금씩 바꾼다. 그래서 막대가 오가는 거리가 한 바퀴 돌 때마다 서서히 줄었다가 다시 늘어난다. 실을 실패에 고르게 감는 데 쓰인다.",
+      "category": "gear",
+      "mech": "Large circular disc (dotted inner ring) rotating about a fixed central stud with a fixed pinion on its end (small gear, top centre); a spur gear on a stud on the disc meshing with the fixed pinion; a small crank pin on the gear connecting down to a connecting rod and the traversing guide-bar (below the disc). Input = disc rotation; output = guide-bar with slowly varying stroke length."
+    },
+    {
+      "n": 143,
+      "enStart": "Circular motion into alternate",
+      "titleKo": "웜축으로 왕복시키는 장치",
+      "ko": "원운동을 번갈아 하는 직선 운동으로 바꾼다. 왼쪽 풀리를 통해 웜 축에 운동이 전해진다. 웜은 축 위에서 미끄러질 수 있지만, 축에 파인 홈과 웜의 허브에 있는 키(꽂이)에 의해 축과 함께 돈다. 웜은 작은 이동 틀에 실려 있고, 이 이동 틀은 고정 틀의 수평 막대 위를 미끄러진다. 이 이동 틀에는 웜이 맞물리는 웜 기어(톱니바퀴)도 달려 있다. 연결 막대의 한쪽 끝은 오른쪽의 고정 틀에, 다른 쪽 끝은 톱니바퀴에 달린 크랭크 핀에 이어져 있다. 웜 축을 돌리면 웜에서 바퀴로 회전이 전해지고, 바퀴가 돌면서 연결 막대에 의해 이동 틀이 왕복하게 된다.",
+      "easy": "웜 축을 돌리면 웜 기어가 천천히 돌고, 그 바퀴에 붙은 크랭크 핀과 연결 막대가 이동 틀을 좌우로 밀고 당긴다. 이동 틀에 실린 웜은 축 위를 미끄러지며 계속 맞물려 있다. 회전이 왕복 운동으로 바뀐다.",
+      "category": "gear",
+      "mech": "Horizontal worm shaft in two end bearings with a flywheel/pulley at the left; sliding worm on a keyed shaft carried by a traversing frame running on a fixed horizontal bar; worm wheel on the frame meshed with the worm; connecting rod from the wheel's crank pin to a fixed point on the right frame. Input = shaft rotation; output = traversing frame reciprocating along the shaft."
+    },
+    {
+      "n": 144,
+      "enStart": "A system of crossed",
+      "titleKo": "레이지 통즈(엇갈린 지렛대)",
+      "ko": "'레이지 통즈'(게으른 집게)라고 부르는 엇갈린 지렛대 장치이다. 오른쪽 막대의 짧은 왕복 직선 운동이 왼쪽에 비슷하지만 훨씬 큰 운동을 만든다. 어린이 장난감에 자주 쓰이고, 프랑스에서는 가라앉은 배를 끌어올리는 기계에 적용되었으며, 75년쯤 전에 배의 펌프에도 쓰였다.",
+      "easy": "X자로 엇갈린 막대들을 핀으로 이어 놓으면 한쪽 끝을 조금만 움직여도 반대쪽 끝은 훨씬 멀리 움직인다. 늘었다 줄었다 하는 장난감 팔이 이 원리이다.",
+      "category": "crank",
+      "mech": "Lattice (pantograph/scissors) of crossed levers pinned at crossings and ends, drawn horizontally with four crossing units (zig-zag), fixed pivot point under the middle; ends carry rods left and right. Input = small push/pull at the right rod; output = larger similar motion at the left end (multiplication ~ number of cells)."
+    },
+    {
+      "n": 145,
+      "enStart": "Reciprocating curvilinear motion of",
+      "titleKo": "빔과 크랭크, 플라이휠",
+      "ko": "빔(보)의 왕복 곡선 운동이 크랭크와 플라이휠(관성바퀴)에 연속적인 회전 운동을 준다. 연결 막대로 빔과 이어진 레버의 한쪽 끝이 붙은 왼쪽의 작은 받침대는 수평 왕복 직선 운동을 한다.",
+      "easy": "위쪽 빔이 호를 그리며 오르내리면 연결 막대가 바퀴에 붙은 크랭크를 밀어 바퀴를 돌린다. 플라이휠은 무게로 회전을 매끄럽게 유지한다.",
+      "category": "crank",
+      "mech": "Beam (long horizontal lever with round eye at the right end, pivot at the top right) driven in an arc; vertical connecting rod down from the beam to a lever pivoted on a small standard at the right; flywheel (spoked, with crank pin and connecting rod) on the left, base hatched. Input = beam oscillation; output = flywheel rotation."
+    }
+  ]
+}

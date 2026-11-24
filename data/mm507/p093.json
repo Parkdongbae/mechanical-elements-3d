@@ -1,79 +1,170 @@
 {
-  "platePage": 93, "textPage": 94,
+  "platePage": 93,
+  "textPage": 94,
   "figures": [
-    {"n": 358, "boxpx": [62, 240, 326, 494]},
-    {"n": 359, "boxpx": [330, 240, 544, 494]},
-    {"n": 360, "boxpx": [548, 240, 804, 494]},
-    {"n": 361, "boxpx": [62, 498, 326, 708]},
-    {"n": 362, "boxpx": [330, 498, 544, 708]},
-    {"n": 363, "boxpx": [548, 498, 804, 708]},
-    {"n": 364, "boxpx": [62, 712, 326, 932]},
-    {"n": 365, "boxpx": [330, 712, 544, 932]},
-    {"n": 366, "boxpx": [548, 712, 804, 932]}
+    {
+      "n": 358,
+      "box": [
+        0.075,
+        0.2051,
+        0.3942,
+        0.4222
+      ]
+    },
+    {
+      "n": 359,
+      "box": [
+        0.399,
+        0.2051,
+        0.6578,
+        0.4222
+      ]
+    },
+    {
+      "n": 360,
+      "box": [
+        0.6626,
+        0.2051,
+        0.9722,
+        0.4222
+      ]
+    },
+    {
+      "n": 361,
+      "box": [
+        0.075,
+        0.4256,
+        0.3942,
+        0.6051
+      ]
+    },
+    {
+      "n": 362,
+      "box": [
+        0.399,
+        0.4256,
+        0.6578,
+        0.6051
+      ]
+    },
+    {
+      "n": 363,
+      "box": [
+        0.6626,
+        0.4256,
+        0.9722,
+        0.6051
+      ]
+    },
+    {
+      "n": 364,
+      "box": [
+        0.075,
+        0.6085,
+        0.3942,
+        0.7966
+      ]
+    },
+    {
+      "n": 365,
+      "box": [
+        0.399,
+        0.6085,
+        0.6578,
+        0.7966
+      ]
+    },
+    {
+      "n": 366,
+      "box": [
+        0.6626,
+        0.6085,
+        0.9722,
+        0.7966
+      ]
+    }
   ],
   "texts": [
-    {"n": 358,
-     "en": "Traverse of carriage, made variable by fusee according to the variation in diameter where the band acts.",
-     "titleKo": "원뿔 풀리로 이송 속도 바꾸기",
-     "ko": "수레(캐리지)의 이동을, 띠가 닿는 곳의 지름 변화에 따라 퓨지(원뿔 풀리)로 변하게 만든 것이다.",
-     "easy": "원뿔 모양 풀리에서 띠가 감기는 위치를 옮기면 지름이 달라져서 같은 회전에도 수레가 가는 빠르기가 달라진다.",
-     "category": "belt",
-     "mech": "Conical stepped pulley (fusee) on a horizontal shaft at left with a crank handle and gear pair; a long slanted belt (band) from the cone up to the carriage shaft frame at right with two vertical forks (belt guides); horizontal rails. Input: cone rotation; output: carriage traverse speed varying with the belt position on the cone. Cone length about 1.4x its largest diameter."},
-    {"n": 359,
-     "en": "Primitive drilling apparatus. Being once set in motion, it is kept going by hand, by alternately pressing down and relieving the transverse bar to which the bands are attached, causing the bands to wind upon the spindle alternately in opposite directions, while the heavy disk or fly-wheel gives a steady momentum to the drill-spindle in its rotary motion.",
-     "titleKo": "원시적인 활비비 드릴",
-     "ko": "원시적인 구멍 뚫는 장치이다. 한번 움직이기 시작하면, 띠가 붙은 가로 막대를 손으로 번갈아 눌렀다 놓아 계속 움직인다. 이렇게 하면 띠가 스핀들에 서로 반대 방향으로 번갈아 감기고, 무거운 원판(플라이휠)은 드릴 스핀들의 회전에 꾸준한 관성(운동량)을 준다.",
-     "easy": "가로 막대를 누르면 줄이 풀리며 축이 돌고, 놓으면 다시 감기며 반대로 돈다. 무거운 원판이 계속 돌려 주려는 힘을 가지고 있어서 드릴이 끊김 없이 돌며 구멍을 뚫는다.",
-     "category": "misc",
-     "mech": "Vertical spindle with a spiral cord wound at the top, a triangular frame (horizontal crossbar with two bands/cords running to the spindle top and two end knobs) around the spindle, a heavy flywheel disc (rounded, horizontal, ~2x spindle height in width) at the middle and a conical drill bit at the bottom. Input: pumping the crossbar up/down by hand; output: alternate-direction rotation of spindle (fly-wheel smooths it). Disc diameter about 1.2x crossbar width."},
-    {"n": 360,
-     "en": "Continuous rotary motion from oscillating. The beam being made to vibrate, the drum to which the cord is attached, working loose on fly-wheel shaft, gives motion to said shaft through the pawl and ratchet-wheel, the pawl being attached to drum and the ratchet-wheel fast on shaft.",
-     "titleKo": "흔들림에서 연속 회전",
-     "ko": "흔들리는 운동에서 연속적인 회전 운동을 얻는다. 빔을 흔들면, 줄이 붙은 드럼이 플라이휠 축 위에서 느슨하게 돌며, 걸쇠와 래칫 바퀴를 통해 그 축에 운동을 준다. 걸쇠는 드럼에 붙어 있고 래칫 바퀴는 축에 단단히 고정되어 있다.",
-     "easy": "빔이 오르내리면 줄이 드럼을 감았다 풀었다 한다. 드럼의 걸쇠가 래칫 바퀴를 한 방향으로만 밀어 주므로 큰 바퀴는 같은 방향으로 계속 돈다.",
-     "category": "ratchet",
-     "mech": "Wooden A-frame stand with a pivoted see-saw/rocking beam on top (two curved arc heads at the ends, rope hanging from the left arc ending in a ball weight); big spoked flywheel on a horizontal shaft behind the frame; on the shaft a rope drum (loose) with a pawl, and a sawtooth ratchet wheel (fast on shaft). Input: beam rocking; output: continuous one-way rotation of the flywheel. Flywheel diameter about 1.2x beam length/2."},
-    {"n": 361,
-     "en": "Another simple form of clutch for pulleys, consisting of a pin on the lower shaft and a pin on side of pulley. The pulley is moved lengthwise of the shaft by means of a lever or other means to bring its pin into or out of contact with the pin on shaft.",
-     "titleKo": "핀 클러치 풀리",
-     "ko": "풀리를 위한 또 다른 간단한 클러치로, 아래 축에 박힌 핀과 풀리 옆면에 박힌 핀으로 이루어진다. 레버 등으로 풀리를 축의 길이 방향으로 밀어 풀리의 핀이 축의 핀과 닿았다 떨어졌다 하게 한다.",
-     "easy": "풀리를 옆으로 밀어 두 개의 핀이 맞물리면 풀리의 회전이 축에 전해지고, 떨어뜨리면 축에 전해지지 않는다. 기계를 멈추지 않고 동력을 이었다 끊는 장치이다.",
-     "category": "belt",
-     "mech": "Two wooden uprights with two parallel horizontal shafts (upper with a flywheel at left and double pulleys; lower with another pair of loose pulleys and a pin collar); a belt connecting the pulleys; a bent lever with a crank handle at right to slide the pulley lengthwise; pin on shaft and pin on pulley side form the clutch. Input: belt-driven pulley; output: shaft driven only when pins engage."},
-    {"n": 362,
-     "en": "Alternating traverse of upper shaft and its drum, produced by pin on the end of the shaft working in oblique groove in the lower cylinder.",
-     "titleKo": "비스듬한 홈으로 왕복 이동",
-     "ko": "위쪽 축과 그 드럼이 번갈아 가로로 오가는 운동은, 축 끝에 박힌 핀이 아래쪽 원통의 비스듬한 홈 안에서 움직임으로써 생긴다.",
-     "easy": "아래 원통이 돌면 비스듬한 홈 속의 핀이 위 축을 좌우로 밀었다 당겼다 한다. 위쪽의 드럼은 회전하면서 옆으로 왕복한다.",
-     "category": "cam",
-     "mech": "Two posts with a base plate; upper horizontal shaft carrying a big rectangular drum (hatched, ~1.2x taller than wide) at left; lower horizontal cylinder (drum, hatched, rectangular) at right with an oblique groove; a bent lever/pin on the end of the upper shaft rides in the groove. Input: lower cylinder rotation; output: axial traverse (left-right) of the upper shaft and drum, alternately."},
-    {"n": 363,
-     "en": "See-saw, one of the simplest illustrations of a limited oscillating or alternate circular motion.",
-     "titleKo": "시소",
-     "ko": "시소는 한정된 범위의 흔들림, 곧 번갈아 가는 원운동을 가장 간단하게 보여 주는 예이다.",
-     "easy": "가운데 받침점을 중심으로 막대가 한쪽이 올라가면 다른 쪽은 내려가는 운동이다. 정해진 각도 안에서 번갈아 흔들린다.",
-     "category": "crank",
-     "mech": "Long plank (about 4:1) pivoted at the center on a tall post with a curved wooden support (A-frame/arched base); seats (shaped like a footrest/saddle, one at each end, the left raised higher). Input: alternate weight on the ends; output: oscillation (rotation through limited angle about the central pivot). Plank length about 3x the post height."},
-    {"n": 364,
-     "en": "Intermittent rotary motion from continuous rotary motion about an axis at right angles. Small wheel on left is driver ; and the friction rollers on its radial studs work against the faces of oblique grooves or projections across the face of the larger wheel, and impart motion thereto.",
-     "titleKo": "직각 축 간헐 회전",
-     "ko": "직각으로 놓인 축 둘레의 연속 회전에서 간헐(끊어지는) 회전을 얻는다. 왼쪽의 작은 바퀴가 구동 바퀴이고, 그 방사형 돌기 위의 마찰 롤러가 큰 바퀴 면을 가로지르는 비스듬한 홈이나 돌기의 면에 닿아 운동을 전달한다.",
-     "easy": "작은 바퀴가 계속 돌면 가장자리의 롤러가 비스듬한 홈을 하나씩 밀어, 직각으로 놓인 큰 바퀴(축)가 한 칸씩 돌고 쉬기를 되풀이한다.",
-     "category": "ratchet",
-     "mech": "Small driver wheel at left (hub, 8 radial studs each with a small friction roller) on a horizontal axis; driven large cylinder/wheel across at right with oblique (helical-like) grooves/ribs across its face, its axis vertical (a rod through the middle, drawn as a vertical post). Input: continuous rotation of the small wheel; output: stepwise rotation of the larger wheel (axis perpendicular). Driver diameter about 0.7 of the driven length."},
-    {"n": 365,
-     "en": "Cylindrical rod arranged between two rollers, the axes of which are oblique to each other. The rotation of the rollers produces both a longitudinal and a rotary motion of the rod.",
-     "titleKo": "비스듬한 롤러로 막대 보내기",
-     "ko": "원통형 막대를 두 롤러 사이에 놓았는데, 두 롤러의 축은 서로 비스듬하다. 롤러가 회전하면 막대에는 길이 방향의 운동과 회전 운동이 함께 생긴다.",
-     "easy": "비스듬하게 놓인 두 롤러 사이에서 막대가 회전하며 앞으로 나아간다. 나사가 돌며 전진하는 것과 비슷하다. 금속 막대를 곧게 펴거나 보낼 때 쓰이는 방식이다.",
-     "category": "misc",
-     "mech": "Vertical cylindrical rod passing between two horizontal rollers with ends (rolls drawn as cylinders with end pins), axes crossed obliquely (about 20 deg) in the horizontal plane; dotted lines mark the roller contacts. Input: roller rotation (same direction); output: rod rotates and moves along its axis (screw-like feed). Roller length about 3x rod diameter."},
-    {"n": 366,
-     "en": "Drilling machine. By the large bevel-gear rotary motion is given to vertical drill-shaft, which slides through small bevel-gear but is made to turn with it by a feather and groove, and is depressed by treadle connected with upper lever.",
-     "titleKo": "발판 드릴링 머신",
-     "ko": "드릴링 머신(구멍 뚫는 기계)이다. 큰 베벨 기어가 세로 드릴 축에 회전 운동을 주는데, 드릴 축은 작은 베벨 기어를 통과해 미끄러질 수 있으면서도 키(페더)와 홈 덕분에 기어와 함께 돈다. 드릴 축은 위쪽 레버와 이어진 발판(트레들)으로 눌려 내려간다.",
-     "easy": "가로 축의 큰 베벨 기어가 세로 방향의 작은 기어를 돌리고, 그 기어 속에 드릴 축이 끼어 있어 함께 돌면서도 아래위로 움직일 수 있다. 발판을 밟으면 드릴이 내려가 구멍을 뚫는다.",
-     "category": "gear",
-     "mech": "Rectangular bracket (hatched section) containing a large bevel gear on a horizontal shaft (crank handle at right) meshing with a small bevel gear on the vertical drill shaft; the drill shaft slides through the small gear via a feather-and-groove (key), ends in a conical drill bit at the bottom. Upper lever from a pivot at top-left via a link to a clamp ring on the shaft; treadle lever at the bottom right. Input: crank (horizontal shaft) and treadle; output: rotating drill moved down by the treadle."}
+    {
+      "n": 358,
+      "en": "Traverse of carriage, made variable by fusee according to the variation in diameter where the band acts.",
+      "titleKo": "원뿔 풀리로 이송 속도 바꾸기",
+      "ko": "수레(캐리지)의 이동을, 띠가 닿는 곳의 지름 변화에 따라 퓨지(원뿔 풀리)로 변하게 만든 것이다.",
+      "easy": "원뿔 모양 풀리에서 띠가 감기는 위치를 옮기면 지름이 달라져서 같은 회전에도 수레가 가는 빠르기가 달라진다.",
+      "category": "belt",
+      "mech": "Conical stepped pulley (fusee) on a horizontal shaft at left with a crank handle and gear pair; a long slanted belt (band) from the cone up to the carriage shaft frame at right with two vertical forks (belt guides); horizontal rails. Input: cone rotation; output: carriage traverse speed varying with the belt position on the cone. Cone length about 1.4x its largest diameter."
+    },
+    {
+      "n": 359,
+      "en": "Primitive drilling apparatus. Being once set in motion, it is kept going by hand, by alternately pressing down and relieving the transverse bar to which the bands are attached, causing the bands to wind upon the spindle alternately in opposite directions, while the heavy disk or fly-wheel gives a steady momentum to the drill-spindle in its rotary motion.",
+      "titleKo": "원시적인 활비비 드릴",
+      "ko": "원시적인 구멍 뚫는 장치이다. 한번 움직이기 시작하면, 띠가 붙은 가로 막대를 손으로 번갈아 눌렀다 놓아 계속 움직인다. 이렇게 하면 띠가 스핀들에 서로 반대 방향으로 번갈아 감기고, 무거운 원판(플라이휠)은 드릴 스핀들의 회전에 꾸준한 관성(운동량)을 준다.",
+      "easy": "가로 막대를 누르면 줄이 풀리며 축이 돌고, 놓으면 다시 감기며 반대로 돈다. 무거운 원판이 계속 돌려 주려는 힘을 가지고 있어서 드릴이 끊김 없이 돌며 구멍을 뚫는다.",
+      "category": "misc",
+      "mech": "Vertical spindle with a spiral cord wound at the top, a triangular frame (horizontal crossbar with two bands/cords running to the spindle top and two end knobs) around the spindle, a heavy flywheel disc (rounded, horizontal, ~2x spindle height in width) at the middle and a conical drill bit at the bottom. Input: pumping the crossbar up/down by hand; output: alternate-direction rotation of spindle (fly-wheel smooths it). Disc diameter about 1.2x crossbar width."
+    },
+    {
+      "n": 360,
+      "en": "Continuous rotary motion from oscillating. The beam being made to vibrate, the drum to which the cord is attached, working loose on fly-wheel shaft, gives motion to said shaft through the pawl and ratchet-wheel, the pawl being attached to drum and the ratchet-wheel fast on shaft.",
+      "titleKo": "흔들림에서 연속 회전",
+      "ko": "흔들리는 운동에서 연속적인 회전 운동을 얻는다. 빔을 흔들면, 줄이 붙은 드럼이 플라이휠 축 위에서 느슨하게 돌며, 걸쇠와 래칫 바퀴를 통해 그 축에 운동을 준다. 걸쇠는 드럼에 붙어 있고 래칫 바퀴는 축에 단단히 고정되어 있다.",
+      "easy": "빔이 오르내리면 줄이 드럼을 감았다 풀었다 한다. 드럼의 걸쇠가 래칫 바퀴를 한 방향으로만 밀어 주므로 큰 바퀴는 같은 방향으로 계속 돈다.",
+      "category": "ratchet",
+      "mech": "Wooden A-frame stand with a pivoted see-saw/rocking beam on top (two curved arc heads at the ends, rope hanging from the left arc ending in a ball weight); big spoked flywheel on a horizontal shaft behind the frame; on the shaft a rope drum (loose) with a pawl, and a sawtooth ratchet wheel (fast on shaft). Input: beam rocking; output: continuous one-way rotation of the flywheel. Flywheel diameter about 1.2x beam length/2."
+    },
+    {
+      "n": 361,
+      "en": "Another simple form of clutch for pulleys, consisting of a pin on the lower shaft and a pin on side of pulley. The pulley is moved lengthwise of the shaft by means of a lever or other means to bring its pin into or out of contact with the pin on shaft.",
+      "titleKo": "핀 클러치 풀리",
+      "ko": "풀리를 위한 또 다른 간단한 클러치로, 아래 축에 박힌 핀과 풀리 옆면에 박힌 핀으로 이루어진다. 레버 등으로 풀리를 축의 길이 방향으로 밀어 풀리의 핀이 축의 핀과 닿았다 떨어졌다 하게 한다.",
+      "easy": "풀리를 옆으로 밀어 두 개의 핀이 맞물리면 풀리의 회전이 축에 전해지고, 떨어뜨리면 축에 전해지지 않는다. 기계를 멈추지 않고 동력을 이었다 끊는 장치이다.",
+      "category": "belt",
+      "mech": "Two wooden uprights with two parallel horizontal shafts (upper with a flywheel at left and double pulleys; lower with another pair of loose pulleys and a pin collar); a belt connecting the pulleys; a bent lever with a crank handle at right to slide the pulley lengthwise; pin on shaft and pin on pulley side form the clutch. Input: belt-driven pulley; output: shaft driven only when pins engage."
+    },
+    {
+      "n": 362,
+      "en": "Alternating traverse of upper shaft and its drum, produced by pin on the end of the shaft working in oblique groove in the lower cylinder.",
+      "titleKo": "비스듬한 홈으로 왕복 이동",
+      "ko": "위쪽 축과 그 드럼이 번갈아 가로로 오가는 운동은, 축 끝에 박힌 핀이 아래쪽 원통의 비스듬한 홈 안에서 움직임으로써 생긴다.",
+      "easy": "아래 원통이 돌면 비스듬한 홈 속의 핀이 위 축을 좌우로 밀었다 당겼다 한다. 위쪽의 드럼은 회전하면서 옆으로 왕복한다.",
+      "category": "cam",
+      "mech": "Two posts with a base plate; upper horizontal shaft carrying a big rectangular drum (hatched, ~1.2x taller than wide) at left; lower horizontal cylinder (drum, hatched, rectangular) at right with an oblique groove; a bent lever/pin on the end of the upper shaft rides in the groove. Input: lower cylinder rotation; output: axial traverse (left-right) of the upper shaft and drum, alternately."
+    },
+    {
+      "n": 363,
+      "en": "See-saw, one of the simplest illustrations of a limited oscillating or alternate circular motion.",
+      "titleKo": "시소",
+      "ko": "시소는 한정된 범위의 흔들림, 곧 번갈아 가는 원운동을 가장 간단하게 보여 주는 예이다.",
+      "easy": "가운데 받침점을 중심으로 막대가 한쪽이 올라가면 다른 쪽은 내려가는 운동이다. 정해진 각도 안에서 번갈아 흔들린다.",
+      "category": "crank",
+      "mech": "Long plank (about 4:1) pivoted at the center on a tall post with a curved wooden support (A-frame/arched base); seats (shaped like a footrest/saddle, one at each end, the left raised higher). Input: alternate weight on the ends; output: oscillation (rotation through limited angle about the central pivot). Plank length about 3x the post height."
+    },
+    {
+      "n": 364,
+      "en": "Intermittent rotary motion from continuous rotary motion about an axis at right angles. Small wheel on left is driver ; and the friction rollers on its radial studs work against the faces of oblique grooves or projections across the face of the larger wheel, and impart motion thereto.",
+      "titleKo": "직각 축 간헐 회전",
+      "ko": "직각으로 놓인 축 둘레의 연속 회전에서 간헐(끊어지는) 회전을 얻는다. 왼쪽의 작은 바퀴가 구동 바퀴이고, 그 방사형 돌기 위의 마찰 롤러가 큰 바퀴 면을 가로지르는 비스듬한 홈이나 돌기의 면에 닿아 운동을 전달한다.",
+      "easy": "작은 바퀴가 계속 돌면 가장자리의 롤러가 비스듬한 홈을 하나씩 밀어, 직각으로 놓인 큰 바퀴(축)가 한 칸씩 돌고 쉬기를 되풀이한다.",
+      "category": "ratchet",
+      "mech": "Small driver wheel at left (hub, 8 radial studs each with a small friction roller) on a horizontal axis; driven large cylinder/wheel across at right with oblique (helical-like) grooves/ribs across its face, its axis vertical (a rod through the middle, drawn as a vertical post). Input: continuous rotation of the small wheel; output: stepwise rotation of the larger wheel (axis perpendicular). Driver diameter about 0.7 of the driven length."
+    },
+    {
+      "n": 365,
+      "en": "Cylindrical rod arranged between two rollers, the axes of which are oblique to each other. The rotation of the rollers produces both a longitudinal and a rotary motion of the rod.",
+      "titleKo": "비스듬한 롤러로 막대 보내기",
+      "ko": "원통형 막대를 두 롤러 사이에 놓았는데, 두 롤러의 축은 서로 비스듬하다. 롤러가 회전하면 막대에는 길이 방향의 운동과 회전 운동이 함께 생긴다.",
+      "easy": "비스듬하게 놓인 두 롤러 사이에서 막대가 회전하며 앞으로 나아간다. 나사가 돌며 전진하는 것과 비슷하다. 금속 막대를 곧게 펴거나 보낼 때 쓰이는 방식이다.",
+      "category": "misc",
+      "mech": "Vertical cylindrical rod passing between two horizontal rollers with ends (rolls drawn as cylinders with end pins), axes crossed obliquely (about 20 deg) in the horizontal plane; dotted lines mark the roller contacts. Input: roller rotation (same direction); output: rod rotates and moves along its axis (screw-like feed). Roller length about 3x rod diameter."
+    },
+    {
+      "n": 366,
+      "en": "Drilling machine. By the large bevel-gear rotary motion is given to vertical drill-shaft, which slides through small bevel-gear but is made to turn with it by a feather and groove, and is depressed by treadle connected with upper lever.",
+      "titleKo": "발판 드릴링 머신",
+      "ko": "드릴링 머신(구멍 뚫는 기계)이다. 큰 베벨 기어가 세로 드릴 축에 회전 운동을 주는데, 드릴 축은 작은 베벨 기어를 통과해 미끄러질 수 있으면서도 키(페더)와 홈 덕분에 기어와 함께 돈다. 드릴 축은 위쪽 레버와 이어진 발판(트레들)으로 눌려 내려간다.",
+      "easy": "가로 축의 큰 베벨 기어가 세로 방향의 작은 기어를 돌리고, 그 기어 속에 드릴 축이 끼어 있어 함께 돌면서도 아래위로 움직일 수 있다. 발판을 밟으면 드릴이 내려가 구멍을 뚫는다.",
+      "category": "gear",
+      "mech": "Rectangular bracket (hatched section) containing a large bevel gear on a horizontal shaft (crank handle at right) meshing with a small bevel gear on the vertical drill shaft; the drill shaft slides through the small gear via a feather-and-groove (key), ends in a conical drill bit at the bottom. Upper lever from a pivot at top-left via a link to a clamp ring on the shaft; treadle lever at the bottom right. Input: crank (horizontal shaft) and treadle; output: rotating drill moved down by the treadle."
+    }
   ]
 }

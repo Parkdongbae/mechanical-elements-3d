@@ -25,17 +25,30 @@ start_re = re.compile(r"^[\.\s·:,]*(\d{1,3})\s*[\.,]\s*(.*)$")
 for idx in text_pages:
     p = pages[idx]
     mid = p["width"] / 2
-    lines = []
+    # OCR 이 두 단을 한 줄로 합쳐 읽는 일이 있어, 낱말 단위로 단을 나눈 뒤 줄을 다시 만든다
+    cols = {0: [], 1: []}
     for l in p["lines"]:
-        if not l["words"]:
-            continue
-        x = l["words"][0]["x"]
-        y = l["words"][0]["y"]
-        txt = l["text"].strip()
-        # 머리말(쪽 제목·쪽 번호) 제외
-        if re.fullmatch(r"MECHANICAL|MOVEMENTS\.?|MECHANICAL MOVEMENTS\.?|\d{1,3}", txt) and y < p["height"] * 0.24:
-            continue
-        lines.append((0 if x < mid - 20 else 1, y, x, txt))
+        for w in l["words"]:
+            cx = w["x"] + w["w"] / 2
+            cols[0 if cx < mid else 1].append(w)
+    lines = []
+    for col, ws in cols.items():
+        ws.sort(key=lambda w: (w["y"] + w["h"] / 2, w["x"]))
+        row = []
+        for w in ws:
+            cy = w["y"] + w["h"] / 2
+            if row and abs(cy - row_y) > max(14, w["h"] * 0.6):
+                row.sort(key=lambda t: t["x"])
+                lines.append((col, row_y, row[0]["x"], " ".join(t["t"] for t in row)))
+                row = []
+            if not row:
+                row_y = cy
+            row.append(w)
+        if row:
+            row.sort(key=lambda t: t["x"])
+            lines.append((col, row_y, row[0]["x"], " ".join(t["t"] for t in row)))
+    hdr = re.compile(r"MECHANICAL|MOVEMENTS\.?|MECHANICAL MOVEMENTS\.?|\d{1,3}")
+    lines = [t for t in lines if not (hdr.fullmatch(t[3].strip()) and t[1] < p["height"] * 0.24)]
     lines.sort()
     cur = None
     for col, y, x, txt in lines:
