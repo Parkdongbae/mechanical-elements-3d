@@ -39,10 +39,9 @@ export default function buildM070(): MovementModel {
   // 회전 방향 화살표 — C 반시계, A 시계
   const arrC = rotArrow(0.5, true);
   arrC.position.set(CX, AY, 0.4);
-  // 공용 rotArrow(…, false) 는 호가 110° 짧은 쪽으로 그려져 화살촉이 호 안쪽을 향한다 —
-  // 반시계 화살표를 Y 축으로 뒤집어(앞에서 보면 시계) 250° 호 + 바른 화살촉으로 쓴다.
-  const arrA = rotArrow(0.5, true);
-  arrA.rotation.y = Math.PI;
+  // 시계 화살표 — 빈 곳(110°)을 오른쪽 아래(−62°)에 두어 예전 Y 뒤집기 판과 같은 자리에 호가 오게
+  const arrA = rotArrow(0.5, false);
+  arrA.rotation.z = -0.3 * Math.PI;
   arrA.position.set(AX, AY, 0.1);
   g.add(arrC, arrA);
 

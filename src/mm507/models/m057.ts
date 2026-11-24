@@ -186,7 +186,8 @@ export default function buildM057(): MovementModel {
   aTop.position.set(T[0], T[1], 0.47);
   const aRing = rotArrow(1.08, true);
   aRing.position.set(C[0], C[1], 0.2);
-  const aSun = rotArrow(0.5, false);
+  // 태양 화살표는 피니언 화살표(공전 반지름 0.63 − 0.18)와 로프(0.37) 안쪽 — 0.5 면 도는 피니언 화살표와 겹친다
+  const aSun = rotArrow(0.28, false);
   aSun.position.set(C[0], C[1], 0.42);
   const aPin = rotArrow(0.18, true);
   g.add(aTop, aRing, aSun, aPin);

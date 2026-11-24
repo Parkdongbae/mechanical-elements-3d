@@ -89,6 +89,8 @@ export default function buildM045(): MovementModel {
   ra.position.set(X0 + 0.5, Y1, ZC);
   const rb = rotArrow(0.4, false);
   rb.rotation.y = AX;
+  // 호의 빈 곳(110°)을 위(위 기어 화살표 쪽)로 — 시계 화살표 250° 호가 위 화살표 호와 맞닿지 않게
+  rb.rotation.z = (98 * Math.PI) / 180;
   rb.position.set(X0 + 0.5, Y2, ZC);
   g.add(ra, rb);
 

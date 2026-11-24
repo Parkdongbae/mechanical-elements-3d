@@ -85,6 +85,8 @@ export default function buildM013(): MovementModel {
 
   // 회전 방향 화살표 (M 시계, F 반시계) + 이름표
   const arrowM = rotArrow(0.5, false);
+  // 호의 빈 곳(110°)을 아래로 — 호가 추를 거는 고리·막대를 지나지 않게
+  arrowM.rotation.z = (-82 * Math.PI) / 180;
   arrowM.position.set(0, 0, 0.36);
   mGroup.add(arrowM);
   const arrowF = rotArrow(0.55, true);

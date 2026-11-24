@@ -124,8 +124,10 @@ export default function buildM059(): MovementModel {
   const aU = rotArrow(0.55, true);
   aU.rotation.y = Math.PI / 2 - 0.9;
   aU.position.set(-0.7, YU, ZC);
-  const aB = rotArrow(0.55, false);
+  // B 화살표: 반지름 0.3, 호의 빈 곳(110°)을 위로 — 위쪽 축 A 의 풀리·벨트(아래 끝 y 1.1)를 뚫지 않게
+  const aB = rotArrow(0.3, false);
   aB.rotation.y = Math.PI / 2 - 0.9;
+  aB.rotation.z = (98 * Math.PI) / 180;
   aB.position.set(-0.1, YB, ZC);
   g.add(aU, aB);
 

@@ -36,15 +36,17 @@ export default function buildM040(): MovementModel {
   for (const y of [Y1, Y2]) {
     g.add(rod(v(-0.78, y, ZC), v(0.78, y, ZC), 0.047));
     for (const x of [-0.7, 0.7]) {
-      const post = lathe(rodProfile(0.07, 0, ZC + 0.3, 0.01, 0.01), 28);
+      // 기둥은 뒤판(z −0.3)에서 고리 바깥면(z = ZC − 0.085)까지 — 축·고리 구멍을 파고들지 않게
+      const post = lathe(rodProfile(0.07, 0, ZC + 0.3 - 0.083, 0.01, 0), 28);
       post.rotateX(Math.PI / 2);
       const pm = mesh(post, castIron());
       pm.position.set(x, y, -0.3);
       g.add(pm);
-      const ring = lathe(tubeProfile(0.047, 0.085, 0, 0.07, 0.01), 28);
-      ring.rotateX(Math.PI / 2);
+      // 끝 고리: 구멍 축이 X(축 방향)를 향해야 가로축이 구멍을 지난다
+      const ring = lathe(tubeProfile(0.047, 0.085, -0.07, 0.07, 0.01), 28);
+      ring.rotateZ(Math.PI / 2);
       const rm = mesh(ring, darkSteel());
-      rm.position.set(x, y, ZC - 0.035);
+      rm.position.set(x, y, ZC);
       g.add(rm);
     }
   }
@@ -55,6 +57,8 @@ export default function buildM040(): MovementModel {
   a1.position.set(0.52, Y1, ZC);
   const a2 = rotArrow(0.4, false);
   a2.rotation.y = Math.PI / 2;
+  // 호의 빈 곳(110°)을 위(위 기어 화살표 쪽)로 — 시계 화살표 250° 호가 위 화살표 호와 맞닿지 않게
+  a2.rotation.z = (98 * Math.PI) / 180;
   a2.position.set(0.52, Y2, ZC);
   g.add(a1, a2);
   g.add(tag('구동 기어(V자 이)', v(-1.35, Y1, 0.5)), tag('피동 기어(V자 이)', v(-1.35, Y2, 0.5)), tag('이가 비스듬해 계속 물린다', v(1.5, 1.8, 0.5)));

@@ -26,7 +26,8 @@ export default function buildM049(): MovementModel {
   const aIn1 = rotArrow(0.4, true);
   aIn1.rotation.y = Math.PI / 2;
   aIn1.position.set(-1.45, 1.15, 0.28);
-  const aIn2 = rotArrow(0.4, false);
+  // 반대 방향 화살표는 한 치수 작게 — 같은 반지름이면 두 250° 호가 겹쳐 한 고리로 보인다
+  const aIn2 = rotArrow(0.3, false);
   aIn2.rotation.y = Math.PI / 2;
   aIn2.position.set(-1.58, 1.15, 0.28);
   g.add(aTop, aIn1, aIn2);
