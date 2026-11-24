@@ -522,6 +522,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'fan',
+    view: { pos: [3.6, 2.8, 3], target: [0, 1.6, -0.1] },
     group: 'life',
     summary: '날개가 돌면서 목도 좌우로 돌아요',
     name: '선풍기',
@@ -553,6 +554,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'clickpen',
+    view: { pos: [0.3, 1.9, 2.9], target: [-0.05, 0.85, 0] },
     group: 'life',
     summary: '딸깍 누르면 심이 나왔다 들어가요',
     name: '노크식 볼펜',
@@ -599,6 +601,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'umbrella',
+    view: { pos: [2.6, 1.5, 3.4], target: [0, 1.85, 0] },
     group: 'life',
     summary: '버튼을 누르면 살이 활짝 펴져요',
     name: '자동 우산',
@@ -614,6 +617,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'piano',
+    view: { pos: [2, 2.3, 3.6], target: [-0.6, 1, 0] },
     group: 'life',
     summary: '건반을 누르면 해머가 현을 쳐요',
     name: '피아노 건반',
@@ -629,6 +633,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'printer',
+    view: { pos: [2.2, 3.2, 3.8], target: [0, 0.6, 0.1] },
     group: 'life',
     summary: '롤러가 종이를 넣고 헤드가 오가요',
     name: '프린터',
