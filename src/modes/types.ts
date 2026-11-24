@@ -13,6 +13,10 @@ export interface ModeContext {
   toast(message: string, kind?: 'ok' | 'warn' | 'info', duration?: number): void;
   goHome(): void;
   playSound(kind: 'ok' | 'wrong'): void;
+  /** 해시 경로 인자(선택) — 예: '#/mm/12' → '12', '#/mm/about' → 'about' */
+  param?: string;
+  /** 해시 경로로 이동(선택) — 예: navigate('mm/13') */
+  navigate?(path: string): void;
 }
 
 export interface AppMode {

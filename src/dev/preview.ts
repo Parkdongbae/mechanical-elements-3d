@@ -5,7 +5,8 @@
 //   /preview.html?mode=enc | mode=quiz      학습 모드(도감·퀴즈) 단독 실행
 //   /preview.html?machine=gearhunt&hunt=spur_gear1,bevel_gear1,...  드래그 조립형의 조립 상태 복원
 //   /preview.html?machine=bicycle&steps=6  기계 + n단계 조립(steps=all 가능, 완료 시 시뮬레이션 가동)
-// 공통 옵션: &theme=dark  &q=low  &cam=x,y,z,tx,ty,tz  &t=3 (시뮬레이션을 t초 진행 후 정지)
+//   /preview.html?mm=<n> | mm=kit          「507 기계 운동」 모델(레지스트리 지연 로딩)·키트 부품 시연
+// 공통 옵션: &theme=dark  &q=low  &cam=x,y,z,tx,ty,tz  &t=3 (시뮬레이션을 t초 진행 후 정지)  &speed=배율(mm 전용, 기본 1)
 
 import * as THREE from 'three';
 import { SceneManager, type CameraView } from '../scene/SceneSetup';
@@ -32,8 +33,15 @@ import { SteamEngines } from '../labs/SteamEngines';
 import '../styles/lab-steam.css';
 import { HandPump } from '../labs/HandPump';
 import '../styles/lab-pump.css';
+import { Linkage } from '../labs/Linkage';
+import '../styles/lab-link.css';
+import { Gallery } from '../mm507/Gallery';
+import '../styles/mm507.css';
 import { ThumbnailFactory } from '../models/thumbnails';
 import { loadSettings } from '../state/settings';
+import { loadModel } from '../mm507/registry';
+import buildKitDemo from '../mm507/kitDemo';
+import type { MovementModel } from '../mm507/types';
 import '../styles/tokens.css';
 import '../styles/modes.css';
 
@@ -52,6 +60,8 @@ sceneMgr.adaptive = false; // 캡처용 — 헤드리스의 낮은 프레임률 
 let machine: Machine | null = null;
 let sim: MachineSim | null = null;
 let view: CameraView | null = null;
+let mmModel: MovementModel | null = null;
+let mmSpeed = 1;
 
 const shadow = (o: THREE.Object3D): void => {
   o.traverse((c) => {
@@ -78,7 +88,9 @@ const MODE_CTORS: Record<string, () => AppMode> = {
   cycle: () => new EngineCycle(),
   engines: () => new EngineTypes(),
   steam: () => new SteamEngines(),
-  pump: () => new HandPump()
+  pump: () => new HandPump(),
+  link: () => new Linkage(),
+  mm: () => new Gallery()
 };
 if (modeArg && MODE_CTORS[modeArg]) {
   const root = document.createElement('div');
@@ -92,6 +104,10 @@ if (modeArg && MODE_CTORS[modeArg]) {
     thumbs: new ThumbnailFactory(),
     root,
     settings: loadSettings(),
+    param: q.get('param') ?? undefined,
+    navigate: (p) => {
+      location.hash = `#/${p}`;
+    },
     toast: (m) => console.log('[toast]', m),
     goHome: () => console.log('[goHome]'),
     playSound: () => {}
@@ -114,6 +130,23 @@ if (modeArg && MODE_CTORS[modeArg]) {
   });
   view = { pos: [0, 10.5, 9.5], target: [0, 0.4, 0.3] };
   if (info) info.textContent = PARTS.map((p, i) => `${i + 1}.${p.name}`).join('  ');
+} else if (q.get('mm')) {
+  // 「507 기계 운동」: mm=kit → 키트 시연, mm=<n> → 레지스트리로 지연 로딩
+  const arg = q.get('mm')!;
+  const spArg = q.get('speed');
+  const sp = spArg === null ? 1 : Number(spArg); // 없으면 1 (Number(null) = 0 이라 멈추던 문제)
+  mmSpeed = Number.isFinite(sp) ? sp : 1;
+  const load = arg === 'kit' ? Promise.resolve().then(() => buildKitDemo()) : loadModel(Number(arg));
+  load
+    .then((m) => {
+      mmModel = m;
+      shadow(m.group);
+      sceneMgr.add(m.group);
+      view = m.view ?? { pos: [0, 2.1, 6.2], target: [0, 1.75, 0] };
+      if (info) info.textContent = arg === 'kit' ? '507 키트 부품 일람' : `507 운동 ${arg}번`;
+      if (!q.get('cam') && view) sceneMgr.flyTo(view, true);
+    })
+    .catch((e: unknown) => console.error('[mm507]', e));
 } else {
   const id = q.get('machine') ?? 'bicycle';
   const def = getMachineDef(id);
@@ -159,6 +192,10 @@ function tick(): void {
   if (sim && simTime < stopAt) {
     simTime += dt;
     sim.update(dt);
+  }
+  if (mmModel && simTime < stopAt) {
+    simTime += dt;
+    mmModel.update(dt, mmSpeed);
   }
   sceneMgr.render();
   requestAnimationFrame(tick);

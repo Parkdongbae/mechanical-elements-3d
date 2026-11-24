@@ -417,14 +417,16 @@ export class Fan extends BaseMachine {
     capA.position.copy(pinA.position);
     armGrp.add(pinA, capA);
     grp.add(armGrp);
-    // 전선
-    const cable = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-0.05, 0.3, -0.1),
-      new THREE.Vector3(-0.2, 0.18, -0.45),
-      new THREE.Vector3(-0.3, 0.08, -0.85),
-      new THREE.Vector3(-0.35, 0.02, -1.4)
-    ]);
-    grp.add(new THREE.Mesh(new THREE.TubeGeometry(cable, 40, 0.018, 10, false), plastic(0x2b2e33)));
+    // 전선: 기둥 밑동에서 나와 받침 윗면을 타고(단면 높이 + 선 반지름) 가장자리를 넘어 바닥으로
+    const CABLE_R = 0.018;
+    const dir = new THREE.Vector2(-0.33, -0.944).normalize();
+    const along: [number, number][] = [
+      [0.0, 0.3], [0.1, 0.27], [0.16, BASE_H + 0.05 + CABLE_R], [0.3, BASE_H + 0.048 + CABLE_R], [0.5, BASE_H + 0.035 + CABLE_R],
+      [BASE_R - 0.12, BASE_H + 0.02 + CABLE_R], [BASE_R - 0.04, BASE_H - 0.005 + CABLE_R], [BASE_R + 0.01, 0.075 + CABLE_R],
+      [BASE_R + 0.05, 0.035], [BASE_R + 0.12, CABLE_R], [1.1, CABLE_R], [1.45, CABLE_R]
+    ];
+    const cable = new THREE.CatmullRomCurve3(along.map(([r, y]) => new THREE.Vector3(dir.x * r, y, dir.y * r)), false, 'centripetal');
+    grp.add(new THREE.Mesh(new THREE.TubeGeometry(cable, 80, CABLE_R, 10, false), plastic(0x2b2e33)));
   }
 
   private buildHead(): void {
