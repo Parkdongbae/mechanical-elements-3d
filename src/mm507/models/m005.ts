@@ -15,7 +15,7 @@ const A0 = 2.0; // 떼었을 때 레버 각 — B가 왼쪽 위로 물러나 벨
 const A1 = 0.374; // 눌렀을 때 레버 각 — B가 바깥에서 왼쪽 가닥을 안쪽으로 민다
 const Z = 0.25; // 벨트·풀리 면
 const ZBAR = 0.1; // 레버 막대 면 — B 허브와 겹치지 않게 뒤로
-const BULGE = 0.35; // 느슨할 때 왼쪽 가닥의 바깥 불룩함
+const BULGE = 0.21; // 느슨할 때 왼쪽 가닥의 바깥 불룩함 — 느슨한 경로 길이(5.891)가 팽팽한 경로(5.890)와 같게 맞춘 값(줄은 늘지 않는다)
 const PERIOD = 6; // 동작 주기(초)
 // 경로 조각별 점 수: 왼쪽 가닥(선+B호+선) · C호 · 오른쪽 가닥 · A호
 const NL1 = 5;
@@ -118,7 +118,8 @@ function loosePath(): THREE.Vector3[] {
     const t = i / nl;
     const x = pa[0] + (pc[0] - pa[0]) * t;
     const y = pa[1] + (pc[1] - pa[1]) * t;
-    pts.push(v3(x - BULGE * Math.sin(Math.PI * t), y, Z));
+    const sn = Math.sin(Math.PI * t);
+    pts.push(v3(x - BULGE * sn * sn, y, Z)); // sin² — 양끝이 A·C 접선(수직)으로 매끄럽게 이어진다(꺾임 없음)
   }
   arcPts(pts, CC, rC, Math.PI, Math.PI + norm(aR - Math.PI), NC);
   linePts(pts, tCA.p1, tCA.p2, NR);

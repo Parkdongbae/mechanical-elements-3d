@@ -26,6 +26,21 @@ const smooth = (x: number): number => {
 
 type P2 = [number, number];
 
+const HB = 0.05; // 벨트 반폭
+
+/** 벨트 중심이 x 일 때 위 풀리에서 띠가 얹히는 반지름. 띠(폭 0.1)가 높은 단에 조금이라도 걸쳐 있는 동안은
+ *  높은 단 반지름을 유지하고, 완전히 벗어난 뒤(낮은 단 가운데까지 남은 0.05 구간)에만 낮은 단으로 내려간다 —
+ *  반지름을 x 에 직선 보간하면 단을 옮기는 동안 띠가 높은 단 모서리 속으로 최대 0.06 파묻혔다.
+ *  아래 풀리는 반대 장착이라 stepR(−x) */
+function stepR(x: number): number {
+  let r = RU[0]!;
+  for (let i = 0; i < RU.length - 1; i++) {
+    const a = (XS[i]! + XS[i + 1]!) / 2 + HB; // 높은 단을 완전히 벗어나는 자리
+    r += (RU[i + 1]! - RU[i]!) * smooth((x - a) / (XS[i + 1]! - a));
+  }
+  return r;
+}
+
 /** 열린 벨트 경로(닫힌 점열) — 키트 openBeltPath 와 같은 점 순서·점 수. 단, r1<r2(위 단이 작고 아래 단이 큰 경우)에서
  *  atan2 각이 뒤집혀 호가 풀리 사이로 돌고 벨트가 감겨 엉키던 문제를 각 증분 정규화(0, 2π])로 피한다 */
 function openPath(c1: P2, r1: number, c2: P2, r2: number, seg = 24): P2[] {
@@ -136,8 +151,8 @@ export default function buildM008(): MovementModel {
       const k = inTrans ? smooth((u - (STEP_T - TRANS)) / TRANS) : 0;
       beltStep = (inTrans ? nxt : seg) + 1;
       const x = XS[seg]! + (XS[nxt]! - XS[seg]!) * k;
-      const ru = RU[seg]! + (RU[nxt]! - RU[seg]!) * k;
-      const rl = RL[seg]! + (RL[nxt]! - RL[seg]!) * k;
+      const ru = stepR(x);
+      const rl = stepR(-x);
       theta += OMEGA * speed * dt;
       thetaD += OMEGA * speed * (ru / rl) * dt; // 벨트 속도 보존: ωd·ru = ωl·rl
       s += OMEGA * speed * (ru + E) * dt;

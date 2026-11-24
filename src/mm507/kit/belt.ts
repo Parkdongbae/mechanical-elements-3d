@@ -365,7 +365,7 @@ export class Belt {
         m.makeBasis(q.n, q.b, q.t);
       } else {
         mk.position.copy(q.p).addScaledVector(q.b, this.thickness / 2 + 0.004);
-        m.makeBasis(q.t, q.n, q.b);
+        m.makeBasis(q.t, q.b, q.n.clone().negate()); // 표시 상자가 띠 면에 눕게(긴 변 = 폭 방향 n)
       }
       mk.quaternion.setFromRotationMatrix(m);
     }

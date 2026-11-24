@@ -135,9 +135,11 @@ export default function buildM009(): MovementModel {
       const w = OMEGA * speed;
       theta += w * dt;
       driven += w * (Ru / Rl) * dt; // 종동각: 가변 속도비의 적분 — 각이 튀지 않게 누적
-      beltS += w * Ru * dt; // 벨트 선속도 = 구동 표면 속도
-      pT.rotation.x = theta;
-      pB.rotation.x = driven; // 열린 벨트: 같은 방향
+      beltS += w * (Ru + E) * dt; // 벨트 선속도 = 구동 표면 속도(띠 중심선 반지름)
+      // 벨트 경로는 (z, y) 평면 반시계 = X 축 음의 회전(앞 가닥이 올라가고 꼭대기에서 뒤로 넘어간다, 008·010 규약).
+      // 풀리 표면도 같은 쪽으로 돌아야 띠 표시와 표면이 함께 흐른다 — 양의 각이면 띠와 풀리가 반대로 돈다
+      pT.rotation.x = -theta;
+      pB.rotation.x = -driven; // 열린 벨트: 같은 방향
       const fr = beltFrame(x);
       belt.setPath(fr.path, fr.wd);
       belt.setOffset(beltS);
