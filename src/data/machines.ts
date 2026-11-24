@@ -537,6 +537,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'swivelchair',
+    view: { pos: [3.4, 2, 5.2], target: [0, 1.9, 0] },
     group: 'life',
     summary: '빙글 돌고 높이도 오르내려요',
     name: '회전의자',
@@ -582,6 +583,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'sharpener',
+    view: { pos: [1, 3, 8.6], target: [0.2, 1.6, 0] },
     group: 'life',
     summary: '손잡이를 돌리면 나선 칼날이 깎아요',
     name: '연필깎이',
@@ -642,6 +644,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'doorhandle',
+    view: { pos: [1.5, 2.8, 8.5], target: [-1, 1.8, 0] },
     group: 'life',
     summary: '손잡이를 돌리면 걸쇠가 들어가요',
     name: '문 손잡이',
@@ -672,6 +675,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'desk',
+    view: { pos: [3.6, 2.8, 5], target: [0, 1, 0.6] },
     group: 'structure',
     summary: '볼트로 조이고 핀으로 높이 조절',
     name: '교실 책걸상',
@@ -687,6 +691,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'swing',
+    view: { pos: [6.5, 2.8, 5.5], target: [0, 1.5, 0] },
     group: 'structure',
     summary: '베어링 걸이와 체인으로 흔들흔들',
     name: '그네',
@@ -762,6 +767,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'board',
+    view: { pos: [5, 3.4, 5.4], target: [0, 1.8, 0] },
     group: 'structure',
     summary: '두 칠판이 균형을 이루며 오르내려요',
     name: '상하 이동 칠판',
@@ -777,6 +783,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'gate',
+    view: { pos: [4.2, 3, 5.5], target: [0.9, 1, 0] },
     group: 'structure',
     summary: '모터가 교문을 옆으로 밀어요',
     name: '슬라이딩 교문',
@@ -792,6 +799,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'flagpole',
+    view: { pos: [5, 3.6, 10.5], target: [0.3, 3.5, 0.3] },
     group: 'structure',
     summary: '손잡이를 돌려 깃발을 올려요',
     name: '국기 게양대',
@@ -807,6 +815,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ladder',
+    view: { pos: [6.5, 4.2, 11], target: [0, 2.4, 0] },
     group: 'structure',
     summary: '펴고 나면 벌어지지 않게 고정',
     name: '접이식 사다리',
