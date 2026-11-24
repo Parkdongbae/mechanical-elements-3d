@@ -570,6 +570,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'stapler',
+    view: { pos: [2.6, 2.2, 3.4], target: [0, 0.4, 0] },
     group: 'life',
     summary: '누르면 심이 박히고 다시 올라와요',
     name: '스테이플러',
@@ -665,6 +666,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'scooter',
+    view: { pos: [4.4, 2.4, 5.6], target: [0.1, 1.35, 0] },
     group: 'life',
     summary: '바퀴가 매끄럽게 굴러요',
     name: '킥보드',
@@ -712,6 +714,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'seesaw',
+    view: { pos: [3.2, 2.4, 4.4], target: [0, 0.7, 0] },
     group: 'structure',
     summary: '가운데 축을 중심으로 오르락내리락',
     name: '시소',
@@ -727,6 +730,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'hoop',
+    view: { pos: [3.4, 3.2, 4.6], target: [-0.2, 2.4, 0] },
     group: 'structure',
     summary: '볼트로 고정하고 림은 스프링으로',
     name: '농구 골대',
@@ -742,6 +746,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'door',
+    view: { pos: [2.6, 2.4, 4.6], target: [0, 1.5, 0.2] },
     group: 'structure',
     summary: '경첩으로 열리고 저절로 닫혀요',
     name: '교실 문',
@@ -757,6 +762,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'window',
+    view: { pos: [2.4, 2.0, 4.4], target: [0, 1.3, 0.2] },
     group: 'structure',
     summary: '레일 위를 바퀴로 스르륵',
     name: '미닫이 창문',
@@ -820,7 +826,7 @@ export const MACHINES: MachineDef[] = [
   },
   {
     id: 'ladder',
-    view: { pos: [6.5, 4.2, 11], target: [0, 2.4, 0] },
+    view: { pos: [3.8, 2.4, 5.8], target: [0, 1.5, 0] },
     group: 'structure',
     summary: '펴고 나면 벌어지지 않게 고정',
     name: '접이식 사다리',

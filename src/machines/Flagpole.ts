@@ -185,7 +185,8 @@ function drawTaegeukgi(): THREE.CanvasTexture {
     const ux = dirx / L;
     const uy = diry / L;
     g.save();
-    g.translate(cx + ux * d, cy + uy * d);
+    // 괘 중심 = 반지름 d/2 + 간격 d/4 + 괘 폭의 절반 d/6 = 11d/12
+    g.translate(cx + ux * (11 * d) / 12, cy + uy * (11 * d) / 12);
     g.rotate(Math.atan2(uy, ux)); // 로컬 x = 대각선(바깥) 방향, 막대는 로컬 y 방향(대각선에 수직)
     g.fillStyle = '#000000';
     const t = d / 12;

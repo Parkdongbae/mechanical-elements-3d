@@ -11,19 +11,19 @@ import { BaseMachine, type MachineSim } from './types';
 import { CATEGORY_COLORS, aluminum, paint, plastic, rubber, steel } from '../models/materials';
 
 // 다리
-const LEG_L = 5.0; // 다리 길이(경첩 중심 ~ 발 끝)
-const RZ = 0.55; // 두 레일의 z 위치(±)
-const RAIL_T = 0.13; // 레일 두께(다리 면 방향)
-const RAIL_W = 0.12; // 레일 폭(z)
+const LEG_L = 3.4; // 다리 길이(경첩 중심 ~ 발 끝) — 전체가 반경 3 안에
+const RZ = 0.42; // 두 레일의 z 위치(±)
+const RAIL_T = 0.1; // 레일 두께(다리 면 방향)
+const RAIL_W = 0.09; // 레일 폭(z)
 const RAIL_LEN = LEG_L - 0.1; // 레일 길이(발 고무 제외)
-const RUNGS = [0.9, 1.5, 2.6, 3.4, 4.2]; // 앞 다리 발판 위치(발 쪽에서 잰 거리)
+const RUNGS = [0.55, 1.15, 1.75, 2.35, 2.9]; // 같은 간격 // 앞 다리 발판 위치(발 쪽에서 잰 거리)
 
 // 링크
-const HINGE_D = 2.0; // 다리 위에서 링크가 달리는 거리(경첩에서)
+const HINGE_D = 1.4; // 다리 위에서 링크가 달리는 거리(경첩에서)
 const THETA_OPEN = 0.32; // 펼친 상태: 다리 반각 ≈ 18°
 const THETA_CLOSE = 0.05; // 접은 상태
 const LINK_A = HINGE_D * Math.sin(THETA_OPEN); // 막대 길이(고정)
-const ZL = RZ + 0.12; // 링크 면의 z(±)
+const ZL = RZ + 0.1; // 링크 면의 z(±)
 const SPLIT_SPREAD = 0.45; // 분할 핀 다리가 벌어진 각
 
 // 한 주기 8초: 펼침 유지 → 접음 → 접힘 유지 → 펴짐
@@ -291,7 +291,7 @@ export class FoldingLadder extends BaseMachine {
     const barMat = paint(CATEGORY_COLORS.control, { roughness: 0.35 });
     const pinMat = steel({ roughness: 0.3 });
     const holeMat = plastic(0x0d0e10, { roughness: 0.9 });
-    const barGeo = new RoundedBoxGeometry(LINK_A, 0.1, 0.05, 2, 0.02);
+    const barGeo = new RoundedBoxGeometry(LINK_A, 0.08, 0.04, 2, 0.015);
     const holeGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.004, 16);
     holeGeo.rotateX(Math.PI / 2);
     this.links = [];
@@ -339,9 +339,9 @@ export class FoldingLadder extends BaseMachine {
 
   private buildHinge(): void {
     const hingeMat = steel({ roughness: 0.3 });
-    const cap = roundBox(0.7, 0.16, 1.5, 0.04, this.alu, 0, 0.08, 0);
+    const cap = roundBox(0.5, 0.12, 2 * RZ + 0.3, 0.03, this.alu, 0, 0.06, 0);
     this.frame.add(cap);
-    this.frame.add(new THREE.Mesh(zCyl(0.05, -RZ - 0.12, RZ + 0.12, 24), hingeMat));
+    this.frame.add(new THREE.Mesh(zCyl(0.04, -RZ - 0.12, RZ + 0.12, 24), hingeMat));
   }
 
   /** 다리 한쪽: 레일 2개(z ±RZ), 발 고무 2개, 앞 다리만 발판 */
@@ -350,13 +350,13 @@ export class FoldingLadder extends BaseMachine {
     const footMat = rubber();
     for (const sz of [-1, 1]) {
       leg.add(roundBox(RAIL_T, RAIL_LEN, RAIL_W, 0.03, this.railMat, 0, -RAIL_LEN / 2, sz * RZ));
-      const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.085, 0.1, 24), footMat);
+      const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.07, 0.1, 24), footMat);
       foot.position.set(0, -LEG_L + 0.05, sz * RZ);
       leg.add(foot);
     }
     if (front) {
       for (const s of RUNGS) {
-        leg.add(roundBox(0.16, 0.1, 2 * RZ + 0.12, 0.03, this.alu, 0, -s, 0));
+        leg.add(roundBox(0.13, 0.07, 2 * RZ + 0.09, 0.02, this.alu, 0, -s, 0));
       }
     }
   }

@@ -147,7 +147,7 @@ export class SlidingWindow extends BaseMachine {
     this.placeSashWaiting();
 
     // 슬롯은 확대 모형 쪽에 크게: ① 차축(Z축 방향) ② 베어링(+Z 0.1 앞)
-    this.addSlot(0, 0.22, MAG_POS.clone());
+    this.addSlot(0, 0.22, MAG_POS.clone().add(new THREE.Vector3(0, 0, 0.16))); // 바퀴 앞면 밖에 보이게
     this.addSlot(1, 0.28, MAG_POS.clone().add(new THREE.Vector3(0, 0, 0.1)));
     this.hideSlot(1);
     shadowAll(this.group);
@@ -164,7 +164,7 @@ export class SlidingWindow extends BaseMachine {
   }
 
   getFlyTarget(step: number): THREE.Vector3 {
-    return step === 0 ? MAG_POS.clone() : MAG_POS.clone().add(new THREE.Vector3(0, 0, 0.1));
+    return step === 0 ? MAG_POS.clone().add(new THREE.Vector3(0, 0, 0.16)) : MAG_POS.clone().add(new THREE.Vector3(0, 0, 0.1));
   }
 
   slotTarget(step: number): THREE.Vector3 {
@@ -412,7 +412,8 @@ export class SlidingWindow extends BaseMachine {
     g.add(box(0.9, 0.04, 0.04, 0.006, this.darkMat, 0, -0.28, 0)); // 볼록 레일(V홈에 물림)
     // 하우징(ㄷ판) + 받침 기둥 2개
     for (const s of [-1, 1]) {
-      g.add(box(0.72, 0.575, 0.06, 0.012, this.darkMat, 0, 0, s * 0.105));
+      // 앞판은 반투명 — 확대 바퀴·축·베어링이 보이게
+      g.add(box(0.72, 0.575, 0.06, 0.012, s > 0 ? ghost() : this.darkMat, 0, 0, s * 0.105));
       g.add(box(0.07, 0.5875, 0.05, 0.008, this.darkMat, s * 0.4, -0.00625, s * 0.105));
     }
     g.add(box(0.72, 0.06, 0.27, 0.012, this.darkMat, 0, 0.3175, 0));
