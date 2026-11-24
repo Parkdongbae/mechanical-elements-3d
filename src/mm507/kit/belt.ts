@@ -80,6 +80,60 @@ export function planar(path: V2[], z: number): THREE.Vector3[] {
  *  벨트 경로 반지름 = 풀리 r + 0.01 일 때 로프가 홈 바닥에 앉는다. */
 export const ROPE_R = 0.045;
 
+/** 평면 원 여러 개를 차례로 감는 닫힌 벨트 경로(점열). ccw = 그 원을 반시계로 감는지.
+ *  이웃한 두 원의 감는 방향이 같으면 바깥 접선, 다르면 안쪽(교차) 접선을 자동 고른다. */
+export function beltPathAround(circles: { c: V2; r: number; ccw: boolean }[], seg = 24): V2[] {
+  const n = circles.length;
+  if (n < 2) return [];
+  const sgn = (i: number): number => (circles[i]!.ccw ? 1 : -1);
+  // 접선 j: circles[j] → circles[j+1]. 부호 있는 반지름 ρ = ±r 로 외접·내접을 한 식으로 푼다
+  const deps: V2[] = [];
+  const arrs: V2[] = [];
+  for (let j = 0; j < n; j++) {
+    const A = circles[j]!;
+    const B = circles[(j + 1) % n]!;
+    const dx = B.c[0] - A.c[0];
+    const dy = B.c[1] - A.c[1];
+    const D = Math.hypot(dx, dy);
+    if (D < 1e-9) return [];
+    const rhoA = A.r * sgn(j);
+    const rhoB = B.r * sgn((j + 1) % n);
+    const k = Math.max(-0.999, Math.min(0.999, (rhoA - rhoB) / D));
+    const th = Math.atan2(dy, dx) + Math.asin(k);
+    const tx = Math.cos(th);
+    const ty = Math.sin(th);
+    // 접점 = 중심 + ρ·(ty, −tx): 접선 방향이 각 원의 감는 방향과 일치한다
+    deps.push([A.c[0] + rhoA * ty, A.c[1] - rhoA * tx]);
+    arrs.push([B.c[0] + rhoB * ty, B.c[1] - rhoB * tx]);
+  }
+  const pts: V2[] = [deps[0]!];
+  for (let i = 1; i < n; i++) {
+    pts.push(arrs[i - 1]!);
+    const C = circles[i]!;
+    pushWrap(pts, C, angleAt(arrs[i - 1]!, C), angleAt(deps[i]!, C), C.ccw, seg);
+    pts.push(deps[i]!);
+  }
+  pts.push(arrs[n - 1]!);
+  const C0 = circles[0]!;
+  pushWrap(pts, C0, angleAt(arrs[n - 1]!, C0), angleAt(deps[0]!, C0), C0.ccw, seg);
+  return pts;
+}
+
+/** 점 p 의 원 c 위 각도 */
+function angleAt(p: V2, c: { c: V2; r: number }): number {
+  return Math.atan2(p[1] - c.c[1], p[0] - c.c[0]);
+}
+
+/** 원 위 도착각→출발각을 감는 방향으로 잇는 호 점 (끝점 제외) */
+function pushWrap(pts: V2[], c: { c: V2; r: number }, a0: number, a1: number, ccw: boolean, seg: number): void {
+  let d = ccw ? (a1 - a0) % TAU : (a0 - a1) % TAU;
+  if (d < 0) d += TAU;
+  for (let i = 1; i < seg && d > 1e-9; i++) {
+    const a = ccw ? a0 + (d * i) / seg : a0 - (d * i) / seg;
+    pts.push([c.c[0] + Math.cos(a) * c.r, c.c[1] + Math.sin(a) * c.r]);
+  }
+}
+
 export interface BeltOpts {
   width?: number;
   thickness?: number;
@@ -89,13 +143,20 @@ export interface BeltOpts {
   style?: 'rope' | 'flat';
   /** 로프 반지름(기본 ROPE_R) */
   ropeR?: number;
+  /** 경로 점마다 띠의 폭 방향(단위 벡터). 없으면 기존 계산을 따른다 (flat 스윕용) */
+  widthDirs?: THREE.Vector3[];
 }
 
 const ROPE_SEG = 18; // 로프 단면 꼭짓점 수
 const ROPE_STRANDS = 3;
 
-/** 경로 접선마다 폭 방향(기본 +Z)을 병렬 운반해 띠 단면을 스윕한다 */
-function frames(pts: THREE.Vector3[], closed: boolean): { ns: THREE.Vector3[]; bs: THREE.Vector3[] } {
+/** 경로 접선마다 폭 방향(기본 +Z)을 병렬 운반해 띠 단면을 스윕한다.
+ *  widthDirs 를 주면 점마다 폭 방향을 직접 쓴다(1/4 비틀림 같은 꼬임용). */
+function frames(
+  pts: THREE.Vector3[],
+  closed: boolean,
+  widthDirs?: THREE.Vector3[]
+): { ns: THREE.Vector3[]; bs: THREE.Vector3[] } {
   const n = pts.length;
   const ns: THREE.Vector3[] = [];
   const bs: THREE.Vector3[] = [];
@@ -106,10 +167,18 @@ function frames(pts: THREE.Vector3[], closed: boolean): { ns: THREE.Vector3[]; b
     const T = next.clone().sub(prev);
     if (T.lengthSq() < 1e-12) T.copy(N).cross(new THREE.Vector3(0, 0, 1));
     T.normalize();
-    const B0 = new THREE.Vector3(0, 0, 1);
-    const Ni = new THREE.Vector3().crossVectors(B0, T);
-    if (Ni.lengthSq() < 1e-8) Ni.copy(N);
-    Ni.normalize();
+    let Ni: THREE.Vector3 | null = null;
+    const wd = widthDirs?.[i];
+    if (wd) {
+      const c = new THREE.Vector3().crossVectors(T, wd);
+      if (c.lengthSq() > 1e-8) Ni = wd.clone().normalize();
+    }
+    if (Ni === null) {
+      const B0 = new THREE.Vector3(0, 0, 1);
+      Ni = new THREE.Vector3().crossVectors(B0, T);
+      if (Ni.lengthSq() < 1e-8) Ni.copy(N);
+      Ni.normalize();
+    }
     const Bi = new THREE.Vector3().crossVectors(T, Ni);
     ns.push(Ni);
     bs.push(Bi);
@@ -147,7 +216,7 @@ export class Belt {
     this.closed = opts.closed ?? true;
     this.rope = (opts.style ?? 'rope') === 'rope';
     this.ropeR = opts.ropeR ?? ROPE_R;
-    this.setPath(path);
+    this.setPath(path, opts.widthDirs);
     const markMat = paint(0xf2b619);
     const count = opts.marks ?? 6;
     for (let i = 0; i < count; i++) {
@@ -160,12 +229,12 @@ export class Belt {
     this.setOffset(0);
   }
 
-  /** 같은 점 개수의 새 경로로 띠를 다시 만든다 (setOffset 위치는 유지) */
-  setPath(path: THREE.Vector3[]): void {
+  /** 같은 점 개수의 새 경로로 띠를 다시 만든다 (setOffset 위치는 유지). widthDirs 는 점마다 띠 폭 방향 */
+  setPath(path: THREE.Vector3[], widthDirs?: THREE.Vector3[]): void {
     this.pts = path.map((p) => p.clone());
     const n = this.pts.length;
     if (n < 2) return;
-    const f = frames(this.pts, this.closed);
+    const f = frames(this.pts, this.closed, widthDirs);
     this.ns = f.ns;
     this.bs = f.bs;
     this.cum = [0];

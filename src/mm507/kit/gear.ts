@@ -85,3 +85,80 @@ export function meshAngle(c1: V2, z1: number, th1: number, c2: V2, z2: number): 
   const s2 = TAU / z2;
   return a + Math.PI - s2 - (s2 / s1) * (th1 + s1 / 2 - a);
 }
+
+// ── 베벨 기어 (키트 추가 — 설계표 007) ──
+
+export interface BevelGearOpts {
+  width?: number;
+  spokes?: number;
+  driver?: boolean;
+  /** 축 구멍 반지름(기본 피치반지름×0.14) — 관축에 직접 끼울 때 지정 */
+  bore?: number;
+}
+
+/** 45° 마이터 베벨: 회전축 = 로컬 Z, 이가 +Z, 원뿔 꼭짓점 = 로컬 (0,0,R), 피치원 = 로컬 z=0 */
+export function bevelGear(teeth: number, module: number, opts: BevelGearOpts = {}): THREE.Group {
+  const w = opts.width ?? 0.12; // 이 폭(원뿔 모선 방향)
+  const spokes = opts.spokes ?? 0;
+  const R = (teeth * module) / 2; // 피치 반지름
+  const rt = R + module * 0.9; // 이 끝
+  const rf = R - module * 0.9; // 이 뿌리
+  const bore = Math.max(0.024, opts.bore ?? R * 0.14);
+  const body = opts.driver === true ? bronze({ roughness: 0.34 }) : brass();
+  const zT = w / Math.SQRT2; // 이가 피치면 위까지 오른 높이(45°)
+  const blankT = w * 0.7; // 뒷판 두께
+  const g = new THREE.Group();
+  // 사다리꼴 이니 개략(반시계, 이 0의 중심 = 로컬 +X) — 맞물림 위상의 기준
+  const p = TAU / teeth;
+  const wt = 0.15 * p; // 끝 반폭
+  const wr = 0.28 * p; // 뿌리 반폭
+  const outline: V2[] = [];
+  for (let i = 0; i < teeth; i++) {
+    const a = i * p;
+    outline.push(
+      [Math.cos(a - wr) * rf, Math.sin(a - wr) * rf],
+      [Math.cos(a - wt) * rt, Math.sin(a - wt) * rt],
+      [Math.cos(a + wt) * rt, Math.sin(a + wt) * rt],
+      [Math.cos(a + wr) * rf, Math.sin(a + wr) * rf]
+    );
+  }
+  // 이: 원뿔면 위의 사다리꼴 돌기 — 꼭짓점 쪽으로 갈수록 작아진다. 구멍도 같이 가늘어져야 뚜껑이 성립
+  const k = 1 - zT / R;
+  const ring = loft(
+    outline,
+    [circlePts(rf * 0.95, 64)],
+    [
+      { z: 0, s: 1, hs: 1 },
+      { z: zT, s: k, hs: k }
+    ]
+  );
+  g.add(mesh(ring, body));
+  // 뒷판 + 허브 — 링 쪽으로 0.002 파묻혀 틈 없이
+  const c = Math.min(0.01, blankT * 0.12);
+  const hubOut = bore + R * 0.14;
+  const hubGeo = lathe(tubeProfile(bore, hubOut, -blankT - 0.02, 0.012, 0.008), 32);
+  hubGeo.rotateX(Math.PI / 2);
+  g.add(mesh(hubGeo, darkSteel()));
+  if (spokes > 0) {
+    const rimIn = rf * 0.62;
+    const rimGeo = lathe(tubeProfile(rimIn, rf, -blankT, 0.002, c), 48);
+    rimGeo.rotateX(Math.PI / 2);
+    g.add(mesh(rimGeo, body));
+    const geos: THREE.BufferGeometry[] = [];
+    for (let i = 0; i < spokes; i++) {
+      const b = new THREE.BoxGeometry(rimIn - bore, Math.max(0.02, R * 0.12), blankT * 0.45);
+      b.translate(bore + (rimIn - bore) / 2, 0, -blankT * 0.4);
+      b.rotateZ((i / spokes) * TAU);
+      geos.push(b);
+    }
+    g.add(mesh(merge(geos), body));
+  } else {
+    const blankGeo = lathe(tubeProfile(bore, rf, -blankT, 0.002, c), 48);
+    blankGeo.rotateX(Math.PI / 2);
+    g.add(mesh(blankGeo, body));
+  }
+  // 표시점: 뒷판 허브 옆 밝은 점 — 회전이 보이게
+  const markGeo = new THREE.BoxGeometry(Math.max(0.03, R * 0.14), 0.016, 0.01);
+  g.add(meshAt(markGeo, paint(0xf2b619), bore + R * 0.1, 0, -blankT - 0.022));
+  return g;
+}

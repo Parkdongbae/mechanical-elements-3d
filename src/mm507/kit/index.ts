@@ -5,3 +5,4 @@ export * from './pulley';
 export * from './belt';
 export * from './gear';
 export * from './misc';
+export * from './rope';

@@ -27,7 +27,7 @@ for (const id of ids) {
   console.log('ok', id);
 }
 // 학습 모드·탐구 실험: 진입해서 패널이 만들어지는지, 에러가 없는지
-for (const r of ['enc', 'quiz', 'lab/bike', 'lab/car', 'lab/power', 'lab/wind', 'lab/cycle', 'lab/engines', 'lab/steam', 'lab/pump']) {
+for (const r of ['enc', 'quiz', 'lab/bike', 'lab/car', 'lab/power', 'lab/wind', 'lab/cycle', 'lab/engines', 'lab/steam', 'lab/pump', 'mm', 'mm/1', 'mm/40', 'mm/about']) {
   const lp = await open(null, '#/' + r, 5000);
   const n = await lp.evaluate(() => document.querySelector('#mode-root').childElementCount);
   if (n === 0) errors.push(`${r}: 화면이 비어 있음`);
