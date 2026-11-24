@@ -66,25 +66,25 @@ export default function buildM011(): MovementModel {
 
   // 드럼 D(구동, bronze): 회전축 X — 감싸는 그룹에 rotation.y = π/2 (로컬 Z → 월드 X)
   const drumPivot = new THREE.Group();
-  drumPivot.position.set(0, DY, DZ);
+  drumPivot.position.set(BX, DY, DZ); // 벨트가 드럼 가운데에 걸리게 드럼 중심 = 벨트 x
   drumPivot.rotation.y = Math.PI / 2;
-  const drum = pulley(0.36, { width: 0.72, spokes: 4, driver: true });
+  const drum = pulley(0.36, { width: 0.72, spokes: 4, driver: true, flat: true }); // 평벨트용 납작 림
   drumPivot.add(drum);
   g.add(drumPivot);
 
   // 드럼 축(양 끝이 드럼 밖으로 0.2 삐죽) + 필로 받침
-  g.add(rod(v(-0.56, DY, DZ), v(0.56, DY, DZ), 0.04));
+  g.add(rod(v(BX - 0.56, DY, DZ), v(BX + 0.56, DY, DZ), 0.04));
   const pilY = DY - PILLOW_BOSS_Y; // 필로 원점 = 축에서 보스 높이만큼 아래
   for (const sx of [-1, 1]) {
     // 뒤판에서 돌출한 브래킷 팔이 필로를 받친다(기둥은 오른쪽 가닥과 부딪친다)
     const arm = mesh(new THREE.BoxGeometry(0.14, 0.09, 0.7), castIron());
-    arm.position.set(sx * 0.46, pilY - 0.045, 0.01);
+    arm.position.set(BX + sx * 0.46, pilY - 0.045, 0.01);
     g.add(arm);
-    g.add(pillow(sx * 0.46, pilY, DZ, 'x'));
+    g.add(pillow(BX + sx * 0.46, pilY, DZ, 'x'));
   }
 
   // 풀리 P(종동, brass): 회전축 Z
-  const pul = pulley(0.4, { spokes: 4 });
+  const pul = pulley(0.4, { spokes: 4, flat: true }); // 평벨트용 납작 림
   pul.position.set(PX, PY, DZ);
   g.add(pul, shaftZ(PX, PY));
 
@@ -95,14 +95,14 @@ export default function buildM011(): MovementModel {
 
   // 회전 방향 화살표: 드럼(오른쪽에서 시계, YZ 평면에 눕힘)·풀리(정면 시계)
   const arrowD = rotArrow(0.45, false);
-  arrowD.position.set(0.7, DY, DZ);
+  arrowD.position.set(BX + 0.7, DY, DZ);
   arrowD.rotation.y = Math.PI / 2;
   const arrowP = rotArrow(0.55, false);
   arrowP.position.set(PX, PY, DZ + 0.09);
   g.add(arrowD, arrowP);
 
   // 이름표
-  g.add(tag('구동 드럼', v(0.95, 3.1, 0.35)));
+  g.add(tag('구동 드럼', v(BX + 0.95, 3.1, 0.35)));
   g.add(tag('종동 풀리', v(1.15, 0.92, 0.35)));
   g.add(tag('비틀린 벨트', v(0.62, 1.71, 0.35)));
 
