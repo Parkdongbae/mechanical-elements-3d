@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { brass, bronze, darkSteel, paint } from '../../models/materials';
 import { lathe, merge, mesh, steppedProfile, tubeProfile, TAU, type V2 } from '../../models/parts/geom';
+import { ROPE_R } from './belt';
 
 function meshAt(geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number): THREE.Mesh {
   const m = mesh(geo, mat);
@@ -16,6 +17,8 @@ export interface PulleyOpts {
   hub?: number;
   crowned?: boolean;
   grooved?: boolean;
+  /** 홈 없는 납작 림(평벨트용). 기본은 로프 홈 림 */
+  flat?: boolean;
   driver?: boolean;
 }
 
@@ -61,7 +64,7 @@ export function pulley(r: number, opts: PulleyOpts = {}): THREE.Group {
       [rimIn, h],
       [rimIn, -h]
     ];
-  } else {
+  } else if (opts.flat === true) {
     prof = [
       [rimIn, -h],
       [r - c, -h],
@@ -71,6 +74,23 @@ export function pulley(r: number, opts: PulleyOpts = {}): THREE.Group {
       [rimIn, h],
       [rimIn, -h]
     ];
+  } else {
+    // 기본: 로프 홈 풀리 — 둥근 홈(로프 중심 반지름 r + 0.01) + 양쪽 플랜지(r + 0.04)
+    const rc = r + 0.01;
+    const gr = Math.min(ROPE_R + 0.004, h - 0.012);
+    const fl = r + 0.04; // 로프(바깥 r + 0.055)가 플랜지 위로 살짝 드러나게
+    prof = [
+      [rimIn, -h],
+      [fl - c, -h],
+      [fl, -h + c],
+      [fl, -gr - 0.004],
+      [rc, -gr]
+    ];
+    for (let i = 1; i < 12; i++) {
+      const t = -Math.PI / 2 + (i / 12) * Math.PI;
+      prof.push([rc - gr * Math.cos(t), gr * Math.sin(t)]);
+    }
+    prof.push([rc, gr], [fl, gr + 0.004], [fl, h - c], [fl - c, h], [rimIn, h], [rimIn, -h]);
   }
   const rimGeo = lathe(prof, 48);
   rimGeo.rotateX(Math.PI / 2);
@@ -107,7 +127,7 @@ export function pulley(r: number, opts: PulleyOpts = {}): THREE.Group {
   }
   // 표시점: 앞면 림에 밝은 한 점 — 회전이 보이게
   const markGeo = new THREE.BoxGeometry(r * 0.2, 0.014, 0.01);
-  g.add(meshAt(markGeo, paint(0xf2b619), r * 0.84, 0, h + 0.004));
+  g.add(meshAt(markGeo, paint(0xf2b619), opts.flat === true || opts.grooved === true || opts.crowned === true ? r * 0.84 : (rimIn + r) / 2, 0, h + 0.004));
   return g;
 }
 

@@ -76,12 +76,23 @@ export function planar(path: V2[], z: number): THREE.Vector3[] {
   return path.map((p) => new THREE.Vector3(p[0], p[1], z));
 }
 
+/** 로프(둥근 벨트) 기본 반지름 — 풀리 홈(pulley 기본 림)이 이 굵기에 맞춰져 있다.
+ *  벨트 경로 반지름 = 풀리 r + 0.01 일 때 로프가 홈 바닥에 앉는다. */
+export const ROPE_R = 0.045;
+
 export interface BeltOpts {
   width?: number;
   thickness?: number;
   closed?: boolean;
   marks?: number;
+  /** 'rope'(기본): 판화처럼 세 가닥 꼬인 둥근 로프 · 'flat': 납작한 가죽 띠 */
+  style?: 'rope' | 'flat';
+  /** 로프 반지름(기본 ROPE_R) */
+  ropeR?: number;
 }
+
+const ROPE_SEG = 18; // 로프 단면 꼭짓점 수
+const ROPE_STRANDS = 3;
 
 /** 경로 접선마다 폭 방향(기본 +Z)을 병렬 운반해 띠 단면을 스윕한다 */
 function frames(pts: THREE.Vector3[], closed: boolean): { ns: THREE.Vector3[]; bs: THREE.Vector3[] } {
@@ -126,16 +137,23 @@ export class Belt {
   private strip: THREE.Mesh | null = null;
   private offset = 0;
   private len = 0;
+  private readonly rope: boolean;
+  private readonly ropeR: number;
+  private twistPitch = 0.25;
 
   constructor(path: THREE.Vector3[], opts: BeltOpts = {}) {
     this.width = opts.width ?? 0.13;
     this.thickness = opts.thickness ?? 0.02;
     this.closed = opts.closed ?? true;
+    this.rope = (opts.style ?? 'rope') === 'rope';
+    this.ropeR = opts.ropeR ?? ROPE_R;
     this.setPath(path);
     const markMat = paint(0xf2b619);
     const count = opts.marks ?? 6;
     for (let i = 0; i < count; i++) {
-      const m = mesh(new THREE.BoxGeometry(0.016, 0.005, this.width * 0.62), markMat);
+      const m = this.rope
+        ? mesh(new THREE.TorusGeometry(this.ropeR * 1.02, 0.006, 6, 20), markMat) // 로프를 감은 노란 띠
+        : mesh(new THREE.BoxGeometry(0.016, 0.005, this.width * 0.62), markMat);
       this.marks.push(m);
       this.group.add(m);
     }
@@ -153,6 +171,11 @@ export class Belt {
     this.cum = [0];
     for (let i = 1; i < n; i++) this.cum.push(this.cum[i - 1]! + this.pts[i]!.distanceTo(this.pts[i - 1]!));
     this.len = this.cum[n - 1]! + (this.closed ? this.pts[0]!.distanceTo(this.pts[n - 1]!) : 0);
+    if (this.rope) {
+      this.buildRope();
+      this.setOffset(this.offset);
+      return;
+    }
     const hw = this.width / 2;
     const ht = this.thickness / 2;
     const prof: V2[] = [
@@ -172,9 +195,79 @@ export class Belt {
     this.setOffset(this.offset);
   }
 
+  /** 로프 메시(점마다 단면 고리, 인덱스는 한 번만) — 꼭짓점 위치는 writeRope 가 꼬임 위상으로 쓴다 */
+  private buildRope(): void {
+    const n = this.pts.length;
+    const K = ROPE_SEG;
+    // 닫힌 로프는 이음매에서 꼬임이 맞도록 한 바퀴 꼬임 수를 정수로
+    const want = this.ropeR * 7;
+    const turns = Math.max(1, Math.round(this.len / want));
+    this.twistPitch = this.closed ? this.len / turns : want;
+    const rings = this.closed ? n + 1 : n;
+    const need = rings * K * 3;
+    const old = this.strip?.geometry;
+    if (!old || (old.getAttribute('position') as THREE.BufferAttribute | undefined)?.array.length !== need) {
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(need), 3));
+      const idx: number[] = [];
+      for (let i = 0; i < rings - 1; i++) {
+        for (let k = 0; k < K; k++) {
+          const a = i * K + k;
+          const b = i * K + ((k + 1) % K);
+          const c = (i + 1) * K + k;
+          const d = (i + 1) * K + ((k + 1) % K);
+          idx.push(a, c, b, b, c, d);
+        }
+      }
+      geo.setIndex(idx);
+      if (this.strip) {
+        this.strip.geometry.dispose();
+        this.strip.geometry = geo;
+      } else {
+        this.strip = mesh(geo, rubber({ color: 0x8a6440, roughness: 0.85 })); // 삼줄색
+        this.group.add(this.strip);
+      }
+    }
+    this.writeRope();
+  }
+
+  /** 꼬임 위상(offset 만큼 흐름)을 반영해 로프 꼭짓점을 다시 쓴다 */
+  private writeRope(): void {
+    if (!this.strip) return;
+    const pos = this.strip.geometry.getAttribute('position') as THREE.BufferAttribute;
+    const arr = pos.array as Float32Array;
+    const n = this.pts.length;
+    const K = ROPE_SEG;
+    const rings = this.closed ? n + 1 : n;
+    const R = this.ropeR;
+    for (let i = 0; i < rings; i++) {
+      const j = i % n;
+      const s = i < n ? this.cum[i]! : this.len;
+      const p = this.pts[j]!;
+      const N = this.ns[j]!;
+      const B = this.bs[j]!;
+      const phase = ((s - this.offset) / this.twistPitch) * Math.PI * 2;
+      for (let k = 0; k < K; k++) {
+        const th = (k / K) * Math.PI * 2;
+        // 세 가닥: 단면 반지름이 가닥 사이에서 살짝 들어간다(꼬인 로프)
+        const r = R * (0.84 + 0.16 * Math.abs(Math.cos((ROPE_STRANDS / 2) * (th - phase))));
+        const cx = Math.cos(th) * r;
+        const cy = Math.sin(th) * r;
+        const o = (i * K + k) * 3;
+        arr[o] = p.x + N.x * cx + B.x * cy;
+        arr[o + 1] = p.y + N.y * cx + B.y * cy;
+        arr[o + 2] = p.z + N.z * cx + B.z * cy;
+      }
+    }
+    pos.needsUpdate = true;
+    this.strip.geometry.computeVertexNormals();
+    this.strip.geometry.computeBoundingSphere();
+  }
+
   /** 표시(이음매) 위치를 호장거리 s로 설정(절대값, 흐르는 방향 = 진행 방향) */
   setOffset(s: number): void {
     this.offset = s;
+    if (this.rope) this.writeRope();
     const L = this.len;
     const count = this.marks.length;
     if (L <= 0 || count === 0) return;
@@ -183,8 +276,14 @@ export class Belt {
       const si = (((s + (L * i) / count) % L) + L) % L;
       const q = this.frameAt(si);
       const mk = this.marks[i]!;
-      mk.position.copy(q.p).addScaledVector(q.b, this.thickness / 2 + 0.004);
-      m.makeBasis(q.t, q.n, q.b);
+      if (this.rope) {
+        // 토러스 축(로컬 Z)을 로프 진행 방향에 맞춘다
+        mk.position.copy(q.p);
+        m.makeBasis(q.n, q.b, q.t);
+      } else {
+        mk.position.copy(q.p).addScaledVector(q.b, this.thickness / 2 + 0.004);
+        m.makeBasis(q.t, q.n, q.b);
+      }
       mk.quaternion.setFromRotationMatrix(m);
     }
   }
