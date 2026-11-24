@@ -6,17 +6,17 @@ import { Belt, beltPathAround, displayStand, pulley, rotArrow, rod, shaftZ, tag,
 import { brass, bronze, darkSteel, paint } from '../../models/materials';
 import { annularSector, extrude, lathe, merge, mesh, rodProfile, TAU } from '../../models/parts/geom';
 
-const P: V2 = [0, 2.8]; // 받침점(레버 축)
+const P: V2 = [0, 2.5]; // 받침점(레버 축) — 레버 끝이 뒤판(3.15) 안에 들도록 2.8 → 2.5
 const Z = 0.3; // 기구 평면 높이
-const LEV = 2.7; // 레버 전체 길이
+const LEV = 2.4; // 레버 전체 길이(2.7 → 2.4, 끝 최고 y = 2.5 + 1.2·sin0.5 + 0.07 ≈ 3.15)
 const RS = 0.62; // 세그먼트 림 반지름
 const RB = 0.63; // 벨트가 세그먼트에 닿는 반지름(바깥면 홈)
 const RC = 0.34; // 아래 풀리 반지름
 const RP = 0.35; // 벨트가 풀리 홈을 감는 반지름
 const CL: V2 = [-1.05, 0.85]; // 왼쪽 풀리 중심
 const CR: V2 = [1.05, 0.85]; // 오른쪽 풀리 중심
-const AMP = 0.55; // 레버 왕복 진폭(rad)
-const DZ = 0.03; // 교차부 두 가닥의 z 간격(0.27 / 0.33)
+const AMP = 0.5; // 레버 왕복 진폭(rad)
+const DZ = 0.055; // 교차부 두 가닥의 z 간격(0.245 / 0.355) — 로프 지름 0.09 + 틈 0.02
 const SEG = 24; // 호 분할 수
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
@@ -144,8 +144,8 @@ export default function buildM006(): MovementModel {
     }
   }
   g.add(
-    tag('레버(왕복)', v(1.15, 3.0, 0.4)),
-    tag('반원 세그먼트', v(-1.25, 2.12, 0.4)),
+    tag('레버(왕복)', v(1.0, 2.75, 0.4)),
+    tag('반원 세그먼트', v(-0.95, 1.65, 0.4)),
     tag('종동 풀리', v(1.5, 1.32, 0.4))
   );
 
