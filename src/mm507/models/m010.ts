@@ -2,7 +2,7 @@
 // 풀리 옆선이 곧지 않고 곡선: 판화대로 위 풀리는 오목(나팔꼴), 아래 풀리는 볼록(종꼴) (판화 10번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, PILLOW_BOSS_Y, STAGE, displayStand, openBeltPath, pillow, rod, tag, type V2 } from '../kit';
+import { Belt, PILLOW_BOSS_Y, STAGE, carryTags, displayStand, openBeltPath, pillow, rod, tag, type V2 } from '../kit';
 import { brass, bronze, castIron, darkSteel, paint } from '../../models/materials';
 import { TAU, lathe, mesh, tubeProfile } from '../../models/parts/geom';
 
@@ -43,6 +43,7 @@ function beltFrame(x: number): { path: THREE.Vector3[]; wd: THREE.Vector3[] } {
   const { ru, rl, su, sl } = surfAt(x);
   const pts = openBeltPath([Z0, YT], ru + E * Math.hypot(1, su), [Z0, YB], rl + E * Math.hypot(1, sl), SEG);
   const path = pts.map((p) => v3(x, p[1], p[0]));
+  carryTags(pts, path, (u, w) => v3(x, w, u)); // 검사 표식(감긴 호)
   const wd = pts.map((p, i) => {
     const top = i === 0 || i >= SEG + 2;
     const cy = top ? YT : YB;

@@ -4,6 +4,7 @@ import { brass, bronze, castIron, darkSteel, paint, rubber, steel } from '../../
 import { circlePts, extrude, lathe, loft, mesh, pathFrom, rodProfile, shapeFrom, TAU, tubeProfile } from '../../models/parts/geom';
 import { involuteOutline } from '../../models/parts/gears';
 import type { V2 } from './belt';
+import { setMM } from './mm';
 
 const MARK = 0xf2b619;
 
@@ -96,6 +97,7 @@ export function wormScrew(
   geo.setIndex(idx);
   geo.computeVertexNormals();
   g.add(mesh(geo, body));
+  setMM(g, { kind: 'gear', fn: 'wormScrew', teeth: 1, pitch, module: pitch / Math.PI, internal: false, rootR, outerR, length, leftHand: opts.leftHand === true, axis: 'x' }); // 검사 표식
   return g;
 }
 
@@ -144,6 +146,7 @@ export function wormWheel(teeth: number, module: number, opts: WormWheelOpts = {
     g.add(mesh(b, brass()));
   }
   g.add(meshAt(new THREE.BoxGeometry(Math.max(0.03, rp * 0.12), 0.016, 0.01), paint(MARK), (hubOut + rRim) / 2, 0, w * 0.2 + 0.004));
+  setMM(g, { kind: 'gear', fn: 'wormWheel', teeth, module, internal: false, rp, ra, rf, width: w, axis: 'z' }); // 검사 표식
   return g;
 }
 
@@ -184,6 +187,7 @@ export function frictionWheel(r: number, opts: FrictionWheelOpts = {}): THREE.Gr
   g.add(mesh(hubGeo, steel()));
   // 표시점: 원판 위 노란 막대
   g.add(meshAt(new THREE.BoxGeometry(0.1, 0.02, 0.012), paint(MARK), rm + rh + 0.09, 0, w * 0.35 + 0.006));
+  setMM(g, { kind: 'wheel', fn: 'frictionWheel', axis: 'z', rim: 'flat', r, bottom: r, outer: r, width: w, span: [-w / 2, w / 2] }); // 검사 표식
   return g;
 }
 
@@ -226,6 +230,7 @@ export function internalGear(teeth: number, module: number, opts: RingGearOpts =
     mk.rotation.z = a;
     g.add(mk);
   }
+  setMM(g, { kind: 'gear', fn: 'internalGear', teeth, module, internal: true, rp, ra: rp - 1.15 * module, rf: rp + 1.1 * module, rOut, width: w, axis: 'z' }); // 검사 표식
   return g;
 }
 
@@ -241,7 +246,9 @@ export function coilSpring(radius: number, wire: number, turns: number): THREE.M
     pts.push(new THREE.Vector3(t, Math.cos(a) * radius, Math.sin(a) * radius));
   }
   const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), n * 2, wire, 8, false);
-  return mesh(geo, steel());
+  const m = mesh(geo, steel());
+  setMM(m, { kind: 'spring', radius, wire, turns, axis: 'x' }); // 검사 표식
+  return m;
 }
 
 // ───────────────────────── 타원 기어(비원형 피치 곡선) ─────────────────────────
@@ -430,6 +437,7 @@ export function ellipticalGear(pitch: PitchCurve, teeth: number, opts: Elliptica
   g.add(mesh(hubGeo, steel()));
   // 표시 막대: φ=0 쪽으로(허브 바로 바깥)
   g.add(meshAt(new THREE.BoxGeometry(0.16, 0.02, 0.012), paint(MARK), 0.22, 0, w / 2 + 0.006));
+  setMM(g, { kind: 'gear', fn: 'ellipticalGear', teeth, module: pitch.L / teeth / Math.PI, internal: false, noncircular: true, rMin: pitch.rMin, rMax: pitch.rMax, pitchLength: pitch.L, width: w, axis: 'z' }); // 검사 표식
   return g;
 }
 

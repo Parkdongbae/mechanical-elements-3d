@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { brass, bronze, darkSteel, paint } from '../../models/materials';
 import { circlePts, lathe, loft, mesh, tubeProfile, TAU, type V2 } from '../../models/parts/geom';
+import { setMM } from './mm';
 
 // ── 원판 나선 기어 (029) ──
 
@@ -69,6 +70,7 @@ export function scrollDisc(R: number, rStart: number, pitch: number, opts: Scrol
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   geo.computeVertexNormals();
   g.add(mesh(geo, mat));
+  setMM(g, { kind: 'part', fn: 'scrollDisc', R, rStart, pitch, thickness: th, axis: 'z' }); // 검사 표식
   return g;
 }
 
@@ -247,6 +249,7 @@ export function squareGear(spec: SquareGearSpec, phase: 0 | 0.5, opts: { width?:
   const mark = mesh(new THREE.BoxGeometry(0.1, 0.02, 0.008), paint(0xd8362f));
   mark.position.set(0.3, 0, w / 2 + 0.004);
   g.add(mark);
+  setMM(g, { kind: 'gear', fn: 'squareGear', teeth: spec.teeth, module: spec.module, internal: false, noncircular: true, rMin: spec.rMin, rMax: spec.rMax, pitchLength: spec.L, width: w, axis: 'z', phase }); // 검사 표식
   return g;
 }
 

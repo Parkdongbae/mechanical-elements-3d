@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { castIron, darkSteel, steel } from '../../models/materials';
 import { extrude, hexPrism, lathe, mesh, rodProfile, roundedRect, tubeProfile } from '../../models/parts/geom';
 import { STAGE } from './stand';
+import { setMM } from './mm';
 
 function meshAt(geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number): THREE.Mesh {
   const m = mesh(geo, mat);
@@ -31,6 +32,7 @@ export function shaftZ(x: number, y: number, z1 = 0.45, r = 0.045): THREE.Group 
   const nutGeo = hexPrism(r * 2.2, r * 0.9, true, true, r * 1.05);
   nutGeo.rotateX(Math.PI / 2);
   g.add(meshAt(nutGeo, darkSteel(), 0, 0, z1 - r * 0.45));
+  setMM(g, { kind: 'shaft', axis: 'z', r, z0: STAGE.backZ, z1 });
   return g;
 }
 
@@ -41,6 +43,7 @@ export function rod(a: THREE.Vector3, b: THREE.Vector3, r = 0.03): THREE.Mesh {
   const m = mesh(geo, steel());
   m.position.copy(a);
   m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+  setMM(m, { kind: 'rod', r, a: [0, 0, 0], b: [0, len, 0], length: len });
   return m;
 }
 
@@ -69,5 +72,6 @@ export function pillow(x: number, y: number, z: number, axis: 'x' | 'z'): THREE.
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) g.add(meshAt(nutGeo.clone(), darkSteel(), sx * 0.078, 0.067, sz * 0.078));
   }
+  setMM(g, { kind: 'pillow', axis, bossY: axis === 'x' ? PILLOW_BOSS_Y : 0.09 });
   return g;
 }

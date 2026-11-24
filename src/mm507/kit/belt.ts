@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { paint, rubber } from '../../models/materials';
 import { mesh, sweep } from '../../models/parts/geom';
+import { carryTags, collectWraps, setMM, tag2, tags2Has } from './mm';
 
 export type V2 = [number, number];
 
@@ -36,6 +37,7 @@ export function openBeltPath(c1: V2, r1: number, c2: V2, r2: number, seg = 24): 
   const pts: V2[] = [];
   pts.push([c1[0] + r1 * lo[0], c1[1] + r1 * lo[1]]);
   pts.push([c2[0] + r2 * lo[0], c2[1] + r2 * lo[1]]);
+  const k2 = 1; // 검사 표식: c2 호 시작 번호
   // 각 풀리의 호는 상대 풀리에서 먼 쪽을 지난다 — 두 후보(정·역) 중 호 가운데가 먼 쪽을 향하는 것
   // (단순 보간은 r1 < r2 일 때 호가 풀리 사이로 돌거나 한 바퀴 넘게 감기던 버그)
   const farArc = (a0: number, a1: number, fx: number, fy: number): number => {
@@ -45,8 +47,11 @@ export function openBeltPath(c1: V2, r1: number, c2: V2, r2: number, seg = 24): 
   };
   arc(pts, c2[0], c2[1], r2, aLo, farArc(aLo, aUp, ax, ay), seg);
   pts.push([c2[0] + r2 * up[0], c2[1] + r2 * up[1]]);
+  const k1 = pts.length;
   pts.push([c1[0] + r1 * up[0], c1[1] + r1 * up[1]]);
   arc(pts, c1[0], c1[1], r1, aUp, farArc(aUp, aLo, -ax, -ay), seg);
+  tag2(pts.slice(k2, k1), c2, r2, true, 'openBeltPath');
+  tag2([...pts.slice(k1), pts[0]!], c1, r1, true, 'openBeltPath');
   return pts;
 }
 
@@ -71,6 +76,7 @@ export function crossedBeltPath(c1: V2, r1: number, c2: V2, r2: number, seg = 24
   // 아래 가닥 1→2 (기어2 쪽은 반대편 접점 c2 - r2·m)
   pts.push([c1[0] + r1 * mB[0], c1[1] + r1 * mB[1]]);
   pts.push([c2[0] - r2 * mB[0], c2[1] - r2 * mB[1]]);
+  const k2 = 1; // 검사 표식: c2 호 시작 번호
   // 엇걸이에서는 두 풀리 모두 반 바퀴보다 많이(π + 2g) 감긴다 — 짧은 쪽 호가 나오면 긴 쪽으로 바꾼다
   const longArc = (a0: number, a1: number): number => {
     let d = a1 - a0;
@@ -80,14 +86,19 @@ export function crossedBeltPath(c1: V2, r1: number, c2: V2, r2: number, seg = 24
   };
   arc(pts, c2[0], c2[1], r2, aB + Math.PI, longArc(aB + Math.PI, aA + Math.PI), seg);
   pts.push([c2[0] - r2 * mA[0], c2[1] - r2 * mA[1]]);
+  const k1 = pts.length;
   pts.push([c1[0] + r1 * mA[0], c1[1] + r1 * mA[1]]);
   arc(pts, c1[0], c1[1], r1, aA, longArc(aA, aB), seg);
+  tag2(pts.slice(k2, k1), c2, r2, false, 'crossedBeltPath');
+  tag2([...pts.slice(k1), pts[0]!], c1, r1, true, 'crossedBeltPath');
   return pts;
 }
 
 /** 평면(XY) 경로를 z 높이의 3D 점열로 */
 export function planar(path: V2[], z: number): THREE.Vector3[] {
-  return path.map((p) => new THREE.Vector3(p[0], p[1], z));
+  const out = path.map((p) => new THREE.Vector3(p[0], p[1], z));
+  if (path.some((p) => tags2Has(p))) carryTags(path, out, (u, v) => new THREE.Vector3(u, v, z));
+  return out;
 }
 
 /** 로프(둥근 벨트) 기본 반지름 — 풀리 홈(pulley 기본 림)이 이 굵기에 맞춰져 있다.
@@ -122,14 +133,18 @@ export function beltPathAround(circles: { c: V2; r: number; ccw: boolean }[], se
   }
   const pts: V2[] = [deps[0]!];
   for (let i = 1; i < n; i++) {
+    const k = pts.length;
     pts.push(arrs[i - 1]!);
     const C = circles[i]!;
     pushWrap(pts, C, angleAt(arrs[i - 1]!, C), angleAt(deps[i]!, C), C.ccw, seg);
     pts.push(deps[i]!);
+    tag2(pts.slice(k), C.c, C.r, C.ccw, 'beltPathAround'); // 검사 표식
   }
+  const k0 = pts.length;
   pts.push(arrs[n - 1]!);
   const C0 = circles[0]!;
   pushWrap(pts, C0, angleAt(arrs[n - 1]!, C0), angleAt(deps[0]!, C0), C0.ccw, seg);
+  tag2([...pts.slice(k0), pts[0]!], C0.c, C0.r, C0.ccw, 'beltPathAround');
   return pts;
 }
 
@@ -230,6 +245,14 @@ export class Belt {
     this.closed = opts.closed ?? true;
     this.rope = (opts.style ?? 'rope') === 'rope';
     this.ropeR = opts.ropeR ?? ROPE_R;
+    setMM(this.group, {
+      kind: 'belt',
+      style: this.rope ? 'rope' : 'flat',
+      radius: this.rope ? this.ropeR : undefined,
+      thickness: this.thickness,
+      width: this.width,
+      closed: this.closed
+    });
     this.setPath(path, opts.widthDirs);
     const markMat = paint(0xf2b619);
     const count = opts.marks ?? 6;
@@ -247,6 +270,7 @@ export class Belt {
   setPath(path: THREE.Vector3[], widthDirs?: THREE.Vector3[]): void {
     this.pts = path.map((p) => p.clone());
     const n = this.pts.length;
+    this.markPath(path);
     if (n < 2) return;
     const f = frames(this.pts, this.closed, widthDirs);
     this.ns = f.ns;
@@ -276,6 +300,19 @@ export class Belt {
       this.group.add(this.strip);
     }
     this.setOffset(this.offset);
+  }
+
+  /** 검사 표식: 경로·감긴 호·길이 (userData.mm) */
+  private markPath(path: THREE.Vector3[]): void {
+    const mm = (this.group.userData.mm ?? {}) as Record<string, unknown>;
+    mm.path = this.pts;
+    if (!this.closed && this.pts.length > 0) {
+      const a = this.pts[0]!;
+      const b = this.pts[this.pts.length - 1]!;
+      mm.ends = [[a.x, a.y, a.z], [b.x, b.y, b.z]];
+    }
+    if (mm.wrapsFixed !== true) mm.wraps = collectWraps(path, this.closed);
+    this.group.userData.mm = mm;
   }
 
   /** 로프 메시(점마다 단면 고리, 인덱스는 한 번만) — 꼭짓점 위치는 writeRope 가 꼬임 위상으로 쓴다 */
@@ -350,6 +387,11 @@ export class Belt {
   /** 표시(이음매) 위치를 호장거리 s로 설정(절대값, 흐르는 방향 = 진행 방향) */
   setOffset(s: number): void {
     this.offset = s;
+    const mm = this.group.userData.mm as Record<string, unknown> | undefined;
+    if (mm) {
+      mm.offset = s;
+      mm.length = this.len;
+    }
     if (this.rope) this.writeRope();
     const L = this.len;
     const count = this.marks.length;

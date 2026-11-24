@@ -4,6 +4,7 @@ import { brass, bronze, darkSteel, paint, steel } from '../../models/materials';
 import { circlePts, lathe, loft, merge, mesh, rodProfile, tubeProfile, TAU } from '../../models/parts/geom';
 import { involuteOutline } from '../../models/parts/gears';
 import type { V2 } from './belt';
+import { setMM } from './mm';
 
 function meshAt(geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number): THREE.Mesh {
   const m = mesh(geo, mat);
@@ -70,6 +71,7 @@ export function spurGear(teeth: number, module: number, opts: SpurGearOpts = {})
     const markGeo = new THREE.BoxGeometry(Math.max(0.03, rf * 0.16), 0.016, 0.01);
     g.add(meshAt(markGeo, paint(0xf2b619), rf * 0.5, 0, w / 2 + 0.004));
   }
+  setMM(g, { kind: 'gear', fn: 'spurGear', teeth, module, internal: false, rp, ra, rf, width: w, axis: 'z' }); // 검사 표식
   return g;
 }
 
@@ -160,6 +162,7 @@ export function bevelGear(teeth: number, module: number, opts: BevelGearOpts = {
   // 표시점: 뒷판 허브 옆 밝은 점 — 회전이 보이게
   const markGeo = new THREE.BoxGeometry(Math.max(0.03, R * 0.14), 0.016, 0.01);
   g.add(meshAt(markGeo, paint(0xf2b619), bore + R * 0.1, 0, -blankT - 0.022));
+  setMM(g, { kind: 'gear', fn: 'bevelGear', teeth, module, internal: false, rp: R, ra: rt, rf, width: w, axis: 'z', apex: [0, 0, R] }); // 검사 표식
   return g;
 }
 
@@ -227,6 +230,7 @@ export function crownGear(teeth: number, module: number, opts: CrownGearOpts = {
   const markGeo = new THREE.BoxGeometry(0.04, 0.016, 0.008);
   markGeo.translate(r1 - 0.06, 0, 0.004);
   g.add(mesh(markGeo, paint(0xf2b619)));
+  setMM(g, { kind: 'gear', fn: 'crownGear', teeth, module, internal: false, rp: rm, rIn: r1, rOut: r2, width, axis: 'z', pitchZ: 1.25 * module }); // 검사 표식
   return g;
 }
 
@@ -284,6 +288,7 @@ export function multiGenevaWheel(C: number, opts: { thickness?: number; driver?:
   const markGeo = new THREE.BoxGeometry(0.07, 0.022, 0.008);
   markGeo.translate(0.24, 0, 0.004);
   g.add(mesh(markGeo, paint(0xd8362f)));
+  setMM(g, { kind: 'part', fn: 'multiGenevaWheel', C, R, thickness: t, axis: 'z' }); // 검사 표식
   return g;
 }
 
@@ -330,6 +335,7 @@ export function multiGenevaDriver(C: number, opts: { driver?: boolean } = {}): T
     dot.position.set(x, y, 0.063);
     g.add(pin, nut, dot);
   }
+  setMM(g, { kind: 'part', fn: 'multiGenevaDriver', C, axis: 'z' }); // 검사 표식
   return g;
 }
 

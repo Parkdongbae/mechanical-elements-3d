@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { wood } from '../../models/materials';
 import { extrude, mesh, roundedRect } from '../../models/parts/geom';
+import { setMM } from './mm';
 
 /** 전시 영역: 폭 4.0 × 높이 2.8, 중심 (cx, cy). 뒤판 앞면이 z = backZ */
 export const STAGE = { w: 4.0, h: 2.8, cx: 0, cy: 1.75, backZ: -0.30 } as const;
@@ -20,5 +21,6 @@ export function displayStand(): THREE.Group {
   const panel = mesh(panelGeo, wood(0xa17248));
   panel.position.z = STAGE.backZ - 0.06;
   g.add(panel);
+  setMM(g, { kind: 'stand' });
   return g;
 }

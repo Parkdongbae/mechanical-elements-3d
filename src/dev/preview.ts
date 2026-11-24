@@ -8,6 +8,11 @@
 //   /preview.html?mm=<n> | mm=kit          「507 기계 운동」 모델(레지스트리 지연 로딩)·키트 부품 시연
 // 공통 옵션: &theme=dark  &q=low  &cam=x,y,z,tx,ty,tz  &t=3 (시뮬레이션을 t초 진행 후 정지)  &speed=배율(mm 전용, 기본 1)
 //           &labels=0|1 (이름표 끔/켬 — 실험은 설정을 덮어쓰고, mm 은 화살표는 두고 이름표만)
+//           &mmsrc=/src/경로.ts (mm 전용: 레지스트리 대신 그 모듈을 불러옴 — 옛 판·임시 모델 검사)
+// mm 전용(지시서 20 · 3-1): &t=T 는 실시간 프레임을 기다리지 않고 update(0.02, speed) 를 T 까지 한꺼번에 돌린다
+//           (바로 점프, 끝나면 window.__mmReady = true). &live=1 이면 예전처럼 실제 프레임으로 T 까지 쌓는다.
+//           window.__mm = { seek(t, speed=1), cam(x,y,z,tx,ty,tz), labels(on), theme(name), render(),
+//                           model, group, time, errors } — 한 페이지에서 시각·시점만 바꿔 여러 장 찍기·수치 검사용
 
 import * as THREE from 'three';
 import { SceneManager, type CameraView } from '../scene/SceneSetup';
@@ -50,6 +55,25 @@ import '../styles/tokens.css';
 import '../styles/modes.css';
 
 const q = new URLSearchParams(location.search);
+
+// 로드 뒤 쌓인 콘솔 에러·경고(window.__mm.errors) — autocheck 가 읽는다
+const mmErrors: string[] = [];
+{
+  const fmt = (args: unknown[]): string =>
+    args.map((a) => (a instanceof Error ? `${a.name}: ${a.message}` : typeof a === 'string' ? a : String(a))).join(' ');
+  const origErr = console.error.bind(console);
+  const origWarn = console.warn.bind(console);
+  console.error = (...a: unknown[]): void => {
+    mmErrors.push('error: ' + fmt(a));
+    origErr(...a);
+  };
+  console.warn = (...a: unknown[]): void => {
+    mmErrors.push('warn: ' + fmt(a));
+    origWarn(...a);
+  };
+  window.addEventListener('error', (e) => mmErrors.push('pageerror: ' + String(e.message)));
+  window.addEventListener('unhandledrejection', (e) => mmErrors.push('rejection: ' + String(e.reason)));
+}
 const canvas = document.querySelector<HTMLCanvasElement>('#scene');
 if (!canvas) throw new Error('#scene not found');
 const info = document.querySelector<HTMLElement>('#info');
@@ -67,6 +91,26 @@ let sim: MachineSim | null = null;
 let view: CameraView | null = null;
 let mmModel: MovementModel | null = null;
 let mmSpeed = 1;
+/** mm 바로 점프 모드(&t 가 있고 &live=1 이 아님) — 프레임 루프가 모델을 진행시키지 않는다 */
+const mmJump = q.get('t') !== null && q.get('live') !== '1';
+/** 모델에 지금까지 넘긴 Σ speed·dt (절대 자세 규약: 자세는 이 누적 위상만의 함수) */
+let mmPhase = 0;
+const MM_DT = 0.02;
+
+/** 누적 위상을 target 까지 고정 dt 로 옮긴다(앞으로든 뒤로든). 모델은 새로 만들지 않는다 */
+function mmStepTo(target: number): void {
+  if (!mmModel) return;
+  let d = target - mmPhase;
+  const sgn = d < 0 ? -1 : 1;
+  d = Math.abs(d);
+  while (d > 1e-9) {
+    const dt = Math.min(MM_DT, d);
+    mmModel.update(dt, sgn);
+    d -= dt;
+  }
+  mmPhase = target;
+  mmModel.group.updateMatrixWorld(true);
+}
 
 const shadow = (o: THREE.Object3D): void => {
   o.traverse((c) => {
@@ -142,7 +186,14 @@ if (modeArg && MODE_CTORS[modeArg]) {
   const spArg = q.get('speed');
   const sp = spArg === null ? 1 : Number(spArg); // 없으면 1 (Number(null) = 0 이라 멈추던 문제)
   mmSpeed = Number.isFinite(sp) ? sp : 1;
-  const load = arg === 'kit' ? Promise.resolve().then(() => buildKitDemo()) : loadModel(Number(arg));
+  // &mmsrc=/src/....ts : 레지스트리 대신 그 모듈의 default 빌더로(autocheck --file, 옛 판 비교용)
+  const src = q.get('mmsrc');
+  const load =
+    arg === 'kit'
+      ? Promise.resolve().then(() => buildKitDemo())
+      : src
+        ? import(/* @vite-ignore */ src).then((mod: { default: () => MovementModel }) => mod.default())
+        : loadModel(Number(arg));
   load
     .then((m) => {
       mmModel = m;
@@ -155,8 +206,26 @@ if (modeArg && MODE_CTORS[modeArg]) {
       view = m.view ?? { pos: [0, 2.1, 6.2], target: [0, 1.75, 0] };
       if (info) info.textContent = arg === 'kit' ? '507 키트 부품 일람' : `507 운동 ${arg}번`;
       if (!q.get('cam') && view) sceneMgr.flyTo(view, true);
+      if (mmJump) {
+        // 바로 점프: update(0.02, speed) 를 T 까지 한꺼번에 — 실시간 프레임을 기다리지 않는다
+        const T = Number(q.get('t'));
+        let left = Number.isFinite(T) && T > 0 ? T : 0;
+        while (left > 1e-9) {
+          const dt = Math.min(MM_DT, left);
+          m.update(dt, mmSpeed);
+          mmPhase += dt * mmSpeed;
+          left -= dt;
+        }
+        m.group.updateMatrixWorld(true);
+      }
+      sceneMgr.update(0);
+      sceneMgr.render();
+      w.__mmReady = true;
     })
-    .catch((e: unknown) => console.error('[mm507]', e));
+    .catch((e: unknown) => {
+      console.error('[mm507]', e);
+      w.__mmReady = true; // 기다리는 쪽이 멈추지 않게(에러는 __mm.errors 에)
+    });
 } else {
   const id = q.get('machine') ?? 'bicycle';
   const def = getMachineDef(id);
@@ -191,6 +260,49 @@ if (view) sceneMgr.flyTo(view, true);
 
 if (q.get('ui') === '0' && info) info.style.display = 'none';
 
+const w = window as unknown as Record<string, unknown>;
+w.__mm = {
+  /** 0 에서 t 까지 고정 dt 로(누적 위상 t·speed 로) 옮긴다. 음수 speed = 역회전 */
+  seek(t: number, speed = 1): void {
+    mmStepTo(t * speed);
+  },
+  cam(x: number, y: number, z: number, tx: number, ty: number, tz: number): void {
+    // 검사 캡처는 근접·위·아래 시점도 쓴다 — 궤도 컨트롤의 거리·각 제한을 푼다
+    sceneMgr.controls.minDistance = 0.05;
+    sceneMgr.controls.maxPolarAngle = Math.PI;
+    sceneMgr.flyTo({ pos: [x, y, z], target: [tx, ty, tz] }, true);
+    sceneMgr.render();
+  },
+  labels(on: boolean): void {
+    if (mmModel) setTagsVisible(mmModel.group, on);
+    sceneMgr.render();
+  },
+  theme(name: string): void {
+    const th = name === 'dark' ? 'dark' : 'light';
+    sceneMgr.setTheme(th);
+    document.documentElement.dataset.theme = th;
+    sceneMgr.render();
+  },
+  render(): void {
+    mmModel?.group.updateMatrixWorld(true);
+    sceneMgr.update(0);
+    sceneMgr.render();
+  },
+  get model(): MovementModel | null {
+    return mmModel;
+  },
+  get group(): THREE.Group | null {
+    return mmModel?.group ?? null;
+  },
+  /** 지금 누적 위상(= seek 의 t·speed) */
+  get time(): number {
+    return mmPhase;
+  },
+  errors: mmErrors,
+  /** 검사 스크립트가 같은 three 인스턴스(Box3·Triangle 등)를 쓰게 */
+  THREE
+};
+
 const stopAt = q.get('t') ? Number(q.get('t')) : Infinity;
 const clock = new THREE.Clock();
 let simTime = 0;
@@ -203,12 +315,13 @@ function tick(): void {
     simTime += dt;
     sim.update(dt);
   }
-  if (mmModel && simTime < stopAt) {
+  if (mmModel && !mmJump && simTime < stopAt) {
     simTime += dt;
     mmModel.update(dt, mmSpeed);
+    mmPhase += dt * mmSpeed;
   }
   sceneMgr.render();
   requestAnimationFrame(tick);
 }
 tick();
-(window as unknown as Record<string, unknown>).__ready = true;
+w.__ready = true;

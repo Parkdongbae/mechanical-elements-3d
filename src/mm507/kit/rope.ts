@@ -4,6 +4,7 @@ import { castIron, rubber, steel, wood } from '../../models/materials';
 import { lathe, mesh, rodProfile } from '../../models/parts/geom';
 import { pulley } from './pulley';
 import type { V2 } from './belt';
+import { collectWraps, seedFor, setMM } from './mm';
 
 const TAU = Math.PI * 2;
 const ROPE_STEP = 0.03; // Rope 재표본 간격(호장)
@@ -64,10 +65,12 @@ export function ropeAround(start: RopeEnd, circles: RopeCircle[], end: RopeEnd, 
     const a1 = Math.atan2(tout[i]![1] - it.c[1], tout[i]![0] - it.c[0]);
     const d = ((((a1 - a0) * it.s) % TAU) + TAU) % TAU;
     const w = it.w ?? start.w ?? 0;
+    const k0 = out.length;
     for (let k = 0; k <= seg; k++) {
       const a = a0 + (it.s * d * k) / seg;
       out.push(map(it.c[0] + Math.cos(a) * it.r, it.c[1] + Math.sin(a) * it.r, w));
     }
+    if (it.r > 0) seedFor(it.c, w, it.r, it.s > 0, 'ropeAround', map)(out.slice(k0)); // 검사 표식
   }
   out.push(map(end.p[0], end.p[1], end.w ?? 0));
   return out;
@@ -106,10 +109,18 @@ export class Rope {
     this.radius = radius;
     this.mat = rubber().clone();
     this.mat.color.set(0x8a6a3a); // 삼줄색
+    setMM(this.group, { kind: 'rope', radius, closed: false, path: [], wraps: [] });
   }
 
   setPath(points: THREE.Vector3[]): void {
     const pts = points.length >= 2 ? resample(points, ROPE_STEP) : [];
+    // 검사 표식: 중심선·양 끝·감긴 호
+    const mm = this.group.userData.mm as Record<string, unknown>;
+    mm.path = pts;
+    const a = points[0];
+    const b = points[points.length - 1];
+    mm.ends = a && b ? [[a.x, a.y, a.z], [b.x, b.y, b.z]] : [];
+    if (mm.wrapsFixed !== true) mm.wraps = collectWraps(points, false);
     if (!this.strand) {
       this.strand = mesh(new THREE.BufferGeometry(), this.mat);
       this.strand.castShadow = true;
@@ -135,6 +146,7 @@ export function arcPoints(c: V2, r: number, a0: number, a1: number, z: number, s
     const a = a0 + ((a1 - a0) * i) / (count - 1);
     out.push(new THREE.Vector3(c[0] + Math.cos(a) * r, c[1] + Math.sin(a) * r, z));
   }
+  seedFor(c, z, r, a1 > a0, 'arcPoints', (u, v, w) => new THREE.Vector3(u, v, w))(out); // 검사 표식
   return out;
 }
 
@@ -155,6 +167,8 @@ export function pulleyBlock(r: number, opts: PulleyBlockOpts = {}): THREE.Group 
   const sheave = pulley(r, { width, spokes: opts.spokes ?? 4, grooved: true, driver: opts.driver });
   g.add(sheave);
   g.userData.sheave = sheave;
+  setMM(g, { kind: 'block', r, width, hookUp: up, hookDown: down });
+  setMM(sheave, { inBlock: true });
   // 양쪽 평평한 띠쇠 (hook이 0이면 그쪽은 바퀴 둘레까지만)
   const yMin = down > 0 ? -(r + down - 0.02) : -r;
   const yMax = up > 0 ? r + up - 0.02 : r;
@@ -173,6 +187,7 @@ export function pulleyBlock(r: number, opts: PulleyBlockOpts = {}): THREE.Group 
     if (h <= 0) continue;
     const eye = mesh(new THREE.TorusGeometry(0.028, 0.008, 12, 28), steel());
     eye.position.set(0, sy * (r + h), 0);
+    setMM(eye, { kind: 'anchor', of: 'pulleyBlock', side: sy > 0 ? 'up' : 'down', point: [0, 0, 0], center: [0, 0, 0], ring: 0.028, tube: 0.008 });
     g.add(eye);
   }
   return g;
@@ -187,6 +202,7 @@ export function ceilingBeam(x0: number, x1: number, yBottom: number, hooksX: num
   for (const x of hooksX) {
     const hk = mesh(new THREE.TorusGeometry(0.03, 0.008, 12, 24), steel());
     hk.position.set(x, yBottom - 0.03, 0.22);
+    setMM(hk, { kind: 'anchor', of: 'ceilingBeam', point: [0, -0.03, 0], ring: 0.03, tube: 0.008, center: [0, 0, 0] });
     g.add(hk);
   }
   return g;
@@ -205,5 +221,6 @@ export function ropeEnd(): THREE.Group {
   const knob = mesh(new THREE.SphereGeometry(0.035, 18, 14), wood());
   knob.position.y = -0.07;
   g.add(knob);
+  setMM(g, { kind: 'anchor', of: 'ropeEnd', point: [0, 0, 0] });
   return g;
 }

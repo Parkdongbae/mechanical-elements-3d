@@ -3,7 +3,7 @@
 // A 는 한 축에 나란히 끼운 헐거운 풀리 2장(A1 뒤·A2 앞)이고 서로 반대로 돈다. 균형추 C 가 A 를 위로 당긴다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, Rope, arcPoints, beltPathAround, displayStand, pulley, rotArrow, shaftZ, tag, weight, type V2 } from '../kit';
+import { Belt, Rope, arcPoints, beltPathAround, carryTags, displayStand, pulley, rotArrow, shaftZ, tag, weight, type V2 } from '../kit';
 import { castIron, steel } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 
@@ -36,12 +36,14 @@ function circles(yA: number, yP: number): { c: V2; r: number; ccw: boolean }[] {
 function beltPts(yA: number, yP: number): THREE.Vector3[] {
   const pts = beltPathAround(circles(yA, yP), SEG);
   const n = SEG + 1;
-  return pts.map((p, i) => {
+  const out = pts.map((p, i) => {
     let z = Z; // D·P 위
     if (i >= 1 && i <= n) z = Z - DZ; // A1 (뒤)
     else if (i > 2 * n && i <= 3 * n) z = Z + DZ; // A2 (앞)
     return new THREE.Vector3(p[0], p[1], z);
   });
+  carryTags(pts, out); // 검사 표식(감긴 호)
+  return out;
 }
 
 /** 벨트 둘레 = 닫힌 경로 점열(호 분할 8)의 총 길이 */

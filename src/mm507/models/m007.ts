@@ -8,6 +8,7 @@ import {
   bevelGear,
   displayStand,
   openBeltPath,
+  carryTags,
   pillow,
   pulley,
   rod,
@@ -129,6 +130,7 @@ export default function buildM007(): MovementModel {
   const beltPath = openBeltPath([2.65, Z], 0.38 + 0.0125, [0.95, Z], RPU + 0.0125);
   // 판화처럼 정면에서 띠가 보이는 납작 벨트(축이 X 방향이라 로프는 옆선만 보인다)
   const beltPts = beltPath.map(([a, b]) => v(0, a, b));
+  carryTags(beltPath, beltPts, (a, b) => v(0, a, b)); // 검사 표식(감긴 호)
   // 축이 X 방향이라 띠 폭도 점마다 X — 기본 계산은 YZ 평면 경로에서 띠를 세워 버린다
   const belt = new Belt(beltPts, { width: 0.14, thickness: 0.025, style: 'flat', widthDirs: beltPts.map(() => new THREE.Vector3(1, 0, 0)) });
   belt.group.position.x = 0.93;
