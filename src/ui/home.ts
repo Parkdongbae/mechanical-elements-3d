@@ -9,7 +9,7 @@ import { ICON } from './icons';
 
 export interface HomeCallbacks {
   onOpenMission: (id: string) => void;
-  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump' | 'mm') => void;
+  onOpenMode: (mode: 'enc' | 'quiz' | 'lab/bike' | 'lab/car' | 'lab/power' | 'lab/wind' | 'lab/cycle' | 'lab/engines' | 'lab/steam' | 'lab/pump' | 'lab/link' | 'mm') => void;
   onOpenSettings: () => void;
   onToggleTheme: () => void;
 }
@@ -182,6 +182,10 @@ export class HomeScreen {
             <button type="button" class="mode-card lab-card" data-mode="lab/pump">
               <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-shaft) 16%, transparent);color:var(--cat-shaft)">${ICON.drop}</span>
               <span class="mode-text"><strong>우물 손펌프</strong><small>손잡이를 움직여 물을 끌어 올리는 원리 알아보기</small></span>
+            </button>
+            <button type="button" class="mode-card lab-card" data-mode="lab/link">
+              <span class="mode-icon" style="background:color-mix(in srgb, var(--cat-power) 16%, transparent);color:var(--cat-power)">${ICON.link}</span>
+              <span class="mode-text"><strong>링크 장치</strong><small>와이퍼·피스톤·걷는 다리까지, 막대와 핀으로 만드는 여러 가지 움직임</small></span>
             </button>
           </div>
         </section>

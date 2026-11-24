@@ -33,6 +33,8 @@ import { SteamEngines } from '../labs/SteamEngines';
 import '../styles/lab-steam.css';
 import { HandPump } from '../labs/HandPump';
 import '../styles/lab-pump.css';
+import { Linkage } from '../labs/Linkage';
+import '../styles/lab-link.css';
 import { Gallery } from '../mm507/Gallery';
 import '../styles/mm507.css';
 import { ThumbnailFactory } from '../models/thumbnails';
@@ -87,6 +89,7 @@ const MODE_CTORS: Record<string, () => AppMode> = {
   engines: () => new EngineTypes(),
   steam: () => new SteamEngines(),
   pump: () => new HandPump(),
+  link: () => new Linkage(),
   mm: () => new Gallery()
 };
 if (modeArg && MODE_CTORS[modeArg]) {

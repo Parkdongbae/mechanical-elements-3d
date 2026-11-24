@@ -25,6 +25,7 @@ export const ICON = {
   cycle: svg('<path d="M12 3v4M12 17v4"/><rect x="8" y="7" width="8" height="6" rx="1"/><path d="M12 13v2.500"/><circle cx="12" cy="18" r="2.500"/><path d="M4 9h2M18 9h2"/>'),
   engine: svg('<rect x="5" y="9" width="12" height="8" rx="1.500"/><path d="M8 9V6.500h6V9M17 12h2.500v3H17M5 13H3M9 6.500V4.500M13 6.500V4.500"/>'),
   steam: svg('<rect x="4" y="12" width="12" height="6" rx="1.500"/><circle cx="7.500" cy="19" r="2"/><circle cx="14" cy="19" r="2"/><path d="M16 14h3.500v4H16M7 12V8.500M7 5.500c1-1 1-1.500 0-2.500M10.500 6c1-1 1-1.500 0-2.500"/>'),
+  link: svg('<path d="M4 20h5M15 20h5"/><path d="M6.500 20 5 13l8-5 6 12"/><circle cx="6.500" cy="20" r="1.200"/><circle cx="17.500" cy="20" r="1.200"/><circle cx="5" cy="13" r="1.400"/><circle cx="13" cy="8" r="1.400"/>'),
   drop: svg('<path d="M12 3.500c3 3.800 5.500 6.700 5.500 10a5.500 5.500 0 0 1-11 0c0-3.300 2.500-6.200 5.500-10z"/>'),
   mouse: svg('<rect x="7" y="3" width="10" height="18" rx="5"/><path d="M12 7v3"/>')
 } as const;
