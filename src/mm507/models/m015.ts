@@ -35,15 +35,16 @@ export default function buildM015(): MovementModel {
   const pU = steppedPulley([0.435, 0.305, 0.175, 0.045], 0.09);
   pU.position.set(0, UY, 0.2);
   g.add(pU);
-  g.add(rod(v(0, UY, 0.03), v(0, UY, 0.37), 0.03));
-  for (const z of [0.03, 0.37]) {
+  // 위 블록은 단 4개(폭 0.36, z 0.02~0.38)라 옆판을 단 바깥(z 0.0·0.4, 틈 0.005)에 둔다
+  g.add(rod(v(0, UY, 0.0), v(0, UY, 0.4), 0.03));
+  for (const z of [0.0, 0.4]) {
     const plate = mesh(new THREE.BoxGeometry(0.03, 0.45, 0.03), steel());
     plate.position.set(0, 2.775, z); // y 2.55 ~ 3.00
     g.add(plate);
   }
   // 옆판 두 장을 잇는 윗 가로대 — 고리가 여기에 붙어 들보로 올라간다
-  const capU = mesh(new THREE.BoxGeometry(0.03, 0.03, 0.37), steel());
-  capU.position.set(0, 2.985, 0.2); // z 0.015 ~ 0.385
+  const capU = mesh(new THREE.BoxGeometry(0.03, 0.03, 0.43), steel());
+  capU.position.set(0, 2.985, 0.2); // z −0.015 ~ 0.415
   g.add(capU);
   const hookU = mesh(new THREE.TorusGeometry(0.03, 0.011, 12, 24), steel());
   hookU.position.set(0, 2.99, 0.2); // xy 면 고리가 z 방향 가로대를 감싸고 윗부분은 들보 속(바닥 y 3.01)
@@ -65,7 +66,7 @@ export default function buildM015(): MovementModel {
   const capL = mesh(new THREE.BoxGeometry(0.03, 0.03, 0.37), steel());
   capL.position.set(0, -0.44, 0.2); // y −0.455 ~ −0.425, z 0.015 ~ 0.385
   hangL.add(capL);
-  hangL.add(rod(v(0, -0.44, 0.2), v(0, -0.475, 0.2), 0.03)); // 가로대 → 고리
+  hangL.add(rod(v(0, -0.45, 0.2), v(0, -0.475, 0.2), 0.03)); // 가로대 아랫면 → 고리
   const hookL = mesh(new THREE.TorusGeometry(0.03, 0.011, 12, 24), steel());
   hookL.position.set(0, -0.5, 0.2);
   hookL.rotation.y = Math.PI / 2; // yz 면 — 추의 xy 면 고리와 사슬처럼 엇걸림

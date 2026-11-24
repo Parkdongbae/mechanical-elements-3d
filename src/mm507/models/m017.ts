@@ -5,29 +5,31 @@ import { OMEGA, type MovementModel } from '../types';
 import { Rope, arcPoints, ceilingBeam, displayStand, pulleyBlock, ropeEnd, rotArrow, rod, tag, weight } from '../kit';
 
 const R = 0.2; // 도르래 반지름 (셋 같음)
-const ZB = 0.22; // 도르래 블록 중심 z
-const ZP = 0.19; // 줄 P 높이 (Q 와 엇갈림)
-const ZQ = 0.25; // 줄 Q 높이
+// 줄이 바퀴 홈 가운데에 앉도록 블록 z 를 줄마다 맞춘다(예전: 블록 0.22, 줄 0.19/0.25 → 홈 가장자리에 걸침).
+// 줄 P 가 감는 M·A 는 z 0.16, 줄 Q 가 감는 B 는 z 0.28 — 둘 사이 0.12 라 엇갈리는 곳에서도 서로 안 닿는다.
+const ZP = 0.16; // 줄 P 높이 = M·A 블록 중심 z
+const ZQ = 0.28; // 줄 Q 높이 = B 블록 중심 z
 const EYE = R + 0.06; // 눈고리 중심 = 바퀴 중심에서 0.26 위
 type V2 = [number, number];
 const AX: V2 = [0.1, 2.55]; // A 고정 도르래 중심
 const MX = -0.3; // M 중심 x
 const BX = 0.3; // B 중심 x
 const HOOK_M: V2 = [-0.5, 2.94]; // 왼쪽 들보 고리 아랫점 (줄 P 시작)
+const ZH = 0.22; // 들보 고리 z (ceilingBeam 고정값)
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 
 /** 줄 P: 고리 → M 왼쪽 → M 밑 → M 오른쪽 → A 왼쪽 → A 위 → A 오른쪽 → B 윗 눈 */
 function pathP(yM: number, yB: number): THREE.Vector3[] {
   return [
-    v(HOOK_M[0], HOOK_M[1], ZP),
+    v(HOOK_M[0], HOOK_M[1], ZH), // 고리(z 0.22) → M 왼쪽(z 0.16)으로 내려오며 z 를 옮긴다
     v(HOOK_M[0], yM, ZP),
     ...arcPoints([MX, yM], R, Math.PI, 2 * Math.PI, ZP),
     v(MX + R, yM, ZP),
     v(MX + R, AX[1], ZP),
     ...arcPoints(AX, R, Math.PI, 0, ZP),
     v(BX, AX[1], ZP),
-    v(BX, yB + EYE, ZP)
+    v(BX, yB + EYE, ZQ) // B 윗 눈(B 블록 z) — 내려오며 z 0.16 → 0.28
   ];
 }
 
@@ -52,7 +54,7 @@ const LQ0 = lenQ(0.92, 2.0) + 0.25; // 줄 Q 전체 길이(처음 자유 구간 
 /** 줄 Q: M 윗 눈 → B 접점(접선으로 들어옴) → B 위 접촉 호 → B 오른쪽 끝점 → 자유 끝(접선으로 내려감) */
 function pathQ(yM: number, yB: number, yF: number): THREE.Vector3[] {
   return [
-    v(MX, yM + EYE, ZQ),
+    v(MX, yM + EYE, ZP), // M 윗 눈(M 블록 z) — B 접점까지 z 0.16 → 0.28
     ...arcPoints([BX, yB], R, tangentQ(yM, yB), 0, ZQ),
     v(BX + R, yF, ZQ)
   ];
@@ -69,9 +71,9 @@ export default function buildM017(): MovementModel {
 
   // A 고정 도르래 — 윗 눈과 들보 고리를 rod 로 연결 (고정)
   const blockA = pulleyBlock(R, { hookUp: 0.06 });
-  blockA.position.set(AX[0], AX[1], ZB);
+  blockA.position.set(AX[0], AX[1], ZP);
   g.add(blockA);
-  g.add(rod(v(AX[0], AX[1] + EYE, ZB), v(AX[0], 2.94, ZB), 0.008));
+  g.add(rod(v(AX[0], AX[1] + EYE, ZP), v(AX[0], 2.94, ZH), 0.008));
   const sheaveA = blockA.userData.sheave as THREE.Group;
 
   // M 움직도르래 + 추 — 한 조로 같이 오르내린다
@@ -123,8 +125,8 @@ export default function buildM017(): MovementModel {
     sheaveA.rotation.z = (-2 * h) / R; // A 왼쪽 줄이 2h 올라감 → 시계
     sheaveM.rotation.z = h / R; // M 밑에서 줄이 왼→오른 → 반시계
     sheaveB.rotation.z = (free - 0.25) / -R; // 자유 구간이 늘면 오른쪽 가닥이 내려감 → 시계
-    mAsm.position.set(MX, yM, ZB);
-    blockB.position.set(BX, yB, ZB);
+    mAsm.position.set(MX, yM, ZP);
+    blockB.position.set(BX, yB, ZQ);
     knob.position.set(BX + R, yF, ZQ);
     ropeP.setPath(pathP(yM, yB));
     ropeQ.setPath(pathQ(yM, yB, yF));

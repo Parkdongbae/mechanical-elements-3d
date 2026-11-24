@@ -16,7 +16,12 @@ const Y_L = 1.2; // 아래 블록 최저 중심 y
 const X_E = 0.62; // 자유단 x
 const Y_E = 2.05; // 자유단 최고 y (d = 0)
 const Z_B = ZC - RC; // 뒤쪽 가닥의 z (도르래 뒤 접선)
-const TIE: V2 = [Z_B, Y_U]; // 묶는 점 (z, y) — 위 블록 첫 도르래 뒤쪽 가장자리
+// 묶는 점 — 위 블록 왼쪽 띠쇠를 아래로 늘인 끝의 눈(becket). 실제 복활차처럼 줄 끝을 블록 띠쇠에 맨다.
+// (예전엔 U0 뒤 접점과 같은 자리라 줄 끝이 U0→L1 가닥과 겹쳤다.)
+const BK_X = -0.375; // 띠쇠 옆판 x
+const BK_Y = -0.33; // 눈 중심(블록 중심 기준 y)
+const BK_R = 0.03; // 눈 반지름
+const TIE: V2 = [ZC, Y_U + BK_Y - BK_R]; // (z, y) — 눈 아랫변
 // 띠쇠(스트랩): 볼 바깥(x ±0.375)에서 축 끝을 잡고 도르래 밖을 돌아 고리 쪽 가로대로 이어진다
 const SX = 0.375; // 옆 띠쇠 x
 const SB = 0.32; // 가로대 중심까지 거리(블록 중심에서) — 줄(바닥 r 0.223)과 볼(0.26) 밖
@@ -85,7 +90,17 @@ export default function buildM014(): MovementModel {
     uInner.push(s.inner);
   }
   upper.add(strap(1));
-  upper.add(rod(v(0, SB, ZC), v(0, 0.392, ZC), 0.03)); // 위 가로대 → 고리
+  // becket: 왼쪽 옆판을 축 아래로 늘이고 끝에 눈 — 줄의 묶는 끝(매듭)이 여기 걸린다
+  const bkPlate = mesh(new THREE.BoxGeometry(0.02, -0.05 - (BK_Y + BK_R) + 0.005, 0.07), castIron());
+  bkPlate.position.set(BK_X, (-0.05 + BK_Y + BK_R - 0.005) / 2, ZC);
+  upper.add(bkPlate);
+  const bkEye = mesh(new THREE.TorusGeometry(BK_R, 0.008, 10, 20), steel());
+  bkEye.position.set(BK_X, BK_Y, ZC);
+  upper.add(bkEye);
+  const knot = mesh(new THREE.SphereGeometry(0.026, 14, 10), wood(0x8a6a3a));
+  knot.position.set(BK_X, BK_Y - BK_R, ZC);
+  upper.add(knot);
+  upper.add(rod(v(0, SB + 0.01, ZC), v(0, 0.392, ZC), 0.03)); // 위 가로대 윗면 → 고리(가로대 속 0.005만)
   const hookU = mesh(new THREE.TorusGeometry(0.05, 0.012, 12, 24), steel());
   hookU.position.set(0, 0.44, ZC);
   upper.add(hookU);
@@ -104,7 +119,7 @@ export default function buildM014(): MovementModel {
   // 띠쇠 가로대 → 막대 → 블록 고리(XY 평면) ↔ 추 고리(YZ 평면, 사슬처럼 꿰임) → 공 추
   // 모두 lower 그룹 안이라 블록과 함께 움직인다
   lower.add(strap(-1));
-  lower.add(rod(v(0, -SB, ZC), v(0, -0.452, ZC), 0.03)); // 가로대 → 고리 윗변
+  lower.add(rod(v(0, -SB - 0.01, ZC), v(0, -0.452, ZC), 0.03)); // 가로대 아랫면 → 고리 윗변
   const hookL = mesh(new THREE.TorusGeometry(0.05, 0.012, 12, 24), steel());
   hookL.position.set(0, -0.5, ZC); // 관(tube) 윗변 y −0.45, 아랫변 −0.55
   lower.add(hookL);
@@ -174,7 +189,7 @@ export default function buildM014(): MovementModel {
         circles.push({ c: [ZC, Y_U], r: RC, ccw: true, w: XS[j]! }); // 위 U_j
       }
       rope.setPath(
-        ropeAround({ p: TIE, w: XS[0] }, circles, { p: [Z_B, Y_E - 8 * d], w: X_E }, {
+        ropeAround({ p: TIE, w: BK_X }, circles, { p: [Z_B, Y_E - 8 * d], w: X_E }, {
           seg: 12,
           map: (u: number, vv: number, w: number) => new THREE.Vector3(w, vv, u)
         })

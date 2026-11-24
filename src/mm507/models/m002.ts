@@ -1,7 +1,7 @@
 // 002 엇걸이(교차) 벨트 — 벨트가 가운데서 X자로 교차, 두 풀리가 반대 방향 1:1 (판화 2번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, ROPE_R, beltPathAround, displayStand, pulley, rotArrow, shaftZ, tag, type V2 } from '../kit';
+import { Belt, ROPE_R, beltPathAround, carryTags, displayStand, pulley, rotArrow, shaftZ, tag, type V2 } from '../kit';
 
 const RA = 0.52; // 풀리 A(구동) 반지름
 const RB = 0.52; // 풀리 B(종동) 반지름
@@ -42,6 +42,7 @@ function crossedPath3D(): THREE.Vector3[] {
   };
   const arcPts = (from: number, to: number): void => {
     for (let i = from; i < to; i++) out.push(v(flat[i]![0], flat[i]![1], Z));
+    carryTags(flat.slice(from, to), out.slice(out.length - (to - from))); // 검사 표식(감긴 호)
   };
   strand(flat[0]!, flat[1]!, -1); // 가닥 1(A→B): 교차점에서 Z−AMP, 양 끝은 Z
   arcPts(2, seg + 1); // B 호 (끝점 제외한 내부 점)

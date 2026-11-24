@@ -8,6 +8,7 @@ import {
   bevelGear,
   displayStand,
   openBeltPath,
+  carryTags,
   pillow,
   pulley,
   rod,
@@ -112,10 +113,11 @@ export default function buildM007(): MovementModel {
 
   // 수직축 c + 위 뒤판 브래킷(주철 상자 + 구멍) + 표시판(원판·화살표·깃)
   g.add(rod(v(-1.125, 1.22, Z), v(-1.125, 3.05, Z), 0.04));
-  g.add(at(new THREE.BoxGeometry(0.26, 0.3, 0.4), castIron(), -1.125, 2.86, -0.1));
+  // 상자 앞면(z 0.078)이 축받이 고리(반지름 0.072) 바깥에 닿기만 하게 — 전에는 고리가 0.022 박혔다
+  g.add(at(new THREE.BoxGeometry(0.26, 0.3, 0.378), castIron(), -1.125, 2.86, -0.111));
   g.add(at(lathe(tubeProfile(0.045, 0.072, -0.06, 0.06, 0.01), 36), darkSteel(), -1.125, 2.9, Z));
   const plate = new THREE.Group();
-  plate.position.set(-1.125, 3.0, Z);
+  plate.position.set(-1.125, 3.025, Z); // 원판 아랫면 3.013 — 상자 윗면(3.01) 위로 띄움
   plate.add(at(lathe(tubeProfile(0.044, 0.15, -0.012, 0.012, 0.004), 48), darkSteel(), 0, 0, 0));
   plate.add(at(new THREE.BoxGeometry(0.1, 0.006, 0.026), paint(0xf2b619), 0.075, 0.019, 0));
   const headGeo = new THREE.ConeGeometry(0.02, 0.05, 12);
@@ -129,6 +131,7 @@ export default function buildM007(): MovementModel {
   const beltPath = openBeltPath([2.65, Z], 0.38 + 0.0125, [0.95, Z], RPU + 0.0125);
   // 판화처럼 정면에서 띠가 보이는 납작 벨트(축이 X 방향이라 로프는 옆선만 보인다)
   const beltPts = beltPath.map(([a, b]) => v(0, a, b));
+  carryTags(beltPath, beltPts, (a, b) => v(0, a, b)); // 검사 표식(감긴 호)
   // 축이 X 방향이라 띠 폭도 점마다 X — 기본 계산은 YZ 평면 경로에서 띠를 세워 버린다
   const belt = new Belt(beltPts, { width: 0.14, thickness: 0.025, style: 'flat', widthDirs: beltPts.map(() => new THREE.Vector3(1, 0, 0)) });
   belt.group.position.x = 0.93;
@@ -137,12 +140,13 @@ export default function buildM007(): MovementModel {
   // 벨트 옮기개: 앞쪽 수직 막대 + 포크(손가락 간격 0.18), 위쪽 안내봇에 걸쳐 미끄러짐
   const fork = new THREE.Group();
   fork.add(
-    rod(v(0, 1.46, 0.585), v(0, 2.0, 0.585), 0.025),
-    rod(v(-0.09, 1.46, 0.585), v(0.09, 1.46, 0.585), 0.02),
+    // 세로 막대는 가로대 윗면에서 시작해 깃(바깥 0.038) 아래쪽에 0.005 들어가 끝난다(안내봉 속까지 박히지 않게)
+    rod(v(0, 1.475, 0.585), v(0, 1.967, 0.585), 0.025),
+    rod(v(-0.106, 1.46, 0.585), v(0.106, 1.46, 0.585), 0.02),
     // 포크 손가락: 띠 면에 수직(Z)으로 띠 양옆을 지나야 띠를 밀 수 있다 — 앞 가닥(z ≈ 0.53)을 사이에 낀다.
     // (전에는 z 0.585 의 세로 막대라 띠 앞에 떠 있었다)
-    rod(v(-0.09, 1.46, 0.45), v(-0.09, 1.46, 0.585), 0.016),
-    rod(v(0.09, 1.46, 0.45), v(0.09, 1.46, 0.585), 0.016)
+    rod(v(-0.09, 1.46, 0.45), v(-0.09, 1.46, 0.57), 0.016),
+    rod(v(0.09, 1.46, 0.45), v(0.09, 1.46, 0.57), 0.016)
   );
   const collarGeo = lathe(tubeProfile(0.02, 0.038, -0.032, 0.032, 0.005), 32);
   collarGeo.rotateZ(-Math.PI / 2);

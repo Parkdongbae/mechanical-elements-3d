@@ -62,6 +62,29 @@ VERIFY: npx tsc --noEmit ; then
 all must print 'saved' without 'CONSOLE ERRORS'.
 $COMMON"
     ;;
+  s[0-9]*)
+    NUM=$((10#${TASK#s})); N=$(printf "%03d" "$NUM")
+    PROMPT="TASK: write ONE design sheet (설계표) of the '507 Mechanical Movements' part: number $NUM. Write it in Korean.
+READ, in this order:
+ 1. docs/work-orders/20-507-속도향상.md sections 3-2, 3-3 (검사 선언 JSON), 4 (오류 유형, 설계표 새 양식 ★ 절, 난도) — follow the new sheet format exactly.
+ 2. Good examples: docs/mm507-sheets/101.md, 104.md, 131.md (same format, already built and verified).
+ 3. The original text: in public/mm507/catalog.json the entry with \"n\": $NUM (fields en, ko, easy).
+ 4. The engraving public/mm507/fig/$N.png — LOOK at it if you can view images. Count the parts, which part touches/meshes which, what is fixed and what moves, what drives. Letters (A, B, …) in the engraving match the text.
+ 5. src/mm507/kit/index.ts and the kit files it re-exports, plus existing per-number kits src/mm507/kit/k*.ts — reuse functions; read only.
+WRITE docs/mm507-sheets/$N.md with: 판화 묘사·원문 요지, ## ★ 판화 읽기 (질문표), 구동, 부품과 치수 (coordinates, radii, teeth, z), ## ★ 줄·벨트 표, ## ★ 연결 표 (every part is supported — nothing floats), ## ★ 깊이 계산 (z -0.25~0.8, x ±2.2, y ≤ 3.3, include swinging arm tips), 동작 (every pose a closed function of theta or a periodic table that closes exactly each period), 표시 (rotArrow, at least 3 tag labels that follow moving parts, notes), ## ★ 검사 선언 (a fenced json block, format of section 3-3; the heading must be exactly '## ★ 검사 선언'), 확인 (t values, cam), ## ★ 난도·질문.
+Rules learned from earlier numbers: horizontal-shaft bearing rings have their hole along the shaft and posts stop at the ring surface; arrows show the real rotation direction and do not cover parts; view shows the whole display stand (pos z about 6.2~6.6); outline names for holes contain lowercase 'hole'; marker strips/nuts/rod ends must not sink into moving parts.
+If a part is missing from the kit, implement it ONLY in a new file src/mm507/kit/k$N.ts (never edit other kit files or index.ts; models import from '../kit/k$N'), and write '이미 구현됨: name(signature)' in the sheet's 키트 추가 section.
+VERIFY: node scripts/mm507/sheetlint.mjs $NUM  must show fail 0 ; npx tsc --noEmit must show no error in k$N.ts. Do not write the model file.
+$COMMON"
+    ;;
+  f[0-9]*)
+    NUM=$((10#${TASK#f})); N=$(printf "%03d" "$NUM")
+    PROMPT="TASK: fix the model of '507 Mechanical Movements' number $NUM so the automatic check passes.
+The automatic checker result is in shots/mm/auto/$N.json (fields fail, warn, checks with reasons and positions). READ it first, then docs/mm507-sheets/$N.md (the design sheet), src/mm507/models/m$N.ts, and the kit files it imports. LOOK at shots/mm/auto/$N-cmp.png and $N-close.png and the engraving public/mm507/fig/$N.png if you can view images.
+Fix every fail (and real warns: parts sinking into each other, floating parts, labels covering parts) by editing src/mm507/models/m$N.ts and, only if the cause is there, src/mm507/kit/k$N.ts. Keep the mechanism, the ratios and the engraving layout. Do not edit shared kit files.
+VERIFY: npx tsc --noEmit (no error in your files); node scripts/mm507/autocheck.mjs $NUM  must end with fail 0. Add 2~3 lines at the end of docs/mm507-sheets/$N.md under '## 자동 검사 후 수정 (GLM)'.
+$COMMON"
+    ;;
   *)
     N=$(printf "%03d" "$TASK")
     NUM=$((10#$TASK))

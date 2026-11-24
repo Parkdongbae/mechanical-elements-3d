@@ -35,7 +35,7 @@ export default function buildM029(): MovementModel {
   gearMesh.rotation.x = -Math.PI / 2;
   gear.add(gearMesh, rod(v(0, -0.66, 0), v(0, 0.66, 0), 0.03));
   const flag = mesh(new THREE.BoxGeometry(0.1, 0.02, 0.02), paint(0xf2b619));
-  flag.position.set(0.06, 0.6, 0);
+  flag.position.set(0.06, 0.645, 0); // 위 고리(윗면 +0.63) 위에서 돈다 — 전에는 고리·연결 막대를 지나갔다
   gear.add(flag);
   g.add(gear);
 

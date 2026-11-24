@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { brass, bronze, darkSteel, paint } from '../../models/materials';
 import { lathe, merge, mesh, steppedProfile, tubeProfile, TAU, type V2 } from '../../models/parts/geom';
 import { ROPE_R } from './belt';
+import { setMM } from './mm';
 
 function meshAt(geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number): THREE.Mesh {
   const m = mesh(geo, mat);
@@ -34,8 +35,11 @@ export function pulley(r: number, opts: PulleyOpts = {}): THREE.Group {
   const g = new THREE.Group();
   // 림 단면 (r, 축방향) — 바깥 모서리 모따기, 끝에서 안벽까지 닫는다
   let prof: V2[];
+  // 검사 표식(userData.mm): 림 종류·홈 바닥·가장 바깥 반지름
+  const mm: Record<string, unknown> = { kind: 'wheel', fn: 'pulley', axis: 'z', r, width: w, span: [-h, h] };
   if (opts.grooved === true) {
     const gd = r * 0.16 + 0.006;
+    Object.assign(mm, { rim: 'groove', groove: 'v', bottom: r - gd, outer: r });
     const gw = Math.min(w * 0.32, 0.055);
     const gd2 = gd * 0.7;
     prof = [
@@ -52,6 +56,7 @@ export function pulley(r: number, opts: PulleyOpts = {}): THREE.Group {
       [rimIn, -h]
     ];
   } else if (opts.crowned === true) {
+    Object.assign(mm, { rim: 'flat', crowned: true, bottom: r, outer: r * 1.02 });
     prof = [
       [rimIn, -h],
       [r - c, -h],
@@ -65,6 +70,7 @@ export function pulley(r: number, opts: PulleyOpts = {}): THREE.Group {
       [rimIn, -h]
     ];
   } else if (opts.flat === true) {
+    Object.assign(mm, { rim: 'flat', bottom: r, outer: r });
     prof = [
       [rimIn, -h],
       [r - c, -h],
@@ -79,6 +85,7 @@ export function pulley(r: number, opts: PulleyOpts = {}): THREE.Group {
     const rc = r + 0.01;
     const gr = Math.min(ROPE_R + 0.004, h - 0.012);
     const fl = r + 0.04; // 로프(바깥 r + 0.055)가 플랜지 위로 살짝 드러나게
+    Object.assign(mm, { rim: 'groove', groove: 'round', bottom: rc - gr, outer: fl, ropeR: rc });
     prof = [
       [rimIn, -h],
       [fl - c, -h],
@@ -128,6 +135,7 @@ export function pulley(r: number, opts: PulleyOpts = {}): THREE.Group {
   // 표시점: 앞면 림에 밝은 한 점 — 회전이 보이게
   const markGeo = new THREE.BoxGeometry(r * 0.2, 0.014, 0.01);
   g.add(meshAt(markGeo, paint(0xf2b619), opts.flat === true || opts.grooved === true || opts.crowned === true ? r * 0.84 : (rimIn + r) / 2, 0, h + 0.004));
+  setMM(g, mm);
   return g;
 }
 
@@ -163,6 +171,10 @@ export function steppedPulley(radii: number[], stepWidth = 0.09): THREE.Group {
   // 표시점: 가장 작은 단차 앞면
   const markGeo = new THREE.BoxGeometry(0.03, Math.max(0.024, rMin * 0.36), 0.01);
   g.add(meshAt(markGeo, paint(0xf2b619), 0, (bore + rMin) / 2, W / 2 + 0.004));
+  setMM(g, {
+    kind: 'wheel', fn: 'steppedPulley', axis: 'z', rim: 'flat', r: rs[0]!, bottom: rs[0]!, outer: rs[0]!, width: W, span: [-W / 2, W / 2],
+    steps: rs.map((rr, i) => ({ r: rr, z0: -W / 2 + i * stepWidth, z1: -W / 2 + (i + 1) * stepWidth }))
+  });
   return g;
 }
 
@@ -191,5 +203,9 @@ export function conePulley(r0: number, r1: number, length: number, curved = fals
   const rr = r0 + (r1 - r0) * t + bulge * Math.sin(Math.PI * t);
   const markGeo = new THREE.BoxGeometry(0.024, 0.012, 0.05);
   g.add(meshAt(markGeo, paint(0xf2b619), length * 0.12, rr + 0.007, 0));
+  setMM(g, {
+    kind: 'wheel', fn: 'conePulley', axis: 'x', rim: 'flat', r0, r1, length, curved, bulge,
+    r: Math.max(r0, r1), outer: Math.max(r0, r1) + bulge, width: length, span: [-length / 2, length / 2]
+  });
   return g;
 }

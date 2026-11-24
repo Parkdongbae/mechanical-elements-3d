@@ -55,7 +55,7 @@ export default function buildM036(): MovementModel {
   g.add(pinion);
 
   // 세운 고정 막대(홈) + 받침
-  const barShape = roundedRect(-0.07, 0.32, 0.07, 1.62, 0.03);
+  const barShape = roundedRect(-0.07, 0.33, 0.07, 1.62, 0.03); // 모따기(0.008) 아랫끝이 받침 윗면(0.32) 위에 앉게
   const slot = new THREE.Path();
   slot.absarc(0, YC - 0.48, 0.032, 0, Math.PI, false);
   slot.lineTo(-0.032, YC - 0.9);

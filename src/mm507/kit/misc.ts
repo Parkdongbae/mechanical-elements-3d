@@ -4,6 +4,7 @@ import { darkSteel, glow, paint, steel, wood } from '../../models/materials';
 import { annularSector, extrude, lathe, mesh, rodProfile, roundedRect, stadiumShape } from '../../models/parts/geom';
 import { makeLabelSprite } from '../../machines/stlShared';
 import type { V2 as BV2 } from './belt';
+import { setMM } from './mm';
 
 function meshAt(geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number): THREE.Mesh {
   const m = mesh(geo, mat);
@@ -22,6 +23,9 @@ export function weight(w: number, h: number): THREE.Mesh {
   m.add(ring);
   const mark = meshAt(new THREE.BoxGeometry(w * 0.5, 0.012, 0.008), paint(0xf2b619), 0, 0, d / 2 + 0.001);
   m.add(mark);
+  // 검사 표식: 추 몸통 + 고리(줄 끝이 붙을 자리 = 고리 꼭대기)
+  setMM(m, { kind: 'weight', w, h, d, top: [0, h / 2, 0], ring: [0, h / 2 + w * 0.1, 0] });
+  setMM(ring, { kind: 'anchor', of: 'weight', point: [0, w * 0.16, 0], center: [0, 0, 0], ring: w * 0.16, tube: w * 0.045 });
   return m;
 }
 
@@ -41,6 +45,7 @@ export function lever(length: number, opts: { handle?: boolean } = {}): THREE.Gr
     const hg = lathe(rodProfile(0.02, 0, 0.14, 0.008, 0.008), 24);
     g.add(meshAt(hg, wood(), length - 0.02, 0.05, 0));
   }
+  setMM(g, { kind: 'lever', length, pivot: [0, 0, 0], tip: [length, 0, 0] });
   return g;
 }
 
@@ -51,7 +56,8 @@ export function rotArrow(r: number, ccw: boolean): THREE.Group {
   const span = (250 * Math.PI) / 180;
   const a0 = -Math.PI * 0.35;
   const a1 = ccw ? a0 + span : a0 - span;
-  const arcGeo = extrude(annularSector(r - 0.02, r + 0.02, a0, a1), 0.014, 0.004, 16);
+  // annularSector 는 a0 → a1 을 반시계로 그린다. 시계 화살표는 끝점을 바꿔 넣어야 250° 호가 된다(그대로 넣으면 남은 110° 가 그려짐)
+  const arcGeo = extrude(annularSector(r - 0.02, r + 0.02, ccw ? a0 : a1, ccw ? a1 : a0), 0.014, 0.004, 16);
   g.add(mesh(arcGeo, mat));
   // 화살촉: 끝점 접선 방향으로 눕힌 원뿔
   const ae = a1;
@@ -69,6 +75,7 @@ export function rotArrow(r: number, ccw: boolean): THREE.Group {
     o.layers.set(1);
     o.userData.noAO = true;
   });
+  setMM(g, { kind: 'arrow', r, ccw });
   return g;
 }
 
@@ -79,6 +86,7 @@ export function tag(text: string, pos: THREE.Vector3): THREE.Sprite {
   s.position.copy(pos);
   s.name = 'mm-tag';
   s.userData.mmTag = true;
+  setMM(s, { kind: 'tag', text });
   return s;
 }
 

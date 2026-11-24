@@ -4,6 +4,7 @@ import { brass, bronze, darkSteel, paint } from '../../models/materials';
 import { circlePts, lathe, loft, merge, mesh, tubeProfile, TAU, type LoftLayer } from '../../models/parts/geom';
 import { involuteOutline } from '../../models/parts/gears';
 import type { V2 } from './belt';
+import { setMM } from './mm';
 
 function meshAt(geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number): THREE.Mesh {
   const m = mesh(geo, mat);
@@ -177,6 +178,7 @@ export function mangleTrack(o: MangleOpts): MangleTrack {
     group.add(mesh(loft(offsetCurve(rp + 1.25 * m + wall), [toothed], layers), bronze({ roughness: 0.4 })));
     group.userData.outlines = { hole: toothed }; // 검사용(2D 윤곽)
   }
+  setMM(group, { kind: 'gear', fn: 'mangleTrack', teeth: o.loopTeeth, module: m, pinionTeeth: z, internal: !rib, rib, width: w, axis: 'z', noncircular: true }); // 검사 표식
 
   // 풀이표: 경로를 촘촘히 샘플해 θp(s) 단조 감소 테이블을 만든다
   const NT = 4000;
@@ -283,6 +285,7 @@ export function partialGear(teeth: number, module: number, from: number, count: 
   // 표시점: 이가 있는 구간 첫 이 쪽 스포크 위
   const markGeo = new THREE.BoxGeometry(Math.max(0.03, rp * 0.1), 0.016, 0.01);
   g.add(meshAt(markGeo, paint(0xf2b619), (hubOut + rRim) / 2, 0, w * 0.2 + 0.004));
+  setMM(g, { kind: 'gear', fn: 'partialGear', teeth, module, internal: false, rp, ra, rf, width: w, axis: 'z', from, count }); // 검사 표식
   return g;
 }
 
@@ -322,6 +325,7 @@ export function flutedCone(ribs: number, rBottom: number, rTop: number, height: 
   g.add(mesh(geo, opts.driver === true ? bronze({ roughness: 0.34 }) : brass()));
   // 표시점: 윗면 리브 0 자리
   g.add(meshAt(new THREE.BoxGeometry(rTop * 0.3, 0.012, 0.03), paint(0xf2b619), rTop * 0.62, height + 0.002, 0));
+  setMM(g, { kind: 'gear', fn: 'flutedCone', teeth: ribs, ribs, rBottom, rTop, height, internal: false, axis: 'y' }); // 검사 표식
   return g;
 }
 
@@ -371,8 +375,11 @@ export function herringboneGear(teeth: number, module: number, opts: Herringbone
   const hubGeo = lathe(tubeProfile(bore, bore + 0.035, -(h + 0.035), h + 0.035, 0.008), 32);
   hubGeo.rotateX(Math.PI / 2);
   g.add(mesh(hubGeo, darkSteel()));
-  // 표시선: 이끝 위에 얹은 가는 노란 띠(폭 전체) — 회전이 보이게
-  g.add(meshAt(new THREE.BoxGeometry(0.012, 0.012, w * 0.98), paint(0xf2b619), ra + 0.002, 0, 0));
+  // 표시선: 앞면에 얹은 반지름 방향 노란 띠 — 회전이 보이게.
+  // (이끝 위 각 0 에 두면 그 자리가 이 사이 골이라 상대 기어의 이에 박힌다 — autocheck 가 040 에서 잡음)
+  const markLen = rf - (bore + 0.035) - 0.02;
+  g.add(meshAt(new THREE.BoxGeometry(markLen, 0.014, 0.006), paint(0xf2b619), bore + 0.035 + 0.01 + markLen / 2, 0, w / 2 + 0.002));
+  setMM(g, { kind: 'gear', fn: 'herringboneGear', teeth, module, internal: false, rp, ra, rf, width: w, axis: 'z', hand }); // 검사 표식
   return g;
 }
 
@@ -538,6 +545,9 @@ export function varSectorPair(o: VarSectorPairOpts): VarSectorPair {
   const b = build(olB, false, [Math.PI + Kof(o.start), Math.PI + Kof(t1)]);
   a.userData.outline = olA; // 검사용(2D 윤곽)
   b.userData.outline = olB;
+  for (const [gg, role] of [[a, 'a'], [b, 'b']] as const) {
+    setMM(gg, { kind: 'gear', fn: 'varSectorPair', role, teeth: o.teeth, module: m, internal: false, noncircular: true, center: d, width: w, axis: 'z' }); // 검사 표식
+  }
   a.userData.arcCheck = sB[N]! / S; // 두 피치 곡선 호장 비(구름이면 1)
   const split = (thetaA: number): { q: number; tau: number } => {
     const q = Math.floor(thetaA / TAU);
