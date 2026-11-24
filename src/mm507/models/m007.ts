@@ -57,7 +57,7 @@ export default function buildM007(): MovementModel {
   const g = new THREE.Group();
   let theta = 0; // 위 구동 풀리 각
   let T = 0; // 벨트 타임라인(|speed|로 누적)
-  let aB = 0; // 축 b 마스터 각 — A·B·C 는 늘 맞물려 αa = -αb, αC = αb
+  let aB = 0; // 축 b 마스터 각 — A·B·C 는 늘 맞물려 αa = -αb, αC = αa (접점 속도: A 윗점 ωa·R = C 왼점 ωc·R)
   let wMech = 0; // 기구(축 b) 각속도
   let thL = 0; // 헐거운 풀리 각(따로 누적)
   let wLoose = 0;
@@ -127,7 +127,9 @@ export default function buildM007(): MovementModel {
   // 벨트: U ↔ 아래 풀리, YZ 평면 경로를 x = bx 평면에 놓고 그룹 x만 옮긴다
   const beltPath = openBeltPath([2.65, 0.15], 0.39, [0.95, 0.15], 0.37);
   // 판화처럼 정면에서 띠가 보이는 납작 벨트(축이 X 방향이라 로프는 옆선만 보인다)
-  const belt = new Belt(beltPath.map(([a, b]) => v(0, a, b)), { width: 0.14, thickness: 0.025, style: 'flat' });
+  const beltPts = beltPath.map(([a, b]) => v(0, a, b));
+  // 축이 X 방향이라 띠 폭도 점마다 X — 기본 계산은 YZ 평면 경로에서 띠를 세워 버린다
+  const belt = new Belt(beltPts, { width: 0.14, thickness: 0.025, style: 'flat', widthDirs: beltPts.map(() => new THREE.Vector3(1, 0, 0)) });
   belt.group.position.x = 0.93;
   g.add(belt.group);
 
@@ -202,9 +204,9 @@ export default function buildM007(): MovementModel {
       gA.quaternion.copy(q);
       q.setFromAxisAngle(XA, aB).multiply(QYm90);
       gB.quaternion.copy(q);
-      q.setFromAxisAngle(YA, aB + PITCH / 2).multiply(QX90);
+      q.setFromAxisAngle(YA, -aB + PITCH / 2).multiply(QX90); // C 는 축 a 와 같은 부호
       gC.quaternion.copy(q);
-      plate.rotation.y = aB + PITCH / 2;
+      plate.rotation.y = -aB + PITCH / 2;
     }
   };
 }
