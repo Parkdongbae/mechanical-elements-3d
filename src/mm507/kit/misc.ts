@@ -56,7 +56,8 @@ export function rotArrow(r: number, ccw: boolean): THREE.Group {
   const span = (250 * Math.PI) / 180;
   const a0 = -Math.PI * 0.35;
   const a1 = ccw ? a0 + span : a0 - span;
-  const arcGeo = extrude(annularSector(r - 0.02, r + 0.02, a0, a1), 0.014, 0.004, 16);
+  // annularSector 는 a0 → a1 을 반시계로 그린다. 시계 화살표는 끝점을 바꿔 넣어야 250° 호가 된다(그대로 넣으면 남은 110° 가 그려짐)
+  const arcGeo = extrude(annularSector(r - 0.02, r + 0.02, ccw ? a0 : a1, ccw ? a1 : a0), 0.014, 0.004, 16);
   g.add(mesh(arcGeo, mat));
   // 화살촉: 끝점 접선 방향으로 눕힌 원뿔
   const ae = a1;
