@@ -375,8 +375,10 @@ export function herringboneGear(teeth: number, module: number, opts: Herringbone
   const hubGeo = lathe(tubeProfile(bore, bore + 0.035, -(h + 0.035), h + 0.035, 0.008), 32);
   hubGeo.rotateX(Math.PI / 2);
   g.add(mesh(hubGeo, darkSteel()));
-  // 표시선: 이끝 위에 얹은 가는 노란 띠(폭 전체) — 회전이 보이게
-  g.add(meshAt(new THREE.BoxGeometry(0.012, 0.012, w * 0.98), paint(0xf2b619), ra + 0.002, 0, 0));
+  // 표시선: 앞면에 얹은 반지름 방향 노란 띠 — 회전이 보이게.
+  // (이끝 위 각 0 에 두면 그 자리가 이 사이 골이라 상대 기어의 이에 박힌다 — autocheck 가 040 에서 잡음)
+  const markLen = rf - (bore + 0.035) - 0.02;
+  g.add(meshAt(new THREE.BoxGeometry(markLen, 0.014, 0.006), paint(0xf2b619), bore + 0.035 + 0.01 + markLen / 2, 0, w / 2 + 0.002));
   setMM(g, { kind: 'gear', fn: 'herringboneGear', teeth, module, internal: false, rp, ra, rf, width: w, axis: 'z', hand }); // 검사 표식
   return g;
 }
