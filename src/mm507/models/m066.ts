@@ -87,7 +87,7 @@ export default function buildM066(): MovementModel {
   // 회전 화살표
   const ab = rotArrow(0.45, true);
   ab.position.set(OX, OY, 0.12);
-  const aw = rotArrow(0.2, true);
+  const aw = rotArrow(0.2, false); // 웜은 +X 둘레 음의 회전(시계)
   aw.rotation.y = Math.PI / 2;
   aw.position.set(0.75, WORM_Y, 0);
   g.add(ab, aw);
@@ -105,7 +105,7 @@ export default function buildM066(): MovementModel {
   let pNow = 0;
   let phaseNow = '올림';
   function pose(): void {
-    worm.rotation.x = 24 * theta;
+    worm.rotation.x = -24 * theta; // 오른나사: +X 둘레 음의 회전이어야 위쪽 접점이 +X 로 가서 웜기어가 반시계로 돈다
     wheel.rotation.z = theta + Math.PI / 2 - Math.PI / 24;
     const c = (((theta + 2.1) % TAU) + TAU) % TAU;
     const { alpha, phase } = armAngle(c);
