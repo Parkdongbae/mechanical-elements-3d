@@ -23,6 +23,8 @@ import {
   type V2
 } from '../kit';
 import { carrierArm, guideRoller, ringFlange } from '../kit/k057';
+import { lathe, mesh, rodProfile } from '../../models/parts/geom';
+import { wood } from '../../models/materials';
 
 // ── 치수(설계표 057) ──
 const MOD = 0.035;
@@ -120,7 +122,13 @@ export default function buildM057(): MovementModel {
   const topFront = pulley(R_TOP, { width: 0.12, driver: true });
   topFront.name = 'topPulleyFront';
   topFront.position.z = ZR;
-  const crank = lever(CRANK_LEN, { handle: true });
+  // 크랭크 손잡이는 팔 끝에서 앞(+Z, 보는 사람 쪽)으로 선다 — 키트 lever 의 손잡이는 팔과 같은 면에 눕는 지렛대용이라 쓰지 않는다
+  const crank = lever(CRANK_LEN);
+  const gripGeo = lathe(rodProfile(0.022, 0, 0.16, 0.008, 0.01), 24);
+  gripGeo.rotateX(Math.PI / 2); // 축 +Y → +Z
+  const grip = mesh(gripGeo, wood());
+  grip.position.set(CRANK_LEN - 0.02, 0, 0.045);
+  crank.add(grip);
   crank.position.z = 0.42;
   crank.rotation.z = CRANK_A0;
   top.add(topBack, topFront, crank);
