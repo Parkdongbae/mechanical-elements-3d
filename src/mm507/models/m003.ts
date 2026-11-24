@@ -80,7 +80,7 @@ function ropePath(): { pts: THREE.Vector3[]; wds: THREE.Vector3[] } {
     ccw: boolean
   ): void => {
     const d = ccw ? wrap(a1 - a0) : wrap(a0 - a1);
-    const n = Math.max(2, Math.ceil((d * r) / SPACING));
+    const n = Math.max(2, Math.ceil((d * r) / SPACING), Math.ceil(d / 0.09));
     for (let i = 0; i < n; i++) {
       const a = a0 + ((ccw ? d : -d) * i) / n;
       pts.push(v3(cx + r * Math.cos(a), cy + r * Math.sin(a), z));

@@ -11,15 +11,16 @@ const RG = 0.16; // G(종동·수직축) 코어 반지름
 const HB = 0.01; // 로프 중심 = 풀리 r + 0.01 (기본 홈 바닥)
 const Z0 = 0.25; // T·L·R 풀리와 로프 평면 높이
 const CT: V2 = [0, 2.7];
-const CR: V2 = [1.25, 1.05];
-const CL: V2 = [-1.25, 1.05];
+// 안내 풀리 높이를 ±0.05 달리해 아랫가닥이 드럼의 위 칸·아래 칸으로 거의 수평으로 드나들게 한다(감긴 줄과 닿지 않게)
+const CR: V2 = [1.25, 1.1];
+const CL: V2 = [-1.25, 1.0];
 const RTB = RT + HB;
 const RLB = RL + HB;
 const GR = RG + ROPE_R + 0.004; // 드럼 위 로프 중심 반지름(코어에 앉는다)
-const GY = CR[1] - RLB; // G 중심 y = 안내 풀리 밑점 높이(감김 구간의 가운데)
+const GY = (CR[1] + CL[1]) / 2 - RLB; // G 중심 y = 두 안내 풀리 밑점 높이의 가운데(감김 구간의 가운데)
 const GZ = Z0 + GR; // 드럼 뒷면이 로프 평면(z = Z0)에 닿는다 → 아랫가닥이 평면을 벗어나지 않고 곧게 들어온다
 const NT = 3; // 드럼에 감기는 바퀴 수
-const PITCH = 2.5 * ROPE_R; // 한 바퀴에 내려가는 높이 (> 로프 지름)
+const PITCH = 2.9 * ROPE_R; // 한 바퀴에 내려가는 높이 (> 로프 지름)
 const STEP = 0.03; // 로프 점 간격 (꼬임 무늬가 매끈하도록 촘촘히)
 const ZX = 0.05; // 엇걸이 교차점에서 가닥 하나가 벌어지는 z (간격 0.10 > 로프 지름 0.09)
 const TAU = Math.PI * 2;
@@ -45,10 +46,10 @@ function crossT(a: V2, b: V2, c: V2, d: V2): number {
 
 /** 드럼 위 나선: 뒷면(z = Z0)에서 −X 쪽으로 감겨 들어가 NT 바퀴 뒤 같은 자리에서 나온다.
  *  들어오고 나가는 가닥의 기울기 m(진행 방향으로 올라가는 쪽 +)과 꺾임 없이 이어지도록
- *  처음·끝 1/8 바퀴 동안만 기울기를 m → −k(나선 기울기)로 바꾼다. 반환: 호장별 높이 변화 dy[] */
+ *  처음·끝 1/12 바퀴 동안만 기울기를 m → −k(나선 기울기)로 바꾼다. 반환: 호장별 높이 변화 dy[] */
 function helixDy(m: number, n: number): number[] {
   const S = NT * TAU * GR;
-  const b = (TAU * GR) / 8;
+  const b = (TAU * GR) / 12;
   const k = PITCH / (TAU * GR);
   const sl = (s: number): number => {
     if (s < b) return m + (-k - m) * (s / b);
@@ -81,7 +82,7 @@ export default function buildM004(): MovementModel {
 
   // ── 로프 경로 ──────────────────────────────────────────────
   // 나선의 시작·끝 높이(yS > yE)와 아랫가닥 접선을 함께 푼다 (가닥 기울기 ↔ 나선 높이, 몇 번 반복이면 수렴)
-  const nH = Math.ceil((NT * TAU * GR) / STEP);
+  const nH = Math.ceil((NT * TAU * GR) / 0.02);
   let dyH = helixDy(0, nH);
   let yS = GY - dyH[nH]! / 2;
   let yE = GY + dyH[nH]! / 2;
@@ -115,7 +116,7 @@ export default function buildM004(): MovementModel {
     const a0 = Math.atan2(p0[1] - c[1], p0[0] - c[0]);
     const a1 = Math.atan2(p1[1] - c[1], p1[0] - c[0]);
     const d = ccw ? wrap(a1 - a0) : wrap(a0 - a1);
-    const n = Math.max(2, Math.ceil((d * r) / STEP));
+    const n = Math.max(2, Math.ceil((d * r) / STEP), Math.ceil(d / 0.09));
     for (let i = 0; i < n; i++) {
       const a = a0 + ((ccw ? d : -d) * i) / n;
       path.push(v(c[0] + r * Math.cos(a), c[1] + r * Math.sin(a), Z0));
