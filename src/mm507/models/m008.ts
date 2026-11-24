@@ -1,7 +1,7 @@
 // 008 단차(계단) 풀리 변속 — 단차 풀리 2개가 위아래 서로 반대 장착, 벨트가 단을 옮겨 다니며 속도 변환 (판화 8번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, PILLOW_BOSS_Y, STAGE, displayStand, openBeltPath, pillow, rod, steppedPulley, tag } from '../kit';
+import { Belt, PILLOW_BOSS_Y, STAGE, displayStand, pillow, rod, steppedPulley, tag } from '../kit';
 import { castIron } from '../../models/materials';
 
 const RU = [0.50, 0.38, 0.26]; // 위(구동) 풀리 단 반지름 — 단 0·1·2 (큰 단이 왼쪽)
@@ -24,10 +24,49 @@ const smooth = (x: number): number => {
   return c * c * (3 - 2 * c);
 };
 
-/** x 위치의 YZ 평면 열린 벨트 경로: openBeltPath(z,y) → (x, y, z) */
-function beltPath(x: number, ru: number, rl: number): THREE.Vector3[] {
-  return openBeltPath([Z0, YT], ru + E, [Z0, YB], rl + E).map((p) => v3(x, p[1], p[0]));
+type P2 = [number, number];
+
+/** 열린 벨트 경로(닫힌 점열) — 키트 openBeltPath 와 같은 점 순서·점 수. 단, r1<r2(위 단이 작고 아래 단이 큰 경우)에서
+ *  atan2 각이 뒤집혀 호가 풀리 사이로 돌고 벨트가 감겨 엉키던 문제를 각 증분 정규화(0, 2π])로 피한다 */
+function openPath(c1: P2, r1: number, c2: P2, r2: number, seg = 24): P2[] {
+  const dx = c2[0] - c1[0];
+  const dy = c2[1] - c1[1];
+  const D = Math.hypot(dx, dy);
+  const ax = dx / D;
+  const ay = dy / D;
+  const lx = -ay;
+  const ly = ax;
+  const sb = Math.max(-0.999, Math.min(0.999, (r1 - r2) / D));
+  const cb = Math.sqrt(1 - sb * sb);
+  const aUp = Math.atan2(sb * ay + cb * ly, sb * ax + cb * lx);
+  const aLo = Math.atan2(sb * ay - cb * ly, sb * ax - cb * lx);
+  const TAU = Math.PI * 2;
+  const pos = (d: number): number => {
+    const x = d % TAU;
+    return x <= 0 ? x + TAU : x;
+  };
+  const pts: P2[] = [];
+  const add = (c: P2, r: number, a: number): void => {
+    pts.push([c[0] + Math.cos(a) * r, c[1] + Math.sin(a) * r]);
+  };
+  const d2 = pos(aUp - aLo);
+  const d1 = pos(aLo - aUp);
+  add(c1, r1, aLo);
+  add(c2, r2, aLo);
+  for (let i = 1; i < seg; i++) add(c2, r2, aLo + (d2 * i) / seg);
+  add(c2, r2, aUp);
+  add(c1, r1, aUp);
+  for (let i = 1; i < seg; i++) add(c1, r1, aUp + (d1 * i) / seg);
+  return pts;
 }
+
+/** x 위치의 YZ 평면 열린 벨트 경로: (z,y) → (x, y, z) */
+function beltPath(x: number, ru: number, rl: number): THREE.Vector3[] {
+  return openPath([Z0, YT], ru + E, [Z0, YB], rl + E).map((p) => v3(x, p[1], p[0]));
+}
+
+/** 축이 X 이므로 띠 폭 방향은 모든 점에서 X — 기본 계산은 YZ 경로에서 띠를 세워 비튼다 */
+const WIDTH_X = (): THREE.Vector3[] => Array.from({ length: 50 }, () => v3(1, 0, 0));
 
 /** X 방향 축 1개: 막대 + 양끝 필로(뒤판에서 나온 브래킷 상자 위) */
 function shaftLine(g: THREE.Group, y: number): void {
@@ -75,7 +114,7 @@ export default function buildM008(): MovementModel {
   g.add(pTop, pBot);
 
   // 벨트: 단 0(x=−0.2)에서 시작, 단이 바뀔 때 경로 재생성
-  const belt = new Belt(beltPath(XS[0]!, RU[0]!, RL[0]!), { width: 0.1, style: 'flat' });
+  const belt = new Belt(beltPath(XS[0]!, RU[0]!, RL[0]!), { width: 0.1, style: 'flat', widthDirs: WIDTH_X() });
   g.add(belt.group);
 
   g.add(tag('구동축', v3(-1.3, YT + 0.3, Z0 + 0.1)));
@@ -107,7 +146,7 @@ export default function buildM008(): MovementModel {
       pTop.rotation.x = -theta;
       pBot.rotation.x = -thetaD;
       if (Math.abs(x - lastX) > 1e-9) {
-        belt.setPath(beltPath(x, ru, rl));
+        belt.setPath(beltPath(x, ru, rl), WIDTH_X());
         lastX = x;
       }
       belt.setOffset(s);

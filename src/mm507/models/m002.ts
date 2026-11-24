@@ -1,39 +1,47 @@
 // 002 엇걸이(교차) 벨트 — 벨트가 가운데서 X자로 교차, 두 풀리가 반대 방향 1:1 (판화 2번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, crossedBeltPath, displayStand, pulley, rotArrow, shaftZ, tag, type V2 } from '../kit';
+import { Belt, ROPE_R, beltPathAround, displayStand, pulley, rotArrow, shaftZ, tag, type V2 } from '../kit';
 
 const RA = 0.52; // 풀리 A(구동) 반지름
 const RB = 0.52; // 풀리 B(종동) 반지름
-const RP = 0.53; // 벨트 중심선 반지름(림 위)
 const CA: V2 = [0, 2.55]; // A 중심
 const CB: V2 = [0, 0.95]; // B 중심
 const Z = 0.25; // 풀리·호 높이
-const DZ = 0.03; // 교차점에서 가닥을 띄우는 반칸 (0.22 / 0.28)
+const RP_A = RA + 0.01; // 로프 중심 반지름 = 홈 중심 반지름
+const RP_B = RB + 0.01;
+const AMP = ROPE_R + 0.01; // 교차점에서 가닥 하나가 벌어지는 z (두 가닥 간격 = 2·AMP > 2·ROPE_R)
+const SUB = 40; // 직선 가닥을 쪼개는 개수 (꼬임 무늬가 매끈하도록 촘촘히)
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 
-/** 교차 벨트 3D 점열: 호는 z=Z 고정, 두 직선 가닥에서만 z를 선형으로 달리해 교차점에서 Z∓DZ */
+/** 교차 벨트 3D 점열: 호는 홈 중심(z=Z, 반지름 r+0.01) 고정.
+ *  두 직선 가닥만 sin(π·s/L) 로 z 를 ±AMP 벌려 교차점에서 서로 겹치지 않게 한다. */
 function crossedPath3D(): THREE.Vector3[] {
-  const seg = 24;
-  const flat = crossedBeltPath(CA, RP, CB, RP, seg);
-  const mid = (a: V2, b: V2): V2 => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const seg = 72;
+  // A 반시계·B 시계로 감는 엇걸이 경로 (점 배치가 아래 주석과 같도록 beltPathAround 를 쓴다)
+  const flat = beltPathAround(
+    [
+      { c: CA, r: RP_A, ccw: true },
+      { c: CB, r: RP_B, ccw: false }
+    ],
+    seg
+  );
+  // 레이아웃: [0]=A 출발점, [1]=B 도착점, B 호 …, [seg+1]=B 출발점, [seg+2]=A 도착점, A 호 …
   const out: THREE.Vector3[] = [];
-  const put = (p: V2, z: number): void => {
-    out.push(v(p[0], p[1], z));
+  const strand = (p: V2, q: V2, sign: number): void => {
+    for (let i = 0; i <= SUB; i++) {
+      const u = i / SUB;
+      out.push(v(p[0] + (q[0] - p[0]) * u, p[1] + (q[1] - p[1]) * u, Z + sign * AMP * Math.sin(Math.PI * u)));
+    }
   };
-  // 가닥 1(A 접점 → B 접점): 교차점에서 Z−DZ
-  put(flat[0]!, Z);
-  put(mid(flat[0]!, flat[1]!), Z - DZ);
-  put(flat[1]!, Z);
-  // B 주위 호(인덱스 2..seg)
-  for (let i = 2; i <= seg; i++) put(flat[i]!, Z);
-  // 가닥 2(B 접점 → A 접점): 교차점에서 Z+DZ
-  put(flat[seg + 1]!, Z);
-  put(mid(flat[seg + 1]!, flat[seg + 2]!), Z + DZ);
-  put(flat[seg + 2]!, Z);
-  // A 주위 호(인덱스 seg+3..끝)
-  for (let i = seg + 3; i < flat.length; i++) put(flat[i]!, Z);
+  const arcPts = (from: number, to: number): void => {
+    for (let i = from; i < to; i++) out.push(v(flat[i]![0], flat[i]![1], Z));
+  };
+  strand(flat[0]!, flat[1]!, -1); // 가닥 1(A→B): 교차점에서 Z−AMP, 양 끝은 Z
+  arcPts(2, seg + 1); // B 호 (끝점 제외한 내부 점)
+  strand(flat[seg + 1]!, flat[seg + 2]!, +1); // 가닥 2(B→A): Z+AMP
+  arcPts(seg + 3, flat.length); // A 호
   return out;
 }
 
@@ -51,7 +59,7 @@ export default function buildM002(): MovementModel {
   g.add(pA, pB, shaftZ(CA[0], CA[1]), shaftZ(CB[0], CB[1]));
 
   // 엇걸이 벨트: 교차부 두 가닥의 z 를 갈라 뚫고 지나가 보이지 않게
-  const belt = new Belt(crossedPath3D(), { width: 0.13 });
+  const belt = new Belt(crossedPath3D());
   g.add(belt.group);
 
   // 회전 방향 화살표: A 반시계, B 시계
@@ -73,7 +81,7 @@ export default function buildM002(): MovementModel {
       theta += OMEGA * speed * dt;
       pA.rotation.z = theta;
       pB.rotation.z = -theta;
-      belt.setOffset(theta * RP); // 표시가 벨트 따라 흐른다
+      belt.setOffset(theta * RP_A); // 표시가 벨트 따라 흐른다
     }
   };
 }
