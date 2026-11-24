@@ -25,6 +25,8 @@ export interface Disturb {
   box?: { x0: number; x1: number; y1: number; hz: number };
   /** 디퓨저처럼 빨라지는 영역 */
   speedUp?: number;
+  /** 디퓨저 뒤쪽에서 위로 퍼지는 세기 */
+  rise?: number;
 }
 
 const tmp = new Float32Array(5);
@@ -78,7 +80,7 @@ export class FlowField {
     const c = shape.clearance;
     if (cfg.under === 0) d.push({ x: -1.5, y: c * 0.5, z: 0, len: 4, r: 0, amp: 0.95, slow: 0.45, box: { x0: -1.5, x1: 2.6, y1: c + 0.01, hz: 0.55 } });
     else if (cfg.under === 1) d.push({ x: -1.5, y: c * 0.5, z: 0, len: 4, r: 0, amp: 0.12, slow: 0.05, box: { x0: -1.5, x1: 2.2, y1: c + 0.01, hz: 0.55 } });
-    else d.push({ x: -1.5, y: c * 0.5, z: 0, len: 4, r: 0, amp: 0.08, slow: 0, speedUp: 0.35, box: { x0: -1.2, x1: 1.9, y1: c + 0.06, hz: 0.55 } });
+    else d.push({ x: -1.5, y: c * 0.5, z: 0, len: 4, r: 0, amp: 0.08, slow: 0, speedUp: 0.35, rise: 0.55, box: { x0: -1.2, x1: 1.9, y1: c + 0.18, hz: 0.55 } });
     // 스포일러
     if (wing) d.push({ x: wing.x1, y: (wing.y0 + wing.y1) / 2, z: 0, len: 1.4, r: 0.16, amp: 0.7, slow: 0.35, hz: wing.hz });
     else if (cfg.spoiler === 1) d.push({ x: XR, y: shape.yT(XR - 0.05) + 0.04, z: 0, len: 0.6, r: 0.08, amp: 0.25, slow: 0.1, hz: 0.5 });
@@ -213,6 +215,7 @@ export class FlowField {
       if (f <= 0) continue;
       if (q.speedUp) {
         vx *= 1 + q.speedUp * f;
+        if (q.rise) vy += q.rise * f * smooth(1.2, 1.85, x) * (1 - smooth(2.4, 3.2, x));
         continue;
       }
       const amp = q.amp * f;
@@ -266,6 +269,9 @@ const SEEDS: [number, number, number?][] = [];
   for (const z of [0.5, -0.5]) for (const y of [0.32, 0.52]) SEEDS.push([y, z]);
   for (const z of [0.86, -0.86]) SEEDS.push([0.92, z]);
   for (const z of [1.15, -1.15]) for (const y of [0.55]) SEEDS.push([y, z]);
+  // 차 밑(하부 처리 비교용)
+  for (const z of [0.3, -0.3]) SEEDS.push([0.06, z]);
+  for (const z of [0.15, -0.15]) SEEDS.push([0.1, z]);
   // 후류 시드: 차 바로 뒤에서 출발 — 후류의 크기·소용돌이가 부품 설정에 따라 달라지는 것이 보이게
   for (const z of [-0.45, 0, 0.45]) for (const y of [0.22, 0.48, 0.74]) SEEDS.push([y, z, 1.9]);
 }

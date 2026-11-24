@@ -31,6 +31,8 @@ export class Tunnel {
   readonly group = new THREE.Group();
   private fan = new THREE.Group();
   private belt: THREE.Mesh;
+  private floorMat: THREE.MeshStandardMaterial;
+  private floorMesh: THREE.Mesh | null = null;
   private beltTex: THREE.CanvasTexture | null;
   private mats: THREE.Material[] = [];
 
@@ -38,6 +40,7 @@ export class Tunnel {
     this.group.name = 'wind-tunnel';
     const frameM = darkSteel({ roughness: 0.5 });
     const floorM = plastic(0x8d97a3, { roughness: 0.75 });
+    this.floorMat = floorM;
     const wallM = glass(0xcfe3f5, 0.12);
     const alu = aluminum({ roughness: 0.4 });
     const fanM = steel({ roughness: 0.3 });
@@ -60,6 +63,7 @@ export class Tunnel {
     };
     // 시험 구간 바닥판
     const floor = add(new THREE.BoxGeometry(L1 - L0, 0.04, WZ * 2), floorM, (L0 + L1) / 2, -0.019, 0);
+    this.floorMesh = floor;
     floor.castShadow = false;
     // 이동 벨트(바퀴 아래 도로가 움직이는 장치)
     this.belt = add(new THREE.BoxGeometry(4.4, 0.006, 1.5), beltM, 0, 0.003, 0);
@@ -132,6 +136,15 @@ export class Tunnel {
         pad.castShadow = false;
       }
     }
+  }
+
+  /** 하부 보기: 바닥판을 반투명하게(아래로 내려간 카메라에서도 차가 보이게) */
+  setSeeThrough(on: boolean): void {
+    this.floorMat.transparent = on;
+    this.floorMat.opacity = on ? 0.22 : 1;
+    this.floorMat.depthWrite = !on;
+    this.floorMat.needsUpdate = true;
+    if (this.floorMesh) this.floorMesh.receiveShadow = !on;
   }
 
   update(dt: number, kmh: number): void {
