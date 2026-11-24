@@ -79,7 +79,6 @@ const ROLE_ROWS: { role: Role; name: string; desc: string; dot: string }[] = [
 
 export class LinkPanel {
   readonly wrap: HTMLElement;
-  private tagLayer: HTMLElement;
   private topChip: HTMLElement;
   private dock: HTMLElement;
   private ctl: HTMLElement;
@@ -110,6 +109,7 @@ export class LinkPanel {
   private shapeBtns: HTMLButtonElement[] = [];
   private speeds: { in: HTMLInputElement; val: HTMLElement; label: HTMLElement }[] = [];
   private toggles = new Map<ToggleKey, HTMLButtonElement>();
+  private chipsEl!: HTMLElement;
   private legend = new Map<Role, HTMLButtonElement>();
   private pinned: Role | null = null;
   private sliders = new Map<keyof CustomDims, { in: HTMLInputElement; out: HTMLElement }>();
@@ -126,8 +126,6 @@ export class LinkPanel {
     const wrap = el('div', 'lk-wrap');
     wrap.dataset.tab = 'list';
     this.wrap = wrap;
-    this.tagLayer = el('div', 'lk-tags');
-    this.tagLayer.setAttribute('aria-hidden', 'true');
     this.topChip = el('div', 'lk-topchip', '위에서 본 그림이에요');
     this.topChip.hidden = true;
     this.dock = el('div', 'lk-dock');
@@ -171,6 +169,7 @@ export class LinkPanel {
     main.insertBefore(this.makeSpeed('lk-speed-main'), sg);
     more.append(this.makeSpeed('lk-speed-more'));
     const chips = el('div', 'lk-chips');
+    this.chipsEl = chips;
     const tdefs: [ToggleKey, string][] = [
       ['trace', '자취'],
       ['full', '전체 경로'],
@@ -267,7 +266,7 @@ export class LinkPanel {
     this.side.append(nums, uses);
 
     this.dock.append(this.ctl, tabs, this.listPane, this.side);
-    wrap.append(this.tagLayer, this.topChip, this.dock);
+    wrap.append(this.topChip, this.dock);
     root.append(wrap);
   }
 
@@ -679,7 +678,16 @@ export class LinkPanel {
     return { x0: Math.min(x0, W * 0.45), y0: 0, x1: Math.max(x1, W * 0.55), y1: Math.max(160, Math.min(y1, H)) };
   }
 
-  get tags(): HTMLElement {
-    return this.tagLayer;
+  /** 이름표 레이어가 붙을 곳 */
+  get host(): HTMLElement {
+    return this.wrap;
+  }
+
+  /** 공용 이름표 버튼을 칩 줄 맨 앞(옛 `이름표` 칩 자리)에 넣는다 */
+  setLabelButton(b: HTMLButtonElement): void {
+    this.toggles.get('label')?.remove();
+    b.dataset.lk = 'toggle-label';
+    this.toggles.set('label', b);
+    this.chipsEl.prepend(b);
   }
 }

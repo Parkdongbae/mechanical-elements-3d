@@ -1,0 +1,845 @@
+/* 탐구 실험 19 — 물레방아(WaterMill). 색·간격·그림자는 tokens.css 변수만 사용. 접두어 wm- */
+
+.wm-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--font);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.55;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.wm-wrap *,
+.wm-wrap *::before,
+.wm-wrap *::after {
+  box-sizing: border-box;
+}
+
+.wm-wrap button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.wm-wrap :focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.wm-panel {
+  pointer-events: auto;
+  background: var(--panel);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-1);
+}
+
+/* ───────── 넓은 화면: 오른쪽 패널 + 아래 가운데 조작 막대 ───────── */
+
+.wm-dock {
+  display: contents;
+}
+
+.wm-side {
+  position: absolute;
+  right: var(--space-4);
+  top: 76px;
+  bottom: var(--space-4);
+  width: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.wm-sec {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.wm-sec + .wm-sec {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.wm-tabs {
+  display: none;
+}
+
+.wm-bar {
+  position: absolute;
+  left: var(--space-4);
+  right: calc(320px + 2 * var(--space-4));
+  bottom: var(--space-4);
+  margin: 0 auto;
+  width: max-content;
+  max-width: calc(100% - 320px - 3 * var(--space-4));
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.wm-row1 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.wm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ───────── 제목·단계·안내 ───────── */
+
+.wm-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.wm-sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.wm-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.wm-step {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  color: var(--text-dim);
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+
+.wm-step:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.wm-step.is-done {
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+.wm-step.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.wm-guide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.wm-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.wm-gtitle {
+  margin: 0;
+  font-size: 16.5px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.wm-body {
+  margin: 0;
+  font-size: 14px;
+}
+
+.wm-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.wm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.wm-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.wm-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.wm-btn.is-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+/* ───────── 조작 막대 ───────── */
+
+.wm-gate {
+  flex: none;
+  min-width: 132px;
+  min-height: 48px;
+  font-size: 15px;
+  background: var(--cat-shaft);
+  border-color: var(--cat-shaft);
+  color: #fff;
+}
+
+.wm-gate:hover:not(:disabled) {
+  border-color: var(--text);
+}
+
+.wm-gate.is-open {
+  background: var(--panel-solid);
+  color: var(--cat-shaft);
+  border-color: var(--cat-shaft);
+}
+
+.wm-gate-ico {
+  flex: none;
+}
+
+.wm-flow,
+.wm-scrub {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 220px;
+  flex: 1;
+  position: relative;
+}
+
+.wm-field-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.wm-field-l {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.wm-field-v {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--cat-shaft);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.wm-range {
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+.wm-flow .wm-range {
+  accent-color: var(--cat-shaft);
+}
+
+.wm-scale {
+  position: relative;
+  height: 16px;
+  font-size: 11.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.wm-scale span {
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+}
+
+.wm-scale .is-l {
+  left: 0;
+}
+
+.wm-scale .is-r {
+  right: 0;
+}
+
+.wm-scale .is-std {
+  left: 66.7%;
+  transform: translateX(-50%);
+  color: var(--cat-shaft);
+  font-weight: 700;
+}
+
+.wm-scrub {
+  display: none;
+}
+
+.wm-wrap[data-mode='hand'] .wm-scrub {
+  display: flex;
+}
+
+.wm-wrap[data-mode='hand'] .wm-gate,
+.wm-wrap[data-mode='hand'] .wm-flow {
+  display: none;
+}
+
+.wm-seg {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
+  gap: 3px;
+  padding: 3px;
+  border-radius: var(--radius-m);
+  background: var(--panel-sunken);
+  flex: none;
+}
+
+.wm-seg-b {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.wm-seg-b:hover {
+  color: var(--text);
+}
+
+.wm-seg-b.is-on {
+  background: var(--panel-solid);
+  color: var(--text);
+  box-shadow: var(--shadow-1);
+}
+
+.wm-chip {
+  flex: none;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.wm-chip[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.wm-chips .lab-tag-btn {
+  flex: none;
+}
+
+/* 안내 한 줄(거꾸로 돌릴 때 등) */
+.wm-note {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 150px;
+  max-width: min(440px, calc(100% - 2 * var(--space-4)));
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--warn);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  box-shadow: var(--shadow-1);
+  color: var(--warn);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s var(--ease), visibility 0.2s;
+  pointer-events: none;
+}
+
+.wm-note.is-on {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ───────── 숫자판·그래프 ───────── */
+
+.wm-h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.wm-partcard {
+  display: none;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-s);
+  background: var(--accent-soft);
+  font-size: 13px;
+}
+
+.wm-partcard.is-on {
+  display: block;
+}
+
+.wm-partcard strong {
+  display: block;
+  color: var(--accent);
+}
+
+.wm-nums {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.wm-num {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: var(--space-2);
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.wm-num:last-child {
+  border-bottom: 0;
+}
+
+.wm-num-l {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.wm-num-v {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.wm-num-b {
+  grid-column: 1 / -1;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.wm-num.is-water .wm-num-v {
+  color: var(--cat-shaft);
+}
+
+.wm-num.is-power .wm-num-v {
+  color: var(--cat-power);
+}
+
+.wm-graph {
+  margin: 0;
+  padding: var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+}
+
+.wm-graph-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wm-graph-grid {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+
+.wm-graph-tick {
+  fill: var(--text-dim);
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.wm-graph-line {
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.wm-graph-line.is-1 {
+  stroke: var(--cat-shaft);
+}
+
+.wm-graph-line.is-2 {
+  stroke: var(--cat-power);
+  stroke-dasharray: 6 4;
+}
+
+.wm-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--space-3);
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+.wm-graph-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 650;
+}
+
+.wm-graph-unit {
+  margin-left: auto;
+}
+
+/* ───────── 접이식 카드 ───────── */
+
+.wm-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--panel-solid);
+  overflow: hidden;
+}
+
+.wm-card > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  list-style: none;
+}
+
+.wm-card > summary::-webkit-details-marker {
+  display: none;
+}
+
+.wm-card > summary::after {
+  content: '';
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--text-dim);
+  border-bottom: 2px solid var(--text-dim);
+  transform: rotate(45deg);
+  transition: transform 0.18s var(--ease);
+}
+
+.wm-card[open] > summary::after {
+  transform: rotate(-135deg);
+}
+
+.wm-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-3) var(--space-3);
+  font-size: 13px;
+}
+
+.wm-card-body p {
+  margin: 0;
+}
+
+.wm-card-body .wm-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-s);
+  background: var(--panel-sunken);
+}
+
+.wm-card-body .wm-row strong {
+  font-size: 13px;
+  color: var(--cat-shaft);
+}
+
+.wm-card-body .wm-row span {
+  color: var(--text-dim);
+}
+
+.wm-card-body .wm-src {
+  font-size: 12px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere; /* 출처 URL 이 좁은 화면에서 넘치지 않게 */
+}
+
+/* ───────── 3D 이름표 강조(공용 이름표 모듈 위에 얹는다) ───────── */
+
+.wm-wrap .lab-tag[data-wm-focus='true'] .lab-tag-l {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft), var(--shadow-1);
+}
+
+.wm-wrap .lab-tag[data-wm-focus='true'] .lab-tag-dot {
+  background: var(--accent);
+}
+
+.wm-wrap[data-focus='on'] .lab-tag:not([data-wm-focus='true']) {
+  opacity: 0.6;
+}
+
+/* ───────── 좁은 화면: 하단 시트 ───────── */
+
+@media (max-width: 1099px) {
+  .wm-side {
+    width: 296px;
+  }
+
+  .wm-bar {
+    right: calc(296px + 2 * var(--space-4));
+    max-width: calc(100% - 296px - 3 * var(--space-4));
+  }
+}
+
+@media (max-width: 819px) {
+  .wm-dock {
+    pointer-events: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 46vh;
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line);
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+    box-shadow: var(--shadow-2);
+    overflow: hidden;
+  }
+
+  .wm-dock .wm-panel {
+    position: static;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    background: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .wm-bar {
+    order: 0;
+    flex: none;
+    padding: var(--space-2) var(--space-3) 0;
+    gap: 4px;
+    width: auto;
+  }
+
+  .wm-row1 {
+    gap: var(--space-2);
+  }
+
+  .wm-gate {
+    min-width: 108px;
+    padding: 0 var(--space-2);
+  }
+
+  .wm-flow,
+  .wm-scrub {
+    min-width: 0;
+  }
+
+  .wm-scale {
+    display: none;
+  }
+
+  .wm-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: var(--space-2);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wm-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wm-side {
+    order: 1;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: auto;
+    padding: 0 var(--space-3) var(--space-3);
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .wm-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 4px var(--space-3);
+    background: var(--panel-solid);
+    margin: 0 calc(var(--space-3) * -1);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .wm-tab {
+    min-height: 44px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-m);
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 750;
+  }
+
+  .wm-tab[aria-selected='true'] {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .wm-side > .wm-sec {
+    display: none;
+    padding: var(--space-3) 0 0;
+    border-top: 0;
+  }
+
+  .wm-side[data-tab='stage'] > .wm-sec[data-tab='stage'],
+  .wm-side[data-tab='nums'] > .wm-sec[data-tab='nums'],
+  .wm-side[data-tab='info'] > .wm-sec[data-tab='info'] {
+    display: flex;
+  }
+
+  .wm-note {
+    bottom: calc(46vh + 8px);
+  }
+
+  .wm-title {
+    font-size: 16.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wm-step,
+  .wm-note,
+  .wm-card > summary::after {
+    transition: none;
+  }
+}
+
+/* ───────── 확인 문제 · 보조 글 ───────── */
+
+.wm-extra {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cat-power);
+}
+
+.wm-quiz {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.wm-quiz-q {
+  font-weight: 700;
+}
+
+.wm-quiz-c {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.wm-quiz-b {
+  flex: 1 1 auto;
+}
+
+.wm-quiz-r {
+  min-height: 1.5em;
+  font-weight: 650;
+}
+
+.wm-quiz-r.is-ok {
+  color: var(--ok);
+}
+
+.wm-quiz-r.is-no {
+  color: var(--warn);
+}
+
+.wm-slot {
+  display: contents;
+}

@@ -654,6 +654,7 @@ export class WattModel implements SteamModel {
       case 'boiler': return v3(2.65, 1.0, -1.5);
       case 'fire': return v3(2.72, 0.2, -1.68);
       case 'cylinder': return v3(CYLX + 0.2, 1.3, 0.42);
+      case 'piston': return v3(CYLX + 0.12, py + PH / 2, 0.2);
       case 'jacket': return v3(CYLX + 0.41 * Math.sin(DIR + GAP / 2), 1.0, 0.41 * Math.cos(DIR + GAP / 2));
       case 'top': return v3(CYLX + 0.12, (py + PH + BORE1) / 2, 0.2);
       case 'bot': return v3(CYLX + 0.12, (BORE0 + py) / 2, 0.2);

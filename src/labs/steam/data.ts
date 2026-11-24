@@ -36,6 +36,8 @@ export interface StageDef {
 export interface MachineDef {
   id: MachineId;
   name: string;
+  /** 어느 단계에서든 늘 붙는 부품 이름(우선순위 3). 단계 tags에 같은 기준점이 있으면 단계 것만 쓴다 */
+  parts: TagDef[];
   stages: StageDef[];
 }
 
@@ -66,6 +68,19 @@ export const MACHINES: MachineDef[] = [
   {
     id: 'newcomen',
     name: '뉴커먼 기관',
+    parts: [
+      { a: 'boiler', t: '보일러' },
+      { a: 'fire', t: '화로', below: true },
+      { a: 'cylinder', t: '실린더' },
+      { a: 'piston', t: '피스톤' },
+      { a: 'beam', t: '흔들보(워킹 빔)' },
+      { a: 'chain', t: '사슬' },
+      { a: 'pumpRod', t: '펌프 막대' },
+      { a: 'cistern', t: '찬물 통' },
+      { a: 'steamValve', t: '증기 밸브', below: true },
+      { a: 'injValve', t: '찬물 밸브' },
+      { a: 'chimney', t: '굴뚝' }
+    ],
     stages: [
       {
         short: '구조',
@@ -152,6 +167,21 @@ export const MACHINES: MachineDef[] = [
   {
     id: 'watt',
     name: '와트 기관',
+    parts: [
+      { a: 'boiler', t: '보일러' },
+      { a: 'cylinder', t: '실린더' },
+      { a: 'piston', t: '피스톤' },
+      { a: 'crosshead', t: '크로스헤드' },
+      { a: 'beam', t: '흔들보' },
+      { a: 'conrod', t: '연결봉(커넥팅 로드)' },
+      { a: 'crank', t: '크랭크' },
+      { a: 'flywheel', t: '플라이휠' },
+      { a: 'governor', t: '원심 조속기' },
+      { a: 'throttle', t: '조절 밸브' },
+      { a: 'condenser', t: '분리 응축기' },
+      { a: 'airpump', t: '공기 펌프' },
+      { a: 'steamMain', t: '증기관' }
+    ],
     stages: [
       {
         short: '구조',
@@ -251,6 +281,23 @@ export const MACHINES: MachineDef[] = [
   {
     id: 'loco',
     name: '증기 기관차',
+    parts: [
+      { a: 'firebox', t: '화실' },
+      { a: 'tubes', t: '보일러(연관)' },
+      { a: 'dome', t: '증기 돔' },
+      { a: 'chimney', t: '굴뚝' },
+      { a: 'smokebox', t: '연기실' },
+      { a: 'cylinder', t: '실린더' },
+      { a: 'piston', t: '피스톤' },
+      { a: 'chest', t: '슬라이드 밸브' },
+      { a: 'crosshead', t: '크로스헤드' },
+      { a: 'conrod', t: '커넥팅 로드' },
+      { a: 'coupling', t: '커플링 로드' },
+      { a: 'driver', t: '동륜' },
+      { a: 'valveGear', t: '편심봉(밸브 장치)' },
+      { a: 'cab', t: '운전실' },
+      { a: 'rails', t: '레일' }
+    ],
     stages: [
       {
         short: '구조',

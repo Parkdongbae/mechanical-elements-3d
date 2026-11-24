@@ -157,8 +157,28 @@ await scene('toggles', 'lk=crank-rocker&lkq=60', async (page, say2) => {
   }
   const s = await st(page);
   say2(s.tilt === true, '3D로 보기 켜짐');
-  const tagCount = await page.evaluate(() => document.querySelectorAll('.lk-tag').length);
-  say2(tagCount > 0, '이름표가 생긴다', `${tagCount}개`);
+  // 이름표는 기본으로 켜져 있다. 토글이 꺼져 있으면 한 번 눌러 켠 뒤 센다(앞 토글 검사가 상태를 바꿨을 수 있다)
+  const tagBtn = '[data-lab="labels-toggle"]';
+  if ((await page.getAttribute(tagBtn, 'aria-pressed')) !== 'true') await page.click(tagBtn);
+  await page.waitForTimeout(300);
+  const countShown = (onlyHidable) =>
+    page.evaluate((hidable) => {
+      const sel = hidable ? '.lab-tag:not([data-always="true"])' : '.lab-tag';
+      return [...document.querySelectorAll(sel)].filter((t) => {
+        const cs = getComputedStyle(t);
+        return cs.display !== 'none' && cs.visibility !== 'hidden';
+      }).length;
+    }, onlyHidable);
+  const tagsOn = await countShown(false);
+  say2(tagsOn > 0, '이름표가 켜져 보인다(기본 켜짐)', `${tagsOn}개`);
+  await page.click(tagBtn);
+  await page.waitForTimeout(300);
+  const tagsOff = await countShown(true);
+  say2(tagsOff === 0, '토글을 누르면 이름표가 숨는다(data-always 제외)', `${tagsOff}개`);
+  await page.click(tagBtn);
+  await page.waitForTimeout(300);
+  const tagsBack = await countShown(false);
+  say2(tagsBack > 0, '한 번 더 누르면 이름표가 다시 보인다', `${tagsBack}개`);
   await page.click('[data-lk="clear"]');
   await page.click('[data-lk="reset"]');
   await page.waitForTimeout(300);

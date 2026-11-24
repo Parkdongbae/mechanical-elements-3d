@@ -329,7 +329,7 @@
 
 .pmp-act-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
 }
@@ -602,106 +602,24 @@
   box-shadow: var(--shadow-1);
 }
 
-/* ───────── 3D 이름표 ───────── */
+/* ───────── 깊이 눈금(이름표 토글을 따름) ───────── */
 
-.pmp-tags {
+.pmp-ticks {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
 }
 
-.pmp-tag,
+.pmp-ticks[hidden] {
+  display: none;
+}
+
 .pmp-tick {
   position: absolute;
   left: 0;
   top: 0;
   will-change: transform;
-}
-
-.pmp-tag {
-  width: 0;
-  height: 0;
-}
-
-.pmp-tag::before {
-  content: '';
-  position: absolute;
-  left: -4px;
-  top: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-  box-shadow: 0 0 0 2px var(--panel-solid);
-}
-
-.pmp-tag-l {
-  position: absolute;
-  left: 10px;
-  top: 0;
-  transform: translateY(-50%);
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  background: var(--panel-solid);
-  border: 1px solid var(--line-strong);
-  box-shadow: var(--shadow-1);
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.pmp-tag.is-valve::before {
-  background: var(--cat-power);
-}
-
-.pmp-tag.is-valve .pmp-tag-l {
-  border-color: var(--cat-power);
-  color: var(--cat-power);
-}
-
-.pmp-tag.is-valve.is-open::before {
-  background: var(--ok);
-}
-
-.pmp-tag.is-valve.is-open .pmp-tag-l {
-  border-color: var(--ok);
-  color: var(--ok);
-}
-
-.pmp-tag.is-below .pmp-tag-l,
-.pmp-tag.is-grip .pmp-tag-l {
-  left: auto;
-  right: 10px;
-}
-
-.pmp-tag.is-grip .pmp-tag-l {
-  top: -18px;
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.pmp-tag.is-atm::before {
-  background: var(--cat-control);
-}
-
-.pmp-tag.is-atm .pmp-tag-l {
-  left: auto;
-  right: 10px;
-  border-color: var(--cat-control);
-  color: var(--cat-control);
-}
-
-.pmp-tag.is-water::before {
-  background: var(--cat-shaft);
-}
-
-.pmp-tag.is-limit::before {
-  background: var(--cat-power);
-}
-
-.pmp-tag.is-limit .pmp-tag-l {
-  color: var(--cat-power);
 }
 
 .pmp-tick {

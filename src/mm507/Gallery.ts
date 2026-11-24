@@ -7,6 +7,8 @@ import { disposeObject } from '../models/factory';
 import { hasModel, listModels, loadModel } from './registry';
 import type { MovementModel } from './types';
 import { buildAbout, loadPreface, type PrefaceData } from './about';
+import { createLabelsToggle } from '../labs/common/labels';
+import { setTagsVisible } from './kit/misc';
 
 const TOTAL = 507;
 const RANGE_SIZE = 100;
@@ -126,6 +128,7 @@ export class Gallery implements AppMode {
   private playBtn: HTMLButtonElement | null = null;
   private speedOut: HTMLElement | null = null;
   private zoomEl: HTMLElement | null = null;
+  private labelsToggle: { button: HTMLButtonElement; sync(): void; dispose(): void } | null = null;
   private notesKey = '';
   private noteTimer = 0;
 
@@ -166,6 +169,9 @@ export class Gallery implements AppMode {
     this.range = this.kind === 'detail' ? Math.floor((this.cur - 1) / RANGE_SIZE) : 0;
     if (this.kind === 'detail') this.markSeen(this.cur);
 
+    // 상세 화면은 레이어 1을 켜 둔다(회전 화살표가 항상 보이게). 이름표는 setTagsVisible 이 따로 끈다
+    ctx.sceneMgr.setLabelsVisible(this.kind === 'detail' ? true : ctx.settings.showLabels);
+
     const ep = ++this.epoch;
     if (this.kind === 'about') this.buildAboutView(ep);
     else if (this.kind === 'list') this.buildList(ep);
@@ -177,6 +183,9 @@ export class Gallery implements AppMode {
     this.epoch++;
     window.removeEventListener('keydown', this.onKey);
     const ctx = this.ctx;
+    this.labelsToggle?.dispose();
+    this.labelsToggle = null;
+    if (ctx) ctx.sceneMgr.setLabelsVisible(ctx.settings.showLabels);
     if (ctx && this.model) {
       ctx.sceneMgr.remove(this.model.group);
       disposeObject(this.model.group);
@@ -407,7 +416,13 @@ export class Gallery implements AppMode {
       side.dataset.open = open ? 'false' : 'true';
       fold.textContent = open ? '펼치기' : '접기';
     });
-    headEl.append(thumb, ht, fold);
+    // 507 첫 화면(목록)으로 — 접힌 상태에서도 보이게 머리에 둔다
+    const toList = button('mm-tolist', '☰', () => ctx.navigate?.('mm'));
+    toList.append(el('span', 'mm-tolist-t', ' 목록'));
+    toList.dataset.mm = 'to-list';
+    toList.setAttribute('aria-label', '507 기계 운동 목록으로');
+    toList.title = '507 기계 운동 첫 화면(목록)으로';
+    headEl.append(thumb, ht, toList, fold);
     side.append(headEl);
 
     const tabs = el('div', 'mm-tabs');
@@ -453,6 +468,7 @@ export class Gallery implements AppMode {
           }
           this.model = m;
           ctx.sceneMgr.add(m.group);
+          setTagsVisible(m.group, ctx.settings.showLabels);
           this.flyDefault();
           this.buildCtl();
           this.refreshNotes();
@@ -535,7 +551,21 @@ export class Gallery implements AppMode {
       rev.setAttribute('aria-pressed', String(this.reverse));
     });
     rev.setAttribute('aria-pressed', 'false');
-    ctl.append(this.playBtn, spd, rev, button('mm-ctl-btn', '시점 처음으로', () => this.flyDefault()));
+    this.labelsToggle?.dispose();
+    this.labelsToggle = null;
+    const ctx = this.ctx;
+    const parts: HTMLElement[] = [this.playBtn, spd, rev];
+    if (ctx) {
+      this.labelsToggle = createLabelsToggle(ctx, {
+        syncSceneLayer: false,
+        onToggle: (v) => {
+          if (this.model) setTagsVisible(this.model.group, v);
+        }
+      });
+      parts.push(this.labelsToggle.button);
+    }
+    parts.push(button('mm-ctl-btn', '시점 처음으로', () => this.flyDefault()));
+    ctl.append(...parts);
     wrap.append(ctl);
   }
 

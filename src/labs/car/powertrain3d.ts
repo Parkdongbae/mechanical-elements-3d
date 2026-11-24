@@ -21,6 +21,7 @@ import {
 import { rodProfile, tubeProfile, type V2 } from '../../models/parts/geom';
 import type { DriveMode } from './model';
 import type { GearId } from './spec';
+import type { Anchor, LabelSpec } from '../common/labels';
 
 export const SCALE = 2.4;
 /** 화면 회전 속도 = 실제 회전수 × VIS (비율은 그대로 두고 눈에 보이게 늦춘다) */
@@ -72,39 +73,6 @@ interface Pair {
   def: PairDef;
   drive: GearMesh; // 입력축에 고정
   driven: GearMesh; // 출력축 위에서 헛돎(슬리브가 묶으면 같이 돎)
-  label: THREE.Sprite;
-  labelMat: THREE.SpriteMaterial;
-}
-
-function labelSprite(text: string, w: number, opts: { bg?: string; fg?: string; border?: string } = {}): THREE.Sprite {
-  const cw = 256 * Math.max(1, Math.round(w / 0.3));
-  const ch = 128;
-  const canvas = document.createElement('canvas');
-  canvas.width = cw;
-  canvas.height = ch;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    ctx.beginPath();
-    ctx.roundRect(6, 6, cw - 12, ch - 12, 52);
-    ctx.fillStyle = opts.bg ?? 'rgba(22,32,46,0.86)';
-    ctx.fill();
-    ctx.lineWidth = 6;
-    ctx.strokeStyle = opts.border ?? 'rgba(255,255,255,0.35)';
-    ctx.stroke();
-    ctx.font = '700 64px Pretendard, "Malgun Gothic", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = opts.fg ?? '#ffffff';
-    ctx.fillText(text, cw / 2, ch / 2 + 3);
-  }
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false, toneMapped: false });
-  const s = new THREE.Sprite(mat);
-  s.renderOrder = 10;
-  s.layers.set(1);
-  s.scale.set(w, (w * ch) / cw, 1);
-  return s;
 }
 
 /** X축 기어 메시(잇수·모듈로 피치원 결정). base = 처음 위상 */
@@ -144,8 +112,9 @@ export class Powertrain3D {
   private tcTurbine = new THREE.Group();
   private road: THREE.Mesh[] = [];
   private roadMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0, transparent: true, opacity: 0.7 });
-  private clutchLabel: THREE.Sprite;
-  private tcLabel: THREE.Sprite;
+  private mode: DriveMode = 'manual';
+  private gear: GearId = 'N';
+  private idlerAt = new THREE.Vector3();
   // 적분 각(rad)
   private aEng = 0;
   private aIn = 0;
@@ -164,21 +133,6 @@ export class Powertrain3D {
     this.buildClutch();
     this.buildTorqueConverter();
     this.buildRoad();
-
-    this.clutchLabel = labelSprite('클러치', 0.5);
-    this.tcLabel = labelSprite('토크 컨버터', 0.6);
-    const lp = this.world(0.02, 0.43, IN_Z - 0.02);
-    this.clutchLabel.position.copy(lp);
-    this.tcLabel.position.copy(lp);
-    const eng = labelSprite('엔진', 0.42);
-    eng.position.copy(this.world(0.12, 0.64, -0.8));
-    const gb = labelSprite('변속기', 0.5);
-    gb.position.copy(this.world(-0.26, 0.49, -0.78));
-    const diff = labelSprite('차동기어', 0.6);
-    diff.position.copy(this.world(-0.08, -0.05, -0.62));
-    const shaft = labelSprite('구동축', 0.5);
-    shaft.position.copy(this.world(-0.45, 0.0, -0.6));
-    this.group.add(this.clutchLabel, this.tcLabel, eng, gb, diff, shaft);
 
     this.group.traverse((o) => {
       const m = o as THREE.Mesh;
@@ -320,11 +274,7 @@ export class Powertrain3D {
       const hub = new THREE.Mesh(latheX(tubeProfile(0.0135, 0.022, def.x - GEAR_W * 0.6, def.x + GEAR_W * 0.6, 0.002), 24), darkSteel());
       hub.position.set(0, OUT_Y, OUT_Z);
       this.car.add(hub);
-      const label = labelSprite(def.id === 'R' ? '후진 R' : `${def.id}단`, 0.5, { bg: 'rgba(233,128,28,0.95)', border: 'rgba(255,255,255,0.7)' });
-      const labelMat = label.material;
-      label.position.copy(this.world(def.x, IN_Y + 0.13, IN_Z - 0.02));
-      this.group.add(label);
-      this.pairs.push({ def, drive, driven, label, labelMat });
+      this.pairs.push({ def, drive, driven });
     }
 
     // 싱크로 슬리브 + 시프트 포크 + 레일
@@ -409,6 +359,7 @@ export class Powertrain3D {
     const iy = py + (h * (bx - ax)) / d;
     const idler = gearX(R_IDLER_TEETH, m, GEAR_W * 0.9, 0xc9ced6);
     idler.mesh.position.set(def.x, iy, iz);
+    this.idlerAt.set(def.x, iy, iz);
     idler.base = phaseToward(iy, iz, IN_Y, IN_Z) + Math.PI;
     this.car.add(idler.mesh);
     const pin = new THREE.Mesh(cylX(0.008, def.x - 0.03, def.x + 0.03, 16, 0.002), steel());
@@ -551,9 +502,8 @@ export class Powertrain3D {
 
   setMode(mode: DriveMode): void {
     this.clutchGroup.visible = mode === 'manual';
-    this.clutchLabel.visible = mode === 'manual';
+    this.mode = mode;
     this.tcGroup.visible = mode === 'auto';
-    this.tcLabel.visible = mode === 'auto';
     for (const s of this.sleeves) {
       s.obj.visible = mode === 'manual';
       s.fork.visible = mode === 'manual';
@@ -561,6 +511,7 @@ export class Powertrain3D {
   }
 
   setGear(g: GearId): void {
+    this.gear = g;
     for (const p of this.pairs) {
       const on = p.def.id === g;
       for (const gm of [p.drive, p.driven]) {
@@ -568,8 +519,6 @@ export class Powertrain3D {
         gm.mat.emissiveIntensity = on ? 0.55 : 0;
         gm.mat.color.set(on ? 0xffc27a : 0xc9ced6);
       }
-      // 단 라벨은 고른 단 하나만 보인다(5쌍이 촘촘해 모두 띄우면 겹친다)
-      p.label.visible = on;
     }
     this.idler.mat.emissive.set(g === 'R' ? HIGHLIGHT : 0x000000);
     this.idler.mat.emissiveIntensity = g === 'R' ? 0.55 : 0;
@@ -631,10 +580,77 @@ export class Powertrain3D {
     }
   }
 
-  /** 3D 라벨 중 선택 단 라벨의 월드 위치 */
-  pairLabelPos(g: GearId): THREE.Vector3 | null {
-    const p = this.pairs.find((q) => q.def.id === g);
-    return p ? p.label.position.clone() : null;
+  /** 고른 단의 이름표 글자(중립이면 null) */
+  gearText(): string | null {
+    if (this.gear === 'N') return null;
+    return this.gear === 'R' ? '후진 기어' : `${this.gear}단 기어`;
+  }
+
+  /** 이름표 목록(지시서 18 4-2). 보이지 않는 부품은 at()이 false를 돌려준다 */
+  anchors(cam?: THREE.Object3D): LabelSpec[] {
+    const g = this.group;
+    const at =
+      (x: number, y: number, z: number, when?: () => boolean): Anchor =>
+      (out) => {
+        if (when && !when()) return false;
+        g.updateWorldMatrix(true, false);
+        out.copy(this.world(x, y, z)).applyMatrix4(g.matrixWorld);
+        return true;
+      };
+    // 벨트·발전기는 엔진의 +x 끝(기본 시점에서는 엔진 블록 뒤)에 있다 — 카메라가 그쪽에 있을 때만 이름표를 단다
+    const camL = new THREE.Vector3();
+    const plusXSide = (): boolean => {
+      if (!cam) return true;
+      g.updateWorldMatrix(true, false);
+      camL.copy(cam.position);
+      g.worldToLocal(camL);
+      return camL.x / SCALE > 0.2;
+    };
+    const manual = (): boolean => this.mode === 'manual';
+    const auto = (): boolean => this.mode === 'auto';
+    const pairOn = (): PairDef | null => this.pairs.find((p) => p.def.id === this.gear)?.def ?? null;
+    const gearAt: Anchor = (out) => {
+      const def = pairOn();
+      if (!def) return false;
+      const m = (2 * SHAFT_D) / (def.zIn + def.zOut);
+      const rp = def.id === 'R' ? (def.zIn * 0.0045) / 2 : (def.zIn * m) / 2;
+      g.updateWorldMatrix(true, false);
+      out.copy(this.world(def.x, IN_Y + rp + 0.01, IN_Z)).applyMatrix4(g.matrixWorld);
+      return true;
+    };
+    const sleeveAt: Anchor = (out) => {
+      if (this.mode !== 'manual') return false;
+      const s = this.sleeves.find((q) => q.def.left === this.gear || q.def.right === this.gear) ?? this.sleeves[1];
+      if (!s) return false;
+      g.updateWorldMatrix(true, false);
+      out.copy(this.world(s.pos, OUT_Y + 0.034, OUT_Z)).applyMatrix4(g.matrixWorld);
+      return true;
+    };
+    const idlerAnchor: Anchor = (out) => {
+      g.updateWorldMatrix(true, false);
+      out.copy(this.world(this.idlerAt.x, this.idlerAt.y + 0.03, this.idlerAt.z)).applyMatrix4(g.matrixWorld);
+      return true;
+    };
+    const list: LabelSpec[] = [
+      { key: 'engine', text: '엔진', at: at(0.1, 0.42, -1.0), side: 'right', priority: 1, tone: 'power' },
+      { key: 'gearbox', text: '변속기', at: at(-0.26, 0.365, -0.745), side: 'above', priority: 1, tone: 'shaft' },
+      { key: 'clutch', text: '클러치', at: at(0.02, 0.43, IN_Z - 0.02, manual), side: 'above', priority: 1, tone: 'control' },
+      { key: 'tc', text: '토크 컨버터', at: at(0.02, 0.43, IN_Z - 0.02, auto), side: 'above', priority: 1, tone: 'control' },
+      { key: 'diff', text: '차동기어', at: at(-0.08, -0.05, -0.62), side: 'below', priority: 1, tone: 'shaft' },
+      { key: 'halfshaft', text: '구동축', at: at(-0.45, 0.0, -0.6), side: 'below', priority: 1, tone: 'shaft' },
+      { key: 'gear', text: '1단 기어', at: gearAt, side: 'above', priority: 1, tone: 'warn' },
+      { key: 'input', text: '입력축', at: at(-0.43, IN_Y, IN_Z), side: 'left', priority: 2, tone: 'shaft' },
+      { key: 'output', text: '출력축', at: at(-0.43, OUT_Y, OUT_Z), side: 'below', priority: 2, tone: 'shaft' },
+      { key: 'final', text: '종감속 기어', at: at(RING_X, AXLE.y + (Z_RING * 0.003) / 2, AXLE.z), side: 'right', priority: 2 },
+      { key: 'flywheel', text: '플라이휠', at: at(0.052, IN_Y + 0.118, IN_Z, manual), side: 'right', priority: 2 },
+      { key: 'sleeve', text: '싱크로 슬리브', at: sleeveAt, side: 'below', priority: 3, tone: 'warn' },
+      { key: 'idler', text: '후진 아이들 기어', at: idlerAnchor, side: 'left', priority: 3 },
+      { key: 'belt', text: '벨트와 풀리', at: at(0.52, (IN_Y + 0.47) / 2, (IN_Z - 0.79) / 2, plusXSide), side: 'right', priority: 2 },
+      { key: 'alternator', text: '발전기', at: at(0.45, 0.47, -0.79, plusXSide), side: 'above', priority: 3 },
+      // 바퀴 안쪽 옆면의 위 앞쪽 — 기본 시점에서 패널에 가리지 않는 부분
+      { key: 'wheel', text: '앞바퀴(구동 바퀴)', at: at(-CAR.halfTrack + 0.08, CAR.axleY + 0.15, CAR.frontZ - 0.17), side: 'above', priority: 2 }
+    ];
+    return list;
   }
 
   dispose(): void {

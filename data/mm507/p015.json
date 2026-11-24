@@ -192,9 +192,9 @@
       "n": 19,
       "titleKo": "도르래 배열 (19)",
       "ko": "도르래를 여러 가지로 배열한 것이다. 다음 규칙이 적용된다. 각 도르래가 줄에 감싸이고 그 줄의 한쪽 끝은 고정점에, 다른 쪽 끝은 움직도르래의 중심에 매인 도르래 계에서는, 전체의 효과가 숫자 2를 그 계에 있는 움직도르래의 수만큼 거듭 곱한 값과 같다.",
-      "easy": "움직도르래를 하나 더 달 때마다 힘이 절반씩 더 줄어든다. 움직도르래가 3개이면 2를 세 번 곱한 8배의 이득이 생긴다.",
+      "easy": "책에는 움직도르래 3개면 2×2×2 = 8배라고 적혀 있어요. 그런데 판화를 따라가 보면 줄마다 한 끝은 위 도르래에, 다른 끝은 다음 도르래에 매이고 가운데가 추 위의 짐 도르래를 감아요. 그래서 한 단마다 힘이 3배로 커져, 줄의 힘은 T, 3T, 9T이고 추는 2T + 6T + 18T = 26T를 받아요. 손으로 당긴 줄은 추가 오른 높이의 26배(3³ − 1)만큼 움직여요.",
       "category": "belt",
-      "mech": "Fixed pulley at top on a hook; three movable pulleys in cascade, each with its own rope, ropes ending at the weight bar below. Cascade: advantage 2^n."
+      "mech": "Fixed pulley A on a hook, B and C hanging in cascade down-left; three small pulleys stand on one wide weight. Each rope: tied to the lower eye of the block above, under a weight pulley, over that block, tied to the next block (last one is the pull). Rope tensions T:3T:9T, load 26T — advantage 3^3 - 1 = 26 (book text says 2^n = 8)."
     },
     {
       "n": 20,

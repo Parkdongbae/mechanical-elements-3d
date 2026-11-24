@@ -13,7 +13,8 @@ import { LinkageModel } from './linkage/model';
 import { Graph, slowFastBands, type GraphData } from './linkage/graph';
 import { mechanismIcon, startInput } from './linkage/icons';
 import { LinkPanel, DEFAULT_DIMS, type CustomDims, type TabKey, type ToggleKey } from './linkage/panel';
-import { el } from '../modes/dom';
+import { LabLabels, midAnchor, type Anchor, type LabelBounds, type LabelSpec } from './common/labels';
+import { PART_NAMES, CUSTOM_ROLE_NAMES } from './linkage/partNames';
 
 const DEG = Math.PI / 180;
 const TAU = Math.PI * 2;
@@ -23,11 +24,6 @@ const GUIDES: Record<string, { p: Vec2; dir: Vec2 }> = {
 };
 
 type PlayMode = 'rot' | 'osc' | 'path';
-
-interface Tag {
-  el: HTMLElement;
-  id: string;
-}
 
 function wrapPi(a: number): number {
   return a - TAU * Math.round(a / TAU);
@@ -85,9 +81,10 @@ export class Linkage implements AppMode {
   private shape = 0;
   private offPath = false;
   private tilt = false;
-  private tog = { trace: true, full: false, label: false };
+  private tog = { trace: true, full: false };
 
-  private tags: Tag[] = [];
+  private labels: LabLabels | null = null;
+  private bounds: LabelBounds = { x0: 0, y0: 0, x1: 99999, y1: 99999 };
   private readT = 0;
   private lastCur = NaN;
   private dragging = false;
@@ -116,7 +113,7 @@ export class Linkage implements AppMode {
     this.shape = 0;
     this.progress = 0;
     this.tilt = q.get('lktilt') === '1';
-    this.tog = { trace: q.get('lktrace') !== '0', full: q.get('lkfull') === '1', label: q.get('lklabel') === '1' };
+    this.tog = { trace: q.get('lktrace') !== '0', full: q.get('lkfull') === '1' };
     this.dims = { ...DEFAULT_DIMS };
     const dim = (q.get('lkdim') ?? '').split(',').map(Number);
     if (dim.length >= 4 && dim.every((x) => Number.isFinite(x))) {
@@ -169,7 +166,12 @@ export class Linkage implements AppMode {
     window.addEventListener('keydown', this.onKey);
     window.addEventListener('resize', this.onResize);
 
-    (['trace', 'full', 'label'] as const).forEach((k) => this.panel?.setToggle(k, this.tog[k]));
+    (['trace', 'full'] as const).forEach((k) => this.panel?.setToggle(k, this.tog[k]));
+    this.labels = new LabLabels(ctx, this.panel.host, { bounds: () => this.bounds });
+    this.panel.setLabelButton(this.labels.button);
+    const lkl = q.get('lklabel');
+    if (lkl === '0' || lkl === '1') this.labels.setVisible(lkl === '1');
+    this.bounds = this.panel.region();
     this.panel.setToggle('tilt', this.tilt);
     sm.controls.enableRotate = this.tilt;
     this.panel.setTab(this.tab);
@@ -221,7 +223,8 @@ export class Linkage implements AppMode {
     this.graph = null;
     this.topEl?.remove();
     this.topEl = null;
-    this.tags = [];
+    this.labels?.dispose();
+    this.labels = null;
     this.swCache.clear();
     this.def = null;
     this.sw = null;
@@ -430,6 +433,7 @@ export class Linkage implements AppMode {
       this.forcedStop = false;
     }
     m.load(def, this.sw);
+    this.buildTags();
     m.setRange(rng.min, rng.max, rng.full);
     m.setFullPath(this.tog.full ? this.sw : null);
     this.setupInput();
@@ -606,17 +610,20 @@ export class Linkage implements AppMode {
   private setToggle(k: ToggleKey, on: boolean): void {
     const m = this.model;
     this.panel?.setToggle(k, on);
+    if (k === 'label') {
+      this.labels?.setVisible(on);
+      return;
+    }
     if (k === 'tilt') {
       this.tilt = on;
       if (this.ctx) this.ctx.sceneMgr.controls.enableRotate = on;
       this.fit(false);
       return;
     }
-    this.tog[k] = on;
+    this.tog[k as 'trace' | 'full'] = on;
     if (!m) return;
     if (k === 'trace') m.setTrace(on);
     else if (k === 'full') m.setFullPath(on && this.sw && this.canPlay ? this.sw : null);
-    else if (k === 'label') this.buildTags();
   }
 
   private setTab(t: TabKey): void {
@@ -765,42 +772,113 @@ export class Linkage implements AppMode {
 
   private fitSoon = false;
 
-  private buildTags(): void {
-    const panel = this.panel;
-    const def = this.def;
-    if (!panel) return;
-    panel.tags.replaceChildren();
-    this.tags = [];
-    if (!def || !this.tog.label) return;
-    for (const s of def.steps) {
-      const t = el('div', `lk-tag${s.id === def.handle ? ' is-handle' : ''}`);
-      t.append(el('span', 'lk-tag-l', s.id === def.handle ? `${s.id} 끌어 보세요` : s.id));
-      panel.tags.append(t);
-      this.tags.push({ el: t, id: s.id });
-    }
+  private jointAnchor(id: string): Anchor {
+    return (out) => this.model?.jointWorld(id, out) ?? false;
   }
 
-  private updateTags(): void {
-    const ctx = this.ctx;
-    const m = this.model;
-    const panel = this.panel;
-    if (!ctx || !m || !panel || this.tags.length === 0) return;
-    const cam = ctx.sceneMgr.camera;
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    const r = panel.region();
-    for (const t of this.tags) {
-      if (!m.jointWorld(t.id, this.v3)) {
-        t.el.style.visibility = 'hidden';
-        continue;
+  /** 기구 좌표(cm) 1 이 월드에서 얼마인지 — 두 조인트 사이 거리의 비 */
+  private worldPerCm(a: string, b: string, wa: THREE.Vector3, wb: THREE.Vector3): number {
+    const pts = this.pose?.pts;
+    const pa = pts?.[a];
+    const pb = pts?.[b];
+    if (!pa || !pb) return 0;
+    const cm = Math.hypot(pa[0] - pb[0], pa[1] - pb[1]);
+    return cm > 1e-6 ? wa.distanceTo(wb) / cm : 0;
+  }
+
+  /** 바퀴·타이어: 중심(a)에서 b 반대쪽으로 반지름만큼 나간 곳 */
+  private wheelAnchor(a: string, b: string, size: number, frac: number): Anchor {
+    const wb = new THREE.Vector3();
+    return (out) => {
+      const m = this.model;
+      if (!m || !m.jointWorld(a, out) || !m.jointWorld(b, wb)) return false;
+      const k = this.worldPerCm(a, b, out, wb);
+      const d = out.distanceTo(wb);
+      if (k <= 0 || d <= 1e-9) return false;
+      out.addScaledVector(wb.sub(out), (-size * frac * k) / d);
+      return true;
+    };
+  }
+
+  /** 바닥 선(기구 좌표 y = size) 위, 발끝 바로 아래 */
+  private floorAnchor(foot: string, ref: string, size: number): Anchor {
+    const wr = new THREE.Vector3();
+    return (out) => {
+      const m = this.model;
+      const pf = this.pose?.pts[foot];
+      if (!m || !pf || !m.jointWorld(foot, out) || !m.jointWorld(ref, wr)) return false;
+      const k = this.worldPerCm(foot, ref, out, wr);
+      if (k <= 0) return false;
+      out.y += (size - pf[1]) * k;
+      return true;
+    };
+  }
+
+  private centroidAnchor(ids: readonly string[]): Anchor {
+    const t = new THREE.Vector3();
+    return (out) => {
+      const m = this.model;
+      if (!m) return false;
+      out.set(0, 0, 0);
+      for (const id of ids) {
+        if (!m.jointWorld(id, t)) return false;
+        out.add(t);
       }
-      this.v3.project(cam);
-      const x = ((this.v3.x + 1) / 2) * W;
-      const y = ((1 - this.v3.y) / 2) * H;
-      const hide = this.v3.z > 1 || x < r.x0 + 4 || x > r.x1 - 4 || y < Math.max(r.y0, 8) || y > r.y1 - 4 || (x < 232 && y < 76);
-      t.el.style.visibility = hide ? 'hidden' : 'visible';
-      if (!hide) t.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      out.multiplyScalar(1 / ids.length);
+      return true;
+    };
+  }
+
+  private buildTags(): void {
+    const labels = this.labels;
+    const def = this.def;
+    if (!labels) return;
+    if (!def) {
+      labels.set([]);
+      return;
     }
+    const names = PART_NAMES[def.id];
+    const custom = def.id === 'custom';
+    const J = (id: string): Anchor => this.jointAnchor(id);
+    const specs: LabelSpec[] = [];
+    const roleP = (r: Role): 1 | 2 => (r === 'input' || r === 'coupler' || r === 'output' ? 1 : 2);
+    def.bars.forEach((b, i) => {
+      const text = custom ? CUSTOM_ROLE_NAMES[b.role] : names?.bars[i];
+      if (!text) return;
+      const first = b.via?.[0];
+      specs.push({ key: `bar${i}`, text, at: midAnchor(J(b.a), J(first ?? b.b)), priority: roleP(b.role) });
+    });
+    (def.plates ?? []).forEach((p, i) => {
+      const text = custom ? CUSTOM_ROLE_NAMES[p.role] : names?.plates?.[i];
+      if (!text) return;
+      specs.push({ key: `plate${i}`, text, at: this.centroidAnchor(p.pts), priority: roleP(p.role) });
+    });
+    (def.rails ?? []).forEach((r, i) => {
+      const text = names?.rails?.[i];
+      if (text) specs.push({ key: `rail${i}`, text, at: J(r.at), side: 'below', priority: 2 });
+    });
+    (def.decor ?? []).forEach((d, i) => {
+      const text = names?.decor?.[i];
+      if (!text) return;
+      let at: Anchor;
+      let side: LabelSpec['side'] = 'above';
+      if (d.kind === 'wheel' && d.b) at = this.wheelAnchor(d.a, d.b, d.size, 0.62);
+      else if (d.kind === 'tire' && d.b) at = this.wheelAnchor(d.a, d.b, d.size, 0.45);
+      else if (d.kind === 'blade' && d.b) at = midAnchor(J(d.a), J(d.b));
+      else if (d.kind === 'floor') {
+        at = this.floorAnchor(d.a, def.steps[0]?.id ?? d.a, d.size);
+        side = 'below';
+      } else {
+        at = J(d.a);
+        side = 'below';
+      }
+      specs.push({ key: `decor${i}`, text, at, side, priority: 3 });
+    });
+    for (const s of def.steps) {
+      specs.push({ key: `j:${s.id}`, text: names?.joints?.[s.id] ?? s.id, at: J(s.id), side: 'right', kind: 'point', priority: 3 });
+    }
+    specs.push({ key: 'hint', text: '끌어 보세요', at: J(def.handle), side: 'below', kind: 'hint', priority: 1 });
+    labels.set(specs);
   }
 
   // ───────────────────────── 그래프·숫자판 ─────────────────────────
@@ -977,11 +1055,12 @@ export class Linkage implements AppMode {
     if (this.frameT > 0.2 || this.fitSoon) {
       this.frameT = 0;
       this.applyOffset();
+      if (this.panel) this.bounds = this.panel.region();
       if (this.fitSoon) {
         this.fitSoon = false;
         this.fit(false);
       }
     }
-    if (this.tog.label) this.updateTags();
+    this.labels?.update();
   }
 }

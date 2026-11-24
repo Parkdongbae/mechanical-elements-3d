@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import type { AppMode, ModeContext } from '../modes/types';
 import type { CameraView } from '../scene/SceneSetup';
 import { el, button } from '../modes/dom';
+import { LabLabels, localAnchor, type Anchor, type LabelSpec } from './common/labels';
 import { PowerChassis, type Pose } from './power/chassis';
 import { FlowIndicator } from './power/flow';
 import { Highlighter, type HiState } from './power/highlight';
@@ -54,23 +55,17 @@ const VIEWS: Record<number, { t: [number, number, number]; az: number; el: numbe
   8: { t: [0, 0.18, 0.0], az: 142, el: 30, d: 7.6 }
 };
 
-/** 단계별 3D 이름표 (chassis.anchor 이름, 글자) */
+/** 단계별 3D 이름표 (chassis.anchor 이름, 글자, 'b' = 아래쪽) */
 const TAGS: Record<number, [string, string, ('b' | '')?][]> = {
   0: [['engine', '1 엔진'], ['clutch', '2 플라이휠·클러치', 'b'], ['trans', '3 변속기'], ['prop', '4 프로펠러 샤프트', 'b'], ['diff', '5 종감속·차동기어'], ['axle', '6 차축', 'b'], ['wheel', '7 바퀴']],
-  1: [['piston', '피스톤'], ['rod', '커넥팅 로드'], ['crank', '크랭크축', 'b'], ['plug', '점화 플러그']],
+  1: [['piston', '피스톤'], ['rod', '커넥팅 로드'], ['crank', '크랭크축', 'b'], ['plug', '점화 플러그'], ['cylinder', '실린더', 'b']],
   2: [['flywheel', '플라이휠', 'b'], ['disc', '클러치판'], ['pressure', '압력판', 'b']],
   3: [['input', '입력축'], ['countershaft', '부축', 'b'], ['mainshaft', '출력축'], ['gearpair', '']],
-  4: [['prop', '프로펠러 샤프트', 'b'], ['uj1', '유니버설 조인트'], ['uj2', '유니버설 조인트']],
+  4: [['prop', '프로펠러 샤프트(추진축)', 'b'], ['uj1', '유니버설 조인트'], ['uj2', '유니버설 조인트']],
   5: [['pinion', '구동 피니언', 'b'], ['ring', '링 기어'], ['spider', '차동 피니언'], ['side', '사이드 기어', 'b']],
   6: [['axleL', '왼쪽 차축'], ['axleR', '오른쪽 차축'], ['housing', '차축 하우징', 'b']],
   7: [['rear', '뒷바퀴(구동)'], ['front', '앞바퀴(따라 굴러요)'], ['road', '노면', 'b']]
 };
-
-interface Tag {
-  el: HTMLElement;
-  anchor: string;
-  pos: THREE.Vector3;
-}
 
 export class PowerFlow implements AppMode {
   private ctx: ModeContext | null = null;
@@ -82,8 +77,8 @@ export class PowerFlow implements AppMode {
   private stepsBar!: HTMLElement;
   private calcPanel!: HTMLElement;
   private dock!: HTMLElement;
-  private tagLayer!: HTMLElement;
-  private tags: Tag[] = [];
+  private labels: LabLabels | null = null;
+  private bounds = { x0: 0, y0: 0, x1: 0, y1: 0 };
   private stepBtns: HTMLButtonElement[] = [];
   private rows = new Map<string, { row: HTMLElement; val: HTMLElement; sub: HTMLElement }>();
   private gearBtns: HTMLButtonElement[] = [];
@@ -116,7 +111,6 @@ export class PowerFlow implements AppMode {
   private frameT = 0;
   private lastW = 0;
   private lastH = 0;
-  private tmp = new THREE.Vector3();
 
   private onKey = (e: KeyboardEvent): void => {
     const t = e.target as HTMLElement | null;
@@ -129,7 +123,6 @@ export class PowerFlow implements AppMode {
 
   private onResize = (): void => {
     this.flyToStage(false);
-    this.buildTags();
   };
 
   enter(ctx: ModeContext): void {
@@ -186,9 +179,10 @@ export class PowerFlow implements AppMode {
     this.chassis?.dispose();
     this.flow = null;
     this.chassis = null;
+    this.labels?.dispose();
+    this.labels = null;
     this.wrap?.remove();
     this.wrap = null;
-    this.tags = [];
     this.stepBtns = [];
     this.rows.clear();
     this.gearBtns = [];
@@ -203,13 +197,12 @@ export class PowerFlow implements AppMode {
   private buildDom(root: HTMLElement): void {
     const wrap = el('div', 'pf-wrap');
     this.wrap = wrap;
-    this.tagLayer = el('div', 'pf-tags');
-    this.tagLayer.setAttribute('aria-hidden', 'true');
     this.dock = el('div', 'pf-dock');
 
     // 단계 막대(동력 전달 순서 그 자체)
     this.stepsBar = el('nav', 'pf-steps pf-panel');
     this.stepsBar.setAttribute('aria-label', '동력 전달 단계');
+    const scroll = el('div', 'pf-steps-scroll');
     const list = el('div', 'pf-steps-list');
     STAGES.forEach((s, i) => {
       if (i >= 2 && i <= 7) {
@@ -225,15 +218,20 @@ export class PowerFlow implements AppMode {
       this.stepBtns.push(b);
       list.append(b);
     });
-    this.stepsBar.append(list);
+    scroll.append(list);
+    this.stepsBar.append(scroll);
 
     this.guide = el('section', 'pf-guide pf-panel');
     this.guide.setAttribute('aria-live', 'polite');
 
     this.calcPanel = this.buildCalc();
     this.dock.append(this.stepsBar, this.guide, this.calcPanel);
-    wrap.append(this.tagLayer, this.dock);
+    wrap.append(this.dock);
     root.append(wrap);
+    // 이름표 레이어 + 켜고 끄는 버튼(단계 막대 끝 — 스크롤하지 않아도 보이는 자리)
+    const labels = new LabLabels(this.ctx!, wrap, { bounds: () => this.bounds });
+    this.labels = labels;
+    this.stepsBar.append(labels.button);
   }
 
   private buildCalc(): HTMLElement {
@@ -324,7 +322,7 @@ export class PowerFlow implements AppMode {
     this.refreshCalc();
     if (this.stage === 3) {
       this.renderGuide();
-      this.buildTags();
+      this.labels?.setText('gearpair', this.gearpairText());
     }
   }
 
@@ -411,7 +409,7 @@ export class PowerFlow implements AppMode {
     this.renderGuide();
     this.refreshCalc();
     this.applyHighlight();
-    this.buildTags();
+    this.setLabels();
     if (this.chassis) this.chassis.forceArrows.visible = i === 7;
     this.flyToStage(immediate);
   }
@@ -656,7 +654,7 @@ export class PowerFlow implements AppMode {
     const portrait = window.innerWidth < window.innerHeight;
     // 세로 화면은 SceneManager가 수직 화각을 넓혀 주므로 거리는 조금만 늘린다
     const wide = this.stage === 0 || this.stage === QUIZ_STAGE || this.stage === 7;
-    const d = v.d * (portrait ? (wide ? 1.15 : 0.95) : narrow ? 1.1 : 1);
+    const d = v.d * (portrait ? (wide ? 1.02 : 0.95) : narrow ? 1.1 : 1);
     const t = new THREE.Vector3(v.t[0] * SCALE, (v.t[1] + 0.13) * SCALE, v.t[2] * SCALE);
     const az = THREE.MathUtils.degToRad(v.az);
     const elv = THREE.MathUtils.degToRad(v.el);
@@ -687,6 +685,7 @@ export class PowerFlow implements AppMode {
       y0 = 56;
       y1 = this.dock.getBoundingClientRect().top;
     }
+    this.bounds = { x0, y0, x1, y1 };
     const cx = (x0 + x1) / 2;
     const cy = (y0 + y1) / 2;
     const key = `${W}x${H}:${Math.round(cx)},${Math.round(cy)}`;
@@ -700,44 +699,45 @@ export class PowerFlow implements AppMode {
 
   // ───────────────────────── 3D 이름표 ─────────────────────────
 
-  private buildTags(): void {
-    this.tagLayer.replaceChildren();
-    this.tags = [];
-    const ch = this.chassis;
-    if (!ch || !(this.ctx?.settings.showLabels ?? true)) return;
-    // 좁은 화면의 전체 보기는 이름표 7개가 겹친다 — 안내 패널의 순서 버튼으로 대신한다
-    const list = this.stage === 0 && window.innerWidth < 700 ? [] : TAGS[this.stage] ?? [];
-    for (const [anchor, text0, below] of list) {
-      const pos = ch.anchor(anchor);
-      if (!pos) continue;
-      const text = anchor === 'gearpair' ? (this.gear === 4 ? '4단: 직결 슬리브' : `${this.gear}단 기어 쌍`) : text0;
-      const t = el('div', `pf-tag${this.stage === 0 ? ' is-main' : ''}${below ? ' is-below' : ''}`);
-      t.append(el('span', 'pf-tag-l', text));
-      this.tagLayer.append(t);
-      this.tags.push({ el: t, anchor, pos });
+  /** chassis.anchor 이름 → 월드 기준점(root 좌표를 매 프레임 월드로) */
+  private anchorOf(ch: PowerChassis, name: string): Anchor | null {
+    if (name === 'gearpair') {
+      // 고른 단에 따라 자리가 옮겨 간다 — 매 프레임 다시 읽는다
+      return (out) => {
+        const p = ch.anchor('gearpair');
+        if (!p) return false;
+        ch.root.updateWorldMatrix(true, false);
+        out.copy(p).applyMatrix4(ch.root.matrixWorld);
+        return true;
+      };
     }
+    const p = ch.anchor(name);
+    return p ? localAnchor(ch.root, p.x, p.y, p.z) : null;
   }
 
-  private updateTags(): void {
-    const ctx = this.ctx;
+  private gearpairText(): string {
+    return this.gear === 4 ? '4단: 직결 슬리브' : `${this.gear}단 기어 쌍`;
+  }
+
+  private setLabels(): void {
     const ch = this.chassis;
-    if (!ctx || !ch || this.tags.length === 0) return;
-    const cam = ctx.sceneMgr.camera;
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    ch.car.updateMatrixWorld();
-    for (const t of this.tags) {
-      if (t.anchor === 'gearpair') {
-        const p = ch.anchor('gearpair');
-        if (p) t.pos.copy(p);
-      }
-      const v = this.tmp.copy(t.pos).applyMatrix4(ch.root.matrixWorld).project(cam);
-      const x = (v.x + 1) * 0.5 * W;
-      const y = (1 - v.y) * 0.5 * H;
-      const hidden = v.z > 1 || x < 8 || x > W - 8 || y < 30 || y > H - 4 || (x < 240 && y < 90);
-      t.el.style.visibility = hidden ? 'hidden' : 'visible';
-      if (!hidden) t.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
-    }
+    const labels = this.labels;
+    if (!ch || !labels) return;
+    const overview = this.stage === 0 || this.stage === QUIZ_STAGE;
+    const specs: LabelSpec[] = [];
+    const used = new Set<string>();
+    const add = (anchor: string, text0: string, below: 'b' | '' | undefined, priority: 1 | 2 | 3): void => {
+      const at = this.anchorOf(ch, anchor);
+      if (!at) return;
+      const text = anchor === 'gearpair' ? this.gearpairText() : text0;
+      specs.push({ key: anchor, text, at, side: below ? 'below' : 'above', priority });
+      used.add(anchor);
+    };
+    const own = overview ? TAGS[0]! : TAGS[this.stage] ?? [];
+    for (const [anchor, text, below] of own) add(anchor, text, below, 1);
+    // 1~7단계에서도 큰 장치(0단계의 7개)의 이름을 볼 수 있게 — 같은 기준점은 뺀다
+    if (!overview) for (const [anchor, text, below] of TAGS[0]!) if (!used.has(anchor)) add(anchor, text, below, 3);
+    labels.set(specs);
   }
 
   // ───────────────────────── 프레임 ─────────────────────────
@@ -800,7 +800,7 @@ export class PowerFlow implements AppMode {
       this.frameT = 0;
       this.updateFrame();
     }
-    this.updateTags();
+    this.labels?.update();
 
     if (this.auto) {
       this.autoT += dt;

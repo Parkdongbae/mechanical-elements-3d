@@ -390,6 +390,17 @@
   padding: 0 10px;
 }
 
+/* 시점 버튼 + 이름표 버튼 */
+.eng-viewrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.eng-viewrow > .lab-tag-btn {
+  flex: none;
+}
+
 /* ───────── 정보 패널 ───────── */
 
 .eng-head {
@@ -730,89 +741,6 @@
   min-width: 0;
 }
 
-/* ───────── 3D 이름표 ───────── */
-
-.eng-tags {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.eng-tag,
-.eng-btag,
-.eng-ntag {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  will-change: transform;
-}
-
-.eng-tag {
-  --bk: var(--text-dim);
-}
-
-.eng-tag-l {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform: translate(-50%, -50%);
-  display: grid;
-  place-items: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 4px;
-  border-radius: var(--radius-pill);
-  background: var(--panel-solid);
-  border: 2px solid var(--bk);
-  box-shadow: var(--shadow-1);
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--text);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-  transition: transform 0.08s linear;
-}
-
-.eng-tag.is-fire .eng-tag-l {
-  background: var(--cat-joining);
-  border-color: var(--cat-joining);
-  color: var(--panel-solid);
-  transform: translate(-50%, -50%) scale(1.25);
-}
-
-.eng-btag-l {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform: translate(-50%, -50%);
-  padding: 1px 8px;
-  border-radius: var(--radius-pill);
-  background: var(--bk);
-  color: var(--panel-solid);
-  font-size: 11.5px;
-  font-weight: 750;
-  white-space: nowrap;
-  box-shadow: var(--shadow-1);
-}
-
-.eng-ntag-l {
-  position: absolute;
-  left: 0;
-  bottom: 4px;
-  transform: translateX(-50%);
-  padding: 2px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--panel-solid);
-  border: 1px solid var(--accent);
-  font-size: 12.5px;
-  font-weight: 750;
-  white-space: nowrap;
-  box-shadow: var(--shadow-1);
-}
-
 /* ───────── 중간 폭·좁은 화면: 하단 시트 ───────── */
 
 @media (max-width: 1099px) {
@@ -963,8 +891,13 @@
     flex: 1;
   }
 
-  .eng-views {
+  .eng-viewrow {
     flex: 1 1 100%;
+  }
+
+  .eng-views {
+    flex: 1 1 auto;
+    min-width: 0;
     grid-template-columns: repeat(4, 1fr);
   }
 

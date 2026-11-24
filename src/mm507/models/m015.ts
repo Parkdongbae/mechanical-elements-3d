@@ -41,8 +41,12 @@ export default function buildM015(): MovementModel {
     plate.position.set(0, 2.775, z); // y 2.55 ~ 3.00
     g.add(plate);
   }
+  // 옆판 두 장을 잇는 윗 가로대 — 고리가 여기에 붙어 들보로 올라간다
+  const capU = mesh(new THREE.BoxGeometry(0.03, 0.03, 0.37), steel());
+  capU.position.set(0, 2.985, 0.2); // z 0.015 ~ 0.385
+  g.add(capU);
   const hookU = mesh(new THREE.TorusGeometry(0.03, 0.011, 12, 24), steel());
-  hookU.position.set(0, 3.0, 0.2);
+  hookU.position.set(0, 2.99, 0.2); // xy 면 고리가 z 방향 가로대를 감싸고 윗부분은 들보 속(바닥 y 3.01)
   g.add(hookU);
 
   // 아래 블록 + 매달이 + 추 + 묶는 핀 — hangL 그룹을 y_L 로 이동
@@ -51,12 +55,25 @@ export default function buildM015(): MovementModel {
   pL.position.set(0, 0, 0.2);
   hangL.add(pL);
   hangL.add(rod(v(0, 0, 0.03), v(0, 0, 0.37), 0.03));
-  hangL.add(rod(v(0, -0.39, 0.2), v(0, -0.47, 0.2), 0.03)); // 아래로 막대
+  // 스트랩: 축 양끝을 잡는 옆판 2장(z 0.03·0.37, 단·허브 z 0.047~0.353 바깥)이 블록 아래로 내려와
+  // 줄의 가장 낮은 호(B3, y −0.40)보다 아래에서 가로대로 이어진다 → 가로대 가운데에서 막대·고리·추
+  for (const z of [0.03, 0.37]) {
+    const plate = mesh(new THREE.BoxGeometry(0.03, 0.47, 0.03), steel());
+    plate.position.set(0, -0.22, z); // y +0.015 ~ −0.455 (축 막대를 감쌈)
+    hangL.add(plate);
+  }
+  const capL = mesh(new THREE.BoxGeometry(0.03, 0.03, 0.37), steel());
+  capL.position.set(0, -0.44, 0.2); // y −0.455 ~ −0.425, z 0.015 ~ 0.385
+  hangL.add(capL);
+  hangL.add(rod(v(0, -0.44, 0.2), v(0, -0.475, 0.2), 0.03)); // 가로대 → 고리
   const hookL = mesh(new THREE.TorusGeometry(0.03, 0.011, 12, 24), steel());
   hookL.position.set(0, -0.5, 0.2);
+  hookL.rotation.y = Math.PI / 2; // yz 면 — 추의 xy 면 고리와 사슬처럼 엇걸림
   hangL.add(hookL);
+  // 추 고리(키트: 중심 h/2 + 0.1w = 0.2 위, 반지름 0.048, 굵기 0.0135)의 윗변 안쪽이
+  // 고리 아랫변(중심선 y −0.53, 굵기 0.011)에 얹히게: 고리 중심 = −0.53 + 0.011 + 0.0135 − 0.048
   const load = weight(0.3, 0.34);
-  load.position.set(0, -0.75, 0.2);
+  load.position.set(0, -0.53 + 0.011 + 0.0135 - 0.048 - 0.2, 0.2); // −0.7535
   load.add(tag('추', v(0.45, 0.05, 0.1)));
   hangL.add(load);
   hangL.add(rod(v(0.065, 0, 0.335), v(0.065, 0, 0.37), 0.02)); // 줄 끝 묶는 핀

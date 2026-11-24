@@ -478,6 +478,11 @@
   margin-top: var(--space-1);
 }
 
+.stm-nav .lab-tag-btn {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
 .stm-btn {
   position: relative;
   min-height: 44px;
@@ -671,92 +676,6 @@
   clip-path: polygon(30% 0, 70% 0, 70% 55%, 100% 55%, 50% 100%, 0 55%, 30% 55%);
 }
 
-/* ───────── 3D 이름표 ───────── */
-
-.stm-tags {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.stm-tag {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  will-change: transform;
-}
-
-.stm-tag::before {
-  content: '';
-  position: absolute;
-  left: -4px;
-  top: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-  box-shadow: 0 0 0 2px var(--panel-solid);
-}
-
-.stm-tag::after {
-  content: '';
-  position: absolute;
-  left: -0.5px;
-  bottom: 4px;
-  width: 1px;
-  height: 14px;
-  background: var(--accent);
-}
-
-.stm-tag-l {
-  position: absolute;
-  left: 0;
-  bottom: 18px;
-  transform: translateX(-50%);
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  background: var(--panel-solid);
-  border: 1px solid var(--line-strong);
-  box-shadow: var(--shadow-1);
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-  color: var(--text);
-}
-
-.stm-tag.is-below::after {
-  bottom: auto;
-  top: 4px;
-}
-
-.stm-tag.is-below .stm-tag-l {
-  bottom: auto;
-  top: 18px;
-}
-
-.stm-tag.is-open::before,
-.stm-tag.is-open::after {
-  background: var(--ok);
-}
-
-.stm-tag.is-open .stm-tag-l {
-  border-color: var(--ok);
-  color: var(--ok);
-}
-
-.stm-tag.is-closed::before,
-.stm-tag.is-closed::after {
-  background: var(--warn);
-}
-
-.stm-tag.is-closed .stm-tag-l {
-  border-color: var(--warn);
-  color: var(--warn);
-}
-
 /* ───────── 중간 폭·좁은 화면: 하단 시트 ───────── */
 
 @media (max-width: 1099px) {
@@ -860,6 +779,7 @@
   }
 
   .stm-nav {
+    grid-template-columns: auto 1fr auto auto;
     position: sticky;
     bottom: calc(var(--space-4) * -1);
     margin: 0 calc(var(--space-4) * -1);
@@ -867,6 +787,17 @@
     background: var(--panel-solid);
     border-top: 1px solid var(--line);
     z-index: 1;
+  }
+
+  .stm-nav .stm-btn {
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+
+  .stm-nav .lab-tag-btn {
+    grid-column: auto;
+    justify-self: stretch;
+    padding: 0 10px;
   }
 
   .stm-title {

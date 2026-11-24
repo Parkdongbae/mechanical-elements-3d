@@ -8,7 +8,8 @@ import type { CameraView } from '../scene/SceneSetup';
 import { el, button } from '../modes/dom';
 import { Engine4 } from './cycle/engine4';
 import { Engine2 } from './cycle/engine2';
-import type { CycleState, TagDef } from './cycle/parts';
+import type { CycleState } from './cycle/parts';
+import { LabLabels, type LabelSpec } from './common/labels';
 import { buildGraph, type Graph } from './cycle/graph';
 import {
   COMPARE_ROWS,
@@ -28,14 +29,6 @@ const OPEN_T = 0.12;
 
 type Model = (Engine4 | Engine2);
 type PlayMode = 'idle' | 'stroke' | 'loop';
-
-interface Tag {
-  def: TagDef;
-  el: HTMLElement;
-  label: HTMLElement;
-  pos: THREE.Vector3;
-  last: string;
-}
 
 export class EngineCycle implements AppMode {
   private ctx: ModeContext | null = null;
@@ -58,7 +51,11 @@ export class EngineCycle implements AppMode {
   private guide!: HTMLElement;
   private ctrl!: HTMLElement;
   private side!: HTMLElement;
-  private tagLayer!: HTMLElement;
+  private ctrlRow!: HTMLElement;
+  private labels: LabLabels | null = null;
+  private bounds = { x0: 0, y0: 0, x1: 0, y1: 0 };
+  private labelSig = new Map<string, string>();
+  private baseText = new Map<string, string>();
   private segBtns: HTMLButtonElement[] = [];
   private strokeBtns: HTMLButtonElement[] = [];
   private strokeWrap!: HTMLElement;
@@ -73,7 +70,6 @@ export class EngineCycle implements AppMode {
   private graph: Graph | null = null;
   private graphBox!: HTMLElement;
   private keyBox!: HTMLElement;
-  private tags: Tag[] = [];
   private dragging = false;
 
   private savedMinDist = 2;
@@ -81,7 +77,6 @@ export class EngineCycle implements AppMode {
   private frameT = 0;
   private lastW = 0;
   private lastH = 0;
-  private tmp = new THREE.Vector3();
   private lastStatus = '';
 
   private onKey = (e: KeyboardEvent): void => {
@@ -96,7 +91,6 @@ export class EngineCycle implements AppMode {
 
   private onResize = (): void => {
     this.fly(false);
-    this.buildTags();
   };
 
   enter(ctx: ModeContext): void {
@@ -123,9 +117,11 @@ export class EngineCycle implements AppMode {
     }
     this.model?.dispose();
     this.model = null;
+    this.labels?.dispose();
+    this.labels = null;
+    this.labelSig.clear();
     this.wrap?.remove();
     this.wrap = null;
-    this.tags = [];
     this.segBtns = [];
     this.strokeBtns = [];
     this.status.clear();
@@ -162,7 +158,7 @@ export class EngineCycle implements AppMode {
     this.quiz = false;
     this.buildStrokes();
     this.buildSide();
-    this.buildTags();
+    this.setLabels();
     this.shown = -1;
     this.lastStatus = '';
     this.playStroke(0);
@@ -174,8 +170,6 @@ export class EngineCycle implements AppMode {
   private buildDom(root: HTMLElement): void {
     const wrap = el('div', 'cyc-wrap');
     this.wrap = wrap;
-    this.tagLayer = el('div', 'cyc-tags');
-    this.tagLayer.setAttribute('aria-hidden', 'true');
     this.dock = el('div', 'cyc-dock');
 
     this.seg = el('div', 'cyc-seg cyc-panel');
@@ -195,8 +189,12 @@ export class EngineCycle implements AppMode {
     this.ctrl = this.buildCtrl();
     this.side = el('aside', 'cyc-side cyc-panel');
     this.dock.append(this.seg, this.ctrl, this.guide, this.side);
-    wrap.append(this.tagLayer, this.dock);
+    wrap.append(this.dock);
     root.append(wrap);
+    // 이름표 레이어 + 켜고 끄는 버튼(재생 조작 줄 끝)
+    const labels = new LabLabels(this.ctx!, wrap, { bounds: () => this.bounds });
+    this.labels = labels;
+    this.ctrlRow.append(labels.button);
   }
 
   private buildCtrl(): HTMLElement {
@@ -250,6 +248,7 @@ export class EngineCycle implements AppMode {
     ss.append(el('span', undefined, '천천히'), el('span', undefined, '빠르게'));
     sp.append(st, sr, ss);
     row.append(sc, sp);
+    this.ctrlRow = row;
     p.append(row);
     return p;
   }
@@ -587,7 +586,7 @@ export class EngineCycle implements AppMode {
     const t = new THREE.Vector3(0.12 * SCALE, (four ? 2.1 : 1.9) * SCALE, 0);
     const az = THREE.MathUtils.degToRad(22);
     const elv = THREE.MathUtils.degToRad(13);
-    const d = (four ? 7.9 : 7.1) * (portrait ? 0.86 : narrow ? 1.32 : 1);
+    const d = (four ? 7.9 : 7.1) * (portrait ? 1.06 : narrow ? 1.32 : 1);
     const pos = t.clone().add(new THREE.Vector3(Math.sin(az) * Math.cos(elv), Math.sin(elv), Math.cos(az) * Math.cos(elv)).multiplyScalar(d));
     const view: CameraView = { pos: [pos.x, pos.y, pos.z], target: [t.x, t.y, t.z] };
     ctx.sceneMgr.flyTo(view, immediate);
@@ -600,6 +599,7 @@ export class EngineCycle implements AppMode {
     if (!ctx || !this.wrap) return;
     const W = window.innerWidth;
     const H = window.innerHeight;
+    const portrait = W < H;
     let x0 = 0;
     let x1 = W;
     let y0 = 0;
@@ -613,8 +613,10 @@ export class EngineCycle implements AppMode {
       y0 = 56;
       y1 = this.dock.getBoundingClientRect().top;
     }
+    this.bounds = { x0, y0, x1, y1 };
+    // 세로 화면은 좌상단 홈 버튼·제목 자리(y 90)를 비켜, 그 아래 영역의 가운데로 모형을 옮긴다
     const cx = (x0 + x1) / 2;
-    const cy = (y0 + y1) / 2;
+    const cy = ((portrait && W < 1100 ? 132 : y0) + y1) / 2;
     const key = `${W}x${H}:${Math.round(cx)},${Math.round(cy)}`;
     if (key === this.viewKey && W === this.lastW && H === this.lastH) return;
     this.viewKey = key;
@@ -627,60 +629,55 @@ export class EngineCycle implements AppMode {
 
   // ───────────────────────── 3D 이름표 ─────────────────────────
 
-  private buildTags(): void {
-    this.tagLayer.replaceChildren();
-    this.tags = [];
+  private setLabels(): void {
     const m = this.model;
-    if (!m || !(this.ctx?.settings.showLabels ?? true)) return;
-    const small = window.innerWidth < 700;
-    const keep = small ? new Set(['intake', 'exhaust', 'transfer', 'plug']) : null;
-    for (const def of m.tags()) {
-      if (keep && !keep.has(def.key)) continue;
-      const t = el('div', `cyc-tag${def.side ? ' is-' + def.side : ''}`);
-      const label = el('span', 'cyc-tag-l', def.label);
-      t.append(label);
-      this.tagLayer.append(t);
-      this.tags.push({ def, el: t, label, pos: def.pos.clone(), last: '' });
-    }
+    const labels = this.labels;
+    if (!m || !labels) return;
+    this.labelSig.clear();
+    this.baseText.clear();
+    for (const d of m.tags()) this.baseText.set(d.key, d.label);
+    const specs: LabelSpec[] = m.tags().map((def) => ({
+      key: def.key,
+      text: def.label,
+      side: def.side ?? 'above',
+      priority: def.priority ?? 1,
+      at: (out) => {
+        if (def.backOnly) {
+          // 블록 뒤의 부품: 카메라가 엔진 뒤쪽에 있을 때만(앞에서 보면 엉뚱한 부품 위에 점이 찍힌다)
+          out.copy(this.ctx!.sceneMgr.camera.position);
+          m.root.worldToLocal(out);
+          if (out.z > -0.2) return false;
+        }
+        // 움직이는 부품(피스톤·커넥팅 로드)은 매 프레임 자리를 다시 읽는다
+        if (!m.tagPos(def.key, out)) out.copy(def.pos);
+        out.applyMatrix4(m.root.matrixWorld);
+        return true;
+      }
+    }));
+    labels.set(specs);
   }
 
-  private updateTags(st: CycleState): void {
-    const ctx = this.ctx;
-    const m = this.model;
-    if (!ctx || !m || this.tags.length === 0) return;
-    const cam = ctx.sceneMgr.camera;
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    m.root.updateMatrixWorld();
-    for (const t of this.tags) {
-      const k = t.def.key;
-      let text = t.def.label;
-      let cls = '';
-      if (k === 'intake' || k === 'exhaust' || k === 'transfer') {
-        const o = (st.open[k] ?? 0) > OPEN_T;
-        text = `${t.def.label} · ${o ? '열림' : '닫힘'}`;
-        cls = o ? 'is-open' : 'is-closed';
-      } else if (k === 'plug' && st.spark) {
-        text = '점화 플러그 · 불꽃!';
-        cls = 'is-fire';
-      } else if (k === 'piston') {
-        text = `피스톤 ${st.dir === 'up' ? '↑' : '↓'}`;
-        m.tagPos('piston', t.pos);
-      }
-      const sig = text + cls;
-      if (sig !== t.last) {
-        t.last = sig;
-        t.label.textContent = text;
-        t.el.className = `cyc-tag${t.def.side ? ' is-' + t.def.side : ''}${cls ? ' ' + cls : ''}`;
-      }
-      const v = this.tmp.copy(t.pos).applyMatrix4(m.root.matrixWorld).project(cam);
-      const x = (v.x + 1) * 0.5 * W;
-      const y = (1 - v.y) * 0.5 * H;
-      const dockTop = W < 1100 ? this.dock.getBoundingClientRect().top : H;
-      const hidden = v.z > 1 || x < 8 || x > W - 8 || y < 30 || y > dockTop - 4 || (x < 240 && y < 90);
-      t.el.style.visibility = hidden ? 'hidden' : 'visible';
-      if (!hidden) t.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+  /** 밸브·포트 열림/닫힘, 점화 불꽃, 피스톤 방향 — 바뀔 때만 글자·상태를 갱신 */
+  private updateLabelStates(st: CycleState): void {
+    const labels = this.labels;
+    if (!labels) return;
+    const put = (key: string, text: string, state: string | null): void => {
+      const sig = `${text}|${state ?? ''}`;
+      if (this.labelSig.get(key) === sig) return;
+      this.labelSig.set(key, sig);
+      labels.setText(key, text);
+      labels.setState(key, state);
+    };
+    for (const k of ['intake', 'exhaust', 'transfer']) {
+      const base = this.baseText.get(k);
+      if (base === undefined) continue;
+      const o = (st.open[k] ?? 0) > OPEN_T;
+      put(k, `${base} · ${o ? '열림' : '닫힘'}`, o ? 'open' : 'closed');
     }
+    const plug = this.baseText.get('plug');
+    if (plug !== undefined) put('plug', st.spark ? `${plug} · 불꽃!` : plug, st.spark ? 'fire' : null);
+    const piston = this.baseText.get('piston');
+    if (piston !== undefined) put('piston', `${piston} ${st.dir === 'up' ? '↑' : '↓'}`, null);
   }
 
   // ───────────────────────── 프레임 ─────────────────────────
@@ -726,6 +723,7 @@ export class EngineCycle implements AppMode {
       this.frameT = 0;
       this.updateFrame();
     }
-    this.updateTags(st);
+    this.updateLabelStates(st);
+    this.labels?.update();
   }
 }

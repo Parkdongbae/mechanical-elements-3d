@@ -5,10 +5,13 @@
 // 이라서 큰 바퀴가 θ/2 로 돌면 롤러는 늘 각 θ/2 + k·60° 의 지름(홈) 위에 있다(카르단 직선 운동).
 // → 큰 바퀴는 **같은 방향, 정확히 절반 속도, 일정한 속도**로 돈다. 롤러 3개는 언제나 홈 안에 있다.
 // (검증에서 고침: 처음에는 바퀴 밖에서 무는 간헐식 제네바로 만들었으나 판화의 배치·회전 방향과 달랐다.)
+// 롤러(사용자 지적 후 추가): 판화·원문의 'friction-rollers' — 각 핀에 끼운 회전 원통(반지름 RR)이 홈 벽(폭 2·HS ≈ 2·RR)에
+//   닿아 구른다. 큰 바퀴를 같은 방향으로 미는 힘은 홈에 수직(접선)이라 롤러는 큰 바퀴 회전 방향 앞쪽 벽을 누르고,
+//   그 벽 위를 미끄럼 없이 구른다: 큰 바퀴에 대한 롤러 회전각 = |s|/RR (s = 홈을 따른 롤러 위치, 중심을 지날 때 닿는 벽이 바뀌어도 이어진다).
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { displayStand, multiGenevaDriver, rod, rotArrow, shaftZ, tag } from '../kit';
-import { brass, castIron, darkSteel, paint } from '../../models/materials';
+import { brass, castIron, darkSteel, paint, steel } from '../../models/materials';
 import { circlePts, lathe, loft, mesh, tubeProfile, type V2 } from '../../models/parts/geom';
 
 const A = 0.36; // 롤러 원 반지름 = 두 축 사이 거리
@@ -16,9 +19,10 @@ const O2 = { x: 0, y: 1.8 }; // 큰 바퀴 중심
 const O1 = { x: 0, y: 1.8 - A }; // 작은 바퀴(구동) 중심 — 큰 바퀴 중심 바로 아래
 const R = 0.84; // 큰 바퀴 바깥 반지름
 const RI = 0.7; // 테두리 안쪽 반지름(쐐기 구멍의 바깥 호)
-const HS = 0.045; // 홈 반폭(롤러 반지름 0.035 + 틈 0.01)
+const RR = 0.065; // 롤러 반지름(판화: 너트보다 굵은 원통, 키트 핀 반지름 0.035 에 끼움)
+const HS = RR + 0.002; // 홈 반폭 = 롤러 반지름 + 구름 틈 0.002(눈에 보이는 틈 없음)
 const XE = 2 * A + 0.005; // 홈 끝 반원의 중심 반지름(롤러가 가장 멀리 가는 곳 2a)
-const WS = 0.085; // 살 반폭(홈 양옆 레일 0.04 씩)
+const WS = 0.11; // 살 반폭(홈 양옆 레일 0.043 씩)
 const T = 0.09; // 큰 바퀴 두께
 const GD = 0.05; // 홈 깊이
 const ZF = 0.12; // 큰 바퀴 앞면 z
@@ -101,6 +105,23 @@ export default function buildM027(): MovementModel {
   const driver = multiGenevaDriver(2 * A, { driver: true });
   driver.position.set(O1.x, O1.y, ZD);
   g.add(driver);
+  // 롤러 3개: 키트 핀(반지름 0.035, 판 뒷면에서 −Z 로 0.10) 에 끼운 원통. 판 뒷면 바로 뒤 ~ 홈 바닥 위 0.015
+  // 세계 z 0.085 ~ 0.174 → 홈 벽(z 0.07 ~ 0.12) 에 닿고, 큰 바퀴 앞면과 판 사이로 몸통이 보인다(판화처럼)
+  const rollerGeo = lathe(tubeProfile(0.036, RR, -0.095, -0.006, 0.008), 32);
+  rollerGeo.rotateX(Math.PI / 2);
+  const stripeGeo = new THREE.BoxGeometry(0.012, 0.022, 0.08); // 회전이 보이게 몸통에 세로 줄
+  const rollers: THREE.Group[] = [];
+  for (let k = 0; k < 3; k++) {
+    const psi = Math.PI / 2 + (2 * Math.PI * k) / 3;
+    const r = new THREE.Group();
+    r.position.set(A * Math.cos(psi), A * Math.sin(psi), 0);
+    r.add(mesh(rollerGeo, steel()));
+    const st = mesh(stripeGeo, darkSteel());
+    st.position.set(RR - 0.006, 0, -0.05); // 바깥면 = RR (홈 벽에 닿지 않음)
+    r.add(st);
+    driver.add(r);
+    rollers.push(r);
+  }
   // 구동축은 앞으로 나온다(뒤로는 도는 큰 바퀴가 가로막는다) — 받침에서 올라온 앞 기둥의 고리가 받친다
   const dShaft = new THREE.Group();
   dShaft.position.set(O1.x, O1.y, 0);
@@ -129,8 +150,22 @@ export default function buildM027(): MovementModel {
   g.add(
     tag('작은 삼각 바퀴(구동)', v(1.35, 0.8, 0.3)),
     tag('큰 바퀴(홈 6개)', v(1.35, 2.75, 0.2)),
-    tag('롤러(홈을 따라 미끄러짐)', v(-1.3, 0.8, 0.3))
+    tag('롤러(홈 벽을 따라 구름)', v(-1.15, 0.95, 0.3))
   );
+
+  /** 모든 자세를 누적각 θ 에서 다시 계산 */
+  function pose(): void {
+    driver.rotation.z = theta;
+    dShaft.rotation.z = theta;
+    wheel.rotation.z = theta / 2; // 롤러 k 는 늘 홈 각 θ/2 + k·60° 의 지름 위
+    // 롤러 k: 큰 바퀴 중심에서 |s| = 2a·|sin(u/2)|, u = θ + 2πk/3. 홈 벽 위를 구르므로 세계 각 = θ/2 + |s|/RR,
+    // 판(구동 바퀴, 각 θ)에 대한 각 = 그 값 − θ
+    for (let k = 0; k < 3; k++) {
+      const s = 2 * A * Math.abs(Math.sin((theta + (2 * Math.PI * k) / 3) / 2));
+      rollers[k]!.rotation.z = theta / 2 + s / RR - theta;
+    }
+  }
+  pose();
 
   return {
     group: g,
@@ -143,9 +178,7 @@ export default function buildM027(): MovementModel {
     ],
     update(dt: number, speed: number): void {
       theta += OMEGA * speed * dt;
-      driver.rotation.z = theta;
-      dShaft.rotation.z = theta;
-      wheel.rotation.z = theta / 2; // 롤러 k 는 늘 홈 각 θ/2 + k·60° 의 지름 위
+      pose();
     }
   };
 }

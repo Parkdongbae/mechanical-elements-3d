@@ -426,16 +426,31 @@ export class Engine4 implements CycleEngine {
       { key: 'intake', label: '흡기 밸브', pos: new THREE.Vector3(-VX - 0.13, DECK - 0.01, 0.02), side: 'left' },
       { key: 'exhaust', label: '배기 밸브', pos: new THREE.Vector3(VX + 0.13, DECK - 0.01, 0.02), side: 'right' },
       { key: 'plug', label: '점화 플러그', pos: new THREE.Vector3(0, 4.14, 0) },
-      { key: 'cam', label: '캠축(크랭크의 1/2 속도)', pos: new THREE.Vector3(VX + 0.16, CAM_Y, 0.05), side: 'right' },
+      { key: 'cam', label: '캠축(캠)', pos: new THREE.Vector3(VX + 0.16, CAM_Y, 0.05), side: 'right' },
       { key: 'piston', label: '피스톤', pos: new THREE.Vector3(-0.4, 2.4, 0.2), side: 'left' },
-      { key: 'crank', label: '크랭크축', pos: new THREE.Vector3(0, CRANK_Y, 0.36), side: 'right' }
+      { key: 'crank', label: '크랭크축', pos: new THREE.Vector3(0, CRANK_Y, 0.36), side: 'right' },
+      { key: 'rod', label: '커넥팅 로드', pos: new THREE.Vector3(0.1, 1.9, 0.12), side: 'right' },
+      { key: 'cylinder', label: '실린더', pos: new THREE.Vector3(0.52, 2.15, 0.05), side: 'right', priority: 2 },
+      { key: 'spring', label: '밸브 스프링', pos: new THREE.Vector3(-VX - 0.05, HEAD_TOP + SPRING_H / 2, 0.05), side: 'left', priority: 2 },
+      // 캠 벨트는 블록 뒤(z = BELT_Z)에 있다 — 배기 쪽 곧은 가닥의 가운데, 벨트 뒷면에 점을 찍고 뒤에서 볼 때만 보인다
+      { key: 'belt', label: '캠 벨트', pos: new THREE.Vector3(0.26, (CRANK_Y + CAM_Y) / 2, BELT_Z - 0.04), side: 'right', priority: 2, backOnly: true },
+      { key: 'inpipe', label: '흡기관·공기 청정기', pos: new THREE.Vector3(-1.42, 3.78, 0), side: 'left', priority: 3 },
+      { key: 'expipe', label: '배기관·소음기', pos: new THREE.Vector3(1.42, 1.6, 0), side: 'right', priority: 3 },
+      { key: 'fins', label: '냉각 핀', pos: new THREE.Vector3(-0.86, 2.0, 0.02), side: 'left', priority: 3 }
     ];
   }
 
-  /** 움직이는 이름표 위치 갱신(피스톤) */
+  /** 움직이는 이름표 위치 갱신(피스톤·커넥팅 로드 가운데) */
   tagPos(key: string, out: THREE.Vector3): boolean {
     if (key === 'piston') {
       out.set(-0.4, this.piston.position.y + 0.1, 0.1);
+      return true;
+    }
+    if (key === 'rod') {
+      // 소단부(피스톤 핀)와 대단부(크랭크 핀)의 가운데
+      const py = this.piston.position.y;
+      const a = -this.crank.rotation.z;
+      out.set((CR * Math.sin(a)) / 2, (py + CRANK_Y + CR * Math.cos(a)) / 2, 0.12);
       return true;
     }
     return false;

@@ -942,6 +942,26 @@ export class WindCar {
     this.spots.push({ kind: 'spoiler', pos: new THREE.Vector3(wx + chord, wy + 0.04, 0.45) });
   }
 
+  /** 차체 부품 이름표 기준점(차 기준 좌표). 차고·A필러 선택으로 바뀌는 BodyShape 윗면 높이로 계산 */
+  bodyPoint(name: 'hood' | 'windshield' | 'roof' | 'trunk', out: THREE.Vector3): boolean {
+    const sh = this.shape;
+    const at = (x: number, lift = 0.02): THREE.Vector3 => out.set(x, sh.yT(x) + lift, 0);
+    switch (name) {
+      case 'hood':
+        at(-1.15);
+        return true;
+      case 'windshield':
+        at(-0.4, -0.02);
+        return true;
+      case 'roof':
+        at(0.32);
+        return true;
+      case 'trunk':
+        at(1.6);
+        return true;
+    }
+  }
+
   /** 시험 코스용 복제(지오메트리 공유, 재질 선택적 교체) */
   makeClone(material?: THREE.Material): THREE.Group {
     const g = this.group.clone(true);

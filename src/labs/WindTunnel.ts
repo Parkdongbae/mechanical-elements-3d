@@ -50,7 +50,8 @@ import { Tunnel, Ripples, ForceArrow } from './wind/tunnel';
 import { CornerTest, CrosswindTest } from './wind/tests';
 import { WindAudio } from './wind/audio';
 import { DragChart, Spectrum } from './wind/charts';
-import { UnderView } from './wind/underView';
+import { UnderView, LIFT } from './wind/underView';
+import { LabLabels, type Anchor, type LabelBounds, type LabelSpec } from './common/labels';
 
 type Tab = 'drag' | 'stab' | 'noise';
 type Sub = 'force' | 'corner' | 'cross';
@@ -103,6 +104,9 @@ export class WindTunnel implements AppMode {
   private under: UnderView | null = null;
   private underLight: THREE.DirectionalLight | null = null;
   private underBtns: HTMLButtonElement[] = [];
+  private labels: LabLabels | null = null;
+  private labelBounds: LabelBounds = { x0: 0, y0: 0, x1: 4000, y1: 4000 };
+  private boundsT = 0;
   private wheelAngle = 0;
   private time = 0;
 
@@ -184,6 +188,8 @@ export class WindTunnel implements AppMode {
     ctx.sceneMgr.add(this.under.posts);
 
     this.buildDom(ctx.root);
+    if (this.wrap) this.labels = new LabLabels(ctx, this.wrap, { bounds: () => this.labelBounds });
+    this.placeLabelButton();
     this.applyConfig(false);
     this.setTab('drag', true);
     this.narrowMq = window.matchMedia(NARROW);
@@ -213,6 +219,8 @@ export class WindTunnel implements AppMode {
     this.under = null;
     this.underLight = null;
     this.underBtns = [];
+    this.labels?.dispose();
+    this.labels = null;
     const ctx = this.ctx;
     const objs = [this.tunnel?.group, this.car?.group, this.flow?.group, this.ripples?.group, this.corner?.group, this.cross?.group, ...this.arrows.map((a) => a.group)];
     if (ctx) for (const o of objs) if (o) ctx.sceneMgr.remove(o);
@@ -489,6 +497,7 @@ export class WindTunnel implements AppMode {
     this.collapseBtn.setAttribute('aria-expanded', String(open));
     this.collapseBtn.textContent = open ? '접기' : '펼치기';
     this.wrap?.classList.toggle('is-left-closed', !open);
+    this.boundsT = 0;
   }
 
   // ───────────────────────── 상태 변경 ─────────────────────────
@@ -526,7 +535,7 @@ export class WindTunnel implements AppMode {
     this.field.configure(car.shape, this.cfg, car.wing);
     this.flow.rebuild();
     this.rebuildRipples();
-    this.under?.setLabels(car.underLabels);
+    this.refreshLabels();
     for (const [id, list] of this.chips) {
       list.forEach((b, i) => {
         const on = this.cfg[id] === i;
@@ -578,6 +587,8 @@ export class WindTunnel implements AppMode {
     for (const [k, s] of this.sections) s.hidden = k !== t;
     for (const [k, c] of this.ctrlGroups) c.hidden = k !== t;
     if (this.wrap) this.wrap.dataset.tab = t;
+    this.placeLabelButton();
+    this.boundsT = 0;
     const lo = t === 'stab' ? 80 : 0;
     const hi = t === 'stab' ? 250 : 200;
     this.speedInput.min = String(lo);
@@ -990,6 +1001,12 @@ export class WindTunnel implements AppMode {
     const kmh = this.tab === 'stab' ? this.driveKmh : this.tunnelKmh;
     const tests = this.tab === 'stab' && this.sub !== 'force';
     this.updateLift(h);
+    this.boundsT -= h;
+    if (this.boundsT <= 0) {
+      this.boundsT = 0.5;
+      this.measureBounds();
+    }
+    this.labels?.update();
     if (!tests) {
       // 풍동 안: 이동 벨트 위에서 바퀴도 풍속에 맞춰 돈다(화면에서는 느리게)
       this.wheelAngle += (kmhToMs(kmh) / (WHEEL_R * 1.3)) * h * 0.25;
@@ -1034,6 +1051,104 @@ export class WindTunnel implements AppMode {
     }
   }
 
+  /** 이름표 버튼을 지금 보이는 조작 줄(토글 줄)의 맨 앞에 둔다 */
+  private placeLabelButton(): void {
+    const btn = this.labels?.button;
+    const group = this.ctrlGroups.get(this.tab);
+    if (btn && group && group.firstChild !== btn) group.prepend(btn);
+  }
+
+  /** 이름표를 놓을 수 있는 3D 영역(패널·막대·시트를 뺀 곳) — 0.5초마다 한 번만 잰다 */
+  private measureBounds(): void {
+    const w = this.wrap;
+    if (!w) return;
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const r = (sel: string): DOMRect | null => w.querySelector<HTMLElement>(sel)?.getBoundingClientRect() ?? null;
+    if (window.matchMedia(NARROW).matches) {
+      const sheet = r('.wind-sheet');
+      this.labelBounds = { x0: 0, y0: 0, x1: W, y1: Math.max(120, (sheet?.top ?? H * 0.5) - 6) };
+      return;
+    }
+    const left = r('.wind-left');
+    const right = r('.wind-right');
+    const tabs = r('.wind-tabs');
+    const note = r('.wind-disclaimer');
+    const bar = r('.wind-bar');
+    this.labelBounds = {
+      x0: (left?.right ?? 0) + 8,
+      y0: (tabs?.bottom ?? 0) + 6,
+      x1: (right?.left ?? W) - 8,
+      y1: Math.min(note?.top ?? H, bar?.top ?? H) - 6
+    };
+  }
+
+  /** 월드 좌표 기준점 — 차 기준 좌표를 차 그룹(들어 올려지는 중에도 따라감)으로 옮긴다 */
+  private carAnchor(local: (out: THREE.Vector3) => boolean, needLift = false): Anchor {
+    return (out) => {
+      const car = this.car;
+      if (!car || !car.group.visible) return false;
+      if (needLift && !(this.under?.on && this.under.lift > LIFT * 0.8)) return false;
+      if (!local(out)) return false;
+      car.group.updateMatrixWorld();
+      car.group.localToWorld(out);
+      return true;
+    };
+  }
+
+  /** 지금 보기(평소/하부)에 맞는 이름표를 다시 만든다 — 부품·차고·보기 방식이 바뀔 때마다 */
+  private refreshLabels(): void {
+    const car = this.car;
+    const labels = this.labels;
+    if (!car || !labels) return;
+    const specs: LabelSpec[] = [];
+    if (this.under?.on) {
+      car.underLabels.forEach((u, i) => {
+        const info = u.text.includes('→');
+        const p = u.pos.clone();
+        specs.push({
+          key: `under${i}`,
+          text: u.text,
+          at: this.carAnchor((o) => (o.copy(p), true), true),
+          side: 'below',
+          kind: info ? 'info' : 'part',
+          priority: info ? 3 : 2
+        });
+      });
+      labels.set(specs);
+      return;
+    }
+    const spot = (kind: string) => car.spots.find((sp) => sp.kind === kind && sp.pos.z > 0);
+    const fromSpot = (key: string, text: string, kind: string, priority: 1 | 2 | 3, side: LabelSpec['side']): void => {
+      const sp = spot(kind);
+      if (!sp) return;
+      const p = sp.pos.clone();
+      specs.push({ key, text, at: this.carAnchor((o) => (o.copy(p), true)), side, priority });
+    };
+    fromSpot('handle', '도어 손잡이', 'handle', 2, 'below');
+    fromSpot('mirror', '사이드미러', 'mirror', 1, 'above');
+    fromSpot('pillar', 'A필러', 'pillar', 2, 'above');
+    fromSpot('gap', '도어 틈새', 'gap', 3, 'below');
+    fromSpot('wheel', '휠', 'wheel', 2, 'below');
+    fromSpot('spoiler', '뒤 스포일러', 'spoiler', 1, 'above');
+    const body = (key: string, text: string, name: 'hood' | 'windshield' | 'roof' | 'trunk', priority: 1 | 2 | 3): void => {
+      specs.push({ key, text, at: this.carAnchor((o) => car.bodyPoint(name, o)), side: 'above', priority });
+    };
+    body('hood', '보닛', 'hood', 2);
+    body('windshield', '앞유리', 'windshield', 2);
+    body('roof', '지붕', 'roof', 3);
+    body('trunk', '트렁크', 'trunk', 3);
+    const tun = (key: string, text: string, name: 'fan' | 'honeycomb' | 'belt' | 'turntable' | 'balance', priority: 1 | 2 | 3, side: LabelSpec['side']): void => {
+      specs.push({ key, text, at: (o) => this.tunnel?.anchor(name, o) ?? false, side, priority });
+    };
+    tun('fan', '송풍 팬', 'fan', 1, 'above');
+    tun('honeycomb', '벌집 정류기', 'honeycomb', 2, 'above');
+    tun('belt', '이동 벨트', 'belt', 2, 'below');
+    tun('turntable', '턴테이블', 'turntable', 3, 'below');
+    tun('balance', '힘 측정 받침', 'balance', 2, 'below');
+    labels.set(specs);
+  }
+
   /** '하부 보기' 버튼(여러 곳에 두고 상태를 함께 맞춘다) */
   private underButton(cls: string): HTMLButtonElement {
     const b = button(cls, '하부 보기', () => this.setUnder(!this.under?.on, true));
@@ -1058,6 +1173,7 @@ export class WindTunnel implements AppMode {
       b.textContent = on ? '하부 보기 끄기' : '하부 보기';
     }
     this.wrap?.classList.toggle('is-under', on);
+    this.refreshLabels();
     if (on) this.tipEl.textContent = '차를 리프트로 들어 올렸어요. 화면을 끌어 돌려 보며 하부 처리(노출·언더커버·디퓨저)를 바꿔 비교해 보세요.';
     if (fly || !on) this.flyView(false);
   }

@@ -1,7 +1,7 @@
 /* 탐구 실험 스타일 — 작업 지시서 11 (BikeGears). 색·간격·그림자는 tokens.css 변수만 사용한다. */
 
 .bike-wrap {
-  --bike-dock-h: 128px;
+  --bike-dock-h: 144px;
   --bike-side-w: 330px;
   position: absolute;
   inset: 0;
@@ -515,6 +515,15 @@
   margin-top: -4px;
 }
 
+.bike-cadence-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: 2px;
+}
+
 .bike-slow {
   align-self: center;
   min-height: 32px;
@@ -1000,6 +1009,12 @@
 
   .bike-cadence-foot {
     display: none;
+  }
+
+  .bike-cadence-btns {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    margin: 0;
   }
 
   .bike-slow {

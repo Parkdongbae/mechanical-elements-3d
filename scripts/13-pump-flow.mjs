@@ -20,15 +20,15 @@ async function check(page) {
   return page.evaluate(() => {
     const over = document.documentElement.scrollWidth > innerWidth || document.body.scrollWidth > innerWidth;
     const tl = [...document.querySelectorAll('.pmp-wrap *')].filter((e) => {
-      if (e.closest('.pmp-tags')) return false;
+      if (e.closest('.lab-tags')) return false;
       const b = e.getBoundingClientRect();
       return getComputedStyle(e).visibility !== 'hidden' && b.width > 0 && b.left < 220 && b.top < 64 && b.right > 0 && b.bottom > 0;
     }).length;
-    const tagTl = [...document.querySelectorAll('.pmp-tag-l, .pmp-tick')].filter((e) => {
+    const tagTl = [...document.querySelectorAll('.lab-tag-l, .pmp-ticks .pmp-tick')].filter((e) => {
       const b = e.getBoundingClientRect();
       return getComputedStyle(e).visibility !== 'hidden' && b.width > 0 && b.left < 220 && b.top < 64;
     }).length;
-    const wide = [...document.querySelectorAll('.pmp-wrap *')].filter((e) => !e.closest('.pmp-tags') && e.getBoundingClientRect().right > innerWidth + 1).length;
+    const wide = [...document.querySelectorAll('.pmp-wrap *')].filter((e) => !e.closest('.lab-tags') && e.getBoundingClientRect().right > innerWidth + 1).length;
     const txt = (s) => document.querySelector(s)?.textContent ?? '';
     return {
       over,
@@ -127,7 +127,7 @@ await scene('drag', async (p, snap) => {
   await step(p, 2);
   await prime(p);
   const grip = await p.evaluate(() => {
-    const t = document.querySelector('.pmp-tag.is-grip');
+    const t = document.querySelector('.lab-tag[data-always="true"]');
     const m = /translate\(([-\d.]+)px, ([-\d.]+)px\)/.exec(t?.style.transform ?? '');
     return m ? { x: +m[1], y: +m[2] + 10 } : null;
   });

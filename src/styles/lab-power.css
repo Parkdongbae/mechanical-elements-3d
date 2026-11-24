@@ -78,8 +78,21 @@
   right: var(--space-4);
   bottom: var(--space-4);
   padding: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* 단계 버튼만 가로로 스크롤 — 이름표 버튼은 늘 보이게 막대 끝에 고정 */
+.pf-steps-scroll {
+  flex: 1 1 auto;
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
+}
+
+.pf-steps > .lab-tag-btn {
+  flex: none;
 }
 
 .pf-steps-list {
@@ -748,77 +761,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ───────── 3D 이름표 ───────── */
-
-.pf-tags {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.pf-tag {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
-  will-change: transform;
-}
-
-.pf-tag::before {
-  content: '';
-  position: absolute;
-  left: -4px;
-  top: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-  box-shadow: 0 0 0 2px var(--panel-solid);
-}
-
-.pf-tag::after {
-  content: '';
-  position: absolute;
-  left: -0.5px;
-  bottom: 4px;
-  width: 1px;
-  height: 14px;
-  background: var(--accent);
-}
-
-.pf-tag-l {
-  position: absolute;
-  left: 0;
-  bottom: 18px;
-  transform: translateX(-50%);
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  background: var(--panel-solid);
-  border: 1px solid var(--line-strong);
-  box-shadow: var(--shadow-1);
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-  color: var(--text);
-}
-
-.pf-tag.is-below::after {
-  bottom: auto;
-  top: 4px;
-}
-
-.pf-tag.is-below .pf-tag-l {
-  bottom: auto;
-  top: 18px;
-}
-
-.pf-tag.is-main .pf-tag-l {
-  font-size: 12.5px;
-  border-color: var(--accent);
-}
-
 /* ───────── 중간 폭·좁은 화면: 하단 시트 ───────── */
 
 @media (max-width: 1099px) {
@@ -868,7 +810,6 @@
     padding: var(--space-2) var(--space-4) 6px;
     background: var(--panel-solid);
     border-bottom: 1px solid var(--line);
-    overflow-x: auto;
   }
 
   .pf-steps-list {

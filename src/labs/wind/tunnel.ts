@@ -138,6 +138,29 @@ export class Tunnel {
     }
   }
 
+  /** 설비 이름표 기준점(월드 좌표). 시험 구간이 안 보이면 false */
+  anchor(name: 'fan' | 'honeycomb' | 'belt' | 'turntable' | 'balance', out: THREE.Vector3): boolean {
+    if (!this.group.visible) return false;
+    switch (name) {
+      case 'fan':
+        out.set(L0 - 0.55, 1.25, 0);
+        break;
+      case 'honeycomb':
+        out.set(L0 + 0.02, 1.9, WZ * 0.5);
+        break;
+      case 'belt':
+        out.set(0.0, 0.003, 0.75);
+        break;
+      case 'turntable':
+        out.set(0, 0.004, 2.58);
+        break;
+      case 'balance':
+        out.set(WHEEL_X[1], 0.006, 0.74);
+        break;
+    }
+    return true;
+  }
+
   /** 하부 보기: 바닥판을 반투명하게(아래로 내려간 카메라에서도 차가 보이게) */
   setSeeThrough(on: boolean): void {
     this.floorMat.transparent = on;

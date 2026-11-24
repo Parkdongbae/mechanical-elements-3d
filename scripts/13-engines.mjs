@@ -39,12 +39,15 @@ async function scene(name, actions) {
       const r = await page.evaluate(() => {
         const over = document.documentElement.scrollWidth > innerWidth;
         const tl = [...document.querySelectorAll('.eng-wrap *')].filter((e) => {
-          if (e.closest('.eng-tags')) return false;
+          if (e.closest('.lab-tags')) return false;
           const b = e.getBoundingClientRect();
           return getComputedStyle(e).visibility !== 'hidden' && b.width > 0 && b.left < 220 && b.top < 64 && b.right > 0 && b.bottom > 0;
         }).length;
         const info = document.querySelector('.eng-info');
-        const tags = [...document.querySelectorAll('.eng-tag')].filter((t) => t.style.visibility !== 'hidden').length;
+        const tags = [...document.querySelectorAll('.lab-tag')].filter((t) => {
+          const cs = getComputedStyle(t);
+          return cs.display !== 'none' && cs.visibility !== 'hidden';
+        }).length;
         return { over, topLeft: tl, infoScroll: info ? info.scrollHeight > info.clientHeight + 2 : false, tags };
       });
       if (reloaded) throw new Error('reloaded');

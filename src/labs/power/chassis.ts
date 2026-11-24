@@ -718,6 +718,7 @@ export class PowerChassis {
       rod: [0, AY + 0.07, ENG.cz[2]!],
       crank: [0, AY - 0.04, ENG.cz[1]!],
       plug: [0, 0.474, ENG.cz[0]!],
+      cylinder: [0, 0.3, ENG.cz[0]!],
       flywheel: [0, AY - 0.1, -0.562],
       disc: [0, AY + 0.085, -0.547],
       pressure: [0, AY - 0.06, -0.535],

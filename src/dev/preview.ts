@@ -7,6 +7,7 @@
 //   /preview.html?machine=bicycle&steps=6  기계 + n단계 조립(steps=all 가능, 완료 시 시뮬레이션 가동)
 //   /preview.html?mm=<n> | mm=kit          「507 기계 운동」 모델(레지스트리 지연 로딩)·키트 부품 시연
 // 공통 옵션: &theme=dark  &q=low  &cam=x,y,z,tx,ty,tz  &t=3 (시뮬레이션을 t초 진행 후 정지)  &speed=배율(mm 전용, 기본 1)
+//           &labels=0|1 (이름표 끔/켬 — 실험은 설정을 덮어쓰고, mm 은 화살표는 두고 이름표만)
 
 import * as THREE from 'three';
 import { SceneManager, type CameraView } from '../scene/SceneSetup';
@@ -35,11 +36,14 @@ import { HandPump } from '../labs/HandPump';
 import '../styles/lab-pump.css';
 import { Linkage } from '../labs/Linkage';
 import '../styles/lab-link.css';
+import { WaterMill } from '../labs/WaterMill';
+import '../styles/lab-mill.css';
 import { Gallery } from '../mm507/Gallery';
 import '../styles/mm507.css';
 import { ThumbnailFactory } from '../models/thumbnails';
 import { loadSettings } from '../state/settings';
 import { loadModel } from '../mm507/registry';
+import { countTags, setTagsVisible } from '../mm507/kit';
 import buildKitDemo from '../mm507/kitDemo';
 import type { MovementModel } from '../mm507/types';
 import '../styles/tokens.css';
@@ -54,7 +58,8 @@ const sceneMgr = new SceneManager(canvas, {
   theme: q.get('theme') === 'dark' ? 'dark' : 'light',
   quality: q.get('q') === 'low' ? 'low' : 'high'
 });
-sceneMgr.setLabelsVisible(q.get('labels') !== '0');
+const labelsArg = q.get('labels'); // '0' | '1' | null
+sceneMgr.setLabelsVisible(labelsArg !== '0');
 sceneMgr.adaptive = false; // 캡처용 — 헤드리스의 낮은 프레임률 때문에 품질이 내려가지 않게
 
 let machine: Machine | null = null;
@@ -90,6 +95,7 @@ const MODE_CTORS: Record<string, () => AppMode> = {
   steam: () => new SteamEngines(),
   pump: () => new HandPump(),
   link: () => new Linkage(),
+  mill: () => new WaterMill(),
   mm: () => new Gallery()
 };
 if (modeArg && MODE_CTORS[modeArg]) {
@@ -103,7 +109,7 @@ if (modeArg && MODE_CTORS[modeArg]) {
     sceneMgr,
     thumbs: new ThumbnailFactory(),
     root,
-    settings: loadSettings(),
+    settings: labelsArg === null ? loadSettings() : { ...loadSettings(), showLabels: labelsArg !== '0' },
     param: q.get('param') ?? undefined,
     navigate: (p) => {
       location.hash = `#/${p}`;
@@ -142,6 +148,10 @@ if (modeArg && MODE_CTORS[modeArg]) {
       mmModel = m;
       shadow(m.group);
       sceneMgr.add(m.group);
+      // 이름표: 레이어 1(화살표)은 켠 채 두고 이름표만 토글. 이름표 없는 모델은 경고(지시서 18 5-2)
+      sceneMgr.setLabelsVisible(true);
+      setTagsVisible(m.group, labelsArg !== '0');
+      if (arg !== 'kit' && countTags(m.group) === 0) console.warn(`[mm507] ${arg}번: 이름표 없음`);
       view = m.view ?? { pos: [0, 2.1, 6.2], target: [0, 1.75, 0] };
       if (info) info.textContent = arg === 'kit' ? '507 키트 부품 일람' : `507 운동 ${arg}번`;
       if (!q.get('cam') && view) sceneMgr.flyTo(view, true);
