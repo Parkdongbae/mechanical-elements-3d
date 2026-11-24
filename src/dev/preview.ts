@@ -123,7 +123,8 @@ if (modeArg && MODE_CTORS[modeArg]) {
 } else if (q.get('mm')) {
   // 「507 기계 운동」: mm=kit → 키트 시연, mm=<n> → 레지스트리로 지연 로딩
   const arg = q.get('mm')!;
-  const sp = Number(q.get('speed'));
+  const spArg = q.get('speed');
+  const sp = spArg === null ? 1 : Number(spArg); // 없으면 1 (Number(null) = 0 이라 멈추던 문제)
   mmSpeed = Number.isFinite(sp) ? sp : 1;
   const load = arg === 'kit' ? Promise.resolve().then(() => buildKitDemo()) : loadModel(Number(arg));
   load
