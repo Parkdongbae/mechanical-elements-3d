@@ -267,11 +267,11 @@ export function notchedRimWheel71(): THREE.Group {
   const k = K71;
   const g = new THREE.Group();
   const zb = -0.025 - k.depth;
-  // 앞판: 틈을 따낸 원판
+  // 앞판: 테 안쪽 면(rimIn)까지만 — 테와 겹치면 앞면이 같은 평면에 놓여 깜박이고 두 물체가 겹쳐 보인다(70번 사용자 지적과 같은 문제)
   const face: V2[] = [];
-  for (let a = k.notchLow[1]; a <= 360 + k.notchUp[0] + 1e-9; a += 1) face.push([k.rimOut * Math.cos(a * D2R), k.rimOut * Math.sin(a * D2R)]);
+  for (let a = k.notchLow[1]; a <= 360 + k.notchUp[0] + 1e-9; a += 1) face.push([k.rimIn * Math.cos(a * D2R), k.rimIn * Math.sin(a * D2R)]);
   for (let a = k.notchUp[0]; a <= k.notchUp[1] + 1e-9; a += 1) face.push([k.rimIn * Math.cos(a * D2R), k.rimIn * Math.sin(a * D2R)]);
-  for (let a = k.notchUp[1]; a <= k.notchLow[0] + 1e-9; a += 1) face.push([k.rimOut * Math.cos(a * D2R), k.rimOut * Math.sin(a * D2R)]);
+  for (let a = k.notchUp[1]; a <= k.notchLow[0] + 1e-9; a += 1) face.push([k.rimIn * Math.cos(a * D2R), k.rimIn * Math.sin(a * D2R)]);
   for (let a = k.notchLow[0]; a <= k.notchLow[1] + 1e-9; a += 1) face.push([k.rimIn * Math.cos(a * D2R), k.rimIn * Math.sin(a * D2R)]);
   g.add(slab(face, -0.025, 0.025, ghost(0xb8c8d8, 0.3), 0.008));
   const pieces = rimPieces71();
