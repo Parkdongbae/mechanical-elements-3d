@@ -201,7 +201,7 @@
       "enStart": "Are different arrangements of",
       "titleKo": "도르래 배열 (20)",
       "ko": "도르래를 여러 가지로 배열한 것이다. 다음 규칙이 적용된다. 각 도르래가 줄에 감싸이고 그 줄의 한쪽 끝은 고정점에, 다른 쪽 끝은 움직도르래의 중심에 매인 도르래 계에서는, 전체의 효과가 숫자 2를 그 계에 있는 움직도르래의 수만큼 거듭 곱한 값과 같다.",
-      "easy": "움직도르래를 하나 더 달 때마다 힘이 절반씩 더 줄어든다. 움직도르래가 3개이면 2를 세 번 곱한 8배의 이득이 생긴다.",
+      "easy": "책의 설명은 19번과 같은 문단(움직도르래 하나마다 2배씩 — 2ⁿ 규칙)을 함께 쓴다. 그런데 20번 판화처럼 줄 3개가 모두 짐(추 막대)에 매이면, 짐을 직접 당기는 줄 가닥이 4 + 2 + 1개라서 이득은 2³ − 1 = 7배가 된다. 같은 도르래 3개라도 줄을 어디에 매느냐에 따라 이득이 달라진다.",
       "category": "belt",
       "mech": "Fixed pulley on top hook plus two further pulleys cascaded down-left; three vertical ropes drop to a heavy weight bar. Advantage 2^n."
     },
