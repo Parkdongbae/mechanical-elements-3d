@@ -53,7 +53,8 @@ export function rimMarks(r: number, width: number, n = 4, z0 = 0): THREE.Group {
   const len = Math.min(width * 0.5, 0.3);
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI * 2;
-    const m = at(new THREE.BoxGeometry(0.03, 0.012, len), mat, Math.cos(a) * (r + 0.004), Math.sin(a) * (r + 0.004), z0);
+    // 로컬 x = 반지름 방향(rotation.z = a) — 두께 0.012 를 반지름 방향으로(림 위 −0.002~+0.01). 전에는 0.03 이 반지름 방향이라 림에 0.011 박혔다
+    const m = at(new THREE.BoxGeometry(0.012, 0.03, len), mat, Math.cos(a) * (r + 0.004), Math.sin(a) * (r + 0.004), z0);
     m.rotation.z = a;
     g.add(m);
   }

@@ -75,7 +75,8 @@ export default function buildM059(): MovementModel {
   g.add(displayStand());
 
   // 축 3개와 뒤판 지지대 6개
-  g.add(rod(v(-1.25, YU, ZC), v(0.95, YU, ZC), 0.045), rod(v(-1.25, YA, ZC), v(1.15, YA, ZC), 0.045), rod(v(-1.25, YB, ZC), v(1.15, YB, ZC), 0.045));
+  // 축 끝면은 받침 블록 옆면(블록 중심 ± 0.05)에 닿는다
+  g.add(rod(v(-1.2, YU, ZC), v(0.9, YU, ZC), 0.045), rod(v(-1.2, YA, ZC), v(1.1, YA, ZC), 0.045), rod(v(-1.2, YB, ZC), v(1.1, YB, ZC), 0.045));
   for (const [x, y] of [[-1.25, YU], [0.95, YU], [-1.25, YA], [1.15, YA], [-1.25, YB], [1.15, YB]] as const) {
     g.add(wallBracket(x, y, ZC, STAGE.backZ));
   }

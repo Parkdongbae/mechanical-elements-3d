@@ -142,7 +142,7 @@ export default function buildM056(): MovementModel {
   lv.add(plate);
   const bar = lever(1.45);
   bar.rotation.z = Math.PI / 2; // 막대 방향 +Y
-  bar.position.z = 0.345;
+  bar.position.z = 0.367; // 막대 뒷면(z 0.322)이 판 앞면에 얹히게 — 0.345 면 판 속에 0.022 묻혔다
   const knob = mesh(new THREE.SphereGeometry(0.045, 20, 14), wood());
   knob.position.set(1.45, 0, 0);
   bar.add(knob);

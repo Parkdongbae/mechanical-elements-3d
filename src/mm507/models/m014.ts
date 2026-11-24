@@ -100,7 +100,7 @@ export default function buildM014(): MovementModel {
   const knot = mesh(new THREE.SphereGeometry(0.026, 14, 10), wood(0x8a6a3a));
   knot.position.set(BK_X, BK_Y - BK_R, ZC);
   upper.add(knot);
-  upper.add(rod(v(0, SB, ZC), v(0, 0.392, ZC), 0.03)); // 위 가로대 → 고리
+  upper.add(rod(v(0, SB + 0.01, ZC), v(0, 0.392, ZC), 0.03)); // 위 가로대 윗면 → 고리(가로대 속 0.005만)
   const hookU = mesh(new THREE.TorusGeometry(0.05, 0.012, 12, 24), steel());
   hookU.position.set(0, 0.44, ZC);
   upper.add(hookU);
@@ -119,7 +119,7 @@ export default function buildM014(): MovementModel {
   // 띠쇠 가로대 → 막대 → 블록 고리(XY 평면) ↔ 추 고리(YZ 평면, 사슬처럼 꿰임) → 공 추
   // 모두 lower 그룹 안이라 블록과 함께 움직인다
   lower.add(strap(-1));
-  lower.add(rod(v(0, -SB, ZC), v(0, -0.452, ZC), 0.03)); // 가로대 → 고리 윗변
+  lower.add(rod(v(0, -SB - 0.01, ZC), v(0, -0.452, ZC), 0.03)); // 가로대 아랫면 → 고리 윗변
   const hookL = mesh(new THREE.TorusGeometry(0.05, 0.012, 12, 24), steel());
   hookL.position.set(0, -0.5, ZC); // 관(tube) 윗변 y −0.45, 아랫변 −0.55
   lower.add(hookL);

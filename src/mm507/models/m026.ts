@@ -48,12 +48,13 @@ export default function buildM026(): MovementModel {
   const pinMesh = spurGear(NP, MOD, { width: 0.08, spokes: 4, driver: true });
   pinMesh.rotation.x = -Math.PI / 2;
   pin.add(pinMesh, rod(v(0, -0.64, 0), v(0, 0.76, 0), 0.035));
-  pin.add(at(new THREE.BoxGeometry(0.1, 0.02, 0.02), paint(0xf2b619), 0.06, 0.7, 0));
+  pin.add(at(new THREE.BoxGeometry(0.1, 0.02, 0.02), paint(0xf2b619), 0.06, 0.74, 0)); // 위 고리(윗면 YP+0.714) 위에서 돈다
   g.add(pin);
 
   // 피니언 축 브래킷 2개(뒤판에서 나온 팔 + 고리)
   for (const y of [2.5, 1.4]) {
-    g.add(at(new THREE.BoxGeometry(0.16, 0.1, 0.44), castIron(), XP, y, -0.08));
+    // 팔 앞면(z ZC − 0.065)이 고리 바깥에 닿기만 하게 — 전에는 고리가 팔 속에 0.025 묻혔다
+    g.add(at(new THREE.BoxGeometry(0.16, 0.1, ZC - 0.065 + 0.3), castIron(), XP, y, (ZC - 0.065 - 0.3) / 2));
     g.add(at(lathe(tubeProfile(0.04, 0.065, -0.05, 0.05, 0.008), 36), darkSteel(), XP, y, ZC));
   }
 

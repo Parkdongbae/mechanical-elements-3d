@@ -106,7 +106,7 @@ export default function buildM060(): MovementModel {
   const upperOuter = xFrame(YU);
   const upper = new THREE.Group();
   upper.name = 'upperShaft';
-  upper.add(rod(v3(0, 0, X0), v3(0, 0, X1), 0.045));
+  upper.add(rod(v3(0, 0, X0 + 0.05), v3(0, 0, X1 - 0.05), 0.045)); // 끝면이 받침 블록 옆면에 닿음
   upper.add(wheelAt('upperBig', R_BIG, W_UP, X_UL, 6, true));
   upper.add(wheelAt('upperSmall', R_SMALL, W_UP, X_UR, 6, true));
   upperOuter.add(upper);
@@ -116,7 +116,7 @@ export default function buildM060(): MovementModel {
   const lowerOuter = xFrame(YS);
   const lower = new THREE.Group();
   lower.name = 'lowerShaft';
-  lower.add(rod(v3(0, 0, X0), v3(0, 0, X1), 0.045));
+  lower.add(rod(v3(0, 0, X0 + 0.05), v3(0, 0, X1 - 0.05), 0.045)); // 끝면이 받침 블록 옆면에 닿음
   lower.add(wheelAt('fixedLeft', R_BIG, W_LO, X_FL, 4, false));
   lower.add(wheelAt('fixedRight', R_BIG, W_LO, X_FR, 4, false));
   lowerOuter.add(lower);

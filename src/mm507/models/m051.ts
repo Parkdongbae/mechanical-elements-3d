@@ -33,10 +33,10 @@ function buildShaft(name: string, ringName: string, driver: boolean): THREE.Grou
   const col = lathe(tubeProfile(0.045, 0.07, -0.03, 0.03, 0.008), 28);
   col.rotateZ(Math.PI / 2);
   const cm = mesh(col, bronze({ roughness: 0.34 }));
-  cm.position.x = -1.0;
+  cm.position.x = -0.98; // 베어링 링(1.015~1.085) 앞에서 0.005 띄움 — −1.0 이면 표시선이 도는 동안 링에 0.01 박혔다
   g.add(cm);
   const mk = mesh(new THREE.BoxGeometry(0.05, 0.012, 0.012), paint(0xf2b619));
-  mk.position.set(-1.0, 0.075, 0);
+  mk.position.set(-0.98, 0.075, 0);
   g.add(mk);
   // 판화 꼭대기의 작은 원 두 개는 서로 꿴 두 고리의 앞끝 단면으로 본다. 고리 안쪽 조임 핀은 넣지 않는다
   // (검증: 앞끝이 상대 고리와 가장 가까운 곳(중심선 0.060)이라 핀이 상대 고리를 뚫음, 2026-11-25)

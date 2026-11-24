@@ -125,7 +125,8 @@ export default function buildM037(): MovementModel {
     const boss = mesh(lathe([[0.046, 0], [0.09, 0], [0.09, 0.07], [0.046, 0.07], [0.046, 0]], 28), darkSteel());
     boss.position.set(x, 0.6, ZC);
     g.add(boss);
-    g.add(rod(v(x, 2.72, -0.3), v(x, 2.72, ZC), 0.03));
+    // 팔 막대는 링 벽(반지름 0.046~0.085) 속에서 끝난다 — 링 가운데까지 가면 세로축 속에 박힌다
+    g.add(rod(v(x, 2.72, -0.3), v(x, 2.72, ZC - 0.065), 0.03));
     const ring = mesh(lathe([[0.046, -0.04], [0.085, -0.04], [0.085, 0.04], [0.046, 0.04], [0.046, -0.04]], 28), darkSteel());
     ring.position.set(x, 2.72, ZC);
     g.add(ring);

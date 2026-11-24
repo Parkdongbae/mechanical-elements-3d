@@ -129,7 +129,7 @@ export default function buildM038(): MovementModel {
 
   // 두 중심을 잇는 연결대(판화의 굵은 가로선 — 중심 거리 고정, 바퀴 뒤)
   const link = mesh(extrude(stadiumShape(CA[0], CA[1], CB[0], CB[1], 0.045), 0.03, 0.006), steel());
-  link.position.z = 0.0;
+  link.position.z = -0.016; // z −0.031 ~ −0.001 — 바퀴 뒷면(z 0) 바로 뒤(전에는 0.015 겹쳐 도는 바퀴를 뚫었다)
   g.add(link);
 
   const a1 = rotArrow(0.42, true);

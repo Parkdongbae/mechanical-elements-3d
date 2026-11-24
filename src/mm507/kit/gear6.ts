@@ -488,9 +488,9 @@ export function jawClutchHalf(teeth: number, o: JawHalfOpts = {}): THREE.Group {
 }
 
 /** 클러치에서 쓰는 이동 포크(고리 아랫반) + 아래로 내린 귀: 원점 = 축 중심, YZ 평면의 반고리 */
-function shiftFork(): THREE.Group {
+function shiftFork(rIn = 0.185): THREE.Group {
   const g = new THREE.Group();
-  const geo = extrude(annularSector(0.185, 0.235, Math.PI, TAU), 0.04, 0.004);
+  const geo = extrude(annularSector(rIn, 0.235, Math.PI, TAU), 0.04, 0.004);
   geo.rotateY(Math.PI / 2);
   g.add(mesh(geo, steel()));
   g.add(at(new THREE.BoxGeometry(0.04, 0.09, 0.07), steel(), 0, -0.26, 0));
@@ -805,7 +805,8 @@ export function dogClutchAssembly(): ClutchAssembly<DogState & { psiA: number; p
   group.add(pinion);
   group.add(wallBearing(xG - 0.32, yP, AX_Z, 'x', 0.052), wallBearing(xG + 0.36, yP, AX_Z, 'x', 0.052));
 
-  const fork = shiftFork();
+  // 홈 바닥 = 슬리브 바깥 반지름 0.2 — 포크 안 반지름 0.185 면 도는 슬리브에 0.015 박혀서 0.205 로(틈 0.005)
+  const fork = shiftFork(0.205);
   group.add(fork);
   const pivot = V3(0.165, 0.9, AX_Z);
   group.add(wallPost(pivot.x, pivot.y, AX_Z));

@@ -54,7 +54,8 @@ export default function buildM066(): MovementModel {
   g.add(set);
 
   // 웜기어 축, 웜 축 막대, 축받이, 손잡이 고리
-  const shaft = shaftZ(OX, OY, 0.68, 0.09);
+  // 축 끝 너트(두께 0.081)를 핀(z 0.585~0.635)·속 빈 축(z 0.56~0.66) 앞으로 — z1 0.68 이면 너트가 핀과 속 빈 축 자리에 겹쳤다
+  const shaft = shaftZ(OX, OY, 0.75, 0.09);
   shaft.name = 'shaftB';
   g.add(shaft);
   g.add(rod(v(-0.55, WORM_Y, 0), v(0.6, WORM_Y, 0), 0.045), bearingBlock(-0.42), bearingBlock(0.42));

@@ -27,10 +27,12 @@ export function rimStripes(r: number, width: number, count = 6): THREE.Group {
   return g;
 }
 
-/** 축 받침(뒤판에서 축 끝까지 이어진 짧은 막대 + 블록): 위치 (x, y), 축 높이 z */
+/** 축 받침(뒤판에서 축 끝까지 이어진 짧은 막대 + 블록): 위치 (x, y), 축 높이 z
+ *  블록 0.1 × 0.1 × 0.11 — 지름 0.09 축의 끝면이 블록 옆면(x ± 0.05)에 닿게 놓는다(축이 블록 속으로 들어가지 않게).
+ *  막대는 블록 뒷면(z − 0.055)까지만 — 전에는 블록 깊이 0.06 < 축 지름이라 축 끝이 블록 밖으로 비어져 나오고 막대가 축 속까지 들어갔다. */
 export function wallBracket(x: number, y: number, z: number, backZ: number): THREE.Group {
   const g = new THREE.Group();
-  const len = z - backZ;
+  const len = z - 0.055 - backZ;
   const geo = lathe(
     [
       [0, 0],
@@ -44,7 +46,7 @@ export function wallBracket(x: number, y: number, z: number, backZ: number): THR
   const post = mesh(geo, darkSteel());
   post.position.set(x, y, backZ);
   g.add(post);
-  const blk = mesh(new THREE.BoxGeometry(0.1, 0.1, 0.06), darkSteel());
+  const blk = mesh(new THREE.BoxGeometry(0.1, 0.1, 0.11), darkSteel());
   blk.position.set(x, y, z);
   g.add(blk);
   return g;

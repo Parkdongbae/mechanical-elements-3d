@@ -75,7 +75,7 @@ export default function buildM042(): MovementModel {
   rm.quaternion.setFromUnitVectors(ZAX, U2);
   rm.position.copy(pc).addScaledVector(U2, -0.035);
   g.add(rm);
-  g.add(post(pc.x, pc.y, pc.z - 0.07, 0.06));
+  g.add(post(pc.x, pc.y, pc.z - 0.09, 0.06)); // 30° 기운 고리 끝면에 기둥 가장자리가 0.003 만 닿게(0.07 이면 0.018 박힘)
 
   // 회전 방향 화살표
   const aA = rotArrow(0.35, true);

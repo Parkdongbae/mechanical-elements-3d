@@ -39,10 +39,15 @@ export default function buildM012(): MovementModel {
   // 매달이: 축 막대 + 양쪽 옆판 + 위 고리 + 들보 아래 고정 핀 (모두 고정)
   g.add(rod(v(CX, CY, 0.13), v(CX, CY, 0.37), 0.03));
   for (const sz of [-1, 1]) {
-    const plate = mesh(new THREE.BoxGeometry(0.03, 0.52, 0.03), steel());
-    plate.position.set(CX, 2.61, Z + sz * 0.1);
+    const plate = mesh(new THREE.BoxGeometry(0.03, 0.555, 0.03), steel());
+    plate.position.set(CX, 2.6275, Z + sz * 0.1); // y 2.35 ~ 2.905
     g.add(plate);
   }
+  // 옆판 두 장을 잇는 윗 가로대 — 고리 구멍(y 2.872~2.948)을 지나 매달이 전체가 고리에 걸린다
+  // (전에는 옆판 위끝 2.87 과 고리 사이가 z 로 0.07 떨어져 도르래·추 무리가 떠 있었다)
+  const cap = mesh(new THREE.BoxGeometry(0.03, 0.03, 0.23), steel());
+  cap.position.set(CX, 2.89, Z); // y 2.875 ~ 2.905, z 0.135 ~ 0.365
+  g.add(cap);
   const hook = mesh(new THREE.TorusGeometry(0.05, 0.012, 12, 24), steel());
   hook.position.set(CX, 2.91, Z);
   g.add(hook);

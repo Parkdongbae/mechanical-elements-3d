@@ -124,7 +124,7 @@ export default function buildM057(): MovementModel {
   crank.position.z = 0.42;
   crank.rotation.z = CRANK_A0;
   top.add(topBack, topFront, crank);
-  g.add(top, shaftZ(T[0], T[1], 0.47, 0.045));
+  g.add(top, shaftZ(T[0], T[1], 0.484, 0.045)); // 끝 너트(두께 0.04)가 크랭크 앞면(z 0.442) 바로 앞 — 0.47 이면 도는 크랭크에 0.013 박혔다
 
   // ── 링 기어(안쪽 이) + 뒷 플랜지 ──
   const ring = internalGear(NR, MOD, { width: RING_W, wall: RING_WALL });

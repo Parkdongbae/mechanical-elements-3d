@@ -13,6 +13,7 @@ const WORM_Y = OY - 0.72; // 웜 축 높이 1.23
 const SPEED = 0.8; // B 의 각속도(rad/s)
 const HOLLOW_A0 = (85 * Math.PI) / 180; // 속 빈 축 벽이 남은 시작각(E 로컬)
 const PIN_Z = 0.36; // 핀 중심 z(홈통 구간)
+const PIN_HALF = 0.025 / 0.13; // 핀 반각(접선 반폭 / 반지름) — 066 의 DELTA 와 같다
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 
 /** 뒤판에 붙은 축받이 블록: 웜 축이 가운데를 지난다 */
@@ -104,7 +105,8 @@ export default function buildM067(): MovementModel {
     alphaNow = alpha;
     phaseNow = phase;
     tumbler.rotation.z = (3 * Math.PI) / 2 + alpha - gamma;
-    pNow = 4.833 + c;
+    // 핀 반폭(접선 0.025, 반지름 0.13)만큼 뒤에 — 4.833 + c 면 핀 중심이 벽 끝면(a0)에 있어 핀 절반이 벽에 박혔다
+    pNow = 4.833 - PIN_HALF + c;
     pinGroup.rotation.z = pNow;
   }
   pose();

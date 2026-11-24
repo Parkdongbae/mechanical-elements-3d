@@ -108,8 +108,9 @@ export default function buildM052(): MovementModel {
   setMM(driveDisc, { kind: 'clutch', axis: 'x' });
   driveDisc.add(rodX(0.06, -1.58, -1.38, steel(), 0.01, 0));
   driveDisc.add(rodX(0.12, -1.38, -1.15, bronze({ roughness: 0.34 }), 0.012, 0));
-  const keyMark = mesh(new THREE.BoxGeometry(0.1, 0.03, 0.03), paint(0xf2b619));
-  keyMark.position.set(-1.265, 0.122, 0);
+  // 표시는 받침 링(x −1.32~−1.2) 밖으로 드러난 허브 끝(−1.2~−1.15)에 — 링 속에 있으면 돌 때 링을 뚫는다
+  const keyMark = mesh(new THREE.BoxGeometry(0.04, 0.03, 0.03), paint(0xf2b619));
+  keyMark.position.set(-1.175, 0.122, 0);
   driveDisc.add(keyMark);
   const dDisc = clutchDisc(0.45, 0.16, { studs: { count: 2, radius: 0.36, r: 0.04, len: 0.17 }, hubR: 0.1, hubLen: 0.2, driver: true });
   dDisc.rotation.y = PI / 2; // 로컬 Z → 세계 +X
@@ -123,7 +124,8 @@ export default function buildM052(): MovementModel {
   drivenShaft.position.set(0, YA, ZC);
   setMM(drivenShaft, { kind: 'clutch', axis: 'x' });
   drivenShaft.add(rodX(0.045, -1.12, 1.1, steel()));
-  for (const mx of [-0.52, 0.55]) {
+  // (x −0.52 표시는 미끄러지는 구멍 원판 허브(f ~ f+0.5) 속에 묻혀 뺐다)
+  for (const mx of [0.55]) {
     const mk = mesh(new THREE.BoxGeometry(0.04, 0.02, 0.02), paint(0xf2b619));
     mk.position.set(mx, 0.048, 0);
     drivenShaft.add(mk);

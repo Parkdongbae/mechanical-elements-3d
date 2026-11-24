@@ -46,6 +46,9 @@ export default function buildM074(): MovementModel {
   const shB = shaftX(0.3, 1.3, AY, AZ);
   const shC = rodY(0.6, 1.5, 0.045);
   shC.position.set(0, 0, AZ);
+  // 키트 shaftX 의 안쪽 끝 표시(끝에서 0.07)는 기어 A·B 허브 구멍 속에 묻혀 기어가 그 위를 돈다 — 축받이와 기어 사이(x ∓0.75)로 옮긴다
+  shA.children[2]!.position.x = 0.55; // 월드 x −0.75
+  shB.children[1]!.position.x = 0.45; // 월드 x 0.75
   g.add(shA, shB, shC);
 
   // 축받이 (판화에 없음 — 뒤판에서 나온 팔 + 링)
