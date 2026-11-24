@@ -217,8 +217,8 @@ export function studDisc(plateR: number, n: number, ringR: number, studR: number
 export function rimDriver(rimR: number, rimThick: number, gapHalfDeg: number, tipHalf: number, baseHalf: number, baseR: number, depth: number): THREE.Group {
   const g = new THREE.Group();
   const gh = (gapHalfDeg * Math.PI) / 180;
-  // 반투명 앞판은 테 안쪽까지만(반지름 rimR − rimThick) — 테와 겹치면 앞면이 같은 평면에 놓여 깜박이고 두 물체가 겹친 것처럼 보인다(사용자 지적)
-  g.add(mesh(extrude(circleShape(rimR - rimThick), 0.05, 0.008, 64), ghost(0xb8c8d8, 0.3)));
+  // 반투명 앞판은 테 바깥까지 덮어 한 몸으로 보이게 하되, 앞면을 테 앞면(0.025)보다 0.007 뒤에 두어 같은 평면에서 깜박이지 않게(사용자 지적)
+  g.add(meshAt(extrude(circleShape(rimR - 0.002), 0.043, 0.006, 64), ghost(0xb8c8d8, 0.3), 0, 0, -0.0035));
   // 테: 틈을 뺀 환형 조각, 뒤로 depth
   const rimGeo = extrude(annularSector(rimR - rimThick, rimR, gh, TAU - gh), depth + 0.05, 0.008, 64);
   g.add(meshAt(rimGeo, bronze({ roughness: 0.34 }), 0, 0, -depth / 2));
