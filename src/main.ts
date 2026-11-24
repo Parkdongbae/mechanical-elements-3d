@@ -205,6 +205,7 @@ function switchMachine(id: string): void {
   hud.setMachineTitle(groupName, def.name, nextId ? getMachineDef(nextId).name : null);
   sceneMgr.flyTo(def.view ?? DEFAULT_VIEW);
   hud.setPartNameOverrides(def.nameOverrides ?? {});
+  hud.setPartNotes(def.partNotes ?? {});
   hud.setGearNameButton(id === 'gearhunt');
   hud.setMission(missionHeading(def), count, def.steps.map((s) => stepDisplay(s.partId)), def.completeText);
   if (count >= def.steps.length) {

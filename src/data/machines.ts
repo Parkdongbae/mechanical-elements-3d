@@ -81,6 +81,8 @@ export interface MachineDef {
   steps: StepDef[];
   /** 이 머신에서만 부품 표시 이름을 바꿈 (예: 전동축 → 구동축) */
   nameOverrides?: Record<string, string>;
+  /** 이 머신에서 그 부품이 어떻게 쓰이는지 덧붙이는 설명(부품 설명 카드 아래 '이 기계에서는' 문단) */
+  partNotes?: Record<string, string>;
   create(): Machine;
 }
 
@@ -704,12 +706,16 @@ export const MACHINES: MachineDef[] = [
     name: '그네',
     icon: '🎠',
     missionText: '매달 수 없어 탈 수 없는 그네! 가로대에서 그네가 매끄럽게 흔들리게 해 주는 기계요소와, 좌판을 매다는 기계요소를 찾아 조립하세요!',
-    hint: '구슬이 굴러 마찰을 줄이는 축용 기계요소를 먼저 끼우고, 스프로킷에 걸려 미끄럼 없이 동력을 전달하는 전동용 기계요소를 이어서 끼워 주세요!',
+    hint: '구슬이 굴러 마찰을 줄이는 축용 기계요소를 먼저 끼우고, 원래는 스프로킷에 걸려 동력을 전달하는 전동용 기계요소지만 여기서는 좌판을 매다는 줄로 쓰이는 부품을 이어서 끼워 주세요!',
     completeText: '볼 베어링 걸이가 부드럽게 돌고 체인이 좌판을 매달아요 🎠',
     steps: [
       { partId: 'bearing', label: '볼 베어링' },
       { partId: 'chain', label: '체인' }
     ],
+    partNotes: {
+      chain:
+        '체인은 원래 자전거 페달과 뒷바퀴를 잇는 것처럼 회전 동력을 전달하는 전동용 기계요소로 분류해요. 그네에서는 동력을 전달하지 않고, 무거운 좌판과 사람을 매달아 지탱하는 줄(로프·와이어) 역할로 응용해 쓴 거예요. 이 실험실에서는 체인이라는 부품을 익히려고 그네의 줄로 배치했어요.'
+    },
     create: () => new Swing()
   },
   {

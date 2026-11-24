@@ -25,9 +25,11 @@ const HND_X = 1.15, HND_Y = 1.2; // 손잡이(문 양면 ±Z)
 const PIN_R = 0.022, PIN_LEN = 0.34; // 평행 핀
 const CLS_POS = new THREE.Vector3(-0.2, 2.72, 0.16); // 클로저 몸통 중심
 const CLS_W = 0.5, CLS_H = 0.12, CLS_D = 0.1;
-const ARM_A = new THREE.Vector3(-0.35, 2.72, 0.2); // 몸통 축(고정)
-const ARM_C_LOCAL = new THREE.Vector3(0.55, 2.5, 0.06); // 문 고정점(doorGroup 로컬)
-const ARM_L1 = 0.5, ARM_L2 = 0.5; // 팔 2절 길이
+// 팔은 실제 도어클로저처럼 문 윗면 바로 위의 '수평면'(y = ARM_Y)에서 접혔다 펴진다
+const ARM_Y = 2.63; // 팔이 움직이는 수평면 높이(문 윗변 2.56 바로 위)
+const ARM_A = new THREE.Vector3(-0.35, ARM_Y, 0.18); // 몸통 피니언 축(세로축, 고정)
+const ARM_C_LOCAL = new THREE.Vector3(0.75, ARM_Y, 0.08); // 문 위 브래킷 고정점(doorGroup 로컬)
+const ARM_L1 = 0.32, ARM_L2 = 0.45; // 메인 암(몸통 쪽) · 포어 암(문 쪽) 길이
 const SPR_R = 0.04, SPR_COIL = 0.008, SPR_TURNS = 8; // 스프링 코일
 const SPR_LEN0 = 0.4, SPR_STROKE = 0.25; // 길이 = 0.4 − 0.25·열림비율
 const OPEN_MAX = 1.3; // 최대 열림각 (rad)
@@ -261,18 +263,22 @@ export class ClassroomDoor extends BaseMachine {
     for (const p of this.plates) p.position.x = p.userData.end === 1 ? half : -half;
   }
 
-  /** 클로저 팔: A(고정)–B(관절)–C(문 고정점), |AB|=|BC|=L — 두 원의 교점에서 B(위쪽 해) */
+  /** 클로저 팔: A(고정)–B(관절)–C(문 고정점), |AB|=L1, |BC|=L2.
+   *  셋 다 수평면 y = ARM_Y 위 — XZ 평면의 두 원 교점에서 B(방 쪽 +Z 해) */
   private updateArms(): void {
     if (!this.arm1 || !this.arm2 || !this.elbow) return;
     const c = ARM_C_LOCAL.clone().applyAxisAngle(UP, this.door.rotation.y).add(this.door.position);
+    c.y = ARM_Y;
     const a = ARM_A;
-    const reach = ARM_L1 + ARM_L2; // 팔이 닿는 최대 거리(가드용 — 실제 최대 0.54 로 도달하지 않음)
-    const dist = Math.min(a.distanceTo(c), reach - 0.002);
-    const mid = a.clone().add(c).multiplyScalar(0.5);
-    const h = Math.sqrt(Math.max(0.0001, ARM_L1 * ARM_L1 - (dist * dist) / 4));
-    const u = c.clone().sub(a).normalize();
-    const n = UP.clone().addScaledVector(u, -u.y).normalize(); // A–C에 수직·위쪽 방향
-    const b = mid.addScaledVector(n, h);
+    const dx = c.x - a.x, dz = c.z - a.z;
+    const d = Math.min(Math.max(Math.hypot(dx, dz), Math.abs(ARM_L1 - ARM_L2) + 0.002), ARM_L1 + ARM_L2 - 0.002);
+    const k = (ARM_L1 * ARM_L1 - ARM_L2 * ARM_L2 + d * d) / (2 * d); // A에서 교점 현까지
+    const h = Math.sqrt(Math.max(0, ARM_L1 * ARM_L1 - k * k));
+    const ux = dx / d, uz = dz / d;
+    // 수직 방향 두 후보 중 +Z(방 쪽)로 나온 해
+    let px = -uz, pz = ux;
+    if (pz < 0) { px = -px; pz = -pz; }
+    const b = new THREE.Vector3(a.x + ux * k + px * h, ARM_Y, a.z + uz * k + pz * h);
     stretch(this.arm1, a, b);
     stretch(this.arm2, b, c);
     this.elbow.position.copy(b);
@@ -375,13 +381,14 @@ export class ClassroomDoor extends BaseMachine {
     for (const e of [-1, 1]) {
       g.add(rbox(0.05, CLS_H + 0.012, CLS_D + 0.012, 0.01, capMat, CLS_POS.x + e * (CLS_W / 2 - 0.025), CLS_POS.y, CLS_POS.z));
     }
-    const boss = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.05, 24), capMat);
-    boss.rotation.x = Math.PI / 2;
-    boss.position.set(ARM_A.x, ARM_A.y, ARM_A.z + 0.02);
+    // 피니언 축: 몸통 밑면에서 아래로 나온 세로축 — 메인 암이 여기에 물려 수평으로 돈다
+    const bossTop = CLS_POS.y - CLS_H / 2;
+    const boss = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, bossTop - ARM_Y + 0.02, 24), capMat);
+    boss.position.set(ARM_A.x, (bossTop + ARM_Y - 0.02) / 2, ARM_A.z);
     g.add(boss);
     const armMat = aluminum();
     const jointMat = steel({ roughness: 0.3 });
-    this.arm1 = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1, 24), armMat);
+    this.arm1 = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 1, 24), armMat); // 메인 암(굵게)
     this.arm2 = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1, 24), armMat);
     this.elbow = new THREE.Mesh(new THREE.SphereGeometry(0.03, 24, 16), jointMat);
     this.arm1.visible = this.arm2.visible = this.elbow.visible = false;
@@ -441,7 +448,11 @@ export class ClassroomDoor extends BaseMachine {
     }
     // 클로저 팔 고정점 브래킷 + 관절 구
     const c = ARM_C_LOCAL;
-    g.add(rbox(0.09, 0.1, 0.045, 0.008, aluminum(), c.x, c.y, c.z - 0.01));
+    const brBot = DOOR_H - 0.1; // 문 앞면 위쪽에 붙어 팔 높이까지 올라오는 브래킷
+    g.add(rbox(0.1, c.y - brBot + 0.02, 0.03, 0.006, aluminum(), c.x, (c.y + brBot) / 2, DOOR_T / 2 + 0.015));
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.05, 16), hingeMat);
+    post.position.set(c.x, c.y - 0.01, c.z);
+    g.add(post);
     const joint = new THREE.Mesh(new THREE.SphereGeometry(0.028, 20, 14), hingeMat);
     joint.position.copy(c);
     g.add(joint);

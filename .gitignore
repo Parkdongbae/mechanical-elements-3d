@@ -21,3 +21,5 @@ shots/
 
 # 사용자 원본 자료(PDF) — 저장소에 올리지 않음
 mechanical_movements_507/
+# GLM API 키 — 절대 커밋하지 않음
+glm_api_key.txt

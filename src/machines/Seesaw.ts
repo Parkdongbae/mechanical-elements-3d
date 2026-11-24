@@ -39,7 +39,7 @@ const AXLE_LEN = 0.6; // 차축 길이
 const CAP_R = 0.062; // 차축 양끝 캡 반지름
 const CAP_L = 0.04; // 캡 길이
 const END_X = 1.9; // 널빤지 양끝 아래(스프링·타이어 x 위치)
-const TIRE_R = 0.22; // 완충 타이어 반지름
+const TIRE_R = 0.27; // 완충 타이어 반지름(눕힌 고리 — 안지름 0.18 > 스프링 바깥 0.144)
 const TIRE_TUBE = 0.09; // 타이어 관 반지름
 const SPRING_R = 0.12; // 스프링 코일 반지름
 const SPRING_TURNS = 6; // 감은 수
@@ -282,7 +282,7 @@ export class Seesaw extends BaseMachine {
   }
 
   private springLen(s: number, theta: number): number {
-    return Math.max(SPRING_MIN, this.plankBottomY(s, theta) - MAT_TOP);
+    return Math.max(SPRING_MIN, this.plankBottomY(s, theta) - MAT_TOP - 0.03);
   }
 
   // ───────────────────────── 미션 부품 ─────────────────────────
@@ -317,8 +317,8 @@ export class Seesaw extends BaseMachine {
     for (const s of [-1, 1]) {
       const coil = new THREE.Mesh(coilGeo, coilMat);
       coil.name = 'coil';
-      coil.position.set(s * END_X, MAT_TOP, 0);
-      coil.scale.y = SPRING_MIN / SPRING_FREE; // 타이어 안에 웅크린 상태로 시작
+      coil.position.set(s * END_X, MAT_TOP + 0.03, 0); // 받침판 위
+      coil.scale.y = SPRING_MIN / SPRING_FREE; // 받침판 위에 웅크린 상태로 시작
       g.add(coil);
     }
     return g;
@@ -413,14 +413,23 @@ export class Seesaw extends BaseMachine {
     }
   }
 
-  /** 완충용 고무 타이어 반쪽: 발판이 평평하게 잘린 아치가 바닥에 박혀 스프링을 감싼다 */
+  /** 완충용 고무 타이어: 바닥에 눕혀 반쯤 묻은 고리. 스프링이 고리 한가운데를 지나 겹치지 않는다.
+   *  스프링 밑에는 강철 받침판(바닥에 고정) */
   private buildTires(): void {
-    const geo = new THREE.TorusGeometry(TIRE_R, TIRE_TUBE, 18, 48, Math.PI);
+    const geo = new THREE.TorusGeometry(TIRE_R, TIRE_TUBE, 18, 48);
+    geo.rotateX(Math.PI / 2);
     const mat = rubber({ color: 0x232529 });
+    const plateGeo = new THREE.CylinderGeometry(SPRING_R + 0.04, SPRING_R + 0.05, 0.03, 32);
+    const plateMat = steel({ roughness: 0.4 });
     for (const s of [-1, 1]) {
       const tire = new THREE.Mesh(geo, mat);
-      tire.position.set(s * END_X, 0.02, 0);
+      tire.position.set(s * END_X, MAT_TOP + 0.01, 0);
+      tire.castShadow = true;
       this.group.add(tire);
+      const plate = new THREE.Mesh(plateGeo, plateMat);
+      plate.position.set(s * END_X, MAT_TOP + 0.015, 0);
+      plate.castShadow = true;
+      this.group.add(plate);
     }
   }
 }
