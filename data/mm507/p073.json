@@ -1,0 +1,170 @@
+{
+  "platePage": 73,
+  "textPage": 74,
+  "figures": [
+    {
+      "n": 270,
+      "box": [
+        0.1297,
+        0.237,
+        0.411,
+        0.4235
+      ]
+    },
+    {
+      "n": 271,
+      "box": [
+        0.4209,
+        0.237,
+        0.6769,
+        0.4235
+      ]
+    },
+    {
+      "n": 272,
+      "box": [
+        0.6835,
+        0.237,
+        0.9736,
+        0.4235
+      ]
+    },
+    {
+      "n": 273,
+      "box": [
+        0.1297,
+        0.4289,
+        0.411,
+        0.6138
+      ]
+    },
+    {
+      "n": 274,
+      "box": [
+        0.4209,
+        0.4289,
+        0.6769,
+        0.6138
+      ]
+    },
+    {
+      "n": 275,
+      "box": [
+        0.6835,
+        0.4289,
+        0.9736,
+        0.6138
+      ]
+    },
+    {
+      "n": 276,
+      "box": [
+        0.1297,
+        0.6185,
+        0.411,
+        0.8081
+      ]
+    },
+    {
+      "n": 277,
+      "box": [
+        0.4209,
+        0.6185,
+        0.6769,
+        0.8081
+      ]
+    },
+    {
+      "n": 278,
+      "box": [
+        0.6835,
+        0.6185,
+        0.9736,
+        0.8081
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 270,
+      "en": "Anti-friction bearing for a pulley.",
+      "titleKo": "풀리용 마찰 줄이는 받침",
+      "ko": "풀리를 위한 마찰 방지 베어링이다.",
+      "easy": "풀리 한가운데 구멍에 작은 롤러들을 둥글게 끼워 넣어서, 풀리가 미끄러지는 대신 롤러 위에서 구르며 돌게 한다. 그래서 마찰이 적다.",
+      "category": "belt",
+      "mech": "Two pulley wheels side by side with ropes hanging down from each; left wheel shows a hub with a ring of holes (bolt circle) and a rotation arrow; right wheel's hub is hollow holding a ring of six small rollers around a central roller (roller bearing). Driver = rope; pulley rotates on rollers with low friction."
+    },
+    {
+      "n": 271,
+      "en": "On vibrating the lever to which the two pawls are attached, a nearly continuous rectilinear motion is given to the ratchet-bar.",
+      "titleKo": "래칫 막대 이송",
+      "ko": "두 개의 폴이 붙은 레버를 흔들면 래칫 막대에 거의 연속적인 직선 운동이 전해진다.",
+      "easy": "레버가 위아래로 움직이면 두 폴이 번갈아 래칫 막대의 이를 밀어서 막대가 앞으로 거의 끊김 없이 나아간다.",
+      "category": "ratchet",
+      "mech": "Horizontal ratchet-bar (toothed rack) resting on a base with a stand; a hinged lever at the right end carrying two pawls hooked on the teeth; a small guide roller at the left end with a cord. Driver = lever vibrating up/down; bar advances almost continuously."
+    },
+    {
+      "n": 272,
+      "en": "Rotary motion of the beveled disk cam gives a reciprocating rectilinear motion to the rod bearing on its circumference.",
+      "titleKo": "비스듬한 원판 캠",
+      "ko": "비스듬히 깎인 원판 캠의 회전 운동이 그 둘레에 닿아 있는 막대에 직선 왕복 운동을 준다.",
+      "easy": "기울어진 모양의 캠이 돌면 가장자리에 닿은 막대가 앞뒤로 밀렸다 돌아오기를 되풀이한다.",
+      "category": "cam",
+      "mech": "Cam: a skewed (beveled) disc, mounted obliquely on a horizontal shaft (ends extending left and right), its rim bearing on the end of a slanting rod with two guide brackets above-left. Driver = shaft rotating; rod reciprocates along its axis."
+    },
+    {
+      "n": 273,
+      "en": "Rectilinear into rectilinear motion. When the rods, A and B, are brought together, the rods, C and D, are thrust further apart, and vice versa.",
+      "titleKo": "마름모 링크",
+      "ko": "직선 운동이 직선 운동으로 바뀐다. 막대 A와 B가 가까워지면 막대 C와 D는 더 멀어지고, 그 반대도 마찬가지이다.",
+      "easy": "네 개의 막대를 마름모 모양으로 이어 놓았다. 가로 방향을 좁히면 세로 방향이 늘어나고, 가로를 넓히면 세로가 줄어든다.",
+      "category": "crank",
+      "mech": "Rhombus formed by four equal links pinned at corners A (left), B (right), C (top), D (bottom); each corner has a sliding rod (A,B horizontal; C,D vertical) guided in a short sleeve. Driver = A and B pushed together/apart; C and D move in the perpendicular direction oppositely."
+    },
+    {
+      "n": 274,
+      "en": "An engine-governor. The rise and fall of the balls, K, are guided by the parabolic curved arms, B, on which the anti-friction wheels, L, run. The rods, F, connecting the wheels, L, with the sleeve move it up and down the spindle, C, D.",
+      "titleKo": "포물선 팔 조속기",
+      "ko": "기관 조속기이다. 공 K의 오르내림은 포물선 모양으로 굽은 팔 B의 안내를 받으며, 그 위를 마찰 방지 바퀴 L이 구른다. 바퀴 L을 슬리브와 이어 주는 막대 F가 슬리브를 축 C, D 위에서 위아래로 움직인다.",
+      "easy": "축이 빨리 돌면 공 K가 바깥으로 벌어지며 굽은 팔을 타고 올라간다. 공과 바퀴를 연결한 막대가 아래 슬리브를 끌어올려 기관 속도를 조절한다.",
+      "category": "governor",
+      "mech": "Vertical spindle C-D with a top fitting C; two curved parabolic arms B (upper left and right) hinged at the top; two balls (one labelled K) on rods with small guide wheels L running on the arms; rods F connecting the wheels L to a sliding sleeve near the bottom. Driver = spindle rotation; balls fly outward, sleeve rises."
+    },
+    {
+      "n": 275,
+      "en": "Rotary motion of the worm gives a rectilinear motion to the rack.",
+      "titleKo": "웜과 랙",
+      "ko": "웜의 회전 운동이 랙에 직선 운동을 준다.",
+      "easy": "나사(웜)가 돌면 곁에 놓인 톱니 막대(랙)가 한 칸씩 위아래로 밀려 직선으로 움직인다.",
+      "category": "gear",
+      "mech": "Vertical rack (bar with square teeth on its right side) beside a vertical shaft carrying a worm (helical thread of about 3 turns with a cylinder); the worm thread meshes with the rack teeth. Driver = worm shaft rotating; rack translates along its length."
+    },
+    {
+      "n": 276,
+      "en": "Continuous rotary motion of the cam gives a reciprocating rectilinear motion to the bar. The cam is of equal diameter in every direction measured across its center.",
+      "titleKo": "세 갈래 정폭 캠",
+      "ko": "캠의 연속된 회전 운동이 막대에 직선 왕복 운동을 준다. 이 캠은 중심을 가로지르는 어느 방향으로 재도 지름이 같다.",
+      "easy": "세 갈래로 둥글게 퍼진 캠이 돌면서 막대를 밀었다 당긴다. 어느 방향으로 재도 폭이 같아서 막대 끝이 늘 캠에 닿아 있는 채 움직인다.",
+      "category": "cam",
+      "mech": "Three-lobed constant-width cam (rounded triangular, Reuleaux-like, with a hub hole) on a shaft (left, with a flattened/notched end) with the bar attached through a pivot at the right (small block). Driver = cam rotating; the bar reciprocates with the constant-breadth property keeping contact."
+    },
+    {
+      "n": 277,
+      "en": "Col. Colt's invention for obtaining the movement of the cylinder of a revolving fire-arm by the act of cocking the hammer. As the hammer is drawn back to cock it, the dog, a, attached to the tumbler, acts on the ratchet, b, on the back of the cylinder. The dog is held up to the ratchet by a spring, c.",
+      "titleKo": "콜트 리볼버 회전 장치",
+      "ko": "리볼버(회전식 총)의 실린더를 공이치기를 당기는 동작만으로 움직이게 하는 콜트 대령의 발명이다. 공이치기를 뒤로 당겨 장전할 때, 텀블러에 붙은 도그 a가 실린더 뒷면의 래칫 b를 민다. 도그는 스프링 c에 의해 래칫에 붙어 있다.",
+      "easy": "방아쇠 부분의 공이치기를 당기면 작은 갈고리(도그)가 실린더 뒤의 톱니를 밀어 실린더가 한 칸 돌아간다. 그래서 다음 총알이 발사 위치에 온다.",
+      "category": "ratchet",
+      "mech": "Left: revolver cylinder (large drum with fine vertical grooves/flutes on its side) with a ratchet b on its back; right: hammer/lock body (a large curved plate with hatched pivot) with a spring c (curved arm) and a pawl/dog a at its lower left pushing the ratchet teeth; hammer spur at the upper right. Driver = hammer drawn back; dog advances cylinder by one chamber."
+    },
+    {
+      "n": 278,
+      "en": "C. R. Otis’s safety-stop for the platform of a hoisting apparatus. A are the stationary uprights, and B is the upper part of the platform working between them. The rope, a, by which the platform is hoisted, is attached by a pin, b, and spring, c, and the pin is connected by two elbow levers with two pawls, d, which work in ratchets secured to the uprights, A. The weight of the platform and the tension of the rope keep the pawls out of gear from the ratchets in hoisting or lowering the platform, but in case of the breakage of rope the spring, c, presses down the pin, b, and the attached ends of the levers, and so presses the pawls into the ratchets and stops the descent of the platform.",
+      "titleKo": "오티스의 승강기 안전 장치",
+      "ko": "C. R. 오티스가 만든, 들어 올리는 장치의 플랫폼용 안전 멈춤 장치이다. A는 고정된 기둥이고, B는 그 사이에서 움직이는 플랫폼의 윗부분이다. 플랫폼을 들어 올리는 밧줄 a는 핀 b와 스프링 c로 붙어 있고, 이 핀은 두 개의 엘보 레버로 두 개의 폴 d와 연결되어 있으며, 폴은 기둥 A에 고정된 래칫에 걸린다. 플랫폼을 올리거나 내릴 때는 플랫폼의 무게와 밧줄의 장력이 폴을 래칫에서 떨어져 있게 한다. 그러나 밧줄이 끊어지면 스프링 c가 핀 b와 레버의 붙은 끝을 아래로 눌러 폴을 래칫 속으로 밀어 넣고, 플랫폼의 하강을 멈춘다.",
+      "easy": "밧줄이 팽팽할 때는 폴이 기둥의 톱니에서 떨어져 있다가, 밧줄이 끊어지면 스프링이 폴을 톱니에 걸어 플랫폼이 떨어지지 않게 붙잡는다. 엘리베이터의 안전장치와 같은 원리이다.",
+      "category": "ratchet",
+      "mech": "Two vertical uprights A, A with toothed ratchet edges (inner faces); a platform top B between them with a rope a coming down to a pin b and a leaf spring c across the middle; two bell-crank (elbow) levers pivoting at the platform corners with pawls d at their outer ends facing the ratchet teeth. Driver = rope tension holds spring and pawls retracted; if rope breaks, spring pushes pawls into ratchets."
+    }
+  ]
+}

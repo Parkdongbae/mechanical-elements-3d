@@ -1,0 +1,170 @@
+{
+  "platePage": 65,
+  "textPage": 66,
+  "figures": [
+    {
+      "n": 234,
+      "box": [
+        0.1264,
+        0.2409,
+        0.4088,
+        0.4297
+      ]
+    },
+    {
+      "n": 235,
+      "box": [
+        0.4187,
+        0.2409,
+        0.6813,
+        0.4297
+      ]
+    },
+    {
+      "n": 236,
+      "box": [
+        0.6923,
+        0.2409,
+        0.978,
+        0.4297
+      ]
+    },
+    {
+      "n": 237,
+      "box": [
+        0.1264,
+        0.4351,
+        0.4088,
+        0.6177
+      ]
+    },
+    {
+      "n": 238,
+      "box": [
+        0.4187,
+        0.4351,
+        0.6813,
+        0.6177
+      ]
+    },
+    {
+      "n": 239,
+      "box": [
+        0.6923,
+        0.4351,
+        0.978,
+        0.6177
+      ]
+    },
+    {
+      "n": 240,
+      "box": [
+        0.1264,
+        0.6232,
+        0.4088,
+        0.8003
+      ]
+    },
+    {
+      "n": 241,
+      "box": [
+        0.4187,
+        0.6232,
+        0.6813,
+        0.8003
+      ]
+    },
+    {
+      "n": 242,
+      "box": [
+        0.6923,
+        0.6232,
+        0.978,
+        0.8003
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 234,
+      "en": "Represents a verge escapement. On oscillating the spindle, S, the crown-wheel has an intermittent rotary motion.",
+      "titleKo": "버지 탈진기",
+      "ko": "버지 탈진기를 나타낸다. 스핀들 S를 흔들면 크라운 휠이 간헐 회전 운동(멈췄다 돌기)을 한다.",
+      "easy": "막대(스핀들)가 앞뒤로 흔들리면서 왕관 모양 톱니바퀴의 이를 하나씩 놓아 주거나 막는다. 그래서 바퀴는 한 칸씩 끊어지며 돈다. 옛 시계에 쓰인 장치이다.",
+      "category": "escapement",
+      "mech": "Crown wheel (ring-shaped with saw teeth standing on its rim) on a vertical shaft going down; a horizontal spindle S above its center with two small flags (pallets) A, A at right angles, one engaging each side of the wheel. Driver = spindle S oscillating about its horizontal axis; crown wheel advances one tooth per swing."
+    },
+    {
+      "n": 235,
+      "en": "The oscillation of the tappet-arm produces an intermittent rotary motion of the ratchet-wheel. The small spring at the bottom of the tappet-arm keeps the tappet in the position shown in the drawing as the arm rises, yet allows it to pass the teeth on the return motion.",
+      "titleKo": "태핏 팔 래칫",
+      "ko": "태핏 팔의 진동이 래칫 바퀴에 간헐 회전 운동을 만든다. 태핏 팔 아래쪽의 작은 스프링은 팔이 올라갈 때 태핏을 그림에 나타난 위치에 있게 하면서도, 돌아올 때는 태핏이 이 위를 지나가게 해 준다.",
+      "easy": "팔이 올라갈 때는 작은 돌기(태핏)가 이를 밀어 바퀴를 한 칸 돌리고, 내려올 때는 스프링 덕분에 돌기가 접히며 이를 타 넘어 돌아온다.",
+      "category": "ratchet",
+      "mech": "Small star-shaped ratchet wheel (about 7 teeth) with a hooked guard arm above; a tappet-arm (lever with a pivoted tappet and small spring at the lower end) swinging up under the wheel; dotted arcs show the paths. Driver = tappet-arm oscillating; wheel advances one tooth per upstroke."
+    },
+    {
+      "n": 236,
+      "en": "A nearly continuous circular motion is imparted to the ratchet-wheel on vibrating the lever, a, to which are attached the two pawls, b and c.",
+      "titleKo": "두 폴 래칫 2",
+      "ko": "레버 a를 흔들면 래칫 바퀴에 거의 연속적인 원운동이 전해진다. 이 레버에는 두 폴 b와 c가 붙어 있다.",
+      "easy": "폴 두 개가 번갈아 이를 밀어서, 레버가 올라갈 때도 내려갈 때도 바퀴가 같은 방향으로 거의 쉬지 않고 돈다.",
+      "category": "ratchet",
+      "mech": "Saw-tooth ratchet wheel (about 20 teeth, hub, arrow shows rotation direction) with a long lever a pivoted at the upper right carrying two pawls b and c hanging on short links that engage the teeth at the upper left. Driver = lever a vibrating; wheel turns almost continuously one way."
+    },
+    {
+      "n": 237,
+      "en": "A reciprocating circular motion of the top arm makes its attached pawl produce an intermittent circular motion of the crown-ratchet or rag-wheel.",
+      "titleKo": "왕관 래칫",
+      "ko": "위쪽 팔의 왕복 원운동으로, 거기 붙은 폴이 크라운 래칫(왕관 래칫) 또는 래그 휠에 간헐 원운동을 만든다.",
+      "easy": "위에서 왔다 갔다 하는 팔 끝의 폴이 왕관 모양 바퀴의 이를 한 칸씩 밀어 바퀴를 조금씩 돌린다.",
+      "category": "ratchet",
+      "mech": "Crown ratchet (ring with inward-facing saw teeth about 18, standing on a disc on a vertical shaft); a horizontal arm hinged at the center collar carrying a pawl at its end that hooks the teeth. Driver = arm swinging back and forth horizontally; the wheel advances one tooth per swing."
+    },
+    {
+      "n": 238,
+      "en": "An escapement. D is the escape-wheel, and C and B the pallets. A is the axis of the pallets.",
+      "titleKo": "탈진기",
+      "ko": "탈진기이다. D는 탈진 바퀴(이스케이프 휠)이고, C와 B는 팔레트이다. A는 팔레트의 축이다.",
+      "easy": "별 모양의 바퀴가 한 칸씩만 돌도록 갈고리(팔레트)가 이를 번갈아 걸고 놓는다. 시계에서 시간을 일정하게 나누는 부분이다.",
+      "category": "escapement",
+      "mech": "Seven-pointed star escape-wheel D with arrow showing direction; an anchor-shaped pallet piece pivoting at A (lower hub) with pallets B and C at its two arms, one hooking the star's tooth at C, the other releasing at B. Driver = escape wheel driven by a spring/weight; the anchor rocks and releases one tooth per swing."
+    },
+    {
+      "n": 239,
+      "en": "An arrangement of stops for a spur-gear.",
+      "titleKo": "기어의 멈추개",
+      "ko": "평기어를 위한 멈추개 배열이다.",
+      "easy": "레버 두 개가 기어의 이 사이에 끼어 기어가 돌지 못하게 막는다. 한쪽 레버를 빼면 기어가 돌 수 있다.",
+      "category": "escapement",
+      "mech": "Spur gear segment (about 10 teeth, hatched hub) with two stop levers hinged on the left and right sides; their ends fit between the teeth; one is a short curved hook and the other a long straight bar. Driver = levers swinging to catch or release the gear."
+    },
+    {
+      "n": 240,
+      "en": "Represents varieties of stops for a ratchet-wheel.",
+      "titleKo": "래칫의 여러 멈추개",
+      "ko": "래칫 바퀴를 위한 여러 가지 멈추개를 나타낸다.",
+      "easy": "톱니 모양 바퀴에 걸리는 폴과 멈추개의 여러 모양을 한 그림에 모아 보여 준다. 폴이 이에 걸려 바퀴가 거꾸로 돌지 못하게 한다.",
+      "category": "ratchet",
+      "mech": "Ratchet wheel (about 14 saw teeth, hub) with three different stops: a hooked arm at the upper left, a long straight arm at the upper right, and a small pivoted catch C with a curved spring at the bottom. Driver = wheel; stops catch the teeth."
+    },
+    {
+      "n": 241,
+      "en": "Intermittent circular motion is imparted to the wheel, A, by the continuous circular motion of the smaller wheel with one tooth.",
+      "titleKo": "한 이빨 바퀴",
+      "ko": "작은 바퀴의 연속된 원운동으로 바퀴 A에 간헐 원운동이 전해진다. 작은 바퀴에는 이가 하나뿐이다.",
+      "easy": "이가 하나뿐인 작은 바퀴가 한 바퀴 돌 때마다 큰 톱니 바퀴 A의 이 하나를 밀어 한 칸 돌린다. 작은 바퀴가 아무리 빨리 돌아도 큰 바퀴는 한 칸씩만 움직인다.",
+      "category": "ratchet",
+      "mech": "Large saw-toothed wheel A (about 20 teeth, arrow shows rotation, hub) with a hooked stop arm above left; a small wheel (single-tooth, with an arrow) at the lower left driving A. Driver = small one-tooth wheel rotating continuously; A advances one tooth per small-wheel revolution."
+    },
+    {
+      "n": 242,
+      "en": "A brake used in cranes and hoisting machines. By pulling down the end of the lever, the ends of the brake-strap are drawn toward each other, and the strap tightened on the brake-wheel.",
+      "titleKo": "띠 브레이크",
+      "ko": "기중기와 감아올리는 기계에 쓰이는 브레이크이다. 레버 끝을 아래로 당기면 브레이크 띠의 양 끝이 서로 가까워지고, 띠가 브레이크 바퀴를 죈다.",
+      "easy": "바퀴를 감싼 띠의 양 끝을 레버로 당겨 조이면 마찰이 생겨 바퀴가 멈춘다. 무거운 물건을 들어 올리는 기계에서 쓴다.",
+      "category": "tool",
+      "mech": "Brake wheel (large disc with rim, hatched hub) wrapped by a thin brake-strap; both strap ends joined to a short lever with pivots at the right; the lever's handle end points down-right. Driver = lever pulled down; the strap tightens on the wheel and brakes it."
+    }
+  ]
+}

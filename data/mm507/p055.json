@@ -1,0 +1,170 @@
+{
+  "platePage": 55,
+  "textPage": 56,
+  "figures": [
+    {
+      "n": 189,
+      "box": [
+        0.1187,
+        0.2315,
+        0.3923,
+        0.4289
+      ]
+    },
+    {
+      "n": 190,
+      "box": [
+        0.4011,
+        0.2315,
+        0.6615,
+        0.4289
+      ]
+    },
+    {
+      "n": 191,
+      "box": [
+        0.667,
+        0.2315,
+        0.9714,
+        0.4289
+      ]
+    },
+    {
+      "n": 192,
+      "box": [
+        0.1187,
+        0.4367,
+        0.3923,
+        0.6154
+      ]
+    },
+    {
+      "n": 193,
+      "box": [
+        0.4011,
+        0.4367,
+        0.6615,
+        0.6154
+      ]
+    },
+    {
+      "n": 194,
+      "box": [
+        0.667,
+        0.4367,
+        0.9714,
+        0.6154
+      ]
+    },
+    {
+      "n": 195,
+      "box": [
+        0.1187,
+        0.6208,
+        0.3923,
+        0.7848
+      ]
+    },
+    {
+      "n": 196,
+      "box": [
+        0.4011,
+        0.6208,
+        0.6615,
+        0.7848
+      ]
+    },
+    {
+      "n": 197,
+      "box": [
+        0.667,
+        0.6208,
+        0.9714,
+        0.7848
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 189,
+      "en": "Another modification of 186.",
+      "titleKo": "분리 장치 변형 3",
+      "ko": "186의 또 다른 변형이다.",
+      "easy": "186에서 본 편심 막대 분리 장치를 다르게 만든 것이다. 손잡이와 핀으로 막대를 밸브 장치에서 떼었다 붙였다 한다.",
+      "category": "steam",
+      "mech": "Horizontal eccentric-rod with a forked end at left; a pivot pin with a roller; a crank/eccentric hub (hatched disc) above; linked bell-crank arm and a vertical rod rising to the right. Same function as 186: uncoupling the eccentric-rod from the valve gear."
+    },
+    {
+      "n": 190,
+      "en": "A screw-clamp. On turning the handle the screw thrusts upward against the holder, which, operating as a lever, holds down the piece of wood or other material placed under it on the other side of its fulcrum.",
+      "titleKo": "나사 클램프",
+      "ko": "나사 죔쇠이다. 손잡이를 돌리면 나사가 홀더(고정구)를 위로 밀고, 홀더는 지레처럼 작용하여 받침점 반대쪽 아래에 놓인 나무 조각이나 다른 재료를 눌러 고정한다.",
+      "easy": "나사를 돌려 한쪽을 위로 밀면 지레의 반대쪽이 아래로 내려가 나무를 꽉 누른다. 작은 힘으로도 물건을 단단히 고정할 수 있다.",
+      "category": "tool",
+      "mech": "Wooden work surface (board, grain drawn); a curved arm (holder) pivoted on a post at the right, a pad block on its left end resting on the wood; a vertical screw with a crank handle at the far right pushes the lever's tail upward. Driver = screw turning; lever presses the pad down."
+    },
+    {
+      "n": 191,
+      "en": "Scroll-gears for obtaining a gradually increasing speed.",
+      "titleKo": "소용돌이 기어",
+      "ko": "속도가 점점 빨라지게 하는 스크롤 기어(소용돌이 기어)이다.",
+      "easy": "기어의 이가 소용돌이처럼 중심에서 점점 멀어지게 배열되어 있어서, 한 바퀴 도는 동안 맞물린 기어의 속도가 서서히 빨라지거나 느려진다.",
+      "category": "gear",
+      "mech": "Two equal spur-gear-like discs, one above the other, centers on vertical line, hatched hubs; each has teeth on a spiral (scroll) pitch line so the radius increases around the circumference, with a step where the spiral closes. Driver = either; speed ratio changes continuously through the revolution."
+    },
+    {
+      "n": 192,
+      "en": "A variety of what is known as the \"mangle-wheel.\" One variety of this was illustrated by 36. In this one the speed varies in every part of a revolution, the groove, b, d, in which the pinion-shaft is guided, as well as the series of teeth, being eccentric to the axis of the wheel.",
+      "titleKo": "맹글 휠 1",
+      "ko": "'맹글 휠(mangle-wheel)'이라고 불리는 것의 한 종류이다. 36번에 그 한 가지가 그려져 있다. 이 장치에서는 한 바퀴 도는 모든 부분에서 속도가 달라지는데, 피니언 축을 안내하는 홈 b, d와 이의 줄이 모두 바퀴의 축에서 치우쳐(편심) 있기 때문이다.",
+      "easy": "작은 기어(피니언)가 바퀴 안쪽의 이를 따라 홈 안을 이동하며 바퀴를 돌린다. 홈이 축에서 치우쳐 있어 바퀴가 도는 속도가 계속 달라진다.",
+      "category": "gear",
+      "mech": "Large circular plate with an eccentric heart/comma-shaped continuous groove, with internal teeth around the groove (about 50 teeth outer, 20 inner); center hub hatched; pinion (not drawn in this view) runs in the groove guided at b, d. Driver = pinion rotating one direction; wheel speed varies through each revolution."
+    },
+    {
+      "n": 193,
+      "en": "Another kind of mangle-wheel with its pinion. With this as well as with that in the preceding figure, although the pinion continues to revolve in one direction, the mangle-wheel will make almost an entire revolution in one direction and the same in an opposite direction; but the revolution of the wheel in one direction will be slower than that in the other, owing to the greater radius of the outer circle of teeth.",
+      "titleKo": "맹글 휠 2",
+      "ko": "피니언이 달린 다른 종류의 맹글 휠이다. 이것도 앞 그림의 것과 마찬가지로, 피니언은 계속 한 방향으로 돌지만 맹글 휠은 한 방향으로 거의 한 바퀴 돈 뒤 반대 방향으로도 거의 한 바퀴 돈다. 다만 한 방향의 회전이 다른 방향의 회전보다 느린데, 바깥쪽 이의 원이 반지름이 더 크기 때문이다.",
+      "easy": "작은 기어는 한 방향으로만 도는데도, 큰 바퀴는 한 바퀴 가까이 돌다가 방향을 바꿔 반대로 거의 한 바퀴 돈다. 바깥쪽 이를 탈 때가 안쪽 이를 탈 때보다 더 느리게 돈다.",
+      "category": "gear",
+      "mech": "Round plate with a heart-shaped (cusp at the top) double toothed track: an outer ring of teeth and an inner ring of teeth connected by a groove; hub in the center; small pinion (about 10 teeth) at the lower right engaging. Driver = pinion rotating continuously; wheel reverses after nearly one revolution; slow (outer) and fast (inner) phases."
+    },
+    {
+      "n": 194,
+      "en": "Another mangle-wheel. In this the speed is equal in both directions of motion, only one circle of teeth being provided on the wheel. With all of these mangle-wheels the pinion-shaft is guided and the pinion kept in gear by a groove in the wheel. The said shaft is made with a universal joint, which allows a portion of it to have the vibratory motion necessary to keep the pinion in gear.",
+      "titleKo": "맹글 휠 3",
+      "ko": "또 다른 맹글 휠이다. 이것은 바퀴에 이의 줄이 하나만 있어서 두 방향 운동의 속도가 같다. 이런 맹글 휠에서는 모두 피니언 축이 바퀴에 있는 홈의 안내를 받고, 피니언은 그 덕에 계속 맞물린다. 이 축에는 유니버설 조인트가 있어서 축의 일부가 피니언을 맞물린 채로 두는 데 필요한 진동 운동을 할 수 있다.",
+      "easy": "이 맹글 휠은 이가 한 줄뿐이라 앞으로 돌 때와 뒤로 돌 때의 속도가 같다. 피니언 축은 만능 이음(유니버설 조인트) 덕에 홈을 따라 흔들리며 계속 맞물린다.",
+      "category": "gear",
+      "mech": "Round plate (about 8 in) with a heart/comma-shaped closed groove and one ring of teeth along the inner edge of the groove (drawn as oval slots); hatched hub in the center; pinion (about 10 teeth) at the lower right. Pinion shaft has a universal joint. Driver = pinion; wheel reverses with equal speed in both directions."
+    },
+    {
+      "n": 195,
+      "en": "A mode of driving a pair of feed-rolls, the opposite surfaces of which require to move in the same direction. The two wheels are precisely similar, and both gear into the endless screw which is arranged between them. The teeth of one wheel only are visible, those of the other being on the back or side which is concealed from view.",
+      "titleKo": "웜으로 구동하는 이송 롤러",
+      "ko": "서로 마주 보는 면이 같은 방향으로 움직여야 하는 이송 롤러 한 쌍을 구동하는 방법이다. 두 바퀴는 똑같이 생겼고, 둘 사이에 놓인 끝없는 나사(웜)에 모두 맞물린다. 한쪽 바퀴의 이만 보이고, 다른 바퀴의 이는 가려진 뒷면이나 옆면에 있다.",
+      "easy": "웜 하나가 위아래 두 바퀴와 맞물려 돌리면 두 바퀴의 마주 보는 면이 같은 방향으로 움직인다. 그 사이에 끼운 재료가 앞으로 밀려 나온다.",
+      "category": "gear",
+      "mech": "Two identical wheels one above the other (upper one with visible teeth, lower one plain disc whose teeth are hidden), centers on a vertical line with hatched hub circles; a long horizontal worm (endless screw, shown as a rod with threads at the middle) between them engaging both. Driver = worm rotating; both wheels turn so their facing surfaces move in the same direction."
+    },
+    {
+      "n": 196,
+      "en": "The pinion, B, rotates about a fixed axis and gives an irregular vibratory motion to the arm carrying the wheel, A.",
+      "titleKo": "흔들리는 팔의 기어",
+      "ko": "피니언 B는 고정된 축을 중심으로 회전하고, 바퀴 A를 단 팔에 불규칙한 진동 운동을 준다.",
+      "easy": "작은 기어 B가 제자리에서 돌면, 이에 맞물린 물결 모양의 바퀴 A가 B 둘레를 불규칙하게 오르내리며 팔을 흔든다.",
+      "category": "gear",
+      "mech": "Pinion B (small, about 10 teeth) on a fixed axis at lower left; wheel A (wavy/elliptical toothed wheel, about 25 teeth) on a pivoted arm; arm pivots on a hatched fixed block at the right. Driver = B rotating; A's arm swings irregularly up/down about its pivot."
+    },
+    {
+      "n": 197,
+      "en": "What is called a \"mangle-rack.\" A continuous rotation of the pinion will give a reciprocating motion to the square frame. The pinion-shaft must be free to rise and fall, to pass round the guides at the ends of the rack. This motion may be modified as follows:—If the square frame be fixed, and the pinion be fixed upon a shaft made with a universal joint, the end of the shaft will describe a line, similar to that shown in the drawing, around the rack.",
+      "titleKo": "맹글 랙",
+      "ko": "'맹글 랙(mangle-rack)'이라고 부르는 것이다. 피니언이 계속 회전하면 네모난 틀이 왕복 운동을 한다. 피니언 축은 랙 끝의 안내 부분을 돌아가기 위해 위아래로 자유롭게 움직일 수 있어야 한다. 이 운동은 다음과 같이 바꿀 수 있다. 네모난 틀을 고정하고, 피니언을 유니버설 조인트가 있는 축에 붙이면, 축의 끝은 그림에 나온 것과 비슷한 선을 그리며 랙 둘레를 돈다.",
+      "easy": "작은 기어가 한 방향으로만 돌아도 이가 양쪽에 있는 틀은 앞뒤로 왔다 갔다 한다. 틀의 양 끝에서 기어가 반대편 이로 넘어가기 때문이다.",
+      "category": "gear",
+      "mech": "Rectangular frame with a long stadium-shaped slot (rounded ends); a rack of round holes/teeth along the bottom straight side and a curved guide at each end, a pinion (about 8 teeth) above engaging the rack row. Driver = pinion rotating one direction; frame reciprocates left-right, pinion shaft rises/falls at the ends."
+    }
+  ]
+}

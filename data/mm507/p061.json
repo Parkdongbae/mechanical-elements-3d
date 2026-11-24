@@ -1,0 +1,170 @@
+{
+  "platePage": 61,
+  "textPage": 62,
+  "figures": [
+    {
+      "n": 216,
+      "box": [
+        0.1209,
+        0.2331,
+        0.3978,
+        0.4235
+      ]
+    },
+    {
+      "n": 217,
+      "box": [
+        0.4044,
+        0.2331,
+        0.6659,
+        0.4235
+      ]
+    },
+    {
+      "n": 218,
+      "box": [
+        0.6725,
+        0.2331,
+        0.9736,
+        0.4235
+      ]
+    },
+    {
+      "n": 219,
+      "box": [
+        0.1209,
+        0.4289,
+        0.3978,
+        0.6138
+      ]
+    },
+    {
+      "n": 220,
+      "box": [
+        0.4044,
+        0.4289,
+        0.6659,
+        0.6138
+      ]
+    },
+    {
+      "n": 221,
+      "box": [
+        0.6725,
+        0.4289,
+        0.9736,
+        0.6138
+      ]
+    },
+    {
+      "n": 222,
+      "box": [
+        0.1209,
+        0.62,
+        0.3978,
+        0.8353
+      ]
+    },
+    {
+      "n": 223,
+      "box": [
+        0.4044,
+        0.62,
+        0.6659,
+        0.8353
+      ]
+    },
+    {
+      "n": 224,
+      "box": [
+        0.6725,
+        0.62,
+        0.9736,
+        0.8353
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 216,
+      "en": "The external and internal mutilated cog-wheels work alternately into the pinion, and give slow forward and quick reverse motion.",
+      "titleKo": "안팎 결손 기어",
+      "ko": "바깥쪽과 안쪽의 이가 일부 빠진(결손) 톱니바퀴가 번갈아 피니언에 맞물려 느린 전진과 빠른 후진 운동을 준다.",
+      "easy": "큰 고리 모양 기어는 안쪽에, 또 다른 부분은 바깥쪽에 이가 있어서 작은 기어(피니언)가 번갈아 맞물린다. 그래서 한쪽으로는 천천히, 반대쪽으로는 빨리 돈다.",
+      "category": "gear",
+      "mech": "Large ring gear with internal teeth around most of its inside rim (about 45 teeth, with a gap/missing section at the left); two equal pinions (about 10 teeth each, hatched hubs) stacked vertically at the center, meshing with each other. Driver = pinion; the internal toothed part and an outer toothed part alternate, giving slow forward and quick reverse."
+    },
+    {
+      "n": 217,
+      "en": "These are parts of the same movement, which has been used for giving the roller motion in wool-combing machines. The roller to which wheel, F (218), is secured is required to make one third a revolution backward, then two thirds of a revolution forward, when it must stop until another length of combed fiber is ready for delivery. This is accomplished by the grooved heart-cam, C, D, B, e (217), the stud, A, working in the said groove; from C to D it moves the roller backward, and from D to e it moves it forward, the motion being transmitted through the catch, G, to the notch-wheel, F, on the roller-shaft, H.",
+      "titleKo": "하트 캠 홈",
+      "ko": "217과 218은 같은 운동의 부분이며, 양모 빗질 기계에서 롤러에 운동을 주는 데 쓰였다. 바퀴 F(218)가 붙은 롤러는 한 바퀴의 3분의 1은 뒤로, 3분의 2는 앞으로 돈 다음, 다른 빗질한 섬유 한 토막이 나올 준비가 될 때까지 멈춰야 한다. 이것은 홈이 있는 하트 모양 캠 C, D, B, e(217)와 그 홈 속에서 움직이는 스터드 A로 이루어진다. C에서 D까지는 롤러를 뒤로, D에서 e까지는 앞으로 움직이며, 그 운동은 걸쇠 G를 거쳐 롤러 축 H에 달린 홈 바퀴 F에 전해진다.",
+      "easy": "하트 모양 홈을 따라 핀이 돌면 핀이 가까워졌다 멀어졌다 한다. 이 움직임으로 롤러를 조금 뒤로 빼고 많이 앞으로 보내는 일을 되풀이한다. 양모를 빗는 기계에 쓰였다.",
+      "category": "cam",
+      "mech": "Circular plate with a heart-shaped double groove (cam track) with points labelled e (top cusp), B (right), C (left), D (bottom center, around the hub); arrow beside it shows rotation direction. The stud A rides in the groove. Driver = plate rotating; stud moves radially in/out: C-D backward stroke, D-e forward stroke."
+    },
+    {
+      "n": 218,
+      "en": "[Shared paragraph with 217.] When the stud, A, arrives at the point, e, in the cam, a projection at the back of the wheel which carries the cam strikes the projecting piece on the catch, G, and raises it out of the notch in the wheel, F, so that, while the stud is traveling in the cam from e to C, the catch is passing over the plain surface between the two notches in the wheel, F, without imparting any motion; but when stud, A, arrives at the part, C, the catch has dropped in another notch, and is again ready to move wheel, F, and roller as required.",
+      "titleKo": "걸쇠와 홈 바퀴",
+      "ko": "스터드 A가 캠의 e 지점에 이르면, 캠을 단 바퀴 뒤쪽의 돌기가 걸쇠 G의 튀어나온 부분을 쳐서 바퀴 F의 홈에서 걸쇠를 들어 올린다. 그래서 스터드가 캠 속에서 e에서 C로 가는 동안 걸쇠는 바퀴 F의 두 홈 사이 평평한 면 위를 지나가기만 하고 아무 운동도 전하지 않는다. 그러나 스터드 A가 C 부분에 오면 걸쇠는 다른 홈에 떨어져 있어서, 필요한 대로 바퀴 F와 롤러를 움직일 준비가 다시 된다. (217과 같은 문단에 묶인 설명이다.)",
+      "easy": "걸쇠가 홈 바퀴의 홈에 걸리면 바퀴를 밀어 돌리고, 평평한 부분 위에서는 헛돌기만 한다. 이렇게 롤러를 필요할 때만 움직이게 하고 나머지 시간에는 멈추게 한다.",
+      "category": "ratchet",
+      "mech": "Notched wheel F (about 10 notches around the rim, hub H) with a catch G (curved arm along the top of the wheel, with a knob on it) pivoted on the right; a long lever from the catch down to the lower left ending at A (stud). Driver = lever A swinging; catch pushes wheel F by one notch per stroke, and is lifted out for part of the cycle."
+    },
+    {
+      "n": 219,
+      "en": "Variable circular motion by crown-wheel and pinion. The crown-wheel is placed eccentrically to the shaft, therefore the relative radius changes.",
+      "titleKo": "편심 크라운 기어",
+      "ko": "크라운 기어와 피니언으로 변하는 원운동을 얻는다. 크라운 기어가 축에 대해 치우쳐(편심) 놓여 있어서 상대적인 반지름이 변한다.",
+      "easy": "접시 모양의 크라운 기어가 축에서 한쪽으로 치우쳐 있다. 맞물린 작은 기어가 도는 동안 맞물린 곳의 반지름이 계속 바뀌어서 바퀴의 속도가 일정하지 않게 변한다.",
+      "category": "gear",
+      "mech": "Crown wheel (disc-shaped ring with teeth standing on its rim, three spokes meeting at a hub) mounted on a vertical shaft going down; a pinion on a slanted shaft (cylinder at upper right) meshes with its rim. The crown wheel is offset from the shaft axis (eccentric). Driver = pinion; crown-wheel speed varies each turn."
+    },
+    {
+      "n": 220,
+      "en": "The two crank-shafts are parallel in direction, but not in line with each other. The revolution of either will communicate motion to the other with a varying velocity, for the wrist of one crank working in the slot of the other is continually changing its distance from the shaft of the latter.",
+      "titleKo": "평행한 두 크랭크 축",
+      "ko": "두 개의 크랭크 축은 방향은 평행하지만 서로 일직선에 있지는 않다. 어느 쪽이 회전해도 다른 쪽에 변하는 속도로 운동을 전하는데, 한 크랭크의 손목(핀)이 다른 크랭크의 홈 안에서 움직이면서 그 크랭크 축으로부터의 거리를 계속 바꾸기 때문이다.",
+      "easy": "서로 어긋나게 놓인 두 축을 크랭크의 핀과 홈으로 이었다. 한 축이 일정하게 돌아도 다른 축은 빨라졌다 느려졌다 하며 돈다.",
+      "category": "crank",
+      "mech": "Two parallel shafts (rods) offset sideways, one at left and one at right, each with a crank arm; one arm has a slot (long groove), the other has a wrist-pin working in the slot. Driver = either crank; the other turns with variable angular velocity (like a drag-link)."
+    },
+    {
+      "n": 221,
+      "en": "Irregular circular motion imparted to wheel, A. C is an elliptical spur-gear rotating round center, D, and is the driver. B is a small pinion with teeth of the same pitch, gearing with C. The center of this pinion is not fixed, but is carried by an arm or frame which vibrates on a center, A, so that as C revolves the frame rises and falls to enable pinion to remain in gear with it, notwithstanding the variation in its radius of contact. To keep the teeth of C and B in gear to a proper depth, and prevent them from riding over each other, wheel, C, has attached to it a plate which extends beyond it and is furnished with a groove, g, h, of similar elliptical form, for the reception of a pin or small roller attached to the vibrating arm concentric with pinion, B.",
+      "titleKo": "타원 기어 구동",
+      "ko": "바퀴 A에 불규칙한 원운동을 전한다. C는 중심 D를 축으로 도는 타원형 평기어이며 구동 바퀴이다. B는 C와 같은 피치의 이를 가진 작은 피니언으로 C와 맞물린다. 이 피니언의 중심은 고정되어 있지 않고, 중심 A를 축으로 진동하는 팔(틀)에 실려 있다. 그래서 C가 돌 때 틀이 오르내리며, 맞물리는 곳의 반지름이 달라져도 피니언이 C와 계속 맞물려 있게 한다. C와 B의 이가 알맞은 깊이로 맞물리고 서로 타고 넘지 않게 하려고, 바퀴 C에는 바깥으로 뻗은 판이 붙어 있고, 이 판에는 같은 타원 모양의 홈 g, h가 있어서 피니언 B와 같은 중심의 진동 팔에 달린 핀이나 작은 롤러를 받는다.",
+      "easy": "타원 모양 기어 C가 일정하게 돌면 맞물린 곳의 반지름이 바뀌므로 바퀴 A는 빨라졌다 느려졌다 한다. 작은 기어 B는 흔들리는 팔 위에 얹혀 있어서 오르내리며 C와 계속 맞물린다.",
+      "category": "gear",
+      "mech": "Elliptical spur gear C (center D, about 35 teeth, with a dotted ellipse groove g,h around it) as the driver; small pinion B on a swinging arm pivoted about A (round gear at upper left, with arm from A to B); wheel A at upper left is the follower. The arm rises/falls as C revolves; the groove and pin keeps depth of mesh."
+    },
+    {
+      "n": 222,
+      "en": "If for the eccentric wheel described in the last figure an ordinary spur-gear moving on an eccentric center of motion be substituted, a simple link connecting the center of the wheel with that of the pinion with which it gears will maintain proper pitching of teeth in a more simple manner than the groove.",
+      "titleKo": "편심 중심 기어",
+      "ko": "앞 그림에서 설명한 편심 바퀴 대신 편심 운동 중심에서 움직이는 보통의 평기어를 쓰면, 바퀴의 중심과 이에 맞물린 피니언의 중심을 잇는 간단한 링크가 홈보다 더 간단한 방법으로 이의 알맞은 맞물림을 유지해 준다.",
+      "easy": "앞 장치의 타원 기어를 중심이 어긋난 보통 기어로 바꾸었다. 홈 대신 두 기어의 축을 막대(링크)로 이으면 간단하게 이가 알맞게 맞물린다.",
+      "category": "gear",
+      "mech": "Three spur gears: a large one at the upper left (center joined by a link bar to the middle small pinion), the small pinion at the center, and a lower-right gear on an eccentric center (dotted circle shows its offset path), joined by another link to the pinion. Driver = eccentric gear; link keeps the pitch distance constant."
+    },
+    {
+      "n": 223,
+      "en": "An arrangement for obtaining variable circular motion. The sectors are arranged on different planes, and the relative velocity changes according to the respective diameters of the sectors.",
+      "titleKo": "부채꼴 기어 배열",
+      "ko": "변하는 원운동을 얻는 장치이다. 부채꼴(섹터) 기어를 서로 다른 평면에 놓고, 부채꼴의 지름에 따라 상대 속도가 달라진다.",
+      "easy": "이가 달린 부채꼴 조각 두 개를 서로 다른 면에 겹쳐 놓았다. 맞물리는 반지름이 달라져 한쪽이 일정하게 돌 때 다른 쪽은 속도가 변한다.",
+      "category": "gear",
+      "mech": "Two toothed sectors (fan-shaped plates, about 90 degrees each with radial straight edge) pivoted at centers one above the other, on different planes; each sector's tooth arc has a different radius. Driver = one sector; angular speed ratio varies with the contact radius."
+    },
+    {
+      "n": 224,
+      "en": "This represents an expanding pulley. On turning pinion, d, to the right or left, a similar motion is imparted to wheel, c, which, by means of curved slots cut therein, thrusts the studs fastened to arms of pulley outward or inward, thus augmenting or diminishing the size of the pulley.",
+      "titleKo": "지름이 변하는 풀리",
+      "ko": "지름이 넓어지는 풀리를 나타낸다. 피니언 d를 오른쪽이나 왼쪽으로 돌리면 같은 방향의 운동이 바퀴 c에 전해지고, 바퀴 c에 파인 굽은 홈이 풀리의 팔에 달린 스터드를 바깥이나 안쪽으로 밀어서 풀리의 크기를 늘리거나 줄인다.",
+      "easy": "작은 기어를 돌리면 가운데 바퀴의 굽은 홈이 풀리의 팔을 바깥으로 밀거나 안으로 당긴다. 그래서 벨트가 걸리는 풀리의 지름을 바꿀 수 있다.",
+      "category": "belt",
+      "mech": "Pulley with six radial arms carrying curved rim segments (gaps between the segments) at the outer end; central wheel c (hub, with six curved/spiral slots cut in it) engaging studs on the arm ends; pinion d at the top meshing with wheel c (teeth); labels a, b near an arm at left. Driver = pinion d turned; wheel c rotates, slots push arms radially, changing the pulley's diameter."
+    }
+  ]
+}

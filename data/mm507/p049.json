@@ -1,0 +1,152 @@
+{
+  "platePage": 49,
+  "textPage": 50,
+  "figures": [
+    {
+      "n": 164,
+      "box": [
+        0.1341,
+        0.2051,
+        0.3923,
+        0.4274
+      ]
+    },
+    {
+      "n": 165,
+      "box": [
+        0.4022,
+        0.2051,
+        0.6615,
+        0.4274
+      ]
+    },
+    {
+      "n": 166,
+      "box": [
+        0.6692,
+        0.2051,
+        0.9692,
+        0.4274
+      ]
+    },
+    {
+      "n": 167,
+      "box": [
+        0.1341,
+        0.4336,
+        0.3923,
+        0.6177
+      ]
+    },
+    {
+      "n": 168,
+      "box": [
+        0.4022,
+        0.4336,
+        0.6615,
+        0.6177
+      ]
+    },
+    {
+      "n": 171,
+      "box": [
+        0.6692,
+        0.4336,
+        0.9692,
+        0.8376
+      ]
+    },
+    {
+      "n": 169,
+      "box": [
+        0.1341,
+        0.6232,
+        0.3923,
+        0.8376
+      ]
+    },
+    {
+      "n": 170,
+      "box": [
+        0.4022,
+        0.6232,
+        0.6615,
+        0.8376
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 164,
+      "en": "A knee-lever, differing slightly from the toggle-joint shown in 40. It is often used for presses and stamps, as a great force can be obtained by it. The action is by raising or lowering the horizontal lever.",
+      "titleKo": "무릎 레버",
+      "ko": "40번에서 본 토글 이음과 조금 다른 무릎 레버(니 레버)이다. 이것으로 큰 힘을 얻을 수 있어서 프레스와 스탬프(찍는 기계)에 자주 쓰인다. 수평 레버를 올리거나 내려서 작동시킨다.",
+      "easy": "꺾인 두 막대가 거의 일직선이 될 때 작은 힘으로도 아주 큰 힘이 나온다. 그래서 물건을 누르거나 찍는 기계에 쓰인다.",
+      "category": "crank",
+      "mech": "Fixed top plate (hatched) and fixed base (hatched); a knee/toggle joint at the top with a long handle (horizontal lever) at right; a long blade-like vertical link between the joint and the base block. Driver = handle up/down; the lower link presses downward with large force near the straight (locked) position."
+    },
+    {
+      "n": 165,
+      "en": "Circular into rectilinear motion. The waved-wheel or cam on the upright shaft communicates a rectilinear motion to the upright bar through the oscillating rod.",
+      "titleKo": "물결 캠과 흔들막대",
+      "ko": "원운동이 직선 운동으로 바뀐다. 수직 축 위의 물결 모양 바퀴(캠)가 흔들리는 막대를 거쳐 수직 막대에 직선 운동을 전한다.",
+      "easy": "가장자리가 물결 모양인 바퀴가 돌면서 막대 끝을 밀면, 연결된 흔들막대를 거쳐 세로 막대가 위아래로 왔다 갔다 한다.",
+      "category": "cam",
+      "mech": "Upright shaft with a wave-edged cam-wheel (three lobes); a short pivoted arm with a roller bearing on the cam edge, an oscillating rod linking to an upright bar at lower left. Driver = upright shaft rotation; the bar reciprocates vertically, once per lobe."
+    },
+    {
+      "n": 166,
+      "en": "The rotation of the disk carrying the crank pin gives a to-and-fro motion to the connecting-rod, and the slot allows the rod to remain at rest at the termination of each stroke; it has been used in a brick-press, in which the connecting-rod draws a mold backward and forward, and permits it to rest at the termination of each stroke, that the clay may be deposited in it and the brick extracted.",
+      "titleKo": "멈춤이 있는 홈 크랭크",
+      "ko": "크랭크 핀이 달린 원판이 돌면 연결봉이 앞뒤로 왔다 갔다 하는데, 홈이 있어서 연결봉이 각 행정의 끝에서 잠시 멈춰 있을 수 있다. 이것은 벽돌 프레스에 쓰였는데, 연결봉이 틀(몰드)을 앞뒤로 끌었다 밀었다 하며 각 행정의 끝에서 쉬게 해 주므로, 그동안 틀에 진흙을 넣고 벽돌을 꺼낼 수 있다.",
+      "easy": "원판의 핀이 홈의 끝에서 방향을 바꾸는 동안 막대는 거의 움직이지 않고 쉰다. 이 쉬는 시간에 벽돌 틀에 진흙을 채우고 만들어진 벽돌을 꺼낸다.",
+      "category": "crank",
+      "mech": "Large disk on a center shaft with a crank pin (dotted circle path); a slotted eye at the end of the connecting-rod holds the pin; rod runs to the right horizontally. Driver = disk rotation; rod moves back and forth with dwell at each end of stroke."
+    },
+    {
+      "n": 167,
+      "en": "A drum or cylinder having an endless spiral groove extending all around it; one half of the groove having its pitch in one, and the other half its pitch in the opposite direction. A stud on a reciprocating rectilinearly moving rod works in the groove, and so converts reciprocating into rotary motion. This has been used as a substitute for the crank in a steam engine.",
+      "titleKo": "끝없는 나선 홈 원통",
+      "ko": "끝없이 한 바퀴 둘러 있는 나선 홈이 있는 드럼 또는 원통으로, 홈의 절반은 한 방향으로, 나머지 절반은 반대 방향으로 기울어(피치) 있다. 직선으로 왕복하는 막대에 붙은 스터드가 이 홈 안에서 움직여서 왕복 운동을 회전 운동으로 바꾼다. 이것은 증기 기관에서 크랭크 대신 쓰인 적이 있다.",
+      "easy": "막대 끝의 돌기가 홈을 따라 미끄러지면 원통이 돈다. 홈이 반대 방향으로 이어져 있어 막대가 왕복해도 원통은 계속 같은 방향으로 돈다.",
+      "category": "crank",
+      "mech": "Vertical cylinder (drum) with a closed spiral groove, half left-handed and half right-handed (drawn as a diagonal V-shaped path); a vertical guide bar to its right carrying a stud that engages the groove. Driver = rod reciprocating up/down; drum rotates about its vertical axis."
+    },
+    {
+      "n": 168,
+      "en": "The slotted crank at the left hand of the figure is on the main shaft of an engine, and the pitman which connects it with the reciprocating moving power is furnished with a pin which works in the slot of the crank. Intermediate between the first crank and the moving power is a shaft carrying a second crank, of an invariable radius, connected with the same pitman. While the first crank moves in a circular orbit, the pin at the end of the pitman is compelled to move in an elliptical orbit, thereby increasing the leverage of the main crank at those points which are most favorable for the transmission of power.",
+      "titleKo": "홈 크랭크와 타원 궤도",
+      "ko": "그림 왼쪽의 홈 크랭크는 기관의 주축에 붙어 있고, 이것을 왕복하는 동력과 이어 주는 피트먼(연결봉)에는 크랭크의 홈 안에서 움직이는 핀이 달려 있다. 첫째 크랭크와 동력 사이에는 둘째 크랭크가 달린 축이 있는데, 이 크랭크는 반지름이 일정하며 같은 피트먼에 연결되어 있다. 첫째 크랭크가 원 궤도로 움직이는 동안 피트먼 끝의 핀은 타원 궤도를 돌게 되므로, 동력을 전하기에 가장 유리한 위치에서 주 크랭크의 지렛대 효과가 커진다.",
+      "easy": "피트먼 끝의 핀이 타원을 그리며 움직이게 해서, 힘을 전달하기 좋은 위치에서 크랭크가 더 큰 지렛대 효과를 받도록 한 장치이다.",
+      "category": "crank",
+      "mech": "Slotted crank on the main shaft at left (dotted ellipse = pin path); long pitman bar across to the right with a pin in the crank slot; second crank (round, constant radius, dotted circle) on an intermediate shaft near the middle linked to the same pitman; piston/power rod at the far right end. Driver = reciprocating rod at right; main shaft rotates."
+    },
+    {
+      "n": 169,
+      "en": "A modification of 168, in which a link is used to connect the pitman with the main crank, thereby dispensing with the slot in the said crank.",
+      "titleKo": "연결 링크가 있는 크랭크",
+      "ko": "168의 변형으로, 피트먼을 주 크랭크에 연결하는 데 링크를 써서 크랭크의 홈을 없앴다.",
+      "easy": "앞의 장치에서 홈 대신 짧은 링크(연결 막대)로 이었다. 그래서 홈 없이도 같은 타원 궤도 효과를 얻는다.",
+      "category": "crank",
+      "mech": "Long pitman bar (left end = power rod) with two cranks: a small crank (round disk with dotted circle) at the middle on an intermediate shaft and the main crank at the right joined to the pitman by a short link (dotted ellipse = path). Driver = reciprocating rod at left; main crank rotates."
+    },
+    {
+      "n": 170,
+      "en": "Another form of steam engine governor. Instead of the arms being connected with a slide working on a spindle, they cross each other and are elongated upward beyond the top thereof and connected with the valve-rod by two short links.",
+      "titleKo": "교차 팔 조속기",
+      "ko": "증기 기관 조속기의 다른 형태이다. 팔이 축 위를 미끄러지는 슬라이드에 연결되는 대신, 서로 교차하고 그 위쪽으로 길게 늘어나 있어 두 개의 짧은 링크로 밸브 막대에 연결된다.",
+      "easy": "공이 달린 두 팔이 서로 엇갈려 있어서, 공이 벌어지면 팔의 윗부분이 오므라들며 링크로 밸브 막대를 움직인다. 축에 슬라이드를 쓰지 않는 간단한 구조다.",
+      "category": "governor",
+      "mech": "Vertical spindle with a bevel gear at the bottom (driven from a horizontal shaft at lower left); two crossing arms with a ball on each, pivoting at the arc-shaped hinge near the middle, upper ends extended and joined by two short links (diamond shape) to the valve rod at the top. Driver = spindle rotation; balls spread, top links move the valve rod."
+    },
+    {
+      "n": 171,
+      "en": "Valve motion and reversing gear used in oscillating marine engines. The two eccentric rods give an oscillating motion to the slotted link which works the curved slide over the trunnion. Within the slot in the curved slide is a pin attached to the arm of a rock-shaft which gives motion to the valve. The curve of the slot in the slide is an arc of a circle described from the center of the trunnion, and as it moves with the cylinder it does not interfere with the stroke of the valve. The two eccentrics and link are like those of the link motion used in locomotives.",
+      "titleKo": "선박용 밸브·역전 장치",
+      "ko": "진동식(오실레이팅) 선박 기관에 쓰이는 밸브 장치이며 역전 장치이다. 두 개의 편심 막대가 홈이 있는 링크에 흔들리는 운동을 주고, 이 링크가 트러니언 위의 굽은 슬라이드를 움직인다. 굽은 슬라이드의 홈 안에는 밸브를 움직이는 로커 축의 팔에 붙은 핀이 들어 있다. 슬라이드 홈의 굽은 모양은 트러니언 중심에서 그린 원의 호이며, 슬라이드가 실린더와 함께 움직이므로 밸브의 움직임을 방해하지 않는다. 두 개의 편심과 링크는 기관차에 쓰이는 링크 장치와 같다.",
+      "easy": "두 편심이 만드는 흔들림이 홈 달린 링크를 통해 밸브를 움직인다. 이 장치는 기관을 반대로 돌리는 역전 장치로도 쓰인다.",
+      "category": "steam",
+      "mech": "Top: shaft with two eccentrics (hatched center circle), two long eccentric rods going down to a curved slotted link (arc-shaped slot) with a pin; bottom: curved slide (arc) over the trunnion (large round pivot, labelled TRUNNION) between two vertical guide rods; rock-shaft arm and valve rod joined by a pin in the slide slot. Driver = shaft rotation; eccentrics oscillate the link, which moves the valve."
+    }
+  ]
+}

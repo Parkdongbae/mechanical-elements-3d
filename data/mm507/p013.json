@@ -1,0 +1,179 @@
+{
+  "platePage": 13,
+  "textPage": 14,
+  "figures": [
+    {
+      "n": 1,
+      "box": [
+        0.1209,
+        0.2436,
+        0.4027,
+        0.4342
+      ]
+    },
+    {
+      "n": 2,
+      "box": [
+        0.4087,
+        0.2436,
+        0.6687,
+        0.4342
+      ]
+    },
+    {
+      "n": 3,
+      "box": [
+        0.6747,
+        0.2436,
+        0.9674,
+        0.4342
+      ]
+    },
+    {
+      "n": 4,
+      "box": [
+        0.1209,
+        0.4385,
+        0.4027,
+        0.6171
+      ]
+    },
+    {
+      "n": 5,
+      "box": [
+        0.4087,
+        0.4385,
+        0.6687,
+        0.6171
+      ]
+    },
+    {
+      "n": 6,
+      "box": [
+        0.6747,
+        0.4385,
+        0.9674,
+        0.6171
+      ]
+    },
+    {
+      "n": 7,
+      "box": [
+        0.1209,
+        0.6222,
+        0.4027,
+        0.8077
+      ]
+    },
+    {
+      "n": 8,
+      "box": [
+        0.4111,
+        0.6222,
+        0.5127,
+        0.8077
+      ]
+    },
+    {
+      "n": 9,
+      "box": [
+        0.5127,
+        0.6222,
+        0.6687,
+        0.8077
+      ]
+    },
+    {
+      "n": 10,
+      "box": [
+        0.6747,
+        0.6222,
+        0.9674,
+        0.8077
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 1,
+      "titleKo": "열린 벨트 전동",
+      "ko": "단순한 풀리와 열린 벨트로 동력을 전달하는 모습이다. 이 경우 두 풀리는 같은 방향으로 회전한다.",
+      "easy": "두 바퀴(풀리)에 벨트를 둥글게 걸면 한쪽이 돌 때 다른 쪽도 같은 방향으로 돈다. 축이 멀리 떨어져 있어도 힘을 전할 수 있다.",
+      "category": "belt",
+      "mech": "Two equal pulleys on parallel horizontal shafts, one above the other; open flat belt. Both rotate the same way, ratio 1:1."
+    },
+    {
+      "n": 2,
+      "enStart": "Differs from 1 in",
+      "titleKo": "엇걸이 벨트 전동",
+      "ko": "1과 달리 열린 벨트 대신 엇걸린(교차한) 벨트를 쓴다. 이 경우 풀리의 회전 방향이 뒤바뀐다. 구동할 축에 풀리 세 개를 나란히 두고 가운데 것은 축에 고정하고 나머지 둘은 축에 헐겁게 끼운 뒤, 열린 벨트와 엇걸린 벨트를 함께 쓰면 구동하는 쪽을 멈추거나 거꾸로 돌리지 않고도 구동되는 축의 방향을 바꿀 수 있다. 한 벨트는 항상 고정 풀리에, 다른 벨트는 헐거운 풀리 중 하나에 걸려 있다. 열린 벨트가 고정 풀리에 있는지 엇걸린 벨트가 있는지에 따라 축이 한쪽 또는 반대쪽으로 돈다.",
+      "easy": "벨트를 X자로 엇걸면 두 풀리가 서로 반대 방향으로 돈다. 열린 벨트와 엇걸린 벨트를 함께 두고 어느 쪽을 고정 풀리에 걸지 고르면, 원동축은 계속 돌린 채로 일하는 축의 회전 방향만 바꿀 수 있다.",
+      "category": "belt",
+      "mech": "Two equal pulleys, same layout as 1 but belt crossed at mid-span (figure-8). Rotation reversed, ratio 1:1. Variant in text: three pulleys side by side on driven shaft (middle fast, outer loose), one open and one crossed belt."
+    },
+    {
+      "n": 3,
+      "titleKo": "안내 풀리 직각 전동",
+      "ko": "안내 풀리를 써서 한 축에서 직각으로 놓인 다른 축으로 운동을 전달하는 방법이다. 이 안내 풀리는 둘이 나란히 있고, 벨트의 두 가닥에 하나씩 대응한다.",
+      "easy": "벨트가 방향을 90도 꺾어야 할 때는 작은 안내 풀리로 벨트의 길을 바꿔 준다. 이렇게 하면 서로 수직인 두 축이 벨트로 이어진다.",
+      "category": "belt",
+      "mech": "Large driven pulley on horizontal shaft (top right); a drum with perpendicular axis (bottom left) with belt running down from two small guide pulleys at top-left set side by side, one per belt leaf, turning belt through 90 deg."
+    },
+    {
+      "n": 4,
+      "titleKo": "엇걸이 직각 전동",
+      "ko": "축이 직각으로 놓이고 축선이 같은 평면에 있는 다른 축으로 운동을 전달하는 방법이다. 여기서는 엇걸린 벨트로 보였다. 열린 벨트를 써도 되지만, 접촉면이 더 넓은 엇걸이가 낫다.",
+      "easy": "엇걸린 벨트를 쓰면 서로 직각인 두 축 사이에서도 운동을 전할 수 있다. 엇걸이는 벨트가 풀리에 닿는 면이 더 넓어서 열린 벨트보다 낫다.",
+      "category": "belt",
+      "mech": "Top pulley and two small pulleys at bottom corners plus a grooved guide pulley with perpendicular axis at bottom middle; crossed belt forms a triangle. Driver = top pulley."
+    },
+    {
+      "n": 5,
+      "titleKo": "긴장 풀리 달린 벨트",
+      "ko": "1과 비슷하지만 움직일 수 있는 긴장 풀리 B가 더해졌다. 이 풀리를 벨트에 눌러 느슨함을 없애면 벨트가 큰 풀리 한쪽에서 다른 쪽으로 운동을 전달하고, 누르지 않으면 벨트가 너무 느슨해 운동이 전달되지 않는다.",
+      "easy": "벨트가 느슨하면 헛돌아서 힘이 전해지지 않는다. 지렛대에 달린 작은 긴장 풀리 B로 벨트를 눌러 팽팽하게 하면 힘이 전해지고, 풀어 주면 끊긴다.",
+      "category": "belt",
+      "mech": "Open belt over two pulleys (top larger, bottom smaller); a small idler pulley B on a pivoting arm at left presses the slack side. B in = drive, B out = belt slack, no transmission."
+    },
+    {
+      "n": 6,
+      "titleKo": "왕복 회전 벨트 전동",
+      "ko": "반원 모양 부채꼴 조각에 붙은 레버에 진동 운동을 주면, 그 조각에 붙은 벨트가 아래의 두 풀리에 왕복하는 회전 운동을 준다.",
+      "easy": "위쪽의 레버를 앞뒤로 흔들면 반원 조각이 흔들리고, 거기에 감긴 벨트가 아래 두 바퀴를 번갈아 반대 방향으로 돌린다. 한 방향으로 계속 도는 것이 아니라 왔다 갔다 한다.",
+      "category": "belt",
+      "mech": "Horizontal rocking lever fixed to a semicircular segment (top centre); crossed belt from segment arc down to two equal pulleys below. Driver = lever, oscillating about its centre; pulleys oscillate."
+    },
+    {
+      "n": 7,
+      "titleKo": "벨트로 하는 정·역 전환",
+      "ko": "왼쪽에 있는 직립축을 연결하고, 끊고, 역회전시키는 방법이다. 벨트는 아래 축 a, b 위의 세 풀리 가운데 중간 풀리에 걸려 있는데, 그 풀리는 헐겁게 끼워져 있어 운동이 전달되지 않는다. 벨트를 왼쪽 풀리로 옮기면, 그 풀리는 베벨기어 B를 지닌 속 빈 축 b에 고정되어 있으므로 직립축에 한 방향으로 운동이 전달된다. 오른쪽 풀리로 옮기면 b 안쪽을 지나는 축 a에 고정된 기어 A를 거쳐 운동이 전달되어 직립축의 방향이 반대가 된다.",
+      "easy": "벨트를 가운데 풀리에 두면 헛돌아서 직립축이 멈춘다. 왼쪽이나 오른쪽 풀리로 벨트를 옮기면 서로 다른 베벨기어를 거치게 되어, 직립축이 정방향 또는 역방향으로 돈다.",
+      "category": "belt",
+      "mech": "Upper-right driver pulley on a horizontal shaft; lower horizontal shaft a (inner) with hollow shaft b around it, carrying three pulleys (left fast on b, middle loose, right fast on a); bevel gears B (on b) and A (on a) face a bevel C on a vertical shaft at left. Belt shifted sideways by a fork."
+    },
+    {
+      "n": 8,
+      "titleKo": "속도 풀리 (계단식)",
+      "ko": "선반이나 그 밖의 공작 기계에서, 가공하는 일에 맞추어 속도를 바꾸는 데 쓰는 속도 풀리다.",
+      "easy": "지름이 계단처럼 다른 풀리에 벨트를 옮겨 걸면 속도를 바꿀 수 있다. 가공하는 재료에 따라 알맞은 속도를 고르는 데 쓴다.",
+      "category": "belt",
+      "mech": "Two stepped pulleys on parallel shafts seen edge-on, stepped in opposite sense so the belt, moved to another step, changes speed ratio. Belt vertical."
+    },
+    {
+      "n": 9,
+      "titleKo": "원뿔 풀리",
+      "ko": "8과 같은 목적으로 쓰는 원뿔 풀리다. 이 운동은 면 방적 기계와, 속도를 서서히 늘이거나 줄이며 돌려야 하는 모든 기계에서 쓰인다.",
+      "easy": "원뿔 모양 풀리 두 개를 서로 반대 방향으로 놓고 벨트를 위아래로 옮기면 속도가 조금씩 연속으로 바뀐다. 계단식 풀리와 달리 단계 없이 서서히 바꿀 수 있다.",
+      "category": "belt",
+      "mech": "Two conical pulleys on parallel horizontal shafts, tapers opposite (top large end left, bottom large end right); straight belt on a fork; speed ratio varies continuously as the belt slides."
+    },
+    {
+      "n": 10,
+      "titleKo": "모양 다른 원뿔 풀리",
+      "ko": "9를 변형한 것으로, 풀리의 모양이 다르다.",
+      "easy": "9와 같은 원리인데 풀리의 옆면 모양만 다르다. 벨트를 옮기면 속도비가 바뀐다.",
+      "category": "belt",
+      "mech": "Same as 9 but pulley profiles differ (upper one concave-flared, lower one tapered/convex). Parallel horizontal shafts, belt vertical."
+    }
+  ]
+}

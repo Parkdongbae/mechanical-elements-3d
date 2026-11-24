@@ -1,0 +1,144 @@
+{
+  "platePage": 17,
+  "textPage": 18,
+  "figures": [
+    {
+      "n": 23,
+      "box": [
+        0.1209,
+        0.2436,
+        0.659,
+        0.4359
+      ]
+    },
+    {
+      "n": 24,
+      "box": [
+        0.6651,
+        0.2436,
+        0.9674,
+        0.4359
+      ]
+    },
+    {
+      "n": 25,
+      "box": [
+        0.1209,
+        0.4402,
+        0.3966,
+        0.6197
+      ]
+    },
+    {
+      "n": 26,
+      "box": [
+        0.4027,
+        0.4402,
+        0.6566,
+        0.6197
+      ]
+    },
+    {
+      "n": 27,
+      "box": [
+        0.659,
+        0.4402,
+        0.9819,
+        0.6214
+      ]
+    },
+    {
+      "n": 28,
+      "box": [
+        0.1209,
+        0.6239,
+        0.3966,
+        0.8077
+      ]
+    },
+    {
+      "n": 29,
+      "box": [
+        0.4027,
+        0.6239,
+        0.659,
+        0.8077
+      ]
+    },
+    {
+      "n": 30,
+      "box": [
+        0.6651,
+        0.6239,
+        0.9794,
+        0.8077
+      ]
+    }
+  ],
+  "texts": [
+    {
+      "n": 23,
+      "titleKo": "움직이는 풀리 전동",
+      "ko": "움직이는 풀리에 회전 운동을 전달하는 장치다. 그림 아래쪽의 풀리가 움직이는 풀리다. 이 풀리를 올리거나 내리면 벨트가 그에 따라 느슨해지거나 팽팽해진다. 벨트의 장력을 일정하게 유지하려고, 안내 틀(그림에는 없음) 사이를 미끄러지는 틀에 실린 풀리 A가, 안내 풀리 B, B 두 개 위를 지나는 줄에 매달려 있고, 균형추 C가 작용해 원하는 결과를 낳는다.",
+      "easy": "아래쪽 풀리가 위아래로 움직여도 벨트가 늘 팽팽하도록, 추 C가 매달린 줄이 풀리 A를 벨트에 눌러 준다. 풀리 위치가 바뀌어도 벨트의 팽팽함이 일정하게 유지된다.",
+      "category": "belt",
+      "mech": "Left driver pulley, lower-right movable pulley (can be raised/lowered); open belt passes round tensioning pulley A which hangs on a rope over two small guide pulleys B, B and ends in balance weight C (box). A slides vertically in guides."
+    },
+    {
+      "n": 24,
+      "titleKo": "평기어",
+      "ko": "평기어(스퍼 기어)다.",
+      "easy": "톱니가 축과 나란히 곧게 난 가장 흔한 기어다. 두 기어가 맞물려 서로 반대 방향으로 돈다.",
+      "category": "gear",
+      "mech": "Two spur gears of different diameter (smaller left, larger right) meshing on parallel axes perpendicular to the page; opposite rotation; ratio = teeth ratio (~28:34 from figure)."
+    },
+    {
+      "n": 25,
+      "titleKo": "베벨기어",
+      "ko": "베벨기어(원뿔 기어)다. 지름이 같은 것은 '마이터 기어'라고 부른다.",
+      "easy": "원뿔 모양의 기어 두 개가 직각으로 만난다. 서로 직각인 축 사이에 회전을 전할 때 쓴다.",
+      "category": "gear",
+      "mech": "Two bevel gears on perpendicular intersecting shafts (one vertical, one horizontal), equal size appear (miter gears); ratio 1:1."
+    },
+    {
+      "n": 26,
+      "titleKo": "크라운 기어",
+      "ko": "오른쪽의 바퀴는 '크라운 휠'이라 부르고, 이것과 맞물리는 기어는 평기어다. 이 바퀴들은 많이 쓰이지 않으며, 크라운 휠의 톱니를 얇게 만들 수밖에 없어 가벼운 일에만 쓸 수 있다.",
+      "easy": "톱니가 바퀴의 옆면에 왕관처럼 선 기어와 작은 평기어가 직각으로 맞물린다. 톱니가 얇아서 큰 힘을 전하기는 어렵다.",
+      "category": "gear",
+      "mech": "Crown wheel (teeth on its flat face, shown edge-on at right, axis horizontal) meshing with a spur pinion on a vertical shaft at top. Axes perpendicular."
+    },
+    {
+      "n": 27,
+      "titleKo": "다중 기어",
+      "ko": "'다중 기어'라는 최근의 발명이다. 작은 삼각형 바퀴가, 붙어 있는 마찰 롤러가 방사형 홈 속을 움직이는 것으로 큰 바퀴를 구동한다.",
+      "easy": "작은 삼각형 바퀴 끝에 달린 롤러가 큰 바퀴의 방사형 홈 속을 지나며 큰 바퀴를 돌린다. 톱니 대신 롤러와 홈으로 힘을 전하는 것이 특징이다.",
+      "category": "gear",
+      "mech": "Large wheel with six radial grooves; a smaller triangular wheel (centre, with friction rollers on the end of three arms) whose rollers run in the radial grooves and drive the big wheel. Both rotate about the same side."
+    },
+    {
+      "n": 28,
+      "titleKo": "브러시 휠 (마찰 바퀴)",
+      "ko": "이것은 때로 '브러시 휠'이라 불린다. 윗바퀴를 아랫바퀴의 중심에서 떨어뜨리는 거리를 바꾸면 상대 속도를 바꿀 수 있다. 한쪽이 다른 쪽을 마찰 또는 점착으로 구동하는데, 아랫바퀴에 인도고무를 씌우면 그 마찰을 더 크게 할 수 있다.",
+      "easy": "큰 원판 위에서 작은 바퀴를 중심에서 가까이 또는 멀리 옮기면 속도가 바뀐다. 마찰로 구동되므로 고무를 입히면 덜 미끄러진다.",
+      "category": "gear",
+      "mech": "Horizontal disk on a vertical shaft (lower wheel) with a small wheel above on a horizontal shaft pressed on the disk face; moving the small wheel radially changes speed ratio. Friction drive."
+    },
+    {
+      "n": 29,
+      "titleKo": "원판 나선 기어",
+      "ko": "한 축에서 직각인 다른 축으로 회전 운동을 전달한다. 원판 바퀴의 나선형 홈이 평기어를 구동하여, 한 바퀴 돌 때마다 평기어를 톱니 한 개의 거리만큼 움직인다.",
+      "easy": "원판에 새긴 나선형 줄이 작은 기어의 톱니를 한 번에 하나씩 밀어 준다. 원판이 한 바퀴 돌면 기어는 톱니 한 개만큼만 돈다.",
+      "category": "gear",
+      "mech": "Disk wheel (horizontal axis perpendicular to page) with a single spiral thread on its face; a small spur gear on a perpendicular shaft is advanced one tooth per revolution of the disk."
+    },
+    {
+      "n": 30,
+      "titleKo": "사각 기어",
+      "ko": "직사각형 기어다. 피동 기어가 변하는 속도로 회전하게 한다. 활자를 직사각형 롤러에 붙인 인쇄기에 쓰였다.",
+      "easy": "정사각형에 가까운 기어는 돌 때마다 속도가 빨라졌다 느려졌다 한다. 기계에 따라 속도가 일정하지 않은 회전이 필요할 때 쓴다.",
+      "category": "gear",
+      "mech": "Two gears of nearly square outline: left rotated 45 deg (diamond), right square, meshing; each on a central axis perpendicular to page. Output speed varies cyclically per revolution."
+    }
+  ]
+}
