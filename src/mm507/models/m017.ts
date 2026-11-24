@@ -14,7 +14,6 @@ const AX: V2 = [0.1, 2.55]; // A 고정 도르래 중심
 const MX = -0.3; // M 중심 x
 const BX = 0.3; // B 중심 x
 const HOOK_M: V2 = [-0.5, 2.94]; // 왼쪽 들보 고리 아랫점 (줄 P 시작)
-const S1_0 = Math.hypot(0.4, 2.0 - (0.92 + EYE)); // Q 첫 구간 초기 길이 ≈ 0.9124
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 
@@ -32,12 +31,29 @@ function pathP(yM: number, yB: number): THREE.Vector3[] {
   ];
 }
 
-/** 줄 Q: M 윗 눈 → B 왼쪽 끝점(접선 근사) → B 위 → 자유 끝 */
+/** B 위를 넘는 줄 Q 가 M 윗 눈 e 에서 B 에 닿는 접점 각(시계 감김의 시작각, 0~2π) */
+function tangentQ(yM: number, yB: number): number {
+  const ex = MX - BX;
+  const ey = yM + EYE - yB;
+  const d = Math.hypot(ex, ey);
+  let a = Math.atan2(ey, ex) - Math.acos(Math.min(1, R / d)); // 위쪽 접점(시계로 감기는 쪽)
+  while (a < 0) a += 2 * Math.PI;
+  while (a > 2 * Math.PI) a -= 2 * Math.PI;
+  return a;
+}
+
+/** 줄 Q 의 자유 구간을 뺀 길이: 접선 구간 + B 위 접촉 호(접점 → 오른쪽 끝점) */
+function lenQ(yM: number, yB: number): number {
+  const d = Math.hypot(MX - BX, yM + EYE - yB);
+  return Math.sqrt(Math.max(0, d * d - R * R)) + R * tangentQ(yM, yB);
+}
+const LQ0 = lenQ(0.92, 2.0) + 0.25; // 줄 Q 전체 길이(처음 자유 구간 0.25) — 일정
+
+/** 줄 Q: M 윗 눈 → B 접점(접선으로 들어옴) → B 위 접촉 호 → B 오른쪽 끝점 → 자유 끝(접선으로 내려감) */
 function pathQ(yM: number, yB: number, yF: number): THREE.Vector3[] {
   return [
     v(MX, yM + EYE, ZQ),
-    v(BX - R, yB, ZQ),
-    ...arcPoints([BX, yB], R, Math.PI, 0, ZQ),
+    ...arcPoints([BX, yB], R, tangentQ(yM, yB), 0, ZQ),
     v(BX + R, yF, ZQ)
   ];
 }
@@ -99,14 +115,14 @@ export default function buildM017(): MovementModel {
     const h = 0.25 * p;
     const yM = 0.92 + h;
     const yB = 2.0 - 2 * h; // 줄 P 일정 길이: M 이 h 오르면 B 는 2h 내려온다
-    const s1 = Math.hypot(0.4, yB - (yM + EYE)); // Q 첫 구간 길이
-    const yF = yB - (0.25 - (s1 - S1_0)); // 자유 끝 높이
+    const free = LQ0 - lenQ(yM, yB); // 줄 Q 일정 길이 → 자유 구간 길이
+    const yF = yB - free; // 자유 끝 높이
     hNow = h;
     yFNow = yF;
     // 도르래 각 (반시계 +)
     sheaveA.rotation.z = (-2 * h) / R; // A 왼쪽 줄이 2h 올라감 → 시계
     sheaveM.rotation.z = h / R; // M 밑에서 줄이 왼→오른 → 반시계
-    sheaveB.rotation.z = (s1 - S1_0) / R; // s1 줄어듦 → 시계
+    sheaveB.rotation.z = (free - 0.25) / -R; // 자유 구간이 늘면 오른쪽 가닥이 내려감 → 시계
     mAsm.position.set(MX, yM, ZB);
     blockB.position.set(BX, yB, ZB);
     knob.position.set(BX + R, yF, ZQ);
