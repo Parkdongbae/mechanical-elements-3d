@@ -1,7 +1,7 @@
 // 슬라이딩 교문: 래크와 피니언, 차축 미션 — 모터 축의 피니언이 문짝 아랫단의 래크를 밀어 문을 옆으로 연다.
 // 문짝 아래 호차의 바퀴는 몸체(호차 판)에 고정된 차축 위에서 돌며 레일을 미끄럼 없이 굴러간다.
 // 기구학: 피니언 각 = -이동거리 / 피치 반지름(래크 피치 = π·모듈, 이가 실제로 맞물림), 바퀴 각 = -이동거리 / 바퀴 반지름.
-// 좌표: +X 오른쪽(문이 열리는 방향), +Z 화면 앞, 문짝 평면 z = 0, 담장·기둥은 그 뒤(z = -0.45).
+// 좌표: +X 오른쪽(문이 열리는 방향), +Z 화면 앞, 문짝 평면 z = 0, 담장·기둥은 그 뒤(z = -0.62 — 래크가 담장 앞을 지나간다).
 
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
@@ -488,7 +488,7 @@ export class SchoolGate extends BaseMachine {
     const g = this.group;
     const stone = plastic(0xd8d0bf, { roughness: 0.85, grain: false });
     const cap = plastic(0xb8b0a0, { roughness: 0.8, grain: false });
-    const wallZ = -0.45;
+    const wallZ = -0.62; // 래크(z −0.39~−0.25)·브래킷이 지나갈 틈을 두고 담장·기둥을 뒤로
     for (const sx of [-1, 1]) {
       g.add(box(0.34, 2.5, 0.34, 0.01, stone, sx * 1.3, GROUND + 1.25, wallZ));
       g.add(box(0.44, 0.08, 0.44, 0.012, cap, sx * 1.3, GROUND + 2.54, wallZ));
