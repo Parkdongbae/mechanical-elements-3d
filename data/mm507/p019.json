@@ -146,7 +146,7 @@
       "enStart": "A means of converting rotary",
       "titleKo": "부분 이 기어 변속",
       "ko": "회전 운동을 바꾸는 수단으로, 한 바퀴 중 일부에서는 속도를 일정하게 하고 다른 부분에서는 속도를 변하게 한다.",
-      "easy": "한 쌍의 기어에서 톱니가 일부분에만 있게 하면, 한 바퀴 돌 때 어떤 구간은 일정하게 돌고 어떤 구간은 속도가 바뀐다.",
+      "easy": "두 바퀴는 둘레 대부분이 보통 톱니라서 그동안은 같은 속도로 돌아요. 그런데 한쪽에는 길게 뻗은 부채꼴, 다른 쪽에는 축 가까이의 작은 톱니가 있어요. 긴 부채꼴이 작은 톱니를 밀 때는 3배 빨라지고, 반대로 작은 톱니가 긴 부채꼴을 밀 때는 1/3로 느려져요. 그래서 한 바퀴 중 일부는 일정하고 나머지는 속도가 바뀌어요.",
       "category": "gear",
       "mech": "Two partial-toothed (mutilated) gears on parallel axes joined by a link bar (arm) between their centres; each has a toothed arc plus a flat or stepped section; drive speed uniform during part of revolution and varying during the rest."
     },
