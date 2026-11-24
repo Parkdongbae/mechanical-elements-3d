@@ -103,16 +103,83 @@ export default function buildM051(): MovementModel {
   let ratio = 0.866;
   const n1 = new THREE.Vector3();
   const n2 = new THREE.Vector3();
+  // ── 두 고리가 늘 맞닿게(사용자 지적: "판화처럼 서로 맞닿아 있는 부분이 없음") ──
+  // 예전에는 '두 고리 평면이 수직'(n2 = D2 × n1) 근사로 피동 자세를 정해, 한 바퀴 내내 중심선 거리가 0.06(맞닿음 0.05)이라 떠 보였다.
+  // 이제 그 근사값에서 시작해, 두 고리 중심선 최소 거리가 2·TUBE 가 되도록 피동 고리 각을 매 프레임 이분법으로 푼다.
+  const NS = 96;
+  const CONTACT = 2 * TUBE;
+  const P1: THREE.Vector3[] = Array.from({ length: NS }, () => new THREE.Vector3());
+  const P2: THREE.Vector3[] = Array.from({ length: NS }, () => new THREE.Vector3());
+  const tmpY = new THREE.Vector3();
+  const nTry = new THREE.Vector3();
+  function ringPts(E: THREE.Vector3, n: THREE.Vector3, out: THREE.Vector3[]): void {
+    tmpY.crossVectors(n, E).normalize();
+    for (let i = 0; i < NS; i++) {
+      const t = (i / NS) * Math.PI * 2;
+      out[i]!.copy(O).addScaledVector(E, DELTA - LA + LA * Math.cos(t)).addScaledVector(tmpY, WA * Math.sin(t));
+    }
+  }
+  function nOf(a: number, out: THREE.Vector3): THREE.Vector3 {
+    return out.copy(Z).multiplyScalar(Math.cos(a)).addScaledVector(d2xz, Math.sin(a)).normalize();
+  }
+  function gapAt(a: number): number {
+    ringPts(E2, nOf(a, nTry), P2);
+    let m = Infinity;
+    for (const p of P1) for (const q of P2) m = Math.min(m, p.distanceToSquared(q));
+    return Math.sqrt(m);
+  }
+  let gapNow = 0;
+  let a0Prev = 0;
+  let fwd = -1;
+  let aPrevSol = 0;
+  let hasPrev = false;
+  let psiPrev = 0;
+  let thetaPrev = 0;
+  let psiAcc = 0;
   function pose(): void {
     n1.copy(Z).multiplyScalar(Math.cos(theta)).addScaledVector(d1xz, Math.sin(theta)).normalize();
+    ringPts(E1, n1, P1);
     n2.crossVectors(D2, n1).normalize();
+    const a0 = Math.atan2(n2.dot(d2xz), n2.dot(Z));
+    // 피동 고리는 구동 고리에 밀려서만 돈다: 이전 자세에서 시작해, 구동 고리가 파고들면 피동 회전 방향으로 막 닿을 만큼만 밀어 준다.
+    // (이전 자세가 없으면 근사 자세에서 시작) — 각이 늘 이어지고, 미는 동안은 맞닿아 있다.
+    let dh = a0 - a0Prev;
+    dh = Math.atan2(Math.sin(dh), Math.cos(dh));
+    if (Math.abs(dh) > 1e-6) fwd = dh > 0 ? 1 : -1;
+    a0Prev = a0;
+    const start = hasPrev ? aPrevSol : a0;
+    let aSol = start;
+    if (gapAt(start) < CONTACT) {
+      let lo = 0;
+      let hi = 0.05;
+      while (hi < 1.5 && gapAt(start + fwd * hi) < CONTACT) { lo = hi; hi *= 2; }
+      for (let k = 0; k < 16; k++) {
+        const mid = (lo + hi) / 2;
+        if (gapAt(start + fwd * mid) < CONTACT) lo = mid;
+        else hi = mid;
+      }
+      aSol = start + fwd * hi;
+    }
+    aPrevSol = aSol;
+    hasPrev = true;
+    nOf(aSol, n2);
+    gapNow = gapAt(aSol) - CONTACT;
     g1.quaternion.copy(basis(E1, n1));
     g2.quaternion.copy(basis(E2, n2));
-    psi = Math.atan2(n2.dot(d2xz), n2.dot(Z));
-    const s2 = Math.sin(theta) ** 2;
-    ratio = 0.866 / (1 - 0.25 * s2);
+    // 피동각 누적(±π 접힘 없이)과 지금 속도비(수치 미분)
+    let d = aSol - psiPrev;
+    d = Math.atan2(Math.sin(d), Math.cos(d));
+    if (Math.abs(theta - thetaPrev) > 1e-6) ratio = Math.abs(d / (theta - thetaPrev));
+    psiAcc += d;
+    psiPrev = aSol;
+    thetaPrev = theta;
+    psi = psiAcc;
   }
+  // 밀릴 때만 도는 방식이라 근사 자세에서 바로 시작하면 첫 바퀴 동안 맞닿지 않는다 → 한 바퀴를 미리 돌려 맞닿은 자세로 시작
+  for (theta = -2 * Math.PI; theta < 0; theta += 0.03) pose();
+  theta = 0;
   pose();
+  psiAcc = psiPrev; // 첫 자세 기준
 
   const deg = (r: number): string => `${Math.round((((r * 180) / Math.PI) % 360 + 360) % 360)}°`;
   return {
@@ -122,7 +189,8 @@ export default function buildM051(): MovementModel {
       { label: '구동각', value: deg(theta) },
       { label: '피동각', value: deg(psi) },
       { label: '지금 속도비', value: ratio.toFixed(2) },
-      { label: '한 바퀴 평균', value: '1 : 1' }
+      { label: '한 바퀴 평균', value: '1 : 1' },
+      { label: '두 고리 사이', value: gapNow < 0.003 ? '맞닿음' : `틈 ${gapNow.toFixed(3)}` }
     ],
     update(dt: number, speed: number): void {
       theta += OMEGA * speed * dt;

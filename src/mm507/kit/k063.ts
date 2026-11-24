@@ -139,10 +139,10 @@ export function dropOutline(): V2[] {
   return w.map(([x, y]) => [x - px, y - py] as V2);
 }
 
-/** 폴(갈고리) 윤곽 — 힌지(Q)를 원점, 끝(뾰족한 이)을 +X 로 length 지점. 끝으로 갈수록 가늘다(별 이끝과 0.006 이내라 칼날처럼) */
+/** 폴(갈고리) 윤곽 — 힌지(Q)를 원점, 끝(뾰족한 이)을 +X 로 length 지점. 끝으로 갈수록 가늘다(10이 간격 36°의 이 모서리가 칼날 옆을 지나게 끝쪽 반폭 0.014/0.008/0.005) */
 export function pawlOutline(length: number): V2[] {
   const hw: [number, number][] = [
-    [0.0, 0.075], [0.2, 0.055], [length - 0.45, 0.045], [length - 0.3, 0.026], [length - 0.2, 0.017], [length - 0.1, 0.011]
+    [0.0, 0.075], [0.2, 0.055], [length - 0.45, 0.045], [length - 0.3, 0.014], [length - 0.2, 0.008], [length - 0.1, 0.005]
   ];
   const up: V2[] = hw.map(([x, y]) => [x, y] as V2);
   const dn: V2[] = hw
