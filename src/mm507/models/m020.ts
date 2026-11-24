@@ -135,7 +135,7 @@ export default function buildM020(): MovementModel {
     notes: () => [
       { label: '이득', value: '7배 (줄 3개 모두 추에 맴: 4+2+1)' },
       { label: '당긴 줄 : 오른 높이', value: (7 * u).toFixed(2) + ' : ' + u.toFixed(2) },
-      { label: '책의 규칙', value: '2ⁿ (019 참고)' }
+      { label: '책의 규칙', value: '2ⁿ (책의 설명, 실제는 2ⁿ − 1)' }
     ],
     update(dt: number, speed: number): void {
       // 절대 위상에서 전체 자세 재계산 — 역회전·누적 오차 없음
