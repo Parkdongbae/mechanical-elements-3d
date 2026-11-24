@@ -1,69 +1,170 @@
 {
-  "platePage": 123, "textPage": 124,
-  "figures": [],
+  "platePage": 123,
+  "textPage": 124,
+  "figures": [
+    {
+      "n": 493,
+      "box": [
+        0.1318,
+        0.2282,
+        0.3894,
+        0.4308
+      ]
+    },
+    {
+      "n": 494,
+      "box": [
+        0.3942,
+        0.2479,
+        0.5973,
+        0.4308
+      ]
+    },
+    {
+      "n": 495,
+      "box": [
+        0.6651,
+        0.2573,
+        0.9214,
+        0.4205
+      ]
+    },
+    {
+      "n": 496,
+      "box": [
+        0.1306,
+        0.4376,
+        0.295,
+        0.6205
+      ]
+    },
+    {
+      "n": 497,
+      "box": [
+        0.3942,
+        0.4359,
+        0.6602,
+        0.6043
+      ]
+    },
+    {
+      "n": 498,
+      "box": [
+        0.6651,
+        0.4342,
+        0.9794,
+        0.6205
+      ]
+    },
+    {
+      "n": 499,
+      "box": [
+        0.1137,
+        0.6256,
+        0.3603,
+        0.8137
+      ]
+    },
+    {
+      "n": 500,
+      "box": [
+        0.3942,
+        0.6239,
+        0.6602,
+        0.7906
+      ]
+    },
+    {
+      "n": 501,
+      "box": [
+        0.6651,
+        0.6239,
+        0.9794,
+        0.835
+      ]
+    }
+  ],
   "texts": [
-    {"n": 493,
-     "en": "“Lewis,” for lifting stone in building. It is composed of a central taper pin or wedge, with two wedge-like packing-pieces arranged one on each side of it. The three pieces are inserted together in a hole drilled into the stone, and when the central wedge is hoisted upon it wedges the packing-pieces out so tightly against the sides of the hole as to enable the stone to be lifted.",
-     "titleKo": "루이스 석재 들개",
-     "ko": "건축에서 돌을 들어 올리는 \"루이스\"이다. 가운데의 가늘어지는 핀(쐐기)과 그 양쪽에 하나씩 놓인 쐐기 모양의 채움 조각 둘로 이루어진다. 세 조각을 함께 돌에 뚫은 구멍에 끼워 넣고 가운데 쐐기를 끌어 올리면, 쐐기가 채움 조각들을 구멍 옆면에 아주 꽉 밀어 붙여서 돌을 들어 올릴 수 있게 된다.",
-     "easy": "돌에 구멍을 뚫고 쐐기 세 개를 넣은 뒤 가운데 쐐기를 끌어 올리면 양옆 조각이 벌어져 구멍 벽을 꽉 문다. 무거운 돌일수록 더 세게 물려서 빠지지 않는다.",
-     "category": "tool",
-     "mech": "Block of stone in section with a keyhole-shaped slot; central tapered pin (wedge, wide at the top) between two outer wedge-shaped pieces; shackle with eye and rope at the top. Lifting force pulls the central wedge up, which pushes the side pieces outward against the hole walls (wedge angle ~ 5-10 deg)."},
-    {"n": 494,
-     "en": "Tongs for lifting stones, etc. The pull on the shackle which connects the two links causes the latter so to act on the upper arms of the tongs as to make their points press themselves against or into the stone. The greater the weight the harder the tongs bite.",
-     "titleKo": "돌 집게",
-     "ko": "돌 등을 들어 올리는 집게이다. 두 연결대를 잇는 고리(섀클)를 잡아당기면 연결대가 집게의 윗팔에 작용하여 집게 끝이 돌에 눌리거나 박히게 된다. 무게가 클수록 집게가 더 세게 문다.",
-     "easy": "고리를 위로 당기면 링크가 집게의 윗팔을 벌려 끝이 안쪽으로 오므라들어 돌을 문다. 무거울수록 당기는 힘이 커져서 더 꽉 물린다.",
-     "category": "tool",
-     "mech": "Pair of scissors-like tongs (two curved arms crossing at pivots) with the points inward on the sides of the stone; two short links connect the top ends to a shackle at the top. Lifting pull on the shackle closes the jaws (toggle-like link action, ~ 30 deg)."},
-    {"n": 495,
-     "en": "Entwistle's patent gearing. Bevel-gear, A, is fixed. B, gearing with A, is fitted to rotate on stud, E, secured to shaft, D, and it also gears with bevel-gear, C, loose, on the shaft, D. On rotary motion being given to shaft, D, the gear, E, revolves around A, and also rotates upon its own axis, and so acts upon C in two ways, namely, by its rotation on its own axis and by its revolution around A. With three gears of equal size, the gear, C, makes two revolutions for every one of the shaft, D. This velocity of revolution may, however, be varied by changing the relative sizes of the gears. C is represented with an attached drum, C′. This gearing may be used for steering apparatus, driving screw-propellers, etc. By applying power to C, action may be reversed, and a slow motion of D obtained.",
-     "titleKo": "엔트위슬 유성 기어",
-     "ko": "엔트위슬의 특허 기어 장치이다. 베벨 기어 A는 고정되어 있다. A와 맞물린 B는 축 D에 고정된 스터드(짧은 축) E에서 회전하도록 끼워져 있고, 축 D에 헐겁게 끼워진 베벨 기어 C와도 맞물린다. 축 D에 회전 운동을 주면 기어 E(원문 그대로)는 A 둘레를 돌면서 자기 축으로도 회전하며, C에 두 가지 방식, 곧 자기 축에서의 자전과 A 둘레에서의 공전으로 작용한다. 세 기어의 크기가 같으면 기어 C는 축 D가 한 바퀴 돌 때 두 바퀴를 돈다. 그러나 이 회전 속도는 기어의 상대적인 크기를 바꾸어 달리할 수 있다. C에는 드럼 C′가 붙어 있는 것으로 그려져 있다. 이 기어 장치는 조타 장치나 스크루 프로펠러 구동 등에 쓸 수 있다. C에 동력을 가하면 작용이 반대가 되어 D의 느린 운동을 얻을 수 있다.",
-     "easy": "고정된 기어 둘레를 작은 기어가 공전하면서 자전하여, 입력 축이 한 바퀴 돌 때 출력 기어는 두 바퀴 돈다. 행성 기어(유성 기어) 방식의 속도 증가 장치이다.",
-     "category": "gear",
-     "mech": "Horizontal shaft D through a bench-mounted casing; fixed bevel A at the right, loose bevel C (with drum C') at the left, planet bevel B on a radial stud E fixed in the shaft D, meshing with both. Shaft D drives (input); C turns at 2x the speed of D (equal gears). Bevel ratio 1:1:1."},
-    {"n": 496,
-     "en": "Drawing and twisting in spinning cotton, wool, etc. The front drawing-rolls, B, rotate faster than the back ones, A, and so produce a draught, and draw out the fibers of the sliver or roving passing between them. Roving passes from the front drawing-rolls to throstle, which, by its rotation around the bobbin, twists and winds the yarn on the bobbin.",
-     "titleKo": "방적의 늘임과 꼬임",
-     "ko": "목화나 양모 등을 실로 잣는 데 쓰는 늘이기(드로잉)와 꼬기이다. 앞쪽 늘임 롤러 B가 뒤쪽 롤러 A보다 빨리 돌아 인장(드래프트)을 만들고, 그 사이를 지나는 슬라이버(가닥)나 로빙(굵은 실)의 섬유를 잡아 늘인다. 로빙은 앞쪽 늘임 롤러에서 스로틀(방추 장치)로 가서, 보빈 둘레를 회전하면서 실을 꼬아 보빈에 감는다.",
-     "easy": "앞 롤러가 뒤 롤러보다 빨리 돌면 사이의 섬유 다발이 가늘게 늘어난다. 늘어난 섬유는 빙글빙글 도는 방추에서 꼬여 실이 되고 실패(보빈)에 감긴다.",
-     "category": "belt",
-     "mech": "Two pairs of drawing rolls stacked (A rear, B front; each pair has two small rolls, upper and lower) with the roving passing through horizontally; below: a flyer/throstle spindle (vertical shaft, with a bobbin and flyer arms) rotating about a vertical axis. Front rolls faster (surface speed ratio ~ 3:1 ?); spindle rotates faster."},
-    {"n": 497,
-     "en": "Fan-blower. The casing has circular openings in its sides through which, by the revolution of the shaft and attached fan-blades, air is drawn in at the center of the casing, to be forced out under pressure through the spout.",
-     "titleKo": "원심 송풍기",
-     "ko": "팬 블로어(송풍기)이다. 몸체의 옆면에 둥근 구멍이 있고, 축과 거기에 붙은 날개가 회전하면 이 구멍을 통해 몸체 가운데로 공기가 빨려 들어와 압력을 받으며 주둥이로 밀려 나간다.",
-     "easy": "날개가 빠르게 돌면 가운데로 공기를 빨아들여 원심력으로 바깥으로 밀어낸다. 그 공기가 한쪽 출구로 세게 뿜어 나온다.",
-     "category": "misc",
-     "mech": "Spiral (volute) casing with a tangential rectangular outlet pipe at the right; central shaft with a hub carrying three curved blades (backward-curved) rotating counterclockwise per arrow; air enters through the circular side openings. Blade tip radius ~ 0.7 of casing radius."},
-    {"n": 498,
-     "en": "Siphon pressure gauge. Lower part of bent tube contains mercury. The leg of the tube, against which the scale is marked, is open at top, the other leg connected with the steam-boiler or other apparatus on which the pressure is to be indicated. The pressure on the mercury in the one leg causes it to be depressed in that and raised in the other until there is an equilibrium established between the weight of mercury and pressure of steam in one leg, and the weight of mercury and pressure of atmosphere in the other. This is the most accurate gauge known; but as high pressure requires so long a tube, it has given place to those which are practically accurate enough, and of more convenient form.",
-     "titleKo": "사이펀 압력계",
-     "ko": "사이펀 압력계이다. 구부러진 관의 아랫부분에 수은이 들어 있다. 눈금이 새겨진 쪽 관은 위쪽이 열려 있고, 다른 쪽 관은 압력을 알려는 증기 보일러나 다른 장치에 연결된다. 한쪽 관의 수은에 가해지는 압력이 그쪽 수은을 눌러 내리고 다른 쪽 수은을 밀어 올려, 한쪽의 수은 무게와 증기의 압력, 다른 쪽의 수은 무게와 대기의 압력 사이에 평형이 이루어질 때까지 간다. 이것은 알려진 압력계 중 가장 정확하지만, 높은 압력에는 관이 아주 길어야 하므로, 실용적으로 충분히 정확하면서 더 편리한 모양의 압력계로 대체되었다.",
-     "easy": "U자 모양 관에 수은을 넣고 한쪽에 보일러의 증기를 연결하면 압력이 센 만큼 수은 높이 차이가 생긴다. 눈금으로 압력을 읽는다. 가장 정확하지만 높은 압력에는 관이 너무 길어진다.",
-     "category": "misc",
-     "mech": "U-tube (long leg vertical with scale 0-6 on the right, short leg on the left bending to a horizontal inlet pipe with a cock); mercury in the bottom bend. No moving parts except the mercury column; scale marks 0 to 6 (probably atmospheres), leg length ~ 10x spacing."},
-    {"n": 499,
-     "en": "Aneroid gauge, known as the “Bourdon gauge,” from the name of its inventor, a Frenchman. B is a bent tube closed at its ends, secured at C, the middle of its length, and having its ends free. Pressure of steam or other fluid admitted to tube tends to straighten it more or less, according to its intensity. The ends of tube are connected with a toothed sector-piece gearing, with a pinion on the spindle of a pointer which indicates the pressure on a dial.",
-     "titleKo": "부르동 압력계",
-     "ko": "무액 압력계로, 발명한 프랑스 사람의 이름을 따 \"부르동 압력계\"라고 부른다. B는 양 끝이 막힌 굽은 관으로, 길이의 한가운데인 C에서 고정되어 있고 양 끝은 자유롭다. 관에 들어온 증기나 다른 유체의 압력은 그 세기에 따라 관을 다소 곧게 펴려는 경향이 있다. 관의 양 끝은 톱니 있는 부채꼴 조각 기어에 연결되어, 다이얼 위에 압력을 나타내는 바늘 축의 작은 기어(피니언)를 돌린다.",
-     "easy": "구부러진 얇은 금속관에 압력이 들어오면 관이 조금 펴진다. 그 작은 움직임을 부채꼴 톱니와 작은 기어로 크게 키워 바늘이 눈금판에서 움직이게 한다.",
-     "category": "gear",
-     "mech": "Round gauge case with a dial arc; inside a flat bent tube B (C-shaped, about 270 deg arc) fixed at the bottom centre C (inlet pipe down); the free ends link to a toothed sector which meshes with a pinion on the pointer spindle. Tube tip moves ~ 1-2 mm; the sector/pinion multiplies it into pointer sweep ~ 270 deg."},
-    {"n": 500,
-     "en": "Pressure gauge now most commonly used. Sometimes known as the “Magdeburg gauge,” from the name of the place where first manufactured. Face view and section. The fluid whose pressure is to be measured acts upon a circular metal disk, A, generally corrugated, and the deflection of the disk under the pressure gives motion to a toothed sector, e, which gears with a pinion on the spindle of the pointer.",
-     "titleKo": "마그데부르크 압력계",
-     "ko": "현재 가장 널리 쓰는 압력계이다. 처음 만들어진 곳의 이름을 따 \"마그데부르크 압력계\"라고도 한다. 정면도와 단면도이다. 압력을 재려는 유체가 둥근 금속 원판 A에 작용하는데, 이 원판은 보통 주름이 져 있고, 압력을 받아 원판이 휘는 정도가 톱니 달린 부채꼴 e를 움직여 바늘 축의 작은 기어(피니언)와 맞물려 돌린다.",
-     "easy": "주름진 얇은 금속판이 압력을 받으면 불룩해진다. 그 작은 움직임을 부채꼴 기어와 작은 기어로 키워 바늘을 돌린다. 오늘날의 압력계와 같은 원리이다.",
-     "category": "gear",
-     "mech": "Round dial face with a pointer, and at the right a vertical section: a corrugated disk (diaphragm) A in the lower cavity, a rod up to a lever/toothed sector e meshing with a pinion on the pointer spindle; inlet pipe at the bottom. Diaphragm deflects ~ 1 mm; the sector multiplies it."},
-    {"n": 501,
-     "en": "Mercurial barometer. Longer leg of bent tube, against which is marked the scale of inches, is closed at top, and shorter one is open to the atmosphere, or merely covered with some porous material. Column of mercury in longer leg, from which the air has been extracted, is held up by the pressure of air on the surface of that in the shorter leg, and rises or falls as the pressure of the atmosphere varies. The old-fashioned weather-glass is composed of a similar tube attached to the back of a dial, and a float inserted into the shorter leg of the tube, and geared by a rack and pinion, or cord and pulley, with the spindle of the pointer.",
-     "titleKo": "수은 기압계",
-     "ko": "수은 기압계이다. 구부러진 관의 긴 쪽에는 인치 눈금이 새겨져 있고 위쪽이 막혀 있으며, 짧은 쪽은 대기에 열려 있거나 구멍이 많은 물질로 덮여 있을 뿐이다. 공기를 뺀 긴 쪽 관 속의 수은 기둥은 짧은 쪽 수은 표면에 작용하는 공기의 압력이 떠받치고 있어서, 대기의 압력이 변함에 따라 올라가거나 내려간다. 옛날식 날씨 유리(웨더글래스)는 비슷한 관을 다이얼 뒤에 붙이고 짧은 쪽 관에 뜨개(플로트)를 넣어, 랙과 피니언이나 줄과 도르래로 바늘 축과 이어서 만든다.",
-     "easy": "한쪽이 막힌 긴 유리관에 수은을 채워 거꾸로 세우면, 대기가 짧은 쪽 수은 표면을 눌러서 긴 관의 수은 기둥(약 76cm)을 떠받친다. 날씨에 따라 기압이 변하면 수은 높이가 달라진다.",
-     "category": "misc",
-     "mech": "J-shaped glass tube: long leg vertical closed at top, with an inch scale; short leg at the bottom curved upward, open. Mercury column. No moving parts."}
+    {
+      "n": 493,
+      "en": "“Lewis,” for lifting stone in building. It is composed of a central taper pin or wedge, with two wedge-like packing-pieces arranged one on each side of it. The three pieces are inserted together in a hole drilled into the stone, and when the central wedge is hoisted upon it wedges the packing-pieces out so tightly against the sides of the hole as to enable the stone to be lifted.",
+      "titleKo": "루이스 석재 들개",
+      "ko": "건축에서 돌을 들어 올리는 \"루이스\"이다. 가운데의 가늘어지는 핀(쐐기)과 그 양쪽에 하나씩 놓인 쐐기 모양의 채움 조각 둘로 이루어진다. 세 조각을 함께 돌에 뚫은 구멍에 끼워 넣고 가운데 쐐기를 끌어 올리면, 쐐기가 채움 조각들을 구멍 옆면에 아주 꽉 밀어 붙여서 돌을 들어 올릴 수 있게 된다.",
+      "easy": "돌에 구멍을 뚫고 쐐기 세 개를 넣은 뒤 가운데 쐐기를 끌어 올리면 양옆 조각이 벌어져 구멍 벽을 꽉 문다. 무거운 돌일수록 더 세게 물려서 빠지지 않는다.",
+      "category": "tool",
+      "mech": "Block of stone in section with a keyhole-shaped slot; central tapered pin (wedge, wide at the top) between two outer wedge-shaped pieces; shackle with eye and rope at the top. Lifting force pulls the central wedge up, which pushes the side pieces outward against the hole walls (wedge angle ~ 5-10 deg)."
+    },
+    {
+      "n": 494,
+      "en": "Tongs for lifting stones, etc. The pull on the shackle which connects the two links causes the latter so to act on the upper arms of the tongs as to make their points press themselves against or into the stone. The greater the weight the harder the tongs bite.",
+      "titleKo": "돌 집게",
+      "ko": "돌 등을 들어 올리는 집게이다. 두 연결대를 잇는 고리(섀클)를 잡아당기면 연결대가 집게의 윗팔에 작용하여 집게 끝이 돌에 눌리거나 박히게 된다. 무게가 클수록 집게가 더 세게 문다.",
+      "easy": "고리를 위로 당기면 링크가 집게의 윗팔을 벌려 끝이 안쪽으로 오므라들어 돌을 문다. 무거울수록 당기는 힘이 커져서 더 꽉 물린다.",
+      "category": "tool",
+      "mech": "Pair of scissors-like tongs (two curved arms crossing at pivots) with the points inward on the sides of the stone; two short links connect the top ends to a shackle at the top. Lifting pull on the shackle closes the jaws (toggle-like link action, ~ 30 deg)."
+    },
+    {
+      "n": 495,
+      "en": "Entwistle's patent gearing. Bevel-gear, A, is fixed. B, gearing with A, is fitted to rotate on stud, E, secured to shaft, D, and it also gears with bevel-gear, C, loose, on the shaft, D. On rotary motion being given to shaft, D, the gear, E, revolves around A, and also rotates upon its own axis, and so acts upon C in two ways, namely, by its rotation on its own axis and by its revolution around A. With three gears of equal size, the gear, C, makes two revolutions for every one of the shaft, D. This velocity of revolution may, however, be varied by changing the relative sizes of the gears. C is represented with an attached drum, C′. This gearing may be used for steering apparatus, driving screw-propellers, etc. By applying power to C, action may be reversed, and a slow motion of D obtained.",
+      "titleKo": "엔트위슬 유성 기어",
+      "ko": "엔트위슬의 특허 기어 장치이다. 베벨 기어 A는 고정되어 있다. A와 맞물린 B는 축 D에 고정된 스터드(짧은 축) E에서 회전하도록 끼워져 있고, 축 D에 헐겁게 끼워진 베벨 기어 C와도 맞물린다. 축 D에 회전 운동을 주면 기어 E(원문 그대로)는 A 둘레를 돌면서 자기 축으로도 회전하며, C에 두 가지 방식, 곧 자기 축에서의 자전과 A 둘레에서의 공전으로 작용한다. 세 기어의 크기가 같으면 기어 C는 축 D가 한 바퀴 돌 때 두 바퀴를 돈다. 그러나 이 회전 속도는 기어의 상대적인 크기를 바꾸어 달리할 수 있다. C에는 드럼 C′가 붙어 있는 것으로 그려져 있다. 이 기어 장치는 조타 장치나 스크루 프로펠러 구동 등에 쓸 수 있다. C에 동력을 가하면 작용이 반대가 되어 D의 느린 운동을 얻을 수 있다.",
+      "easy": "고정된 기어 둘레를 작은 기어가 공전하면서 자전하여, 입력 축이 한 바퀴 돌 때 출력 기어는 두 바퀴 돈다. 행성 기어(유성 기어) 방식의 속도 증가 장치이다.",
+      "category": "gear",
+      "mech": "Horizontal shaft D through a bench-mounted casing; fixed bevel A at the right, loose bevel C (with drum C') at the left, planet bevel B on a radial stud E fixed in the shaft D, meshing with both. Shaft D drives (input); C turns at 2x the speed of D (equal gears). Bevel ratio 1:1:1."
+    },
+    {
+      "n": 496,
+      "en": "Drawing and twisting in spinning cotton, wool, etc. The front drawing-rolls, B, rotate faster than the back ones, A, and so produce a draught, and draw out the fibers of the sliver or roving passing between them. Roving passes from the front drawing-rolls to throstle, which, by its rotation around the bobbin, twists and winds the yarn on the bobbin.",
+      "titleKo": "방적의 늘임과 꼬임",
+      "ko": "목화나 양모 등을 실로 잣는 데 쓰는 늘이기(드로잉)와 꼬기이다. 앞쪽 늘임 롤러 B가 뒤쪽 롤러 A보다 빨리 돌아 인장(드래프트)을 만들고, 그 사이를 지나는 슬라이버(가닥)나 로빙(굵은 실)의 섬유를 잡아 늘인다. 로빙은 앞쪽 늘임 롤러에서 스로틀(방추 장치)로 가서, 보빈 둘레를 회전하면서 실을 꼬아 보빈에 감는다.",
+      "easy": "앞 롤러가 뒤 롤러보다 빨리 돌면 사이의 섬유 다발이 가늘게 늘어난다. 늘어난 섬유는 빙글빙글 도는 방추에서 꼬여 실이 되고 실패(보빈)에 감긴다.",
+      "category": "belt",
+      "mech": "Two pairs of drawing rolls stacked (A rear, B front; each pair has two small rolls, upper and lower) with the roving passing through horizontally; below: a flyer/throstle spindle (vertical shaft, with a bobbin and flyer arms) rotating about a vertical axis. Front rolls faster (surface speed ratio ~ 3:1 ?); spindle rotates faster."
+    },
+    {
+      "n": 497,
+      "en": "Fan-blower. The casing has circular openings in its sides through which, by the revolution of the shaft and attached fan-blades, air is drawn in at the center of the casing, to be forced out under pressure through the spout.",
+      "titleKo": "원심 송풍기",
+      "ko": "팬 블로어(송풍기)이다. 몸체의 옆면에 둥근 구멍이 있고, 축과 거기에 붙은 날개가 회전하면 이 구멍을 통해 몸체 가운데로 공기가 빨려 들어와 압력을 받으며 주둥이로 밀려 나간다.",
+      "easy": "날개가 빠르게 돌면 가운데로 공기를 빨아들여 원심력으로 바깥으로 밀어낸다. 그 공기가 한쪽 출구로 세게 뿜어 나온다.",
+      "category": "misc",
+      "mech": "Spiral (volute) casing with a tangential rectangular outlet pipe at the right; central shaft with a hub carrying three curved blades (backward-curved) rotating counterclockwise per arrow; air enters through the circular side openings. Blade tip radius ~ 0.7 of casing radius."
+    },
+    {
+      "n": 498,
+      "en": "Siphon pressure gauge. Lower part of bent tube contains mercury. The leg of the tube, against which the scale is marked, is open at top, the other leg connected with the steam-boiler or other apparatus on which the pressure is to be indicated. The pressure on the mercury in the one leg causes it to be depressed in that and raised in the other until there is an equilibrium established between the weight of mercury and pressure of steam in one leg, and the weight of mercury and pressure of atmosphere in the other. This is the most accurate gauge known; but as high pressure requires so long a tube, it has given place to those which are practically accurate enough, and of more convenient form.",
+      "titleKo": "사이펀 압력계",
+      "ko": "사이펀 압력계이다. 구부러진 관의 아랫부분에 수은이 들어 있다. 눈금이 새겨진 쪽 관은 위쪽이 열려 있고, 다른 쪽 관은 압력을 알려는 증기 보일러나 다른 장치에 연결된다. 한쪽 관의 수은에 가해지는 압력이 그쪽 수은을 눌러 내리고 다른 쪽 수은을 밀어 올려, 한쪽의 수은 무게와 증기의 압력, 다른 쪽의 수은 무게와 대기의 압력 사이에 평형이 이루어질 때까지 간다. 이것은 알려진 압력계 중 가장 정확하지만, 높은 압력에는 관이 아주 길어야 하므로, 실용적으로 충분히 정확하면서 더 편리한 모양의 압력계로 대체되었다.",
+      "easy": "U자 모양 관에 수은을 넣고 한쪽에 보일러의 증기를 연결하면 압력이 센 만큼 수은 높이 차이가 생긴다. 눈금으로 압력을 읽는다. 가장 정확하지만 높은 압력에는 관이 너무 길어진다.",
+      "category": "misc",
+      "mech": "U-tube (long leg vertical with scale 0-6 on the right, short leg on the left bending to a horizontal inlet pipe with a cock); mercury in the bottom bend. No moving parts except the mercury column; scale marks 0 to 6 (probably atmospheres), leg length ~ 10x spacing."
+    },
+    {
+      "n": 499,
+      "en": "Aneroid gauge, known as the “Bourdon gauge,” from the name of its inventor, a Frenchman. B is a bent tube closed at its ends, secured at C, the middle of its length, and having its ends free. Pressure of steam or other fluid admitted to tube tends to straighten it more or less, according to its intensity. The ends of tube are connected with a toothed sector-piece gearing, with a pinion on the spindle of a pointer which indicates the pressure on a dial.",
+      "titleKo": "부르동 압력계",
+      "ko": "무액 압력계로, 발명한 프랑스 사람의 이름을 따 \"부르동 압력계\"라고 부른다. B는 양 끝이 막힌 굽은 관으로, 길이의 한가운데인 C에서 고정되어 있고 양 끝은 자유롭다. 관에 들어온 증기나 다른 유체의 압력은 그 세기에 따라 관을 다소 곧게 펴려는 경향이 있다. 관의 양 끝은 톱니 있는 부채꼴 조각 기어에 연결되어, 다이얼 위에 압력을 나타내는 바늘 축의 작은 기어(피니언)를 돌린다.",
+      "easy": "구부러진 얇은 금속관에 압력이 들어오면 관이 조금 펴진다. 그 작은 움직임을 부채꼴 톱니와 작은 기어로 크게 키워 바늘이 눈금판에서 움직이게 한다.",
+      "category": "gear",
+      "mech": "Round gauge case with a dial arc; inside a flat bent tube B (C-shaped, about 270 deg arc) fixed at the bottom centre C (inlet pipe down); the free ends link to a toothed sector which meshes with a pinion on the pointer spindle. Tube tip moves ~ 1-2 mm; the sector/pinion multiplies it into pointer sweep ~ 270 deg."
+    },
+    {
+      "n": 500,
+      "en": "Pressure gauge now most commonly used. Sometimes known as the “Magdeburg gauge,” from the name of the place where first manufactured. Face view and section. The fluid whose pressure is to be measured acts upon a circular metal disk, A, generally corrugated, and the deflection of the disk under the pressure gives motion to a toothed sector, e, which gears with a pinion on the spindle of the pointer.",
+      "titleKo": "마그데부르크 압력계",
+      "ko": "현재 가장 널리 쓰는 압력계이다. 처음 만들어진 곳의 이름을 따 \"마그데부르크 압력계\"라고도 한다. 정면도와 단면도이다. 압력을 재려는 유체가 둥근 금속 원판 A에 작용하는데, 이 원판은 보통 주름이 져 있고, 압력을 받아 원판이 휘는 정도가 톱니 달린 부채꼴 e를 움직여 바늘 축의 작은 기어(피니언)와 맞물려 돌린다.",
+      "easy": "주름진 얇은 금속판이 압력을 받으면 불룩해진다. 그 작은 움직임을 부채꼴 기어와 작은 기어로 키워 바늘을 돌린다. 오늘날의 압력계와 같은 원리이다.",
+      "category": "gear",
+      "mech": "Round dial face with a pointer, and at the right a vertical section: a corrugated disk (diaphragm) A in the lower cavity, a rod up to a lever/toothed sector e meshing with a pinion on the pointer spindle; inlet pipe at the bottom. Diaphragm deflects ~ 1 mm; the sector multiplies it."
+    },
+    {
+      "n": 501,
+      "en": "Mercurial barometer. Longer leg of bent tube, against which is marked the scale of inches, is closed at top, and shorter one is open to the atmosphere, or merely covered with some porous material. Column of mercury in longer leg, from which the air has been extracted, is held up by the pressure of air on the surface of that in the shorter leg, and rises or falls as the pressure of the atmosphere varies. The old-fashioned weather-glass is composed of a similar tube attached to the back of a dial, and a float inserted into the shorter leg of the tube, and geared by a rack and pinion, or cord and pulley, with the spindle of the pointer.",
+      "titleKo": "수은 기압계",
+      "ko": "수은 기압계이다. 구부러진 관의 긴 쪽에는 인치 눈금이 새겨져 있고 위쪽이 막혀 있으며, 짧은 쪽은 대기에 열려 있거나 구멍이 많은 물질로 덮여 있을 뿐이다. 공기를 뺀 긴 쪽 관 속의 수은 기둥은 짧은 쪽 수은 표면에 작용하는 공기의 압력이 떠받치고 있어서, 대기의 압력이 변함에 따라 올라가거나 내려간다. 옛날식 날씨 유리(웨더글래스)는 비슷한 관을 다이얼 뒤에 붙이고 짧은 쪽 관에 뜨개(플로트)를 넣어, 랙과 피니언이나 줄과 도르래로 바늘 축과 이어서 만든다.",
+      "easy": "한쪽이 막힌 긴 유리관에 수은을 채워 거꾸로 세우면, 대기가 짧은 쪽 수은 표면을 눌러서 긴 관의 수은 기둥(약 76cm)을 떠받친다. 날씨에 따라 기압이 변하면 수은 높이가 달라진다.",
+      "category": "misc",
+      "mech": "J-shaped glass tube: long leg vertical closed at top, with an inch scale; short leg at the bottom curved upward, open. Mercury column. No moving parts."
+    }
   ]
 }

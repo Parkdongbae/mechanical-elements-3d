@@ -1,69 +1,170 @@
 {
-  "platePage": 115, "textPage": 116,
-  "figures": [],
+  "platePage": 115,
+  "textPage": 116,
+  "figures": [
+    {
+      "n": 457,
+      "box": [
+        0.0846,
+        0.2573,
+        0.3918,
+        0.4436
+      ]
+    },
+    {
+      "n": 458,
+      "box": [
+        0.3966,
+        0.2581,
+        0.6578,
+        0.4453
+      ]
+    },
+    {
+      "n": 459,
+      "box": [
+        0.6626,
+        0.259,
+        0.9214,
+        0.4393
+      ]
+    },
+    {
+      "n": 460,
+      "box": [
+        0.11,
+        0.4487,
+        0.3906,
+        0.6308
+      ]
+    },
+    {
+      "n": 461,
+      "box": [
+        0.3966,
+        0.4487,
+        0.6578,
+        0.6308
+      ]
+    },
+    {
+      "n": 462,
+      "box": [
+        0.6626,
+        0.4487,
+        0.9577,
+        0.6308
+      ]
+    },
+    {
+      "n": 463,
+      "box": [
+        0.1197,
+        0.6342,
+        0.3918,
+        0.8145
+      ]
+    },
+    {
+      "n": 464,
+      "box": [
+        0.3966,
+        0.6342,
+        0.6554,
+        0.812
+      ]
+    },
+    {
+      "n": 465,
+      "box": [
+        0.6626,
+        0.635,
+        0.9456,
+        0.8308
+      ]
+    }
+  ],
   "texts": [
-    {"n": 457,
-     "en": "Common mode of raising water from wells of inconsiderable depth. Counterbalance equals about one-half of weight to be raised, so that the bucket has to be pulled down when empty, and is assisted in elevating it when full by counterbalance.",
-     "titleKo": "두레박 우물 지레",
-     "ko": "깊지 않은 우물에서 물을 길어 올리는 흔한 방법이다. 평형추는 들어 올릴 무게의 절반쯤 되므로, 두레박이 비어 있을 때는 끌어내려야 하고, 가득 차 있을 때는 평형추가 올리는 것을 도와준다.",
-     "easy": "긴 막대를 한가운데 받침대 위에 걸치고, 한쪽 끝에 두레박을, 반대쪽에 무거운 추를 단다. 물이 든 두레박을 올릴 때 추가 반쯤 도와주어 힘이 덜 든다.",
-     "category": "crank",
-     "mech": "Long pole pivoted on a forked post (fulcrum near the heavy end, ratio about 4:1); bucket hung by a chain/rope from the long end over the well; counterweight stones/logs at the short end. Lever rocks about the fulcrum (arc about 40 deg). Driver = person pulling bucket down."},
-    {"n": 458,
-     "en": "The common pulley and buckets for raising water; the empty bucket is pulled down to raise the full one.",
-     "titleKo": "도르래 두레박",
-     "ko": "물을 길어 올리는 보통의 도르래와 두레박이다. 빈 두레박을 끌어내려 가득 찬 두레박을 올린다.",
-     "easy": "도르래에 건 줄의 양 끝에 두레박을 하나씩 달아 하나가 내려가면 다른 하나가 올라온다. 빈 두레박을 끌어내리는 힘으로 물이 찬 두레박을 올린다.",
-     "category": "crank",
-     "mech": "Roofed well-house; one fixed pulley under the ridge with a rope whose two ends each carry a bucket (one up, one down). Pure rope-and-pulley, 1:1 ratio; buckets move vertically in opposite directions."},
-    {"n": 459,
-     "en": "Reciprocating lift for wells. Top part represents horizontal wind-wheel on a shaft which carries spiral thread. Coupling of latter allows small vibration, that it may act on one worm-wheel at a time. Behind worm-wheels are pulleys over which passes rope which carries bucket at each extremity. In center is vibrating tappet, against which bucket strikes in its ascent, and which, by means of arm in step wherein spiral and shaft are supported, traverses spiral from one wheel to other so that the bucket which has delivered water is lowered and other one raised.",
-     "titleKo": "풍차 왕복 우물 펌프",
-     "ko": "우물용 왕복 양수기이다. 윗부분은 나선 나사산이 새겨진 축에 달린 수평 풍차를 나타낸다. 축의 이음매는 약간 흔들릴 수 있게 되어 있어서, 한 번에 한 개의 웜 기어에만 작용할 수 있다. 웜 기어 뒤에는 도르래가 있고 줄이 걸려 양 끝에 각각 두레박이 달려 있다. 가운데에는 흔들리는 걸쇠(태핏)가 있어서 두레박이 올라가다 여기에 부딪힌다. 나선축과 축이 받쳐지는 오목한 자리의 팔을 통해 이 걸쇠가 나선을 한 웜 기어에서 다른 웜 기어로 옮겨 주므로, 물을 쏟은 두레박은 내려가고 다른 두레박은 올라간다.",
-     "easy": "바람으로 도는 수평 풍차가 나사 모양 축을 돌려 두 개의 웜 기어 중 하나를 돌리고, 줄에 매달린 두레박 하나가 올라간다. 두레박이 걸쇠를 치면 나사가 반대쪽 웜 기어로 옮겨 가서 이번에는 반대로 돌아 두레박이 서로 오르내린다.",
-     "category": "ratchet",
-     "mech": "Vertical shaft from a horizontal wind-wheel (disc at top) carrying a spiral (worm) thread between two worm wheels (with 8 spokes/teeth each) side by side; shaft coupling allows it to shift sideways to engage one wheel at a time. Pulleys behind carry a rope with a bucket on each end; central swinging tappet reverses the engagement when the bucket reaches the top. Wheels rotate in opposite directions alternately."},
-    {"n": 460,
-     "en": "Fairbairn's bailing-scoop, for elevating water short distances. The scoop is connected by pitman to end of a lever or of a beam of single-acting engine. Distance of lift may be altered by placing end of rod in notches shown in figure.",
-     "titleKo": "페어베언의 물푸개",
-     "ko": "페어베언의 물푸개(베일링 스쿠프)로, 물을 짧은 거리만 끌어올리는 데 쓴다. 물푸개는 피트먼(연결봉)으로 지렛대의 끝이나 단동 기관의 빔(큰 막대) 끝에 연결된다. 막대 끝을 그림에 보이는 홈에 걸어 올리는 거리를 바꿀 수 있다.",
-     "easy": "기관의 빔이 오르내리며 연결봉으로 큰 국자 모양의 물푸개를 흔들어 낮은 곳의 물을 퍼 올려 쏟는다. 연결봉을 거는 홈의 위치를 바꾸면 퍼 올리는 높이가 달라진다.",
-     "category": "pump",
-     "mech": "Scoop (trough on a pivot at its lower left end) swings in a channel dug in the ground; a pitman from the scoop to a notched lever arm on a post at the upper right; notches allow changing stroke length. Scoop oscillates through about 30-40 deg."},
-    {"n": 461,
-     "en": "Pendulums or swinging gutters for raising water by their pendulous motions. Terminations at bottom are scoops, and at top open pipes; intermediate angles are formed with boxes (and flap valve), each connected with two branches of pipe.",
-     "titleKo": "진자 물받이 홈통",
-     "ko": "흔들리는 홈통(진자)으로, 그 흔들림을 이용해 물을 끌어올린다. 아래쪽 끝은 국자 모양이고 위쪽 끝은 열린 관이다. 중간의 꺾인 부분은 상자(와 판 밸브)로 되어 있으며, 각각 두 가닥의 관과 이어진다.",
-     "easy": "계단처럼 이어진 홈통들이 시계추처럼 흔들릴 때 아래의 국자가 물을 떠서 한 단씩 위로 올려 보낸다. 마지막에는 위쪽 열린 관으로 물이 쏟아진다.",
-     "category": "pump",
-     "mech": "Chain of five or six parallel swinging pipes/gutters arranged one above the other (stair-step), each pivoted at its middle with a box and flap valve at the ends; lowest scoop dips in the water, upper spout at top left. All swing together like pendulums (oscillation about pivots). Driven by hand/crank (not shown)."},
-    {"n": 462,
-     "en": "Chain pump; lifting water by continuous circular motion. Wood or metal disks, carried by endless chain, are adapted to water-tight cylinder, and form with it a succession of buckets filled with water. Power is applied at upper wheel.",
-     "titleKo": "체인 펌프",
-     "ko": "체인 펌프로, 끊임없는 원운동으로 물을 끌어올린다. 끝없이 이어진 사슬에 달린 나무나 금속 원판이 물이 새지 않는 원통에 꼭 맞게 들어가 원통과 함께 물이 가득 찬 칸(버킷)들이 차례로 이어진 것처럼 된다. 동력은 위쪽 바퀴에 가한다.",
-     "easy": "끝없는 사슬에 일정한 간격으로 원판을 달아 통 속에서 돌리면, 원판 사이의 물이 계속 위로 올라간다. 위쪽 바퀴를 돌려 주면 물이 통을 따라 끊임없이 퍼 올려진다.",
-     "category": "pump",
-     "mech": "Two chain-wheels (sprockets with spokes), top and bottom, joined by an endless chain with disks every few links; the right-hand run of chain travels up inside a vertical water-tight tube whose lower end is immersed. Driver = top wheel (hand crank); chain circulates continuously, bottom wheel under water. Wheel diameters equal."},
-    {"n": 463,
-     "en": "Self-acting weir and scouring sluice. Two leaves turn on pivots below centers; upper leaf much larger than lower, and turns in direction of stream, while lower turns against it. Top edge of lower leaf overlaps bottom edge of upper one and is forced against it by pressure of water. In ordinary states of stream, counteracting pressures keep weir vertical and closed, as in the left-hand figure, and water flows through notch in upper leaf; but on water rising above ordinary level, pressure above from greater surface and leverage overcomes resistance below, upper leaf turns over, pushing back lower, reducing obstructions and opening at bed a passage to deposit.",
-     "titleKo": "자동 둑과 배수문",
-     "ko": "스스로 작동하는 둑과 흙 씻어내기 수문이다. 두 개의 문짝이 중심보다 아래에 있는 축에서 회전한다. 위쪽 문짝이 아래쪽 문짝보다 훨씬 크며, 위쪽은 물이 흐르는 방향으로, 아래쪽은 그 반대 방향으로 돈다. 아래쪽 문짝의 윗가장자리가 위쪽 문짝의 아래 가장자리와 겹쳐 있고, 물의 압력으로 위쪽 문짝에 밀착된다. 평소의 물 흐름에서는 서로 반대로 작용하는 압력 덕분에 왼쪽 그림처럼 둑이 수직으로 닫혀 있고 물은 위쪽 문짝의 홈으로 흐른다. 그러나 수위가 평소보다 높아지면, 더 넓은 면적과 지렛대 효과로 위쪽의 압력이 아래쪽의 저항을 이겨 위쪽 문짝이 넘어지면서 아래쪽 문짝을 뒤로 밀고, 장애물을 줄이면서 바닥에 쌓인 흙이 빠져나갈 통로를 연다.",
-     "easy": "물이 많아지면 사람이 조작하지 않아도 두 문짝이 스스로 넘어져 문이 열린다. 수위가 올라갈수록 위쪽 문짝에 걸리는 물의 힘이 커져 지렛대처럼 문을 넘어뜨리는 원리이다.",
-     "category": "tool",
-     "mech": "Left: closed state — a large upper leaf (tall plank pivoted below centre) and small lower leaf, vertical, overlapping, with a notch at the top of the upper leaf. Right: flood state — upper leaf tipped downstream to ~60 deg, pushing the lower leaf back; water rushes under. Hinge axes horizontal at the channel bed; stream drives."},
-    {"n": 464,
-     "en": "Hiero's fountain. Water being poured into upper vessel descends tube on right into lower; intermediate vessel being also filled and more water poured into upper, confined air in cavities over water in lower and intermediate vessels and in communication tube on left, being compressed, drives by its elastic force a jet up central tube.",
-     "titleKo": "헤론의 분수",
-     "ko": "헤론(히에로)의 분수이다. 위쪽 그릇에 물을 부으면 오른쪽 관을 따라 아래 그릇으로 내려간다. 중간 그릇도 채워지고 위쪽 그릇에 물을 더 부으면, 아래 그릇과 중간 그릇의 물 위 빈 공간과 왼쪽의 연결관 속에 갇힌 공기가 압축되어, 그 탄성력으로 가운데 관을 따라 물줄기가 위로 솟는다.",
-     "easy": "위 그릇의 물이 관을 타고 내려가 아래 그릇 속 공기를 눌러 압축한다. 압축된 공기가 다른 그릇의 물을 밀어 올려 가운데 관 위로 분수처럼 뿜어낸다. 펌프 없이 물의 무게만으로 물이 더 높이 솟는다.",
-     "category": "pump",
-     "mech": "Open frame table: top basin with a central jet tube; hanging below it a half-round bowl (middle vessel) and a lower closed vessel in the frame; connecting tubes (right: water down-pipe from upper basin; left: air communication pipe). No moving parts: jet driven by compressed air."},
-    {"n": 465,
-     "en": "Balance pumps. Pair worked reciprocally by a person pressing alternately on opposite ends of lever or beam.",
-     "titleKo": "시소식 펌프 한 쌍",
-     "ko": "균형 펌프이다. 한 쌍이 번갈아 움직이도록 사람이 지렛대(빔)의 양 끝을 번갈아 눌러서 작동시킨다.",
-     "easy": "시소 모양의 긴 막대 양 끝에 펌프 두 대를 달고 사람이 번갈아 밟으면, 한쪽이 내려갈 때 다른 쪽이 올라가며 번갈아 물을 퍼 올린다.",
-     "category": "pump",
-     "mech": "Long lever beam (rocker) on a central fulcrum on a wooden bench frame; weights (balls) on the beam ends; a person stands on the bench and pushes alternately; two pump rods hang from the beam below to two pump barrels. Seesaw motion about 20 deg; the two pistons move in opposite directions."}
+    {
+      "n": 457,
+      "en": "Common mode of raising water from wells of inconsiderable depth. Counterbalance equals about one-half of weight to be raised, so that the bucket has to be pulled down when empty, and is assisted in elevating it when full by counterbalance.",
+      "titleKo": "두레박 우물 지레",
+      "ko": "깊지 않은 우물에서 물을 길어 올리는 흔한 방법이다. 평형추는 들어 올릴 무게의 절반쯤 되므로, 두레박이 비어 있을 때는 끌어내려야 하고, 가득 차 있을 때는 평형추가 올리는 것을 도와준다.",
+      "easy": "긴 막대를 한가운데 받침대 위에 걸치고, 한쪽 끝에 두레박을, 반대쪽에 무거운 추를 단다. 물이 든 두레박을 올릴 때 추가 반쯤 도와주어 힘이 덜 든다.",
+      "category": "crank",
+      "mech": "Long pole pivoted on a forked post (fulcrum near the heavy end, ratio about 4:1); bucket hung by a chain/rope from the long end over the well; counterweight stones/logs at the short end. Lever rocks about the fulcrum (arc about 40 deg). Driver = person pulling bucket down."
+    },
+    {
+      "n": 458,
+      "en": "The common pulley and buckets for raising water; the empty bucket is pulled down to raise the full one.",
+      "titleKo": "도르래 두레박",
+      "ko": "물을 길어 올리는 보통의 도르래와 두레박이다. 빈 두레박을 끌어내려 가득 찬 두레박을 올린다.",
+      "easy": "도르래에 건 줄의 양 끝에 두레박을 하나씩 달아 하나가 내려가면 다른 하나가 올라온다. 빈 두레박을 끌어내리는 힘으로 물이 찬 두레박을 올린다.",
+      "category": "crank",
+      "mech": "Roofed well-house; one fixed pulley under the ridge with a rope whose two ends each carry a bucket (one up, one down). Pure rope-and-pulley, 1:1 ratio; buckets move vertically in opposite directions."
+    },
+    {
+      "n": 459,
+      "en": "Reciprocating lift for wells. Top part represents horizontal wind-wheel on a shaft which carries spiral thread. Coupling of latter allows small vibration, that it may act on one worm-wheel at a time. Behind worm-wheels are pulleys over which passes rope which carries bucket at each extremity. In center is vibrating tappet, against which bucket strikes in its ascent, and which, by means of arm in step wherein spiral and shaft are supported, traverses spiral from one wheel to other so that the bucket which has delivered water is lowered and other one raised.",
+      "titleKo": "풍차 왕복 우물 펌프",
+      "ko": "우물용 왕복 양수기이다. 윗부분은 나선 나사산이 새겨진 축에 달린 수평 풍차를 나타낸다. 축의 이음매는 약간 흔들릴 수 있게 되어 있어서, 한 번에 한 개의 웜 기어에만 작용할 수 있다. 웜 기어 뒤에는 도르래가 있고 줄이 걸려 양 끝에 각각 두레박이 달려 있다. 가운데에는 흔들리는 걸쇠(태핏)가 있어서 두레박이 올라가다 여기에 부딪힌다. 나선축과 축이 받쳐지는 오목한 자리의 팔을 통해 이 걸쇠가 나선을 한 웜 기어에서 다른 웜 기어로 옮겨 주므로, 물을 쏟은 두레박은 내려가고 다른 두레박은 올라간다.",
+      "easy": "바람으로 도는 수평 풍차가 나사 모양 축을 돌려 두 개의 웜 기어 중 하나를 돌리고, 줄에 매달린 두레박 하나가 올라간다. 두레박이 걸쇠를 치면 나사가 반대쪽 웜 기어로 옮겨 가서 이번에는 반대로 돌아 두레박이 서로 오르내린다.",
+      "category": "ratchet",
+      "mech": "Vertical shaft from a horizontal wind-wheel (disc at top) carrying a spiral (worm) thread between two worm wheels (with 8 spokes/teeth each) side by side; shaft coupling allows it to shift sideways to engage one wheel at a time. Pulleys behind carry a rope with a bucket on each end; central swinging tappet reverses the engagement when the bucket reaches the top. Wheels rotate in opposite directions alternately."
+    },
+    {
+      "n": 460,
+      "en": "Fairbairn's bailing-scoop, for elevating water short distances. The scoop is connected by pitman to end of a lever or of a beam of single-acting engine. Distance of lift may be altered by placing end of rod in notches shown in figure.",
+      "titleKo": "페어베언의 물푸개",
+      "ko": "페어베언의 물푸개(베일링 스쿠프)로, 물을 짧은 거리만 끌어올리는 데 쓴다. 물푸개는 피트먼(연결봉)으로 지렛대의 끝이나 단동 기관의 빔(큰 막대) 끝에 연결된다. 막대 끝을 그림에 보이는 홈에 걸어 올리는 거리를 바꿀 수 있다.",
+      "easy": "기관의 빔이 오르내리며 연결봉으로 큰 국자 모양의 물푸개를 흔들어 낮은 곳의 물을 퍼 올려 쏟는다. 연결봉을 거는 홈의 위치를 바꾸면 퍼 올리는 높이가 달라진다.",
+      "category": "pump",
+      "mech": "Scoop (trough on a pivot at its lower left end) swings in a channel dug in the ground; a pitman from the scoop to a notched lever arm on a post at the upper right; notches allow changing stroke length. Scoop oscillates through about 30-40 deg."
+    },
+    {
+      "n": 461,
+      "en": "Pendulums or swinging gutters for raising water by their pendulous motions. Terminations at bottom are scoops, and at top open pipes; intermediate angles are formed with boxes (and flap valve), each connected with two branches of pipe.",
+      "titleKo": "진자 물받이 홈통",
+      "ko": "흔들리는 홈통(진자)으로, 그 흔들림을 이용해 물을 끌어올린다. 아래쪽 끝은 국자 모양이고 위쪽 끝은 열린 관이다. 중간의 꺾인 부분은 상자(와 판 밸브)로 되어 있으며, 각각 두 가닥의 관과 이어진다.",
+      "easy": "계단처럼 이어진 홈통들이 시계추처럼 흔들릴 때 아래의 국자가 물을 떠서 한 단씩 위로 올려 보낸다. 마지막에는 위쪽 열린 관으로 물이 쏟아진다.",
+      "category": "pump",
+      "mech": "Chain of five or six parallel swinging pipes/gutters arranged one above the other (stair-step), each pivoted at its middle with a box and flap valve at the ends; lowest scoop dips in the water, upper spout at top left. All swing together like pendulums (oscillation about pivots). Driven by hand/crank (not shown)."
+    },
+    {
+      "n": 462,
+      "en": "Chain pump; lifting water by continuous circular motion. Wood or metal disks, carried by endless chain, are adapted to water-tight cylinder, and form with it a succession of buckets filled with water. Power is applied at upper wheel.",
+      "titleKo": "체인 펌프",
+      "ko": "체인 펌프로, 끊임없는 원운동으로 물을 끌어올린다. 끝없이 이어진 사슬에 달린 나무나 금속 원판이 물이 새지 않는 원통에 꼭 맞게 들어가 원통과 함께 물이 가득 찬 칸(버킷)들이 차례로 이어진 것처럼 된다. 동력은 위쪽 바퀴에 가한다.",
+      "easy": "끝없는 사슬에 일정한 간격으로 원판을 달아 통 속에서 돌리면, 원판 사이의 물이 계속 위로 올라간다. 위쪽 바퀴를 돌려 주면 물이 통을 따라 끊임없이 퍼 올려진다.",
+      "category": "pump",
+      "mech": "Two chain-wheels (sprockets with spokes), top and bottom, joined by an endless chain with disks every few links; the right-hand run of chain travels up inside a vertical water-tight tube whose lower end is immersed. Driver = top wheel (hand crank); chain circulates continuously, bottom wheel under water. Wheel diameters equal."
+    },
+    {
+      "n": 463,
+      "en": "Self-acting weir and scouring sluice. Two leaves turn on pivots below centers; upper leaf much larger than lower, and turns in direction of stream, while lower turns against it. Top edge of lower leaf overlaps bottom edge of upper one and is forced against it by pressure of water. In ordinary states of stream, counteracting pressures keep weir vertical and closed, as in the left-hand figure, and water flows through notch in upper leaf; but on water rising above ordinary level, pressure above from greater surface and leverage overcomes resistance below, upper leaf turns over, pushing back lower, reducing obstructions and opening at bed a passage to deposit.",
+      "titleKo": "자동 둑과 배수문",
+      "ko": "스스로 작동하는 둑과 흙 씻어내기 수문이다. 두 개의 문짝이 중심보다 아래에 있는 축에서 회전한다. 위쪽 문짝이 아래쪽 문짝보다 훨씬 크며, 위쪽은 물이 흐르는 방향으로, 아래쪽은 그 반대 방향으로 돈다. 아래쪽 문짝의 윗가장자리가 위쪽 문짝의 아래 가장자리와 겹쳐 있고, 물의 압력으로 위쪽 문짝에 밀착된다. 평소의 물 흐름에서는 서로 반대로 작용하는 압력 덕분에 왼쪽 그림처럼 둑이 수직으로 닫혀 있고 물은 위쪽 문짝의 홈으로 흐른다. 그러나 수위가 평소보다 높아지면, 더 넓은 면적과 지렛대 효과로 위쪽의 압력이 아래쪽의 저항을 이겨 위쪽 문짝이 넘어지면서 아래쪽 문짝을 뒤로 밀고, 장애물을 줄이면서 바닥에 쌓인 흙이 빠져나갈 통로를 연다.",
+      "easy": "물이 많아지면 사람이 조작하지 않아도 두 문짝이 스스로 넘어져 문이 열린다. 수위가 올라갈수록 위쪽 문짝에 걸리는 물의 힘이 커져 지렛대처럼 문을 넘어뜨리는 원리이다.",
+      "category": "tool",
+      "mech": "Left: closed state — a large upper leaf (tall plank pivoted below centre) and small lower leaf, vertical, overlapping, with a notch at the top of the upper leaf. Right: flood state — upper leaf tipped downstream to ~60 deg, pushing the lower leaf back; water rushes under. Hinge axes horizontal at the channel bed; stream drives."
+    },
+    {
+      "n": 464,
+      "en": "Hiero's fountain. Water being poured into upper vessel descends tube on right into lower; intermediate vessel being also filled and more water poured into upper, confined air in cavities over water in lower and intermediate vessels and in communication tube on left, being compressed, drives by its elastic force a jet up central tube.",
+      "titleKo": "헤론의 분수",
+      "ko": "헤론(히에로)의 분수이다. 위쪽 그릇에 물을 부으면 오른쪽 관을 따라 아래 그릇으로 내려간다. 중간 그릇도 채워지고 위쪽 그릇에 물을 더 부으면, 아래 그릇과 중간 그릇의 물 위 빈 공간과 왼쪽의 연결관 속에 갇힌 공기가 압축되어, 그 탄성력으로 가운데 관을 따라 물줄기가 위로 솟는다.",
+      "easy": "위 그릇의 물이 관을 타고 내려가 아래 그릇 속 공기를 눌러 압축한다. 압축된 공기가 다른 그릇의 물을 밀어 올려 가운데 관 위로 분수처럼 뿜어낸다. 펌프 없이 물의 무게만으로 물이 더 높이 솟는다.",
+      "category": "pump",
+      "mech": "Open frame table: top basin with a central jet tube; hanging below it a half-round bowl (middle vessel) and a lower closed vessel in the frame; connecting tubes (right: water down-pipe from upper basin; left: air communication pipe). No moving parts: jet driven by compressed air."
+    },
+    {
+      "n": 465,
+      "en": "Balance pumps. Pair worked reciprocally by a person pressing alternately on opposite ends of lever or beam.",
+      "titleKo": "시소식 펌프 한 쌍",
+      "ko": "균형 펌프이다. 한 쌍이 번갈아 움직이도록 사람이 지렛대(빔)의 양 끝을 번갈아 눌러서 작동시킨다.",
+      "easy": "시소 모양의 긴 막대 양 끝에 펌프 두 대를 달고 사람이 번갈아 밟으면, 한쪽이 내려갈 때 다른 쪽이 올라가며 번갈아 물을 퍼 올린다.",
+      "category": "pump",
+      "mech": "Long lever beam (rocker) on a central fulcrum on a wooden bench frame; weights (balls) on the beam ends; a person stands on the bench and pushes alternately; two pump rods hang from the beam below to two pump barrels. Seesaw motion about 20 deg; the two pistons move in opposite directions."
+    }
   ]
 }
