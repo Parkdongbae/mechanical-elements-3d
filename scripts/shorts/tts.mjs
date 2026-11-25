@@ -133,12 +133,20 @@ export function tts(n, lang, { voice } = {}) {
     if (A.dur <= A_END - A_START || rate >= 20) break;
     rate += 10;
   }
-  const B = say(voice, `+${rate}%`, sc.cta, path.join(dir, 'b'));
+  // 끝 문장(고정 문구)은 따로 빠르기를 올려 맞춘다 — 대본으로는 줄일 수 없는 문장이므로
+  let rateB = rate;
+  let B;
+  for (;;) {
+    B = say(voice, `+${rateB}%`, sc.cta, path.join(dir, 'b'));
+    if (B.dur <= B_END - B_START || rateB >= 30) break;
+    rateB += 10;
+  }
   const meta = {
     n,
     lang,
     voice,
     rate: `+${rate}%`,
+    rateB: `+${rateB}%`,
     aStart: A_START,
     aDur: A.dur,
     bStart: B_START,
