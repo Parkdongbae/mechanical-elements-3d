@@ -64,7 +64,7 @@ export const K137 = {
   webT: 0.08,
   zWeb0: 0.06,
   hubTop: 0.22,
-  zRoll0: 0.055,
+  zRoll0: 0.045, // 굴른이 편심 테 두께(z 0.065~0.145)를 다 덮도록 더 뒤에서 시작(길이 0.11) — 사용자 지적
   pinR: 0.02,
   pinTopZ1: 0.26,
   pinBotZ1: 0.31,
@@ -185,9 +185,9 @@ export function forkArm137(): THREE.Group {
   shape.holes.push(pathFrom([...circlePts(K137.eyeBore, 40)].reverse()));
   g.add(meshAt(extrude(shape, K137.forkT, 0.004, 48), castIron(), 0, 0, K137.zFork0 + 0.004));
   const makeRoller = (name: string, r: number, y: number): THREE.Mesh => {
-    const roll = meshAt(cylZ(r, 0, 0.08, 0.004, 48), bronze({ roughness: 0.34 }), Ox, y, K137.zRoll0);
+    const roll = meshAt(cylZ(r, 0, 0.11, 0.004, 48), bronze({ roughness: 0.34 }), Ox, y, K137.zRoll0);
     roll.name = name;
-    const dot = meshAt(new THREE.CylinderGeometry(0.012, 0.012, 0.005, 16), paint(0xf2b619), 0.028, 0, 0.0825);
+    const dot = meshAt(new THREE.CylinderGeometry(0.012, 0.012, 0.005, 16), paint(0xf2b619), 0.028, 0, 0.1125);
     roll.add(dot);
     roll.userData.outline = circlePts(r, 64);
     setMM(roll, { kind: 'roller', r });
@@ -195,8 +195,8 @@ export function forkArm137(): THREE.Group {
   };
   g.add(makeRoller('rollTop', K137.rT, Y_TIP137));
   g.add(makeRoller('rollBot', K137.rB, -Y_TIP137));
-  g.add(meshAt(cylZ(K137.pinR, K137.zWeb0 + 0.04, K137.pinTopZ1, 0.003), steel(), Ox, Y_TIP137, 0));
-  g.add(meshAt(cylZ(K137.pinR, K137.zWeb0 + 0.04, K137.pinBotZ1, 0.003), steel(), Ox, -Y_TIP137, 0));
+  g.add(meshAt(cylZ(K137.pinR, K137.zRoll0 - 0.01, K137.pinTopZ1, 0.003), steel(), Ox, Y_TIP137, 0));
+  g.add(meshAt(cylZ(K137.pinR, K137.zRoll0 - 0.01, K137.pinBotZ1, 0.003), steel(), Ox, -Y_TIP137, 0));
   const pinTop = new THREE.Object3D();
   pinTop.name = 'pinTop';
   pinTop.position.set(Ox, Y_TIP137, K137.zRoll0);
@@ -221,7 +221,8 @@ export function valveRod137(): THREE.Group {
   const L = K137.rodLen - 0.16;
   g.add(meshAt(new THREE.CylinderGeometry(K137.rodR, K137.rodR, L, 24), steel(), 0, -0.02 - L / 2, K137.rodT / 2));
   g.add(meshAt(new THREE.CylinderGeometry(0.05, 0.05, 0.028, 28), brass(), 0, -(K137.rodLen - 0.155), K137.rodT / 2));
-  for (const sx of [-1, 1]) g.add(meshAt(new THREE.BoxGeometry(0.012, 0.1, 0.036), steel(), sx * 0.021, -(K137.rodLen - 0.05), K137.rodT / 2));
+  // 텅: 칼라 아랫면(rodLen − 0.141)까지 올려 막대와 이어지게(예전엔 0.04 떠 있었다 — 사용자 지적)
+  for (const sx of [-1, 1]) g.add(meshAt(new THREE.BoxGeometry(0.012, 0.145, 0.036), steel(), sx * 0.021, -(K137.rodLen - 0.0725), K137.rodT / 2));
   const xpin = new THREE.CylinderGeometry(0.011, 0.011, 0.075, 16);
   xpin.rotateZ(Math.PI / 2);
   g.add(meshAt(xpin, darkSteel(), 0, -(K137.rodLen - 0.05), K137.rodT / 2));
