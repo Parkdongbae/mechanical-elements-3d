@@ -8,6 +8,42 @@ const OX = 0.3;
 const OY = 1.9;
 const D2R = Math.PI / 180;
 
+// ── 센 스프링 C 의 끝이 늘 래칫 A 에 닿게(사용자 지적: "스프링이 래칫에 닿아 있어야 함") ──
+// 키트 표는 걸쇠가 C 를 들어 올리는 동안의 휨만 주고, 쉴 때는 끝이 반지름 0.66 에 떠 있어 이 등(약 0.57)과 0.09 떨어져 보였다.
+// C 는 받침에 물린 자리 Q 둘레로 휜다(psi, 반시계 = 끝이 바깥으로). 끝이 A 의 톱니 윤곽 위에 앉는 psi 를 매 프레임 풀고,
+// 걸쇠가 들어 올리는 휨과 비교해 더 바깥쪽(큰 쪽)을 쓴다.
+const TIP0: [number, number] = [K73.tipR * Math.cos(K73.tipDeg * D2R) - K73.q[0], K73.tipR * Math.sin(K73.tipDeg * D2R) - K73.q[1]];
+const CLEAR = 0.003;
+/** A 로컬 각(도)에서의 톱니 윤곽 반지름 — 절벽 면이 36° 마다, 등은 반시계로 높아진다(키트 ratchetOutline73 과 같은 식) */
+function toothR(localDeg: number): number {
+  const a = ((localDeg % 36) + 36) % 36;
+  return K73.rRoot + ((K73.rTip - K73.rRoot) * a) / 36;
+}
+/** psi 만큼 휜 C 끝의 바퀴 중심 기준 좌표 */
+function tipAt(psi: number): [number, number] {
+  const c = Math.cos(psi);
+  const sn = Math.sin(psi);
+  return [K73.q[0] + TIP0[0] * c - TIP0[1] * sn, K73.q[1] + TIP0[0] * sn + TIP0[1] * c];
+}
+/** 끝이 A(회전 aRot rad) 윤곽 위 CLEAR 에 앉는 psi */
+function surfacePsi(aRot: number): number {
+  const gap = (psi: number): number => {
+    const [x, y] = tipAt(psi);
+    const ang = Math.atan2(y, x) - aRot;
+    return Math.hypot(x, y) - (toothR(ang / D2R) + CLEAR);
+  };
+  let lo = -0.4;
+  let hi = 0.3;
+  if (gap(lo) > 0) return lo;
+  if (gap(hi) < 0) return hi;
+  for (let k = 0; k < 30; k++) {
+    const mid = (lo + hi) / 2;
+    if (gap(mid) < 0) lo = mid;
+    else hi = mid;
+  }
+  return hi;
+}
+
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 
 export default function buildM073(): MovementModel {
@@ -62,7 +98,7 @@ export default function buildM073(): MovementModel {
     st = ratchet73State(dDeg);
     A.rotation.z = st.aRot;
     B.set(st.headR);
-    C.rotation.z = st.bladeRot;
+    C.rotation.z = Math.max(st.bladeRot, surfacePsi(st.aRot));
   };
   apply();
 
