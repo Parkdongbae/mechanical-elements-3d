@@ -1,7 +1,7 @@
 // 쇼츠 합성(지시서 21 · 5단계) — 같은 녹화 프레임으로 세로(1080×1920)·가로(1920×1080) 두 형식 + 업로드 메타데이터 JSON.
 //   node scripts/shorts/compose.mjs <번호> [ko|en|both] [--vertical-only|--wide-only]
 // 필요: record.mjs(프레임·motion), tts.mjs(더빙·자막), cards.mjs(카드), sfx.mjs(효과음 트랙 — 없으면 여기서 만든다)
-// 배경음악: assets/shorts/music/ 의 곡(이름순)에서 (번호-1) % 곡 수. 곡이 없으면 ffmpeg 로 만든 잔잔한 임시 합성음.
+// 배경음악: 기본은 모든 편 Badinerie(SHORTS_MUSIC 로 바꿈, 빈 값이면 이름순 (번호-1) % 곡 수). 곡이 없으면 ffmpeg 로 만든 잔잔한 임시 합성음.
 //   곡 앞 무음은 건너뛰고 영상 길이로 자른 뒤 끝 1.5초 페이드아웃, 더빙이 나올 때 자동으로 낮춘다(사이드체인).
 // 결과: shorts/<lang>/NNN.mp4, NNN-wide.mp4, NNN.json
 import fs from 'node:fs';
@@ -15,7 +15,9 @@ const APP = 'https://mechanical-elements-3d.vercel.app/#/mm/';
 export function pickMusic(n) {
   const list = fs.existsSync(MUSIC_DIR) ? fs.readdirSync(MUSIC_DIR).filter((f) => /\.(mp3|wav|m4a|ogg|flac|aac)$/i.test(f)).sort() : [];
   if (!list.length) return null;
-  const f = list[(n - 1) % list.length];
+  // 사용자 결정(2026-11-25): 모든 편에 1번과 같은 곡(Badinerie). 곡을 돌려 쓰려면 SHORTS_MUSIC= (빈 값)
+  const fixed = process.env.SHORTS_MUSIC ?? 'Badinerie';
+  const f = (fixed && list.find((x) => x.toLowerCase().startsWith(fixed.toLowerCase()))) || list[(n - 1) % list.length];
   const base = path.parse(f).name;
   const m = base.match(/^(.*?)\s+-\s+(.*)$/);
   return { file: path.join(MUSIC_DIR, f), title: m ? m[1] : base, artist: m ? m[2] : '' };

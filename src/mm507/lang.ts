@@ -81,6 +81,8 @@ export interface UiText {
   thumbAlt: (n: number) => string;
   fold: string;
   unfold: string;
+  /** 폰에서 접힌 조작 막대를 펼치는 버튼 */
+  ctlMore: string;
   toList: string;
   toListAria: string;
   toListTitle: string;
@@ -93,7 +95,6 @@ export interface UiText {
   next: string;
   prevN: (n: number) => string;
   nextN: (n: number) => string;
-  ext: string;
   numLabel: (n: number) => string;
   untitled: (n: number) => string;
   wait3d: string;
@@ -134,6 +135,7 @@ const KO: UiText = {
   thumbAlt: (n) => `${n}번 판화 작은 그림`,
   fold: '접기',
   unfold: '펼치기',
+  ctlMore: '조작 ▾',
   toList: ' 목록',
   toListAria: '507 기계 운동 목록으로',
   toListTitle: '507 기계 운동 첫 화면(목록)으로',
@@ -146,7 +148,6 @@ const KO: UiText = {
   next: '다음 ›',
   prevN: (n) => `‹ ${n}번`,
   nextN: (n) => `${n}번 ›`,
-  ext: '507movements.com에서 이 운동 보기',
   numLabel: (n) => `${n}번`,
   untitled: (n) => `${n}번 운동`,
   wait3d: '3D 모형 준비 중',
@@ -198,6 +199,7 @@ const EN: UiText = {
   thumbAlt: (n) => `Engraving ${n}, thumbnail`,
   fold: 'Collapse',
   unfold: 'Expand',
+  ctlMore: 'Controls ▾',
   toList: ' List',
   toListAria: 'Back to the 507 movements list',
   toListTitle: 'Back to the 507 movements list',
@@ -210,7 +212,6 @@ const EN: UiText = {
   next: 'Next ›',
   prevN: (n) => `‹ #${n}`,
   nextN: (n) => `#${n} ›`,
-  ext: 'See this movement on 507movements.com',
   numLabel: (n) => `#${n}`,
   untitled: (n) => `#${String(n).padStart(3, '0')}`,
   wait3d: '3D model in progress',

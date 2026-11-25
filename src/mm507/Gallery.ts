@@ -20,6 +20,8 @@ const SEEN_KEY = 'mech3d-mm507-seen-v1';
 const DEFAULT_VIEW: CameraView = { pos: [0, 2.1, 6.2], target: [0, 1.75, 0] };
 
 const pad3 = (n: number): string => String(n).padStart(3, '0');
+/** 폰 크기 화면(CSS 의 820px 미만 하단 시트 배치와 같은 기준) */
+const isNarrow = (): boolean => typeof matchMedia === 'function' && matchMedia('(max-width: 819px)').matches;
 const figUrl = (n: number): string => `/mm507/fig/${pad3(n)}.png`;
 
 interface CatalogEntry {
@@ -523,7 +525,9 @@ export class Gallery implements AppMode {
     fig.append(figImg, el('p', 'mm-fig-cap', t.figCap));
 
     const side = el('aside', 'mm-side');
-    side.dataset.open = 'true';
+    // 폰(좁은 화면)에서는 설명 시트를 접어 둔 채 시작 — 3D 를 가리지 않게(사용자 요청 2026-11-25)
+    const narrow = isNarrow();
+    side.dataset.open = narrow ? 'false' : 'true';
 
     const headEl = el('header', 'mm-sheet-head');
     const thumb = el('img', 'mm-thumb');
@@ -533,7 +537,7 @@ export class Gallery implements AppMode {
     thumb.addEventListener('click', () => this.openZoom());
     const ht = el('div', 'mm-sheet-t');
     this.fillHead(ht, entry);
-    const fold = button('mm-fold', t.fold, () => {
+    const fold = button('mm-fold', narrow ? t.unfold : t.fold, () => {
       const open = side.dataset.open === 'true';
       side.dataset.open = open ? 'false' : 'true';
       fold.textContent = open ? t.unfold : t.fold;
@@ -573,12 +577,7 @@ export class Gallery implements AppMode {
     next.disabled = this.cur >= TOTAL;
     nav.append(prev, next);
 
-    const ext = el('a', 'mm-ext', t.ext);
-    ext.href = `https://507movements.com/mm_${pad3(this.cur)}.html`;
-    ext.target = '_blank';
-    ext.rel = 'noopener noreferrer';
-
-    side.append(tabs, this.tabBody, this.notesEl, nav, ext);
+    side.append(tabs, this.tabBody, this.notesEl, nav);
     wrap.append(fig, side);
     ctx.root.append(wrap);
 
@@ -726,7 +725,16 @@ export class Gallery implements AppMode {
       parts.push(lb.button, ab);
     }
     parts.push(button('mm-ctl-btn', t.resetView, () => this.flyDefault()));
-    ctl.append(...parts);
+    // 폰에서는 조작 막대도 접어 둔다: 펼치기 버튼만 보인다(정지·속도·역회전·이름표·화살표·시점 모두 접힘)(넓은 화면에서는 펼치기 버튼이 숨는다)
+    ctl.dataset.open = isNarrow() ? 'false' : 'true';
+    const ctlFold = button('mm-ctl-btn mm-ctl-fold', ctl.dataset.open === 'true' ? t.fold : t.ctlMore, () => {
+      const open = ctl.dataset.open === 'true';
+      ctl.dataset.open = open ? 'false' : 'true';
+      ctlFold.textContent = open ? t.ctlMore : t.fold;
+      ctlFold.setAttribute('aria-expanded', String(!open));
+    });
+    ctlFold.setAttribute('aria-expanded', ctl.dataset.open);
+    ctl.append(this.playBtn, ctlFold, ...parts.slice(1));
     wrap.append(ctl);
   }
 
