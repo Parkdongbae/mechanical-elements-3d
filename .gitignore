@@ -24,3 +24,9 @@ mechanical_movements_507/
 # GLM API 키 — 절대 커밋하지 않음
 glm_api_key.txt
 __pycache__/
+
+# 507 유튜브 쇼츠 산출물(지시서 21) — assets/shorts 는 커밋 대상
+/shorts/
+/shorts/_work/
+# 유튜브 오디오 보관함 음악 — 영상 사용은 되지만 파일 재배포는 안 됨
+/assets/shorts/music/
