@@ -94,7 +94,9 @@ function buildTable138(): Float64Array {
       const x = px * cu - py * su;
       if (Math.abs(x) > w) continue;
       const y = px * su + py * cu;
-      if (y > m) m = y;
+      // 막대 끝은 반지름 w 의 반원(사용자 지적: 끝을 둥글게) — x 자리에서 끝 바닥이 원점보다 높은 만큼 빼 준다
+      const yt = y - (w - Math.sqrt(Math.max(0, w * w - x * x)));
+      if (yt > m) m = yt;
     }
     tab[k] = m + CLEAR;
   }
@@ -157,13 +159,25 @@ export function rodBar138(len: number): THREE.Group {
   const w = K138.ROD_W / 2;
   const t = K138.ROD_T;
   const g = new THREE.Group();
-  const bodyGeo = extrude(roundedRect(-w, 0, w, len, 0.008), t, 0.004);
+  // 몸통: 아래 끝이 반지름 w 의 반원(원점 = 반원 맨 아래), 위 끝은 둥근 모서리
+  const body = new THREE.Shape();
+  body.moveTo(-w, w);
+  body.absarc(0, w, w, Math.PI, 2 * Math.PI, false);
+  body.lineTo(w, len - 0.008);
+  body.quadraticCurveTo(w, len, w - 0.008, len);
+  body.lineTo(-w + 0.008, len);
+  body.quadraticCurveTo(-w, len, -w, len - 0.008);
+  body.closePath();
+  const bodyGeo = extrude(body, t, 0.004, 32);
   g.add(mesh(bodyGeo, steel()));
-  // 발 테두리(아래 변 0.009 간격 + 위 두 구석)
+  // 발 테두리(반원 + 위 두 구석)
   const foot: V2[] = [];
-  const nEdge = 9;
-  for (let i = 0; i <= nEdge; i++) foot.push([-w + ((2 * w) / nEdge) * i, 0]);
-  foot.push([w, 0.012], [-w, 0.012]);
+  const nEdge = 16;
+  for (let i = 0; i <= nEdge; i++) {
+    const a = Math.PI + (Math.PI * i) / nEdge;
+    foot.push([w * Math.cos(a), w + w * Math.sin(a)]);
+  }
+  foot.push([w, w + 0.012], [-w, w + 0.012]);
   g.userData.outline = foot;
   const footMark = new THREE.Object3D();
   footMark.name = 'foot';
