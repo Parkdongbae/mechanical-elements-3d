@@ -62,22 +62,6 @@ function bar(a: THREE.Vector3, b: THREE.Vector3, r: number, mat: THREE.Material)
   return m;
 }
 
-/** 둥근 모서리 사각형 점열(반시계). r = 모서리 반지름 */
-function rrectPts(x0: number, y0: number, x1: number, y1: number, r: number, n = 10): V2[] {
-  const out: V2[] = [];
-  const corner = (cx: number, cy: number, a0: number): void => {
-    for (let i = 0; i <= n; i++) {
-      const a = a0 + (Math.PI / 2) * (i / n);
-      out.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
-    }
-  };
-  corner(x1 - r, y0 + r, -Math.PI / 2);
-  corner(x1 - r, y1 - r, 0);
-  corner(x0 + r, y1 - r, Math.PI / 2);
-  corner(x0 + r, y0 + r, Math.PI);
-  return out;
-}
-
 /** 뒤판에서 나온 팔 끝의 고리 — 구멍이 Y 방향(세로 막대·세로축용). 그룹 원점 = (x, y, 0), 고리 중심 z = zc */
 export function stemGuide146(x: number, y: number, zc: number, holeR: number, h = 0.1): THREE.Group {
   const g = new THREE.Group();
@@ -112,8 +96,8 @@ export const K146 = {
   /** 요크 판 바깥 반폭(양끝 반원 포함) */
   yokeHalf: 0.608,
   /** 요크 판 윗변·아랫변(원점 기준) */
-  yokeUp: 0.157,
-  yokeDown: 0.407,
+  yokeUp: 0.24,
+  yokeDown: 0.24,
   /** 막대 반지름, 원점에서 위 끝·아래 끝까지 */
   stemR: 0.05,
   stemUp: 1.02,
@@ -130,20 +114,57 @@ export const K146 = {
   pose: 97 * DEG
 } as const;
 
-/** 146 운동식. a = 핀 각(반시계), pin = 축 중심 기준 핀 자리, y = 요크 원점의 높이(축 중심 기준) = crank·sin a */
+/** 요크 왕복 진폭 — 크랭크보다 작게 잡아야 홈 곡선이 한가운데에서 위·아래로 갈라진 하나의 고리가 된다 */
+const Y146 = 0.75 * K146.crank;
+
+/**
+ * 146 운동식(사용자 지적: 핀이 홈 고리 전체를 돌아야 한다). 원문 "홈 모양을 알맞게 하면 일정한 속도의 왕복" 대로
+ * 요크 높이 y 를 핀 각 a 의 세모파(위·아래 끝 a = ±90°)로 정하고, 홈 = 요크에서 본 핀의 길(닫힌 고리)로 만든다.
+ * a = 핀 각(반시계), pin = 축 중심 기준 핀 자리, y = 요크 원점의 높이(축 중심 기준).
+ */
 export function scotchYoke146(theta: number): { a: number; pin: V2; y: number } {
   const a = theta - 1.6 + K146.pose;
   const px = K146.crank * Math.cos(a);
   const py = K146.crank * Math.sin(a);
-  return { a, pin: [px, py], y: py };
+  const y = Y146 * (2 / Math.PI) * Math.asin(Math.max(-1, Math.min(1, Math.sin(a))));
+  return { a, pin: [px, py], y };
+}
+
+/** 요크에서 본 핀 중심의 길(홈 중심선) */
+function grooveCenter146(n = 240): V2[] {
+  const out: V2[] = [];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2;
+    const m = { px: K146.crank * Math.cos(a), py: K146.crank * Math.sin(a) };
+    const y = Y146 * (2 / Math.PI) * Math.asin(Math.sin(a));
+    out.push([m.px, m.py - y]);
+  }
+  return out;
+}
+
+/** 닫힌 곡선을 법선 방향으로 d 만큼 민다(+ 바깥) */
+function offsetLoop(c: V2[], d: number): V2[] {
+  const n = c.length;
+  const out: V2[] = [];
+  for (let i = 0; i < n; i++) {
+    const p = c[(i - 1 + n) % n]!;
+    const q = c[(i + 1) % n]!;
+    const tx = q[0] - p[0];
+    const ty = q[1] - p[1];
+    const l = Math.hypot(tx, ty) || 1;
+    // 반시계 곡선의 바깥 법선 = (ty, −tx)
+    out.push([c[i]![0] + (d * ty) / l, c[i]![1] - (d * tx) / l]);
+  }
+  return out;
 }
 
 /** 요크 홈의 바깥 벽·섬 윤곽(요크 로컬, 반시계). 핀은 hole 안·island 밖에 있어야 한다 */
 export function yokeGroove146(): { hole: V2[]; island: V2[]; outer: V2[] } {
   const k = K146;
   const w = k.pinR + k.clear;
-  const hole = rrectPts(-k.ga - w, -k.gDrop - w, k.ga + w, w, k.gCorner + w, 12);
-  const island = rrectPts(-k.ga + w, -k.gDrop + w, k.ga - w, -w, k.gCorner - w, 8);
+  const c = grooveCenter146();
+  const hole = offsetLoop(c, w);
+  const island = offsetLoop(c, -w);
   const rr = (k.yokeUp + k.yokeDown) / 2;
   const cy = (k.yokeUp - k.yokeDown) / 2;
   const sx = k.yokeHalf - rr;
