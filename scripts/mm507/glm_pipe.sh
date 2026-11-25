@@ -7,11 +7,14 @@ set -u
 cd "$(dirname "$0")/../.." || exit 1
 A="${1:?시작 번호}"; B="${2:?끝 번호}"; P="${3:-7}"
 MODEL="zai-coding-plan/glm-5.3-flash"
+QUIET="${QUIET:-1500-1900}"
 mkdir -p shots/mm/log
 
 glm() { # glm <작업>
-  # DEADLINE=HHMM 이 지나면 새 GLM 작업을 시작하지 않는다(사용자: 15~19시는 GLM 토큰이 빨리 닳음)
-  if [ -n "${DEADLINE:-}" ] && [ "$(date +%H%M)" -ge "$DEADLINE" ]; then echo LIMIT; return; fi
+  # 15~19시에는 새 GLM 작업을 시작하지 않는다(사용자: 이 시간대 GLM 토큰이 빨리 닳음). QUIET="1500-1900" 으로 바꿀 수 있다.
+  local now q0 q1; now=$((10#$(date +%H%M))); q0=$((10#${QUIET%-*})); q1=$((10#${QUIET#*-}))
+  if [ "$now" -ge "$q0" ] && [ "$now" -lt "$q1" ]; then echo LIMIT; return; fi
+  if [ -n "${DEADLINE:-}" ] && [ "$now" -ge "$((10#$DEADLINE))" ]; then echo LIMIT; return; fi
   if [ -n "${ALT:-}" ]; then bash "$ALT" bash scripts/mm507/glm_run.sh "$1" "$MODEL" > /dev/null 2>&1
   else bash scripts/mm507/glm_run.sh "$1" "$MODEL" > /dev/null 2>&1; fi
   if grep -q "Usage limit reached" "shots/mm/log/$1.log" 2>/dev/null; then echo LIMIT; fi
@@ -45,7 +48,7 @@ one() {
   echo "$id ${v:-ERR} $((SECONDS - t0))s" > "$out"
 }
 export -f one glm
-export MODEL ALT SKIP_LINT DEADLINE
+export MODEL ALT SKIP_LINT DEADLINE QUIET
 
 seq "$A" "$B" | xargs -P "$P" -I{} bash -c 'one {}'
 cat shots/mm/log/pipe-*.txt 2>/dev/null | sort > shots/mm/log/pipe-summary.txt
