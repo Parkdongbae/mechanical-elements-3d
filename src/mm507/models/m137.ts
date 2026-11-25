@@ -1,7 +1,9 @@
 // 137 팽창 편심(프랑스식) — 크랭크축에 고정된 편심이 갈라진 진동 팔을 흔들고, 팔 아래 끝의 밸브 막대가 세로 왕복 (판화 137번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, STAGE, tag } from '../kit';
+import { castIron } from '../../models/materials';
+import { mesh } from '../../models/parts/geom';
 import { K137, Y_TIP137, eccentric137, forkArm137, rock137, valveRod137 } from '../kit/k137';
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
@@ -32,6 +34,25 @@ export default function buildM137(): MovementModel {
   const rod = valveRod137();
   rod.name = 'rod';
   g.add(eccentric, fork, rod);
+
+  // 밸브 막대 안내(판화에 없음 — 막대가 떠 있지 않게, 사용자 지적): 막대 아래쪽을 좌우 두 뺨 사이로 지나게 하고 뒤판에 붙인다.
+  // 막대는 팔이 흔들리며 x 로 조금 움직이므로 뺨 사이를 넉넉히(막대 지름 0.064, 틈 0.115) 둔다.
+  {
+    const iron = castIron();
+    const gy = K137.OY - Y_TIP137 - K137.rodLen + 0.2;
+    const zc = K137.zRod0 + K137.rodT / 2;
+    const box = (w: number, h: number, d: number, x: number, y: number, z: number): THREE.Mesh => {
+      const m = mesh(new THREE.BoxGeometry(w, h, d), iron);
+      m.position.set(x, y, z);
+      return m;
+    };
+    const guide = new THREE.Group();
+    guide.name = 'rodGuide';
+    for (const sx of [-1, 1]) guide.add(box(0.025, 0.14, 0.07, K137.OX + sx * 0.07, gy, zc));
+    guide.add(box(0.165, 0.14, 0.025, K137.OX, gy, zc - 0.0475)); // 뒤판(두 뺨을 잇는다)
+    guide.add(box(0.07, 0.07, zc - 0.06 - STAGE.backZ, K137.OX, gy, (STAGE.backZ + zc - 0.06) / 2)); // 뒤판까지 기둥
+    g.add(guide);
+  }
 
   const child = (name: string): THREE.Object3D => {
     const o = fork.getObjectByName(name);
