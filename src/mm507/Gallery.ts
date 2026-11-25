@@ -101,9 +101,9 @@ export function mmSeenCount(): number {
 }
 
 type TabId = 'easy' | 'ko' | 'en';
-/** 한글: 쉬운 풀이·번역·원문 / 그 밖의 언어: 쉬운 설명(그 언어, 없으면 영어)·영어 원문 */
+/** 영어: 쉬운 설명·원문 / 그 밖의 언어: 쉬운 풀이·책의 설명(번역)·영어 원문 — 탭 id 'ko' 는 「책의 설명 번역」 */
 function tabsFor(lang: MmLang, t: UiText): { id: TabId; label: string }[] {
-  if (lang !== 'ko') {
+  if (lang === 'en') {
     return [
       { id: 'easy', label: t.tabEasy },
       { id: 'en', label: t.tabEn }
@@ -229,7 +229,7 @@ export class Gallery implements AppMode {
   private buildView(): void {
     const ep = ++this.epoch;
     const lang = this.lang;
-    if (lang !== 'ko' && this.tab === 'ko') this.tab = 'easy';
+    if (lang === 'en' && this.tab === 'ko') this.tab = 'easy';
     // 앱 위쪽 모드 이름(main.ts 의 #mode-name)도 고른 언어로
     const modeName = document.querySelector<HTMLElement>('#mode-name');
     if (modeName) modeName.textContent = this.t.appTitle;
@@ -688,8 +688,16 @@ export class Gallery implements AppMode {
       return;
     }
     if (this.lang !== 'ko') {
-      const own = this.lang === 'en' ? entry.easyEn : this.dict?.easy[String(this.cur)];
+      const key = String(this.cur);
+      const own = this.lang === 'en' ? entry.easyEn : this.dict?.easy[key];
       const easy = own ?? entry.easyEn;
+      // 책의 설명 번역(새 언어만) — 없으면 영어 원문
+      const book = this.lang === 'en' ? undefined : this.dict?.book[key];
+      if (this.tab === 'ko') {
+        body.lang = book ? this.lang : 'en';
+        body.textContent = book ?? entry.en;
+        return;
+      }
       body.lang = this.tab === 'easy' && easy === own ? this.lang : 'en';
       body.textContent = this.tab === 'easy' ? easy ?? entry.en : entry.en;
       return;

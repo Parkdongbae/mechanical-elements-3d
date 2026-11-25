@@ -1,6 +1,7 @@
 // 「507 기계 운동」 소개 — 작업 지시서 16 §5에서 확인된 사실만 쓴다(추측·단정 금지).
 
 import { el, button } from '../modes/dom';
+import { ABOUT } from './about-i18n';
 
 export interface PrefaceData {
   page?: number;
@@ -36,69 +37,40 @@ function para(text: string, cls = 'mm-about-p'): HTMLElement {
   return el('p', cls, text);
 }
 
-/** 영문 소개 — 한글 본문과 같은 사실만(서문 번역 인용은 한글 전용이라 뺀다) */
-function buildAboutEn(done3d: number, onList: () => void, langBtn?: HTMLElement): HTMLElement {
+/** 한국어 밖의 소개(영·일·중·힌디·아랍) — about-i18n.ts 의 글, 한글 본문과 같은 사실만 */
+function buildAboutIntl(lang: keyof typeof ABOUT, done3d: number, onList: () => void, langBtn?: HTMLElement): HTMLElement {
+  const t = ABOUT[lang];
   const art = el('article', 'mm-about mm-panel');
+  art.lang = lang;
+  art.dir = lang === 'ar' ? 'rtl' : 'ltr';
   const head = el('header', 'mm-about-head');
   if (langBtn) head.append(langBtn);
-  head.append(el('span', 'mm-eyebrow', 'About'), el('h2', 'mm-about-title', 'A picture dictionary of machines, 150 years ago'));
+  head.append(el('span', 'mm-eyebrow', t.eyebrow), el('h2', 'mm-about-title', t.title));
   art.append(head);
-  art.append(
-    section(
-      'The book',
-      para('“Five Hundred and Seven Mechanical Movements” was first published in 1868. The material shown here is a scan of the 1871 printing (Cornell University Library copy).'),
-      para('It was compiled by Henry T. Brown, described on the title page as editor of the magazine “American Artisan”, and published by Brown, Coombs & Co. of New York.'),
-      para('The subtitle sets out its scope: movements important in dynamics, hydraulics, hydrostatics, pneumatics, steam engines, mill and other gearing, presses, horology and miscellaneous machinery, including many never published before and several only recently introduced.')
-    )
-  );
-  art.append(
-    section(
-      'How the book is laid out',
-      para('Each left-hand page holds nine or ten engravings, and the facing right-hand page holds the descriptions with the same numbers. The author noted in the preface that this facing arrangement makes reference easy.'),
-      para('The movements end with No. 507 on page 122, followed by advertisements of the period.')
-    )
-  );
-  const points = el('ul', 'mm-about-ul');
-  for (const t of [
-    'It was compiled because a collection of mechanical movements had long been needed.',
-    'The contents first appeared in the magazine “American Artisan”, across five volumes.',
-    'More than a quarter of the movements were new, and it held about three times as many as any earlier American book.',
-    'The classification is not complete, but a detailed index and facing pictures and text make it easy to search.'
-  ]) {
-    points.append(el('li', 'mm-about-li', t));
-  }
-  art.append(section('What the author says in the preface', points));
-  art.append(
-    section(
-      'Why it matters',
-      para('Before computers and video, inventors and engineers used this book as a picture dictionary to find which mechanism would produce the motion they needed.'),
-      para('The same principles are still inside machines 150 years later — a bicycle chain, a clock escapement and an engine crank are examples.'),
-      para('The book is in the public domain, so anyone can read it and build from it.')
-    )
-  );
-  const how = el('ul', 'mm-about-ul');
-  for (const t of [
-    'Pick an engraving in the list to browse the 507 movements.',
-    `Movements with a finished 3D model (${done3d} / 507 so far) actually move. They are being built in book order from No. 1.`,
-    'If an engraving is hard to follow, read the “Easy explanation” tab first.'
-  ]) {
-    how.append(el('li', 'mm-about-li', t));
-  }
-  art.append(section('How to use this site', how));
-  const ext = el('a', 'mm-ext', 'Also worth a visit — 507movements.com (animated engravings; that content belongs to that site)');
+  const list = (items: string[]): HTMLElement => {
+    const ul = el('ul', 'mm-about-ul');
+    for (const x of items) ul.append(el('li', 'mm-about-li', x));
+    return ul;
+  };
+  art.append(section(t.book.h, ...t.book.p.map((x) => para(x))));
+  art.append(section(t.layout.h, ...t.layout.p.map((x) => para(x))));
+  art.append(section(t.preface.h, list(t.preface.li)));
+  art.append(section(t.why.h, ...t.why.p.map((x) => para(x))));
+  art.append(section(t.how.h, list(t.how.li(done3d))));
+  const ext = el('a', 'mm-ext', t.more.ext);
   ext.href = 'https://507movements.com/';
   ext.target = '_blank';
   ext.rel = 'noopener noreferrer';
-  art.append(section('More', ext));
+  art.append(section(t.more.h, ext));
   const nav = el('div', 'mm-about-nav');
-  nav.append(button('mm-btn is-primary', 'Go to the movements list', onList));
+  nav.append(button('mm-btn is-primary', t.toList, onList));
   art.append(nav);
   return art;
 }
 
-/** 소개 글은 한국어·영어만 있다 — 일·중·힌디·아랍은 영어 소개를 보인다 */
+/** 소개 — 한국어는 아래 본문(서문 번역 포함), 그 밖의 언어는 buildAboutIntl */
 export function buildAbout(preface: PrefaceData | null, done3d: number, onList: () => void, lang: string = 'ko', langBtn?: HTMLElement): HTMLElement {
-  if (lang !== 'ko') return buildAboutEn(done3d, onList, langBtn);
+  if (lang !== 'ko') return buildAboutIntl(lang in ABOUT ? (lang as keyof typeof ABOUT) : 'en', done3d, onList, langBtn);
   const art = el('article', 'mm-about mm-panel');
 
   const head = el('header', 'mm-about-head');

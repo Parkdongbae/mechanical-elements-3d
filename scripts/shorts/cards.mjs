@@ -1,12 +1,13 @@
 // 쇼츠 그림 카드(지시서 21 · 4단계) — Playwright 로 HTML 을 그려 PNG 로(글꼴: assets/shorts/fonts, 무료 OFL).
 //   node scripts/shorts/cards.mjs base             assets/shorts/intro-ko.png·intro-en.png·intro-wide-ko.png·intro-wide-en.png
 //                                                  (Canva 그림 assets/shorts/canva/intro-base.png 가 있으면 그것을 넣고, 없으면 HTML 종이 질감 대체)
-//   node scripts/shorts/cards.mjs <번호> [ko|en|both]   shorts/_work/<lang>/NNN/cards/*.png (번호별 인트로·분할 화면·겹침 판화·배지·아웃트로·가로판 패널)
+//   node scripts/shorts/cards.mjs <번호> [both|all|new|ko,ja,...]   shorts/_work/<lang>/NNN/cards/*.png (번호별 인트로·분할 화면·겹침 판화·배지·아웃트로·가로판 패널)
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
-import { CAT_NAME, H, ROOT, W, WH, WW, catalogEntry, ensureDir, pad3, seriesOf, workDir } from './lib.mjs';
+import { H, ROOT, W, WH, WW, ensureDir, pad3, seriesOf, workDir } from './lib.mjs';
+import { ALL_LANGS, CAT_NAME, CFG, TXT, parseLangs, textOf } from './langs.mjs';
 
 const FONT_DIR = path.join(ROOT, 'assets', 'shorts', 'fonts');
 const furl = (f) => pathToFileURL(path.join(FONT_DIR, f)).href;
@@ -23,37 +24,14 @@ const FONTS = `
 const PAPER = '#efe2c2';
 const INK = '#2b2118';
 const ACCENT = '#f2b619';
-const SANS = (lang) => (lang === 'ko' ? 'Pre' : "Inter, Pre");
+const SANS = (lang) => CFG[lang]?.sans ?? 'Inter, Pre';
+/** 제목용 명조 계열(한 SerifKR, 영 Fell, 그 밖은 langs.mjs) */
+const SERIF = (lang) => CFG[lang]?.serif ?? 'Fell';
 const PAPER_CSS = `background:${PAPER};background-image:
  radial-gradient(ellipse at 50% 45%, rgba(255,250,235,.55), rgba(0,0,0,0) 60%),
  radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(90,60,20,.38) 100%),
  repeating-linear-gradient(0deg, rgba(120,90,40,.035) 0 2px, rgba(0,0,0,0) 2px 5px);`;
 const APP_URL = 'mechanical-elements-3d.vercel.app';
-
-const TXT = {
-  ko: {
-    series: '507 기계 운동',
-    book: '1868년 원서 『507가지 기계 운동』',
-    fig: (n) => `원서 판화 ${n}번 (1868)`,
-    model: '3D 모델',
-    try: '직접 돌려 보세요',
-    sub: '구독',
-    subOn: '구독중',
-    like: '좋아요',
-    link: `${APP_URL}/#/mm/`
-  },
-  en: {
-    series: '507 Mechanical Movements',
-    book: 'Henry T. Brown, 1868',
-    fig: (n) => `Original engraving No. ${n} (1868)`,
-    model: '3D model',
-    try: 'Try it yourself',
-    sub: 'Subscribe',
-    subOn: 'Subscribed',
-    like: 'Like',
-    link: `${APP_URL}/#/mm/`
-  }
-};
 
 // ── 직접 그린 아이콘(SVG). 유튜브 로고·상표는 쓰지 않는다 ──
 const ICON_BELL = `<svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>`;
@@ -61,8 +39,10 @@ const ICON_THUMB = `<svg viewBox="0 0 24 24" width="1em" height="1em"><path fill
 const ICON_CHECK = `<svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>`;
 const CURSOR = `<svg viewBox="0 0 64 64" width="96" height="96"><path d="M22 4c3 0 5 2 5 5v20l3-1c3-1 5 1 6 3l2-1c3-1 5 1 6 3l2-1c3 0 5 2 5 5v12c0 7-6 12-13 12H29c-4 0-7-2-9-5L9 40c-2-3 0-6 3-6 2 0 3 1 5 3V9c0-3 2-5 5-5Z" fill="#fff" stroke="#111" stroke-width="3" stroke-linejoin="round"/></svg>`;
 
-function page(w, h, body, css = '', transparent = false) {
-  return `<!doctype html><html><head><meta charset="utf-8"><style>${FONTS}
+/** 지금 그리는 카드의 언어(html lang·아랍어 dir=rtl) — buildBase·buildCards 가 정한다 */
+let curLang = '';
+function page(w, h, body, css = '', transparent = false, lang = curLang) {
+  return `<!doctype html><html${lang ? ` lang="${lang}"${CFG[lang]?.rtl ? ' dir="rtl"' : ''}` : ''}><head><meta charset="utf-8"><style>${FONTS}
 html,body{margin:0;width:${w}px;height:${h}px;overflow:hidden;${transparent ? 'background:transparent' : 'background:#000'}}
 *{box-sizing:border-box}
 ${css}</style></head><body>${body}</body></html>`;
@@ -176,12 +156,13 @@ async function figTransparent(browser, figFile, out) {
 }
 
 // ───────── 공용 인트로 바탕(assets/shorts) ─────────
-export async function buildBase(browser) {
+export async function buildBase(browser, langs = ALL_LANGS) {
   const canva = path.join(ROOT, 'assets', 'shorts', 'canva', 'intro-base.png');
   const hasCanva = fs.existsSync(canva);
   const deco = [3, 25, 37, 60].map((k) => imgUrl(path.join(ROOT, 'public', 'mm507', 'fig', `${pad3(k)}.png`)));
   const out = ensureDir(path.join(ROOT, 'assets', 'shorts'));
-  for (const lang of ['ko', 'en']) {
+  for (const lang of langs) {
+    curLang = lang;
     const t = TXT[lang];
     // 세로: Canva 정사각 그림(제목·장식)을 위에, 아래로 같은 종이를 이어 붙이고 판화 장식
     const square = hasCanva
@@ -193,8 +174,8 @@ export async function buildBase(browser) {
     const body = `<div style="position:absolute;inset:0;${PAPER_CSS}"></div>
       ${hasCanva ? `<div style="position:absolute;inset:0;background:#e6cf98;background-image:radial-gradient(ellipse at 50% 50%, rgba(255,248,220,.35), rgba(0,0,0,0) 55%, rgba(110,70,20,.45) 100%)"></div>` : ''}
       ${square}
-      <div style="position:absolute;left:0;right:0;top:1390px;text-align:center;font-family:${lang === 'ko' ? 'SerifKR' : 'Fell'};font-weight:700;color:${INK};font-size:${lang === 'ko' ? 58 : 64}px">${t.series}</div>
-      <div style="position:absolute;left:0;right:0;top:1478px;text-align:center;font-family:${lang === 'ko' ? 'SerifKR' : 'Fell'};color:#5a4630;font-size:36px;font-style:${lang === 'ko' ? 'normal' : 'italic'}">${t.book}</div>
+      <div style="position:absolute;left:0;right:0;top:1390px;text-align:center;font-family:${SERIF(lang)};font-weight:700;color:${INK};font-size:${lang === 'ko' ? 58 : 64}px">${t.series}</div>
+      <div style="position:absolute;left:0;right:0;top:1478px;text-align:center;font-family:${SERIF(lang)};color:#5a4630;font-size:36px;font-style:${lang === 'en' ? 'italic' : 'normal'}">${t.book}</div>
       <div style="position:absolute;left:90px;right:90px;top:1580px;height:260px;display:flex;justify-content:space-between;align-items:center;opacity:.8;mix-blend-mode:multiply">
         ${deco.map((u) => `<img src="${u}" style="height:200px;filter:sepia(.6) contrast(1.1)">`).join('')}</div>
       <div style="position:absolute;inset:26px;border:3px double ${INK};opacity:.55"></div>`;
@@ -211,9 +192,8 @@ export async function buildBase(browser) {
 
 // ───────── 번호별 카드 ─────────
 export async function buildCards(browser, n, lang, plan) {
-  const { entry } = catalogEntry(n);
-  const title = lang === 'ko' ? entry?.title ?? `${n}번` : entry?.titleEn ?? `No. ${n}`;
-  const easy = lang === 'ko' ? entry?.easy ?? '' : entry?.easyEn ?? '';
+  curLang = lang;
+  const { title, easy } = textOf(n, lang);
   const t = TXT[lang];
   const ser = seriesOf(n);
   const serTxt = ser ? `${CAT_NAME[lang][ser.cat] ?? ser.cat} ${ser.i}/${ser.count}` : '';
@@ -230,7 +210,7 @@ export async function buildCards(browser, n, lang, plan) {
       <div style="font-size:${size * 0.32}px;font-style:italic;letter-spacing:4px">No.</div>
       <div style="font-family:SerifKR;font-weight:700;font-size:${size * 0.9}px;margin:6px 0">${n}</div>
       <div style="font-size:${size * 0.26}px;margin-top:-6px;opacity:.75">/ 507</div></div>`;
-  const titleBlock = (size) => `<div style="margin-top:22px;font-family:${lang === 'ko' ? 'SerifKR' : 'Fell'};font-weight:700;font-size:${size}px;color:${INK};text-align:center">${title}</div>`;
+  const titleBlock = (size) => `<div style="margin-top:22px;font-family:${SERIF(lang)};font-weight:700;font-size:${size}px;color:${INK};text-align:center">${title}</div>`;
   await shot(
     browser,
     page(W, H, `<img src="${imgUrl(base)}" style="position:absolute;inset:0"><div style="position:absolute;left:0;right:0;top:${250 + 360}px;height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center">${numBlock(230)}${titleBlock(lang === 'ko' ? 62 : 58)}</div>`),
@@ -256,7 +236,7 @@ export async function buildCards(browser, n, lang, plan) {
   await shot(
     browser,
     page(W, 960, `<div style="position:absolute;inset:0;${PAPER_CSS}"></div>${figPanel(W, 960, 720, 900)}
-      <div style="position:absolute;left:0;right:0;bottom:44px;text-align:center;font-family:${lang === 'ko' ? 'SerifKR' : 'Fell'};font-weight:700;font-size:40px;color:${INK}">${t.fig(n)}</div>
+      <div style="position:absolute;left:0;right:0;bottom:44px;text-align:center;font-family:${SERIF(lang)};font-weight:700;font-size:40px;color:${INK}">${t.fig(n)}</div>
       <div style="position:absolute;left:0;right:0;bottom:0;height:8px;background:${ACCENT}"></div>`),
     W, 960, path.join(dir, 'split-top.png')
   );
@@ -316,7 +296,7 @@ export async function buildCards(browser, n, lang, plan) {
     browser,
     page(420, WH, `<div style="position:absolute;inset:0;${PAPER_CSS}"></div>${figPanel(420, WH, 600, 360)}
       <div style="position:absolute;left:20px;right:20px;top:60px;text-align:center;font-family:Fell;font-size:40px;color:${INK}">No. ${n} <span style="opacity:.6">/ 507</span></div>
-      <div style="position:absolute;left:20px;right:20px;bottom:60px;text-align:center;font-family:${lang === 'ko' ? 'SerifKR' : 'Fell'};font-weight:700;font-size:28px;color:${INK}">${t.fig(n)}</div>
+      <div style="position:absolute;left:20px;right:20px;bottom:60px;text-align:center;font-family:${SERIF(lang)};font-weight:700;font-size:28px;color:${INK}">${t.fig(n)}</div>
       <div style="position:absolute;top:0;bottom:0;right:0;width:6px;background:${ACCENT}"></div>`),
     420, WH, path.join(dir, 'wide-left.png')
   );
@@ -341,7 +321,7 @@ if (process.argv[1] && path.basename(process.argv[1]) === 'cards.mjs') {
   else {
     const n = Number(a);
     const plan = JSON.parse(fs.readFileSync(path.join(ROOT, 'shorts', '_work', 'cam', `${pad3(n)}.json`), 'utf8'));
-    for (const lang of (process.argv[3] ?? 'both') === 'both' ? ['ko', 'en'] : [process.argv[3]]) {
+    for (const lang of parseLangs(process.argv[3])) {
       await buildCards(browser, n, lang, plan);
       console.log(`[cards] ${pad3(n)} ${lang}`);
     }

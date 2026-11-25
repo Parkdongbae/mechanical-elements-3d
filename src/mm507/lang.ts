@@ -1,6 +1,6 @@
 // 「507 기계 운동」 화면 언어(한·영·일·중·힌디·아랍) — 화면 문구 사전 + 3D 이름표·수치 사전(src/mm507/i18n/<언어>.json) 불러오기.
 // <언어>.json 형식: { tags: {한글: 번역}, notes: {한글 label: 번역}, phrases: {한글 구: 번역},
-//                    titles?: {번호: 제목}, easy?: {번호: 쉬운 풀이} }  — titles·easy 는 ja·zh·hi·ar 만(ko·en 은 catalog.json 에 있다)
+//                    titles?: {번호: 제목}, easy?: {번호: 쉬운 풀이}, book?: {번호: 책의 설명 번역} }  — titles·easy·book 은 ja·zh·hi·ar 만(ko·en 은 catalog.json 에 있다)
 // 파일이 아직 없거나 비어 있어도 빈 사전으로 동작한다(import.meta.glob 은 파일이 없으면 빈 객체).
 
 import type { MovementNote } from './types';
@@ -27,12 +27,13 @@ export interface ModelDict {
   phrases: Record<string, string>;
   /** phrases 키를 긴 것부터 */
   phraseKeys: string[];
-  /** 번호 → 제목·쉬운 풀이(ja·zh·hi·ar) */
+  /** 번호 → 제목·쉬운 풀이·책의 설명 번역(ja·zh·hi·ar) */
   titles: Record<string, string>;
   easy: Record<string, string>;
+  book: Record<string, string>;
 }
 
-const EMPTY: ModelDict = { tags: {}, notes: {}, phrases: {}, phraseKeys: [], titles: {}, easy: {} };
+const EMPTY: ModelDict = { tags: {}, notes: {}, phrases: {}, phraseKeys: [], titles: {}, easy: {}, book: {} };
 
 const loaders = import.meta.glob<unknown>('./i18n/*.json', { import: 'default' });
 
@@ -74,7 +75,8 @@ export function loadDict(lang: MmLang): Promise<ModelDict> {
         phrases,
         phraseKeys: Object.keys(phrases).sort((a, b) => b.length - a.length),
         titles: strMap(d.titles),
-        easy: strMap(d.easy)
+        easy: strMap(d.easy),
+        book: strMap(d.book)
       };
     })
     .catch(() => EMPTY);
@@ -297,7 +299,7 @@ const JA: UiText = {
   toListTitle: '507の機械運動の最初の画面（一覧）へ',
   tabsAria: '説明',
   tabEasy: 'やさしい説明',
-  tabKo: '韓国語訳',
+  tabKo: '本の説明（翻訳）',
   tabEn: '英語の原文',
   loadingDesc: '説明を読み込み中…',
   prev: '‹ 前へ',
@@ -361,7 +363,7 @@ const ZH: UiText = {
   toListTitle: '返回507种机械运动首页（列表）',
   tabsAria: '说明',
   tabEasy: '简单说明',
-  tabKo: '韩语译文',
+  tabKo: '书中说明（译文）',
   tabEn: '英文原文',
   loadingDesc: '正在加载说明…',
   prev: '‹ 上一个',
@@ -425,7 +427,7 @@ const HI: UiText = {
   toListTitle: '507 गतियों की सूची पर वापस',
   tabsAria: 'विवरण',
   tabEasy: 'आसान व्याख्या',
-  tabKo: 'कोरियाई अनुवाद',
+  tabKo: 'किताब का विवरण (अनुवाद)',
   tabEn: 'अंग्रेज़ी मूल पाठ',
   loadingDesc: 'विवरण लोड हो रहा है…',
   prev: '‹ पिछला',
@@ -489,7 +491,7 @@ const AR: UiText = {
   toListTitle: 'العودة إلى قائمة الحركات الـ507',
   tabsAria: 'الوصف',
   tabEasy: 'شرح مبسّط',
-  tabKo: 'الترجمة الكورية',
+  tabKo: 'وصف الكتاب (مترجم)',
   tabEn: 'النص الإنجليزي الأصلي',
   loadingDesc: 'جارٍ تحميل الوصف…',
   prev: '‹ السابق',

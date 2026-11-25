@@ -5,6 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { FFMPEG, ROOT, T, ffmpeg, pad3, probe, rel, run } from './lib.mjs';
+import { ALL_LANGS, parseLangs } from './langs.mjs';
 
 function loudness(file) {
   const r = run(FFMPEG, ['-hide_banner', '-nostats', '-i', file, '-af', 'ebur128=framelog=quiet,silencedetect=n=-45dB:d=0.8', '-f', 'null', '-']);
@@ -39,7 +40,8 @@ export function sheet(n) {
   const work = path.join(ROOT, 'shorts', '_work', 'sheet');
   fs.mkdirSync(work, { recursive: true });
   const rows = [];
-  for (const [lang, wide] of [['ko', false], ['en', false], ['ko', true], ['en', true]]) {
+  const langs = ALL_LANGS.filter((l) => fs.existsSync(path.join(ROOT, 'shorts', l, `${pad3(n)}.mp4`)));
+  for (const [lang, wide] of [...langs.map((l) => [l, false]), ...langs.map((l) => [l, true])]) {
     const f = path.join(ROOT, 'shorts', lang, `${pad3(n)}${wide ? '-wide' : ''}.mp4`);
     if (!fs.existsSync(f)) continue;
     const row = path.join(work, `${lang}${wide ? '-w' : ''}.png`);
@@ -59,7 +61,7 @@ export function sheet(n) {
 if (process.argv[1] && path.basename(process.argv[1]) === 'check.mjs') {
   const n = Number(process.argv[2]);
   const res = [];
-  for (const lang of ['ko', 'en']) {
+  for (const lang of parseLangs(process.argv.find((a) => a.startsWith('--langs='))?.slice(8), 'all').filter((l) => fs.existsSync(path.join(ROOT, 'shorts', l, `${pad3(n)}.mp4`)))) {
     res.push(checkFile(path.join(ROOT, 'shorts', lang, `${pad3(n)}.mp4`), { w: 1080, h: 1920, maxDur: 14.5 }));
     res.push(checkFile(path.join(ROOT, 'shorts', lang, `${pad3(n)}-wide.mp4`), { w: 1920, h: 1080, maxDur: T.end + 0.2 }));
   }
