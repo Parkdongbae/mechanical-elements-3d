@@ -5,8 +5,8 @@ import { displayStand, rotArrow, shaftZ, tag } from '../kit';
 import { K78, aFrame78, handLever78, hookPawl78, sawWheel78, solve78, state78 } from '../kit/k077';
 
 const OX = -0.3;
-const OY = 0.96;
-const PIV_Y = 2.03;
+const OY = 1.1; // 받침대 윗면(y 0.18) 위로 이끝 최저점 0.24 — 0.96 이면 바퀴와 틀 발이 받침에 박혔다(사용자 지적)
+const PIV_Y = 2.17; // 바퀴와 같이 0.14 올림
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 
