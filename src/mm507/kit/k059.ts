@@ -64,7 +64,8 @@ export interface VerticalBelt {
 export function verticalBelt(circles: { c: V2; r: number; ccw: boolean }[], opts: BeltOpts = {}): VerticalBelt {
   const path2 = beltPathAround(circles);
   const pts = path2.map(([a, b]) => new THREE.Vector3(a, b, 0)); // 로컬 (z, y, 폭 방향)
-  const belt = new Belt(pts, { style: 'flat', ...opts });
+  // 폭은 로컬 Z(= 월드 X, 풀리 축) — 주지 않으면 Belt 기본이 경로 평면 안(반지름 방향)이라 띠가 모로 선다
+  const belt = new Belt(pts, { style: 'flat', widthDirs: pts.map(() => new THREE.Vector3(0, 0, 1)), ...opts });
   const group = new THREE.Group();
   group.rotation.y = -Math.PI / 2; // 로컬 x → 월드 z, 로컬 z → 월드 -x
   group.add(belt.group);

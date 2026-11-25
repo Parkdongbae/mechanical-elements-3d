@@ -23,6 +23,8 @@ import {
   type V2
 } from '../kit';
 import { carrierArm, guideRoller, ringFlange } from '../kit/k057';
+import { lathe, mesh, rodProfile } from '../../models/parts/geom';
+import { wood } from '../../models/materials';
 
 // ── 치수(설계표 057) ──
 const MOD = 0.035;
@@ -120,7 +122,13 @@ export default function buildM057(): MovementModel {
   const topFront = pulley(R_TOP, { width: 0.12, driver: true });
   topFront.name = 'topPulleyFront';
   topFront.position.z = ZR;
-  const crank = lever(CRANK_LEN, { handle: true });
+  // 크랭크 손잡이는 팔 끝에서 앞(+Z, 보는 사람 쪽)으로 선다 — 키트 lever 의 손잡이는 팔과 같은 면에 눕는 지렛대용이라 쓰지 않는다
+  const crank = lever(CRANK_LEN);
+  const gripGeo = lathe(rodProfile(0.022, 0, 0.16, 0.008, 0.01), 24);
+  gripGeo.rotateX(Math.PI / 2); // 축 +Y → +Z
+  const grip = mesh(gripGeo, wood());
+  grip.position.set(CRANK_LEN - 0.02, 0, 0.045);
+  crank.add(grip);
   crank.position.z = 0.42;
   crank.rotation.z = CRANK_A0;
   top.add(topBack, topFront, crank);
@@ -175,7 +183,9 @@ export default function buildM057(): MovementModel {
   g.add(pinion);
 
   // ── 벨트 두 줄 ──
-  const openBelt = new Belt(planar(openBeltPath(T, RB_TOP, C, RB_RING, 48), ZG), { style: 'flat', width: 0.11, thickness: BELT_T });
+  // 평벨트 폭은 풀리 축(Z) 방향 — Belt 기본(경로 평면 안, 반지름 방향)이면 띠가 모로 서서 넓은 면이 림에 닿지 않는다
+  const openPath = planar(openBeltPath(T, RB_TOP, C, RB_RING, 48), ZG);
+  const openBelt = new Belt(openPath, { style: 'flat', width: 0.11, thickness: BELT_T, widthDirs: openPath.map(() => new THREE.Vector3(0, 0, 1)) });
   openBelt.group.name = 'openBelt';
   const crossRope = new Belt(crossedPath3D());
   crossRope.group.name = 'crossRope';

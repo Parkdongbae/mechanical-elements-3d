@@ -178,7 +178,9 @@ export default function buildM058(): MovementModel {
   );
 
   // ── 평벨트: 드럼(위) – 걸린 풀리(아래), 벨트 평면 YZ, 폭 X ──
-  const belt = new Belt(planar(openBeltPath([0, Y_DRUM], R_BELT, [0, Y_MAIN], R_BELT), 0), { style: 'flat', width: 0.13, thickness: BELT_T });
+  // 평벨트 폭은 Belt 기본(경로 평면 안 = 반지름 방향)이 아니라 드럼 축 방향이어야 넓은 면이 원통에 닿는다 → 점마다 로컬 Z(= 월드 X)
+  const beltPath = planar(openBeltPath([0, Y_DRUM], R_BELT, [0, Y_MAIN], R_BELT), 0);
+  const belt = new Belt(beltPath, { style: 'flat', width: 0.13, thickness: BELT_T, widthDirs: beltPath.map(() => new THREE.Vector3(0, 0, 1)) });
   belt.group.name = 'belt';
   belt.group.rotation.y = Math.PI / 2; // 로컬 x → 월드 −z, 로컬 z(폭) → 월드 x
   belt.group.position.set(X_P1, 0, ZC);
@@ -186,10 +188,10 @@ export default function buildM058(): MovementModel {
 
   // ── 회전 방향 화살표 (+X 에서 본 기준: 드럼 반시계, 아래 축 시계) ──
   const a1 = rotArrow(0.5, true);
-  a1.rotation.y = Math.PI / 3;
+  a1.rotation.y = Math.PI / 2; // 드럼 축(X)에 수직인 면 — 정면에서 세로로 선다
   a1.position.set(0.85, Y_DRUM, ZC);
   const a2 = rotArrow(0.3, false);
-  a2.rotation.y = Math.PI / 3;
+  a2.rotation.y = Math.PI / 2;
   a2.position.set(-0.42, Y_LOW, ZC);
   g.add(a1, a2);
 

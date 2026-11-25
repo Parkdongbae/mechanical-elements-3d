@@ -98,7 +98,7 @@ export default function buildM067(): MovementModel {
   let pNow = 0;
   let phaseNow = '올림';
   function pose(): void {
-    worm.rotation.x = 24 * theta;
+    worm.rotation.x = -24 * theta; // 오른나사: +X 둘레 음의 회전이어야 위쪽 접점이 +X 로 가서 웜기어가 반시계로 돈다
     wheel.rotation.z = theta + Math.PI / 2 - Math.PI / 24;
     const c = (((theta + 2.1) % TAU) + TAU) % TAU;
     const { alpha, phase } = tumblerAngle(c);

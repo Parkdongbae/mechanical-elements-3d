@@ -77,6 +77,17 @@ If a part is missing from the kit, implement it ONLY in a new file src/mm507/kit
 VERIFY: node scripts/mm507/sheetlint.mjs $NUM  must show fail 0 ; npx tsc --noEmit must show no error in k$N.ts. Do not write the model file.
 $COMMON"
     ;;
+  x[0-9]*)
+    NUM=$((10#${TASK#x})); N=$(printf "%03d" "$NUM")
+    REQ="$(cat "shots/mm/log/x$NUM.txt")"
+    PROMPT="TASK: fix the model of '507 Mechanical Movements' number $NUM as the user asked.
+USER REQUEST and notes:
+$REQ
+READ docs/mm507-sheets/$N.md, src/mm507/models/m$N.ts and the kit files it imports. LOOK at the engraving public/mm507/fig/$N.png if you can view images.
+Edit src/mm507/models/m$N.ts (and only if needed the per-number kit src/mm507/kit/k$N.ts). Do not edit shared kit files.
+VERIFY: npx tsc --noEmit (no error in your files); node scripts/mm507/autocheck.mjs $NUM must end with fail 0; node scripts/shot.mjs \"preview.html?mm=$NUM&t=1\" shots/mm/$N-x1.png 6000 and t=1.6 as $N-x2.png must print saved without CONSOLE ERRORS. Add 2~3 lines at the end of docs/mm507-sheets/$N.md under '## 사용자 지적 후 수정 (GLM)'.
+$COMMON"
+    ;;
   f[0-9]*)
     NUM=$((10#${TASK#f})); N=$(printf "%03d" "$NUM")
     PROMPT="TASK: fix the model of '507 Mechanical Movements' number $NUM so the automatic check passes.

@@ -267,13 +267,14 @@ export function notchedRimWheel71(): THREE.Group {
   const k = K71;
   const g = new THREE.Group();
   const zb = -0.025 - k.depth;
-  // 앞판: 틈을 따낸 원판
+  // 앞판: 틈 자리만 따낸 원판(틈 밖은 테 바깥까지 덮어 테와 한 몸으로 이어 보이게 — 사용자 지적).
+  // 앞면은 테 앞면(0.025)보다 0.007 뒤(0.018)에 두어 같은 평면에서 깜박이지 않게 한다
   const face: V2[] = [];
   for (let a = k.notchLow[1]; a <= 360 + k.notchUp[0] + 1e-9; a += 1) face.push([k.rimOut * Math.cos(a * D2R), k.rimOut * Math.sin(a * D2R)]);
   for (let a = k.notchUp[0]; a <= k.notchUp[1] + 1e-9; a += 1) face.push([k.rimIn * Math.cos(a * D2R), k.rimIn * Math.sin(a * D2R)]);
   for (let a = k.notchUp[1]; a <= k.notchLow[0] + 1e-9; a += 1) face.push([k.rimOut * Math.cos(a * D2R), k.rimOut * Math.sin(a * D2R)]);
   for (let a = k.notchLow[0]; a <= k.notchLow[1] + 1e-9; a += 1) face.push([k.rimIn * Math.cos(a * D2R), k.rimIn * Math.sin(a * D2R)]);
-  g.add(slab(face, -0.025, 0.025, ghost(0xb8c8d8, 0.3), 0.008));
+  g.add(slab(face, -0.025, 0.018, ghost(0xb8c8d8, 0.3), 0.006));
   const pieces = rimPieces71();
   const guard = sectorOutline(k.rimIn, k.rimOut, pieces[0]![0], pieces[0]![1]);
   const main = sectorOutline(k.rimIn, k.rimOut, pieces[1]![0], pieces[1]![1]);

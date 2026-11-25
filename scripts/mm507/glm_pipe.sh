@@ -18,13 +18,15 @@ glm() { # glm <작업>
 one() {
   local n=$1 id; id=$(printf "%03d" "$n")
   local out="shots/mm/log/pipe-$id.txt" t0=$SECONDS
-  # 1) 설계표 — sheetlint fail 0 이면 그대로 쓴다
+  # 1) 설계표 — sheetlint fail 0 이면 그대로 쓴다 (SKIP_LINT=1 이면 설계표를 그대로 믿고 건너뜀: 사용자 결정으로 옛 양식을 쓰는 번호)
   local k
+  if [ -z "${SKIP_LINT:-}" ]; then
   for k in 1 2; do
     node scripts/mm507/sheetlint.mjs "$n" --quiet > /dev/null 2>&1 && break
     [ "$(glm "s$n")" = LIMIT ] && { echo "$id 한도 도달(설계표)" > "$out"; return; }
   done
   node scripts/mm507/sheetlint.mjs "$n" --quiet > /dev/null 2>&1 || { echo "$id 설계표 실패" > "$out"; return; }
+  fi
   # 2) 모델
   if [ ! -f "src/mm507/models/m$id.ts" ]; then
     [ "$(glm "$n")" = LIMIT ] && { echo "$id 한도 도달(모델)" > "$out"; return; }
@@ -41,7 +43,7 @@ one() {
   echo "$id ${v:-ERR} $((SECONDS - t0))s" > "$out"
 }
 export -f one glm
-export MODEL ALT
+export MODEL ALT SKIP_LINT
 
 seq "$A" "$B" | xargs -P "$P" -I{} bash -c 'one {}'
 cat shots/mm/log/pipe-*.txt 2>/dev/null | sort > shots/mm/log/pipe-summary.txt

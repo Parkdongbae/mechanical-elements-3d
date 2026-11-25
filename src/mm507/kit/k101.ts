@@ -500,7 +500,7 @@ export const K103 = {
   axisY: 1.55,
   coreR: 0.115,
   outerR: 0.21,
-  pitch: 0.3,
+  pitch: 0.15, // 사용자 지적: 나사산 폭이 넓다 → 0.3 의 절반(행정은 그대로 1.2 가 되게 바퀴 수 8)
   /** 나사부 x 범위(틀 로컬) */
   thread0: 0.1,
   thread1: 2.84,
@@ -520,7 +520,7 @@ export const K103 = {
   grooveHalf: 0.113,
   /** 판화 자세에서 슬라이드 가운데의 x(틀 로컬), 왕복 바퀴 수, 가장 왼쪽 자리 */
   poseX: 1.455,
-  turns: 4,
+  turns: 8,
   x0: 0.855
 } as const;
 

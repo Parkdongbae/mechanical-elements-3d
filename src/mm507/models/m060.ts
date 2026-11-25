@@ -168,7 +168,7 @@ export default function buildM060(): MovementModel {
   for (const y of [YU, YS]) {
     const a = rotArrow(0.4, true); // 0.5 면 비스듬한 호의 x 폭(±0.39)이 양옆 통·풀리 옆면(x −0.64·0.12)에 닿는다
     a.position.set(-0.25, y, ZC);
-    a.rotation.y = Math.PI / 2 - 0.9;
+    a.rotation.y = Math.PI / 2; // 축(X)에 수직인 면 — 정면에서 세로
     g.add(a);
   }
 

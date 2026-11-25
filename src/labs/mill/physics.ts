@@ -9,6 +9,9 @@ const BETA_REST = MILL.betaRest * D2R;
 const SUB_DT = 1 / 600;
 const EPS = 1e-12;
 const STOP_AFTER = 0.3; // s
+// 손으로 돌리기: 마우스를 빨리 끌면 굴통 각속도가 수십 rad/s 가 되어, 누름대를 벗어난 방아채가 그 속도를 이어받아 휙휙 돌았다(사용자 지적).
+// 방아채에 넘기는 굴통 빠르기는 물로 돌릴 때 낼 수 있는 정도(약 30회/분)까지만 쓴다.
+const OMEGA_BEAM_MAX = 3.2; // rad/s
 
 // 5-2 상수: 방아채 중력 토크 계수 G, 관성 모멘트 I
 const G_TORQ = G_ACC * (MILL.pestleMass * MILL.pestleArm + MILL.beamMass * 0.5);
@@ -298,8 +301,9 @@ export class MillPhysics {
         }
         s.theta += s.omega * h;
       }
+      const omegaBeam = hand ? Math.min(s.omega, OMEGA_BEAM_MAX) : s.omega;
       for (const i of [0, 1] as const) {
-        const st = this.stepBeam(i, h, s.omega, t0);
+        const st = this.stepBeam(i, h, omegaBeam, t0);
         if (st) {
           s.strikes[i] += 1;
           s.last[i] = st;
