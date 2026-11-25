@@ -143,7 +143,7 @@ async function uploadOne(n, lang, tok) {
   const log = fs.existsSync(LOG) ? JSON.parse(fs.readFileSync(LOG, 'utf8')) : [];
   const key = `${id}-${lang}${wide ? '-wide' : ''}`;
   const prev = log.find((x) => x.key === key);
-  if (prev && !flag('force')) { console.log(`  ${key}: 이미 올림 https://youtu.be/${prev.videoId} (다시 올리려면 --force)`); return; }
+  if (prev && !flag('force')) { console.log(`  ${key}: 이미 올림 ${prev.videoId ? 'https://youtu.be/' + prev.videoId : '(직접 올림)'} (다시 올리려면 --force)`); return; }
 
   const at = opt('at');
   const privacy = at ? 'private' : opt('privacy', 'private');
