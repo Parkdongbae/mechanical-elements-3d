@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 「507 기계 운동」 GLM 실행기 — 한 번에 1건만(요청 한도 때문에 병렬 금지).
-# 사용: bash scripts/mm507/glm_run.sh <kit | tools | gallery | 운동번호> [모델=zai-coding-plan/glm-5.3-flash]
+# 사용: bash scripts/mm507/glm_run.sh <kit | tools | gallery | 운동번호 | s·x·f번호 | sh·shfix·shrev번호(쇼츠)> [모델=zai-coding-plan/glm-5.3-flash]
 # 로그: shots/mm/log/<작업>.log
 set -u
 cd "$(dirname "$0")/../.." || exit 1
@@ -16,6 +16,11 @@ COMMON="RULES (always):
 - Touch only the files this task names. If something outside looks wrong, mention it in your summary instead of editing it.
 - Before finishing run 'npx tsc --noEmit' and fix every error in the files you wrote.
 - End with a short Korean summary: what you wrote, the tsc result, what you could not do."
+
+COMMON_SH="RULES (always):
+- Do not run git. Do not start any server. Do not render videos (another step does that).
+- Touch only the files this task names.
+- End with a short Korean summary: what you wrote or found, the check result, what you could not do."
 
 case "$TASK" in
   kit)
@@ -95,6 +100,37 @@ The automatic checker result is in shots/mm/auto/$N.json (fields fail, warn, che
 Fix every fail (and real warns: parts sinking into each other, floating parts, labels covering parts) by editing src/mm507/models/m$N.ts and, only if the cause is there, src/mm507/kit/k$N.ts. Keep the mechanism, the ratios and the engraving layout. Do not edit shared kit files.
 VERIFY: npx tsc --noEmit (no error in your files); node scripts/mm507/autocheck.mjs $NUM  must end with fail 0. Add 2~3 lines at the end of docs/mm507-sheets/$N.md under '## 자동 검사 후 수정 (GLM)'.
 $COMMON"
+    ;;
+  sh[0-9]*)
+    NUM=$((10#${TASK#sh})); N=$(printf "%03d" "$NUM")
+    PROMPT="TASK: write the YouTube Shorts narration scripts of '507 Mechanical Movements' number $NUM in SIX languages (ko, en, ja, zh, hi, ar).
+READ:
+ 1. shorts/scripts/ko.json, en.json, ja.json, zh.json, hi.json, ar.json — entries \"1\" to \"5\" are approved examples. Copy their style exactly.
+ 2. The source facts: public/mm507/catalog.json entry with \"n\": $NUM (title, easy = Korean easy explanation, easyEn, ko, en), and src/mm507/i18n/ja.json, zh.json, hi.json, ar.json → titles[\"$NUM\"] and easy[\"$NUM\"].
+WRITE: in each of the six files add the key \"$NUM\" = {\"hook\": ..., \"body\": ..., \"cta\": ...}. Keep every other key unchanged and keep valid JSON (2-space indent).
+ - hook: one short question that makes people curious about this mechanism.
+ - body: one or two sentences with the working principle, only facts that are in the source. Never use engraving letters (A, B, C…) — they are not visible in the video.
+ - cta: EXACTLY the same string as entry \"1\" of that file.
+ - Length of hook+body+cta: ko 45~60 characters (no spaces), ja 45~58 characters, zh 40~58 characters, en 24~32 words, hi 18~25 words, ar 14~20 words. Each language is written natively, not word-for-word from Korean.
+VERIFY: node scripts/shorts/scriptlint.mjs $NUM  — every line must start with OK. Fix and re-run until it does.
+$COMMON_SH"
+    ;;
+  shfix[0-9]*)
+    NUM=$((10#${TASK#shfix})); N=$(printf "%03d" "$NUM")
+    PROMPT="TASK: some Shorts narrations of '507 Mechanical Movements' number $NUM are too long for the video time.
+For each language L in ko en ja zh hi ar, read shorts/_work/L/$N/dub/dub.json . Where \"tooLong\" is true, shorten that language's entry \"$NUM\" in shorts/scripts/L.json: make hook and body about 15% shorter, keep the meaning and the facts, keep cta unchanged.
+Then run  node scripts/shorts/tts.mjs $NUM L  for that language and read dub.json again. Repeat (at most 3 times per language) until tooLong is false.
+VERIFY: node scripts/shorts/scriptlint.mjs $NUM  — every line must start with OK (if shortening breaks the minimum length, rewrite instead of cutting).
+$COMMON_SH"
+    ;;
+  shrev[0-9]*)
+    NUM=$((10#${TASK#shrev})); N=$(printf "%03d" "$NUM")
+    PROMPT="TASK: review the finished Shorts of '507 Mechanical Movements' number $NUM in six languages before upload.
+READ: shorts/ko/$N.json, shorts/en/$N.json, shorts/ja/$N.json, shorts/zh/$N.json, shorts/hi/$N.json, shorts/ar/$N.json (title, description, tags, playlist, script) and public/mm507/catalog.json entry \"n\": $NUM .
+RUN: node scripts/shorts/check.mjs $NUM  (every line must start with OK).
+CHECK for every language: the title and description are in that language and name this mechanism correctly; the script says the same facts as the source and nothing extra; no Korean text inside non-Korean files; hashtags and the app link https://mechanical-elements-3d.vercel.app/#/mm/$NUM are present.
+WRITE shorts/_work/review-$N.md in Korean: one line per language — 'OK' or the exact problem. Do NOT edit the video files or the json files; only report.
+$COMMON_SH"
     ;;
   *)
     N=$(printf "%03d" "$TASK")
