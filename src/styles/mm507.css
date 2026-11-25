@@ -957,3 +957,22 @@
     margin-left: auto;
   }
 }
+
+/* 조작 막대 접기 버튼 — 넓은 화면에서는 숨김. 폰에서는 접힌 채 시작해 펼치기 버튼만 보인다(사용자 요청 2026-11-25) */
+.mm-ctl-fold {
+  display: none;
+}
+
+@media (max-width: 819px) {
+  .mm-ctl-fold {
+    display: inline-flex;
+  }
+
+  .mm-ctl[data-open='false'] {
+    right: auto;
+  }
+
+  .mm-ctl[data-open='false'] > :not(.mm-ctl-fold) {
+    display: none;
+  }
+}
