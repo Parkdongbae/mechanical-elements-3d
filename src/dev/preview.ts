@@ -9,10 +9,13 @@
 // 공통 옵션: &theme=dark  &q=low  &cam=x,y,z,tx,ty,tz  &t=3 (시뮬레이션을 t초 진행 후 정지)  &speed=배율(mm 전용, 기본 1)
 //           &labels=0|1 (이름표 끔/켬 — 실험은 설정을 덮어쓰고, mm 은 화살표는 두고 이름표만)
 //           &mmsrc=/src/경로.ts (mm 전용: 레지스트리 대신 그 모듈을 불러옴 — 옛 판·임시 모델 검사)
+//           &lang=ko|en (mm 전용: en 이면 이름표 글자를 영어 사전으로 — Gallery 와 같은 retextTags)
+//           &arrows=0|1 (mm 전용: 회전·움직임 화살표 메시 끔/켬 — Gallery 와 같은 setArrowsVisible)
+//           &leaders=1 (mm 전용: 이름표 지시선 TagLeaders — 쇼츠 녹화용. labels=0 이면 숨김)
 // mm 전용(지시서 20 · 3-1): &t=T 는 실시간 프레임을 기다리지 않고 update(0.02, speed) 를 T 까지 한꺼번에 돌린다
 //           (바로 점프, 끝나면 window.__mmReady = true). &live=1 이면 예전처럼 실제 프레임으로 T 까지 쌓는다.
 //           window.__mm = { seek(t, speed=1), cam(x,y,z,tx,ty,tz), labels(on), theme(name), render(),
-//                           model, group, time, errors } — 한 페이지에서 시각·시점만 바꿔 여러 장 찍기·수치 검사용
+//                           emph(text|null, k), tags(), model, group, time, errors } — 한 페이지에서 시각·시점만 바꿔 여러 장 찍기·수치 검사용
 
 import * as THREE from 'three';
 import { SceneManager, type CameraView } from '../scene/SceneSetup';
@@ -49,6 +52,9 @@ import { ThumbnailFactory } from '../models/thumbnails';
 import { loadSettings } from '../state/settings';
 import { loadModel } from '../mm507/registry';
 import { countTags, setTagsVisible } from '../mm507/kit';
+import { retextTags, setArrowsVisible } from '../mm507/kit/misc';
+import { TagLeaders } from '../mm507/leaders';
+import { loadEnDict } from '../mm507/lang';
 import buildKitDemo from '../mm507/kitDemo';
 import type { MovementModel } from '../mm507/types';
 import '../styles/tokens.css';
@@ -91,6 +97,8 @@ let sim: MachineSim | null = null;
 let view: CameraView | null = null;
 let mmModel: MovementModel | null = null;
 let mmSpeed = 1;
+/** 이름표 지시선(&leaders=1) — 모델이 처음 자세를 잡은 뒤 만든다 */
+let mmLeaders: TagLeaders | null = null;
 /** mm 바로 점프 모드(&t 가 있고 &live=1 이 아님) — 프레임 루프가 모델을 진행시키지 않는다 */
 const mmJump = q.get('t') !== null && q.get('live') !== '1';
 /** 모델에 지금까지 넘긴 Σ speed·dt (절대 자세 규약: 자세는 이 누적 위상만의 함수) */
@@ -203,6 +211,8 @@ if (modeArg && MODE_CTORS[modeArg]) {
       sceneMgr.setLabelsVisible(true);
       setTagsVisible(m.group, labelsArg !== '0');
       if (arg !== 'kit' && countTags(m.group) === 0) console.warn(`[mm507] ${arg}번: 이름표 없음`);
+      const arrowsArg = q.get('arrows');
+      if (arrowsArg !== null) setArrowsVisible(m.group, arrowsArg !== '0');
       view = m.view ?? { pos: [0, 2.1, 6.2], target: [0, 1.75, 0] };
       if (info) info.textContent = arg === 'kit' ? '507 키트 부품 일람' : `507 운동 ${arg}번`;
       if (!q.get('cam') && view) sceneMgr.flyTo(view, true);
@@ -218,9 +228,19 @@ if (modeArg && MODE_CTORS[modeArg]) {
         }
         m.group.updateMatrixWorld(true);
       }
-      sceneMgr.update(0);
-      sceneMgr.render();
-      w.__mmReady = true;
+      // 영어 이름표는 사전을 받은 뒤에 바꾼다 → 지시선·준비 신호는 그 뒤(이름표 폭이 바뀌므로)
+      const langReady: Promise<unknown> =
+        q.get('lang') === 'en' ? loadEnDict().then((d) => retextTags(m.group, d.tags)) : Promise.resolve();
+      return langReady.then(() => {
+        m.group.updateMatrixWorld(true);
+        if (q.get('leaders') === '1') {
+          mmLeaders = new TagLeaders(m.group);
+          mmLeaders.setVisible(labelsArg !== '0');
+        }
+        sceneMgr.update(0);
+        sceneMgr.render();
+        w.__mmReady = true;
+      });
     })
     .catch((e: unknown) => {
       console.error('[mm507]', e);
@@ -285,8 +305,36 @@ w.__mm = {
   },
   render(): void {
     mmModel?.group.updateMatrixWorld(true);
+    mmLeaders?.update();
     sceneMgr.update(0);
     sceneMgr.render();
+  },
+  /** 이름표 하나를 k 배로 키운다(쇼츠 클로즈업 강조). text=null 이면 모두 원래 크기 */
+  emph(text: string | null, k = 1.6): void {
+    mmModel?.group.traverse((o) => {
+      if (o.userData.mmTag !== true || !(o instanceof THREE.Sprite)) return;
+      const base = (o.userData.mmBaseScale as [number, number] | undefined) ?? [o.scale.x, o.scale.y];
+      o.userData.mmBaseScale = base;
+      const shown = String(o.userData.mmTagShown ?? o.userData.mmTagText ?? '');
+      const orig = String(o.userData.mmTagText ?? '');
+      const f = text !== null && (shown === text || orig === text) ? k : 1;
+      o.scale.set(base[0] * f, base[1] * f, 1);
+    });
+  },
+  /** 보이는 이름표 목록(원문·표시 글자·월드 위치) — 쇼츠 카메라 고르기용 */
+  tags(): { text: string; shown: string; pos: [number, number, number] }[] {
+    const out: { text: string; shown: string; pos: [number, number, number] }[] = [];
+    const v = new THREE.Vector3();
+    mmModel?.group.traverse((o) => {
+      if (o.userData.mmTag !== true) return;
+      o.getWorldPosition(v);
+      out.push({ text: String(o.userData.mmTagText ?? ''), shown: String(o.userData.mmTagShown ?? o.userData.mmTagText ?? ''), pos: [v.x, v.y, v.z] });
+    });
+    return out;
+  },
+  /** 장면 카메라(쇼츠 카메라 계획이 화면 투영·화각 계산에 쓴다) */
+  get camera(): THREE.PerspectiveCamera {
+    return sceneMgr.camera;
   },
   get model(): MovementModel | null {
     return mmModel;
@@ -320,6 +368,7 @@ function tick(): void {
     mmModel.update(dt, mmSpeed);
     mmPhase += dt * mmSpeed;
   }
+  mmLeaders?.update();
   sceneMgr.render();
   requestAnimationFrame(tick);
 }
