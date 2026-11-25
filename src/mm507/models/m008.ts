@@ -1,7 +1,7 @@
 // 008 단차(계단) 풀리 변속 — 단차 풀리 2개가 위아래 서로 반대 장착, 벨트가 단을 옮겨 다니며 속도 변환 (판화 8번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, PILLOW_BOSS_Y, STAGE, displayStand, pillow, rod, steppedPulley, tag } from '../kit';
+import { Belt, PILLOW_BOSS_Y, STAGE, displayStand, leaderTo, pillow, rod, steppedPulley, tag } from '../kit';
 import { castIron } from '../../models/materials';
 
 const RU = [0.50, 0.38, 0.26]; // 위(구동) 풀리 단 반지름 — 단 0·1·2 (큰 단이 왼쪽)
@@ -84,14 +84,16 @@ function beltPath(x: number, ru: number, rl: number): THREE.Vector3[] {
 const WIDTH_X = (): THREE.Vector3[] => Array.from({ length: 50 }, () => v3(1, 0, 0));
 
 /** X 방향 축 1개: 막대 + 양끝 필로(뒤판에서 나온 브래킷 상자 위) */
-function shaftLine(g: THREE.Group, y: number): void {
-  g.add(rod(v3(-SX, y, Z0), v3(SX, y, Z0), 0.04));
+function shaftLine(g: THREE.Group, y: number): THREE.Object3D {
+  const shaft = rod(v3(-SX, y, Z0), v3(SX, y, Z0), 0.04);
+  g.add(shaft);
   for (const sx of [-1, 1]) {
     g.add(pillow(sx * SX, y - PILLOW_BOSS_Y, Z0, 'x'));
     const br = castIronBox();
     br.position.set(sx * SX, y - PILLOW_BOSS_Y - 0.08, (Z0 - 0.11 + STAGE.backZ) / 2);
     g.add(br);
   }
+  return shaft;
 }
 
 /** 뒤판에서 나온 브래킷 상자 */
@@ -112,8 +114,8 @@ export default function buildM008(): MovementModel {
   let ratio = RU[0]! / RL[0]!; // notes: 속도비(종동/구동)
 
   g.add(displayStand());
-  shaftLine(g, YT);
-  shaftLine(g, YB);
+  const shaftT = shaftLine(g, YT);
+  const shaftB = shaftLine(g, YB);
 
   // 단차 풀리: 회전축이 X — 위는 큰 단이 왼쪽(rotation.y=π/2), 아래는 반대(−π/2)
   const pTop = new THREE.Group();
@@ -132,8 +134,9 @@ export default function buildM008(): MovementModel {
   const belt = new Belt(beltPath(XS[0]!, RU[0]!, RL[0]!), { width: 0.1, style: 'flat', widthDirs: WIDTH_X() });
   g.add(belt.group);
 
-  g.add(tag('구동축', v3(-1.3, YT + 0.3, Z0 + 0.1)));
-  g.add(tag('종동축', v3(1.3, YB - 0.3, Z0 + 0.1)));
+  // 지시선이 축받이가 아니라 축 막대를 가리키게(사용자 지적)
+  g.add(leaderTo(tag('구동축', v3(-1.3, YT + 0.3, Z0 + 0.1)), shaftT));
+  g.add(leaderTo(tag('종동축', v3(1.3, YB - 0.3, Z0 + 0.1)), shaftB));
 
   return {
     group: g,
