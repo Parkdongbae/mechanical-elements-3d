@@ -1,4 +1,4 @@
-// 196 흔들리는 팔의 기어 — 고정 축 피니언 B 가 돌면, 팔 끝의 물결 모양 바퀴 A 가 B 둘레를 불규칙하게 오르내리며 팔이 흔들린다 (판화 196번)
+// 196 흔들리는 팔의 기어 — 고정 축 피니언 B 가 돌면, 팔 끝의 길쭉한 땅콩꼴 바퀴 A 가 B 둘레를 굴러 오르내리며 팔이 불규칙하게 흔들린다 (판화 196번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { brass, castIron, darkSteel, steel } from '../../models/materials';
@@ -8,6 +8,7 @@ import { K196, RP196, swingSolver196, wavyPitch196 } from '../kit/k196';
 
 const DEG = 180 / Math.PI;
 const PIN_W = OMEGA * 1.4; // 피니언 B 각속도
+const THETA0 = 10.66; // t=1 에 판화 자세(팔 수평, 긴 덩이가 오른쪽, B 가 A 바로 아래)
 const m = (K196.pitch) / Math.PI;
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 const at = (geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number): THREE.Mesh => {
@@ -23,7 +24,7 @@ const cylZ = (r: number, z0: number, z1: number): THREE.BufferGeometry => {
 
 export default function buildM196(): MovementModel {
   const g = new THREE.Group();
-  let theta = 0;
+  let theta = THETA0;
   let cur = { alpha: 0, beta: 0, dist: 0 };
   g.add(displayStand());
   const [px, py] = K196.P;
@@ -45,8 +46,10 @@ export default function buildM196(): MovementModel {
   g.add(at(cylZ(0.14, 0.0, 0.17), steel(), px, py, 0));
   g.add(at(cylZ(0.05, 0.0, 0.27), darkSteel(), px, py, 0)); // 팔 축(받침을 꿰고 팔 눈을 지나 머리가 나온다)
 
-  // 바퀴 A: 물결 모양 피치 곡선 + 이(24개). 축이 팔 끝
+  // 바퀴 A: 두 덩이가 붙은 땅콩꼴 피치 곡선 + 이(30개). 축(팔 끝)은 왼쪽 덩이 중심
   const wheel = ellipticalGear(pitch, K196.na, { width: 0.1 });
+  const ring = wheel.children[1]; // 안쪽 어두운 홈선은 판화에 없으니 뺀다
+  if (ring) wheel.remove(ring);
   wheel.name = 'wheelA';
   g.add(wheel);
 
@@ -79,10 +82,10 @@ export default function buildM196(): MovementModel {
   g.add(arrow);
 
   g.add(
-    leaderTo(tag('피니언 B(고정 축)', v(-1.35, 0.95, 0.3)), pinion),
+    leaderTo(tag('피니언 B(고정 축)', v(-1.6, 0.85, 0.3)), pinion),
     leaderTo(tag('바퀴 A', v(-1.7, 2.9, 0.3)), wheel),
     leaderTo(tag('흔들리는 팔', v(0.2, 2.75, 0.35)), arm),
-    leaderTo(tag('고정 받침', v(1.65, 1.4, 0.3)), arm)
+    leaderTo(tag('고정 받침', v(1.8, 1.75, 0.3)), arm)
   );
 
   const place = (): void => {
@@ -100,7 +103,7 @@ export default function buildM196(): MovementModel {
     group: g,
     view: { pos: [0.1, 1.95, 6.4], target: [0.1, 1.75, 0] },
     notes: () => [
-      { label: '피니언 B', value: `${(theta / (2 * Math.PI)).toFixed(1)} 바퀴 (한 방향)` },
+      { label: '피니언 B', value: `${((theta - THETA0) / (2 * Math.PI)).toFixed(1)} 바퀴 (한 방향)` },
       { label: '팔 각', value: `${(cur.alpha * DEG).toFixed(1)}° (${(solver.alphaMin * DEG).toFixed(0)}° ~ ${(solver.alphaMax * DEG).toFixed(0)}° 사이를 불규칙하게)` },
       { label: 'A~B 거리', value: `${cur.dist.toFixed(2)}` },
       { label: '한 주기', value: `B ${(solver.period / (2 * Math.PI)).toFixed(1)} 바퀴 = A 1바퀴` }
