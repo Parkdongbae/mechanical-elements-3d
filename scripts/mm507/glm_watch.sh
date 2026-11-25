@@ -6,7 +6,7 @@
 #   2) 작업이 시작된 지(ps 의 시작 시각) 최대분(30분)이 넘음 → 헤맴
 #   3) 로그 끝부분이 요청 한도 재시도(attempt 6 이상)만 되풀이 → 한도에 막힘
 #  끊으면 opencode 가 죽고 glm_run 이 끝나므로, glm_pipe 는 그 번호를 실패로 적고 다음 번호로 넘어간다.
-#  기록: shots/mm/log/watch.txt . 돌고 있는 glm_pipe·glm_run 이 없으면(두 번 연속) 스스로 끝난다.
+#  기록: shots/mm/log/watch.txt . 돌고 있는 glm_pipe·glm_shorts·glm_run 이 없으면(두 번 연속) 스스로 끝난다.
 set -u
 cd "$(dirname "$0")/../.." || exit 1
 GAP="${1:-300}"
@@ -49,7 +49,7 @@ check() {
       note "진행 $job: ${age}분, 마지막 출력 $(( (now - mt) ))초 전"
     fi
   done < <(ps -ef | awk '/glm_run\.sh/ && !/awk/ {for (i = 1; i <= NF; i++) if ($i ~ /glm_run\.sh$/) {print $2, $(i + 1), $5; break}}')
-  if [ "$n" -eq 0 ] && ! ps -ef | grep -q "[g]lm_pipe.sh"; then idle=$((idle + 1)); else idle=0; fi
+  if [ "$n" -eq 0 ] && ! ps -ef | grep -qE "[g]lm_pipe.sh|[g]lm_shorts.sh"; then idle=$((idle + 1)); else idle=0; fi
 }
 
 note "감시 시작 — ${GAP}초마다, 최대 ${MAXMIN}분"
