@@ -1,6 +1,6 @@
 // 111 마이크로미터 나사 — 굵은 나사와 가는 나사가 한 몸. 고정 너트 안에서 돌며 오르내리고,
-// 돌지 못하게 잡힌 이동 너트는 피치의 차(0.2 − 0.1 = 0.1)만큼만 따라 오른다 (판화 111번)
-// 두 나사는 같은 방향(둘 다 오른나사, 안 가) — 설계표 결정 사항.
+// 돌지 못하게 잡힌 이동 너트는 피치의 차(0.2 − 0.1 = 0.1)만큼만 따라 오른다 (판화 111번, 원문 설명대로).
+// 나사산 모양은 원문·판화대로 방향이 반대(굵은 나사 오른나사, 가는 나사 왼나사) — 사용자 결정. 움직임은 설명(차)을 따른다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { displayStand, rotArrow, tag } from '../kit';
@@ -26,7 +26,7 @@ export default function buildM111(): MovementModel {
   g.add(nutFrame);
 
   // 나사 한 몸(머리 + 굵은 나사 + 가는 나사 + 손잡이 막대) — 고정 너트 안에서 돌며 오르내린다
-  const screw = diffScrew111(1); // 안 가: 가는 나사도 오른나사
+  const screw = diffScrew111(-1); // 안 나: 가는 나사는 왼나사(판화·원문대로 반대 방향)
   screw.name = 'screw';
   screw.position.set(0, Y0, ZC);
   g.add(screw);
@@ -75,6 +75,7 @@ export default function buildM111(): MovementModel {
         { label: '돌린 양', value: `${s}${n.toFixed(2)} 바퀴(±1바퀴 사이를 오감)` },
         { label: '나사 이동', value: `굵은 피치 0.2 × ${n.toFixed(2)} = ${s}${(K111.p1 * n).toFixed(3)}` },
         { label: '너트 이동', value: `(0.2 − 0.1) × ${n.toFixed(2)} = ${s}${((K111.p1 - K111.p2) * n).toFixed(3)}` },
+        { label: '나사 방향', value: '굵은 나사 오른나사 · 가는 나사 왼나사(반대)' },
         { label: '견줌', value: '너트는 나사의 1/2 만 간다 → 그만큼 정밀하고 미는 힘은 2배' }
       ];
     },
