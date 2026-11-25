@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { BASE, H, REC_FRAMES, W, ensureDir, pad3, workDir } from './lib.mjs';
+import { parseLangs } from './langs.mjs';
 import { planCamera } from './camera.mjs';
 
 /** 효과음 동기화에 쓰는 부품 종류 */
@@ -136,7 +137,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(im
     await browser.close();
     process.exit(0);
   }
-  const langs = which === 'both' ? ['ko', 'en'] : [which];
+  const langs = parseLangs(which);
   for (const [k, lang] of langs.entries()) await record(n, lang, { browser, forceCam: forceCam && k === 0, motion: k === 0 });
   await browser.close();
   console.log(`[record] 끝 — shorts/_work/<lang>/${pad3(n)}/frames`);

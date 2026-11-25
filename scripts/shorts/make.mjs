@@ -1,5 +1,6 @@
 // 쇼츠 한 번에 만들기(지시서 21) — 번호마다 녹화 → 더빙·자막 → 카드 → 효과음 → 합성 → 검사.
-//   node scripts/shorts/make.mjs <번호들: 1 | 1-10 | 1,3,5> [--skip-record] [--force-cam]
+//   node scripts/shorts/make.mjs <번호들: 1 | 1-10 | 1,3,5> [--langs=both|all|new|ko,ja,...] [--skip-record] [--force-cam]
+//   ko 가 목록에 없으면 카메라 경로·움직임은 이미 만든 것(shorts/_work/cam)을 쓴다.
 // 전제: 검사 서버 http://localhost:5274 (npm run dev:check), shorts/scripts/<lang>.json 에 그 번호 대본.
 // 인트로 바탕(assets/shorts/intro-*.png)이 없으면 cards.mjs base 를 먼저 돌린다.
 import fs from 'node:fs';
@@ -12,6 +13,7 @@ import { buildBase, buildCards } from './cards.mjs';
 import { buildTrack } from './sfx.mjs';
 import { compose } from './compose.mjs';
 import { checkFile } from './check.mjs';
+import { parseLangs } from './langs.mjs';
 
 const arg = process.argv[2] ?? '';
 const nums = [];
@@ -25,14 +27,16 @@ if (!nums.length) {
   process.exit(2);
 }
 const skipRec = process.argv.includes('--skip-record');
+const LANGS = parseLangs(process.argv.find((a) => a.startsWith('--langs='))?.slice(8));
 const browser = await launch();
 const cardBrowser = await chromium.launch({ channel: 'chrome', headless: true });
-if (!fs.existsSync(path.join(ROOT, 'assets', 'shorts', 'intro-ko.png'))) await buildBase(cardBrowser);
+if (LANGS.some((l) => !fs.existsSync(path.join(ROOT, 'assets', 'shorts', `intro-${l}.png`)))) await buildBase(cardBrowser);
 for (const n of nums) {
   const t0 = Date.now();
-  if (!skipRec) for (const [k, lang] of ['ko', 'en'].entries()) await record(n, lang, { browser, forceCam: process.argv.includes('--force-cam') && k === 0, motion: k === 0 });
+  const camReady = fs.existsSync(path.join(ROOT, 'shorts', '_work', 'cam', `${pad3(n)}.json`));
+  if (!skipRec) for (const [k, lang] of LANGS.entries()) await record(n, lang, { browser, forceCam: process.argv.includes('--force-cam') && k === 0, motion: k === 0 && (LANGS.includes('ko') || !camReady) });
   const plan = JSON.parse(fs.readFileSync(path.join(ROOT, 'shorts', '_work', 'cam', `${pad3(n)}.json`), 'utf8'));
-  for (const lang of ['ko', 'en']) {
+  for (const lang of LANGS) {
     tts(n, lang);
     await buildCards(cardBrowser, n, lang, plan);
   }
@@ -42,8 +46,8 @@ for (const n of nums) {
     await browser.close();
     await cardBrowser.close();
   }
-  for (const lang of ['ko', 'en']) compose(n, lang);
-  for (const lang of ['ko', 'en'])
+  for (const lang of LANGS) compose(n, lang);
+  for (const lang of LANGS)
     for (const [suf, want] of [['', { w: 1080, h: 1920, maxDur: 14.5 }], ['-wide', { w: 1920, h: 1080, maxDur: 14.6 }]]) {
       const r = checkFile(path.join(ROOT, 'shorts', lang, `${pad3(n)}${suf}.mp4`), want);
       console.log(`${r.ok ? 'OK ' : 'ERR'} ${r.file} ${r.dur}초 ${r.issues.join(' / ')}`);

@@ -6,8 +6,9 @@
 // 결과: shorts/<lang>/NNN.mp4, NNN-wide.mp4, NNN.json
 import fs from 'node:fs';
 import path from 'node:path';
-import { FPS, H, ROOT, T, W, WH, WW, catalogEntry, ensureDir, ffmpeg, pad3, probe, rel, workDir } from './lib.mjs';
+import { FPS, H, ROOT, T, W, WH, WW, ensureDir, ffmpeg, pad3, probe, rel, workDir } from './lib.mjs';
 import { buildTrack } from './sfx.mjs';
+import { fontsDir, metaText, parseLangs } from './langs.mjs';
 
 const MUSIC_DIR = path.join(ROOT, 'assets', 'shorts', 'music');
 const APP = 'https://mechanical-elements-3d.vercel.app/#/mm/';
@@ -131,7 +132,7 @@ function composeVertical(n, lang, mix, outFile) {
     `[s3][chip]overlay=x=0:y=${H / 2}:enable='between(t,${T.introEnd},${T.splitEnd + 0.2})'[s4]`,
     `[5]format=rgba,fade=t=in:st=${T.ghostEnd}:d=0.4:alpha=1,fade=t=out:st=${T.pullEnd - 0.4}:d=0.4:alpha=1[bd]`,
     `[s4][bd]overlay=0:0:enable='between(t,${T.ghostEnd},${T.pullEnd})'[s5]`,
-    `[s5]ass=${rel(path.join(dir, 'dub', 'sub.ass'))}:fontsdir=assets/shorts/fonts[s6]`,
+    `[s5]ass=${rel(path.join(dir, 'dub', 'sub.ass'))}:fontsdir=${fontsDir(lang)}[s6]`,
     `[6]format=rgba,fade=t=in:st=${T.pullEnd}:d=0.35:alpha=1[ot]`,
     `[s6][ot]overlay=0:0:enable='gte(t,${T.pullEnd})'[s7]`,
     ...outroButtons(cards, W / 2, Math.round(H * 0.5 + 290), [7, 8, 9, 10, 11], 's7'),
@@ -167,7 +168,7 @@ function composeWide(n, lang, mix, outFile) {
     `[s1][gh]overlay=x=${(WW - WH) / 2}:y=0:enable='between(t,${T.rec0},${T.ghostEnd})'[s2]`,
     `[s2][2]overlay=0:0[s3]`,
     `[s3][3]overlay=${WW - 420}:0[s4]`,
-    `[s4]ass=${rel(path.join(dir, 'dub', 'sub-wide.ass'))}:fontsdir=assets/shorts/fonts[s5]`,
+    `[s4]ass=${rel(path.join(dir, 'dub', 'sub-wide.ass'))}:fontsdir=${fontsDir(lang)}[s5]`,
     `[5]format=rgba,fade=t=in:st=${T.pullEnd}:d=0.35:alpha=1[ot]`,
     `[s5][ot]overlay=${(WW - WH) / 2}:0:enable='gte(t,${T.pullEnd})'[s6]`,
     ...outroButtons(cards, WW / 2, Math.round(WH * 0.5 + 250), [6, 7, 8, 9, 10], 's6'),
@@ -177,39 +178,21 @@ function composeWide(n, lang, mix, outFile) {
   ffmpeg([...inputs, '-filter_complex', fc, '-map', '[vout]', '-map', '11:a', ...ENC, rel(outFile)]);
 }
 
-/** 업로드 메타데이터(PRD §9) */
+/** 업로드 메타데이터(PRD §9) — 언어별 문구는 langs.mjs 의 metaText */
 export function metadata(n, lang, music, extra = {}) {
-  const { entry } = catalogEntry(n);
   const sc = JSON.parse(fs.readFileSync(path.join(ROOT, 'shorts', 'scripts', `${lang}.json`), 'utf8'))[String(n)] ?? {};
   const url = `${APP}${n}`;
   const musicLine = music ? `Music: ${music.title}${music.artist ? ` - ${music.artist}` : ''} (YouTube Audio Library)` : null;
-  if (lang === 'ko') {
-    const title = `[한] [507 기계 운동 #${n}] ${entry?.title ?? ''} #shorts`;
-    return {
-      n,
-      lang,
-      title,
-      description: [entry?.easy ?? '', '', `▶ 앱에서 직접 돌려 보기: ${url}`, '', `원서: Henry T. Brown, 『Five Hundred and Seven Mechanical Movements』(1868), ${n}번`, '', '#507기계운동 #기계 #기구학 #shorts', ...(musicLine ? ['', musicLine] : [])].join('\n'),
-      tags: ['507 기계 운동', '기계', '기구학', '기계요소', '과학', entry?.title, 'mechanism', 'engineering', '507movements', 'shorts'].filter(Boolean),
-      categoryId: '27',
-      defaultLanguage: 'ko',
-      playlist: '507 기계 운동 (한국어)',
-      script: sc,
-      url,
-      music: music ? { title: music.title, artist: music.artist } : null,
-      ...extra
-    };
-  }
-  const title = `[EN] [507 Mechanical Movements #${n}] ${entry?.titleEn ?? ''} #shorts`;
+  const m = metaText(n, lang, url);
   return {
     n,
     lang,
-    title,
-    description: [entry?.easyEn ?? '', '', `▶ Spin it yourself in the app: ${url}`, '', `From Henry T. Brown, "Five Hundred and Seven Mechanical Movements" (1868), No. ${n}`, '', '#507movements #mechanism #engineering #shorts', ...(musicLine ? ['', musicLine] : [])].join('\n'),
-    tags: ['507 mechanical movements', 'mechanism', 'engineering', 'kinematics', 'machine design', entry?.titleEn, 'how it works', '507movements', 'shorts'].filter(Boolean),
+    title: m.title,
+    description: [m.easy, '', m.app, '', m.src, '', m.hash, ...(musicLine ? ['', musicLine] : [])].join('\n'),
+    tags: m.tags.filter(Boolean),
     categoryId: '27',
-    defaultLanguage: 'en',
-    playlist: '507 Mechanical Movements (English)',
+    defaultLanguage: lang,
+    playlist: m.playlist,
     script: sc,
     url,
     music: music ? { title: music.title, artist: music.artist } : null,
@@ -247,5 +230,5 @@ if (process.argv[1] && path.basename(process.argv[1]) === 'compose.mjs') {
   const n = Number(process.argv[2]);
   const which = process.argv[3] && !process.argv[3].startsWith('--') ? process.argv[3] : 'both';
   const opt = { vertical: !process.argv.includes('--wide-only'), wide: !process.argv.includes('--vertical-only') };
-  for (const lang of which === 'both' ? ['ko', 'en'] : [which]) compose(n, lang, opt);
+  for (const lang of parseLangs(which)) compose(n, lang, opt);
 }
