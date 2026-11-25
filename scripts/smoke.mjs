@@ -35,6 +35,7 @@ for (const r of ['enc', 'quiz', 'lab/bike', 'lab/car', 'lab/power', 'lab/wind', 
   const isMmDetail = r.startsWith('mm/') && r !== 'mm/about';
   if (r.startsWith('lab/') || isMmDetail) {
     const btns = await lp.$$('[data-lab="labels-toggle"]');
+    if (isMmDetail && (await lp.$$('[data-mm="arrows-toggle"]')).length !== 1) errors.push(`${r}: 화살표 버튼 1개가 아님`);
     if (btns.length !== 1) errors.push(`${r}: 이름표 버튼 ${btns.length}개`);
     else if (r.startsWith('lab/')) {
       const visible = () => lp.evaluate(() => [...document.querySelectorAll('.lab-tag')].filter((e) => e.dataset.always !== 'true' && e.offsetParent !== null).length);

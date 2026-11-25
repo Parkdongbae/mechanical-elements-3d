@@ -8,7 +8,11 @@ import { hasModel, listModels, loadModel } from './registry';
 import type { MovementModel } from './types';
 import { buildAbout, loadPreface, type PrefaceData } from './about';
 import { createLabelsToggle } from '../labs/common/labels';
-import { setTagsVisible } from './kit/misc';
+import { retextTags, setArrowsVisible, setTagsVisible } from './kit/misc';
+import { TagLeaders } from './leaders';
+import { loadEnDict, translateNote, uiText, type MmLang, type ModelDict, type UiText } from './lang';
+import { saveSettings } from '../state/settings';
+import { ICON } from '../ui/icons';
 
 const TOTAL = 507;
 const RANGE_SIZE = 100;
@@ -25,20 +29,14 @@ interface CatalogEntry {
   ko: string;
   easy: string;
   en: string;
+  /** 영문 제목(없으면 '#NNN') */
+  titleEn?: string;
+  /** 쉬운 설명 영어(없으면 원문 en) */
+  easyEn?: string;
 }
 
-const CATS: { id: string; label: string }[] = [
-  { id: 'belt', label: '벨트·풀리' },
-  { id: 'gear', label: '기어' },
-  { id: 'ratchet', label: '래칫' },
-  { id: 'cam', label: '캠' },
-  { id: 'crank', label: '크랭크·링크' },
-  { id: 'escapement', label: '탈진기' },
-  { id: 'governor', label: '조속기' },
-  { id: 'steam', label: '증기' },
-  { id: 'pump', label: '펌프' },
-  { id: 'tool', label: '공구·기타' }
-];
+/** 분류 id — 이름은 lang.ts 의 cats */
+const CATS: string[] = ['belt', 'gear', 'ratchet', 'cam', 'crank', 'escapement', 'governor', 'steam', 'pump', 'tool'];
 
 function inCat(entryCat: string, id: string): boolean {
   if (id === 'all') return true;
@@ -62,7 +60,10 @@ function parseCatalog(data: unknown): CatalogEntry[] {
     ) {
       continue;
     }
-    out.push({ n: e.n, title: e.title, cat: e.cat, ko: e.ko, easy: e.easy, en: e.en });
+    const item: CatalogEntry = { n: e.n, title: e.title, cat: e.cat, ko: e.ko, easy: e.easy, en: e.en };
+    if (typeof e.titleEn === 'string' && e.titleEn.trim().length > 0) item.titleEn = e.titleEn;
+    if (typeof e.easyEn === 'string' && e.easyEn.trim().length > 0) item.easyEn = e.easyEn;
+    out.push(item);
   }
   return out;
 }
@@ -98,11 +99,20 @@ export function mmSeenCount(): number {
 }
 
 type TabId = 'easy' | 'ko' | 'en';
-const TABS: { id: TabId; label: string }[] = [
-  { id: 'easy', label: '쉬운 풀이' },
-  { id: 'ko', label: '책의 설명(번역)' },
-  { id: 'en', label: '영어 원문' }
-];
+/** 한글: 쉬운 풀이·번역·원문 / 영문: 쉬운 설명(easyEn, 없으면 원문)·원문 */
+function tabsFor(lang: MmLang, t: UiText): { id: TabId; label: string }[] {
+  if (lang === 'en') {
+    return [
+      { id: 'easy', label: t.tabEasy },
+      { id: 'en', label: t.tabEn }
+    ];
+  }
+  return [
+    { id: 'easy', label: t.tabEasy },
+    { id: 'ko', label: t.tabKo },
+    { id: 'en', label: t.tabEn }
+  ];
+}
 
 export class Gallery implements AppMode {
   private ctx: ModeContext | null = null;
@@ -129,6 +139,9 @@ export class Gallery implements AppMode {
   private speedOut: HTMLElement | null = null;
   private zoomEl: HTMLElement | null = null;
   private labelsToggle: { button: HTMLButtonElement; sync(): void; dispose(): void } | null = null;
+  private enDict: ModelDict | null = null;
+  /** 이름표 지시선 — 모델이 첫 자세를 잡은 뒤(첫 update 프레임) 만든다 */
+  private leaders: TagLeaders | null = null;
   private notesKey = '';
   private noteTimer = 0;
 
@@ -172,11 +185,105 @@ export class Gallery implements AppMode {
     // 상세 화면은 레이어 1을 켜 둔다(회전 화살표가 항상 보이게). 이름표는 setTagsVisible 이 따로 끈다
     ctx.sceneMgr.setLabelsVisible(this.kind === 'detail' ? true : ctx.settings.showLabels);
 
+    this.buildView();
+    window.addEventListener('keydown', this.onKey);
+    // 개발 서버 검사용: 화살표 메시 보임 수·이름표 글자
+    if (import.meta.env.DEV) {
+      (window as unknown as Record<string, unknown>).__mm507 = () => {
+        const g = this.model?.group;
+        if (!g) return null;
+        let arrows = 0;
+        let arrowsOn = 0;
+        const tags: string[] = [];
+        g.traverse((o) => {
+          const mm = o.userData.mm as { kind?: unknown } | undefined;
+          if (mm?.kind === 'arrow') {
+            o.traverse((c) => {
+              if ((c as { isMesh?: boolean }).isMesh === true) {
+                arrows++;
+                if (c.visible) arrowsOn++;
+              }
+            });
+          }
+          if (o.userData.mmTag === true) tags.push(String(o.userData.mmTagShown ?? o.userData.mmTagText));
+        });
+        return { arrows, arrowsOn, tags, leaders: this.leaders?.describe() ?? null };
+      };
+    }
+  }
+
+  private get lang(): MmLang {
+    return this.ctx?.settings.mmLang === 'en' ? 'en' : 'ko';
+  }
+
+  private get t(): UiText {
+    return uiText(this.lang);
+  }
+
+  /** 지금 kind 의 화면을 새로 만든다(모델이 있으면 다시 불러오지 않고 쓴다) */
+  private buildView(): void {
     const ep = ++this.epoch;
+    if (this.lang === 'en' && this.tab === 'ko') this.tab = 'easy';
     if (this.kind === 'about') this.buildAboutView(ep);
     else if (this.kind === 'list') this.buildList(ep);
     else this.buildDetail(ep);
-    window.addEventListener('keydown', this.onKey);
+  }
+
+  /** 한/영 전환 — 설정 저장 후 화면 문구·제목·3D 이름표를 다시 그린다 */
+  private toggleLang(): void {
+    const ctx = this.ctx;
+    if (!ctx) return;
+    ctx.settings.mmLang = this.lang === 'en' ? 'ko' : 'en';
+    saveSettings(ctx.settings);
+    this.closeZoom();
+    this.labelsToggle?.dispose();
+    this.labelsToggle = null;
+    this.wrap?.remove();
+    this.wrap = null;
+    this.notesKey = '';
+    this.buildView();
+  }
+
+  private langButton(): HTMLButtonElement {
+    const en = this.lang === 'en';
+    const b = el('button', 'mm-btn mm-lang');
+    b.type = 'button';
+    b.dataset.mm = 'lang-toggle';
+    b.append(el('span', en ? 'mm-lang-o' : 'mm-lang-o is-on', '한'), el('span', 'mm-lang-sep', '/'), el('span', en ? 'mm-lang-o is-on' : 'mm-lang-o', 'EN'));
+    b.title = this.t.langTitle;
+    b.setAttribute('aria-label', this.t.langTitle);
+    b.addEventListener('click', () => this.toggleLang());
+    return b;
+  }
+
+  private titleOf(entry: CatalogEntry | null, n: number): string {
+    if (this.lang === 'en') return entry?.titleEn ?? this.t.untitled(n);
+    return entry?.title ?? this.t.untitled(n);
+  }
+
+  /** 모델 그룹에 지금 설정(이름표·화살표·언어)을 입힌다 — 모델 로드 직후, 언어 전환 후 */
+  private applyModelSettings(): void {
+    const ctx = this.ctx;
+    const m = this.model;
+    if (!ctx || !m) return;
+    setTagsVisible(m.group, ctx.settings.showLabels);
+    setArrowsVisible(m.group, ctx.settings.showArrows);
+    if (this.lang === 'en') {
+      void loadEnDict().then((d) => {
+        if (this.model !== m || this.lang !== 'en') return;
+        this.enDict = d;
+        retextTags(m.group, d.tags);
+        this.notesKey = '';
+        this.refreshNotes();
+      });
+    } else {
+      retextTags(m.group, null);
+    }
+  }
+
+  private paintArrows(b: HTMLButtonElement, on: boolean): void {
+    b.setAttribute('aria-pressed', String(on));
+    b.title = on ? this.t.arrowsOn : this.t.arrowsOff;
   }
 
   exit(): void {
@@ -191,6 +298,8 @@ export class Gallery implements AppMode {
       disposeObject(this.model.group);
       this.model.dispose?.();
     }
+    this.leaders?.dispose();
+    this.leaders = null;
     this.model = null;
     this.wrap?.remove();
     this.wrap = null;
@@ -207,6 +316,12 @@ export class Gallery implements AppMode {
   update(dt: number): void {
     if (this.kind === 'detail' && this.model && this.playing) {
       this.model.update(dt, this.speed * (this.reverse ? -1 : 1));
+    }
+    if (this.kind === 'detail' && this.model && this.ctx) {
+      if (!this.leaders) {
+        this.leaders = new TagLeaders(this.model.group);
+        this.leaders.setVisible(this.ctx.settings.showLabels);
+      } else this.leaders.update();
     }
     this.noteTimer += dt;
     if (this.noteTimer > 0.15) {
@@ -244,9 +359,9 @@ export class Gallery implements AppMode {
     const z = el('div', 'mm-zoom');
     const img = el('img', 'mm-zoom-img');
     img.src = figUrl(this.cur);
-    img.alt = `${this.cur}번 원본 판화 큰 그림`;
+    img.alt = this.t.zoomAlt(this.cur);
     img.draggable = false;
-    z.append(img, el('p', 'mm-zoom-cap', '닫으려면 눌러요'));
+    z.append(img, el('p', 'mm-zoom-cap', this.t.zoomCap));
     z.addEventListener('click', () => this.closeZoom());
     this.zoomEl = z;
     this.wrap.append(z);
@@ -264,40 +379,44 @@ export class Gallery implements AppMode {
     if (!ctx) return;
     const wrap = el('div', 'mm-wrap is-list');
     this.wrap = wrap;
+    const t = this.t;
+    wrap.lang = this.lang;
 
     const top = el('header', 'mm-top');
     const head = el('div', 'mm-top-head');
     const ht = el('div', 'mm-top-t');
-    ht.append(el('h2', 'mm-title', '507 기계 운동'), el('p', 'mm-sub', `1868년 책의 판화 ${TOTAL}가지 — 본 것 ${this.seen.size} / ${TOTAL}`));
-    head.append(ht, button('mm-btn', '책 소개', () => ctx.navigate?.('mm/about')));
+    ht.append(el('h2', 'mm-title', t.appTitle), el('p', 'mm-sub', t.sub(TOTAL, this.seen.size)));
+    const headBtns = el('div', 'mm-top-btns');
+    headBtns.append(this.langButton(), button('mm-btn', t.about, () => ctx.navigate?.('mm/about')));
+    head.append(ht, headBtns);
     top.append(head);
 
     const filters = el('div', 'mm-filters');
-    for (const c of [{ id: 'all', label: '전체' }, ...CATS]) {
-      const b = button(`mm-chip${c.id === 'all' ? ' is-on' : ''}`, c.label, () => {
+    for (const c of [{ id: 'all', label: t.all }, ...CATS.map((id) => ({ id, label: t.cats[id] ?? id }))]) {
+      const b = button(`mm-chip${c.id === this.cat ? ' is-on' : ''}`, c.label, () => {
         this.cat = c.id;
         filters.querySelectorAll('.mm-chip').forEach((x) => x.classList.toggle('is-on', x === b));
         this.renderTiles();
       });
       filters.append(b);
     }
-    const only = button('mm-chip mm-only3d', '3D 있는 것만', () => {
+    const only = button(`mm-chip mm-only3d${this.only3d ? ' is-on' : ''}`, t.only3d, () => {
       this.only3d = !this.only3d;
       only.classList.toggle('is-on', this.only3d);
       only.setAttribute('aria-pressed', String(this.only3d));
       this.renderTiles();
     });
-    only.setAttribute('aria-pressed', 'false');
+    only.setAttribute('aria-pressed', String(this.only3d));
     filters.append(only);
 
     const jump = el('label', 'mm-jump');
-    jump.append(el('span', 'mm-jump-l', '번호로 가기'));
+    jump.append(el('span', 'mm-jump-l', t.jump));
     const input = el('input', 'mm-jump-in');
     input.type = 'number';
     input.min = '1';
     input.max = String(TOTAL);
     input.placeholder = '1–507';
-    input.setAttribute('aria-label', '운동 번호로 바로 가기');
+    input.setAttribute('aria-label', t.jumpAria);
     input.addEventListener('change', () => {
       const v = Math.round(Number(input.value));
       if (v >= 1 && v <= TOTAL) this.go(v);
@@ -307,7 +426,7 @@ export class Gallery implements AppMode {
 
     const ranges = el('div', 'mm-ranges');
     ranges.setAttribute('role', 'tablist');
-    ranges.setAttribute('aria-label', '번호 구간');
+    ranges.setAttribute('aria-label', t.rangeAria);
     this.rangeBar = ranges;
     const rangeCount = Math.ceil(TOTAL / RANGE_SIZE);
     for (let i = 0; i < rangeCount; i++) {
@@ -325,7 +444,7 @@ export class Gallery implements AppMode {
     row2.append(ranges, jump);
 
     this.gridEl = el('div', 'mm-grid');
-    this.gridEl.append(el('p', 'mm-loading', '목록을 불러오는 중…'));
+    this.gridEl.append(el('p', 'mm-loading', t.loadingList));
 
     wrap.append(top, filters, row2, this.gridEl);
     ctx.root.append(wrap);
@@ -339,7 +458,7 @@ export class Gallery implements AppMode {
       })
       .catch(() => {
         if (ep === this.epoch) {
-          this.gridEl?.replaceChildren(el('p', 'mm-loading', '목록을 불러올 수 없어요. 새로고침해 보세요.'));
+          this.gridEl?.replaceChildren(el('p', 'mm-loading', t.listFail));
         }
       });
   }
@@ -353,7 +472,7 @@ export class Gallery implements AppMode {
     const b = Math.min(TOTAL, (this.range + 1) * RANGE_SIZE);
     const list = this.catalog.filter((e) => e.n >= a && e.n <= b && inCat(e.cat, this.cat) && (!this.only3d || hasModel(e.n)));
     if (list.length === 0) {
-      grid.append(el('p', 'mm-loading', '이 구간에서 조건에 맞는 운동이 없어요.'));
+      grid.append(el('p', 'mm-loading', this.t.emptyRange));
       return;
     }
     for (const e of list) {
@@ -362,14 +481,15 @@ export class Gallery implements AppMode {
       if (this.seen.has(e.n)) tile.classList.add('is-seen');
       const img = el('img', 'mm-tile-img');
       img.src = figUrl(e.n);
-      img.alt = `${e.n}번 판화 — ${e.title}`;
+      const name = this.titleOf(e, e.n);
+      img.alt = this.t.figAlt(e.n, name);
       img.loading = 'lazy';
       img.draggable = false;
       const body = el('span', 'mm-tile-body');
-      body.append(el('span', 'mm-tile-n', String(e.n)), el('span', 'mm-tile-name', e.title));
+      body.append(el('span', 'mm-tile-n', String(e.n)), el('span', 'mm-tile-name', name));
       const foot = el('span', 'mm-tile-foot');
       if (hasModel(e.n)) foot.append(el('span', 'mm-b3d', '3D'));
-      foot.append(el('span', 'mm-tile-cat', CATS.find((c) => c.id === e.cat || (c.id === 'tool' && e.cat === 'misc'))?.label ?? '공구·기타'));
+      foot.append(el('span', 'mm-tile-cat', this.catLabel(e.cat)));
       tile.append(img, body, foot);
       tile.addEventListener('click', () => this.go(e.n));
       grid.append(tile);
@@ -389,16 +509,18 @@ export class Gallery implements AppMode {
     if (!ctx) return;
     const wrap = el('div', 'mm-wrap is-detail');
     this.wrap = wrap;
+    const t = this.t;
+    wrap.lang = this.lang;
     const entry = this.catalog.find((e) => e.n === this.cur) ?? null;
     if (!hasModel(this.cur)) wrap.classList.add('is-no3d');
 
     const fig = el('aside', 'mm-fig');
     const figImg = el('img', 'mm-fig-img');
     figImg.src = figUrl(this.cur);
-    figImg.alt = `${this.cur}번 원본 판화`;
+    figImg.alt = t.zoomAlt(this.cur);
     figImg.draggable = false;
     figImg.addEventListener('click', () => this.openZoom());
-    fig.append(figImg, el('p', 'mm-fig-cap', '원본 판화 — 눌러서 크게'));
+    fig.append(figImg, el('p', 'mm-fig-cap', t.figCap));
 
     const side = el('aside', 'mm-side');
     side.dataset.open = 'true';
@@ -406,35 +528,37 @@ export class Gallery implements AppMode {
     const headEl = el('header', 'mm-sheet-head');
     const thumb = el('img', 'mm-thumb');
     thumb.src = figUrl(this.cur);
-    thumb.alt = `${this.cur}번 판화 작은 그림`;
+    thumb.alt = t.thumbAlt(this.cur);
     thumb.draggable = false;
     thumb.addEventListener('click', () => this.openZoom());
     const ht = el('div', 'mm-sheet-t');
     this.fillHead(ht, entry);
-    const fold = button('mm-fold', '접기', () => {
+    const fold = button('mm-fold', t.fold, () => {
       const open = side.dataset.open === 'true';
       side.dataset.open = open ? 'false' : 'true';
-      fold.textContent = open ? '펼치기' : '접기';
+      fold.textContent = open ? t.unfold : t.fold;
     });
     // 507 첫 화면(목록)으로 — 접힌 상태에서도 보이게 머리에 둔다
     const toList = button('mm-tolist', '☰', () => ctx.navigate?.('mm'));
-    toList.append(el('span', 'mm-tolist-t', ' 목록'));
+    toList.append(el('span', 'mm-tolist-t', t.toList));
     toList.dataset.mm = 'to-list';
-    toList.setAttribute('aria-label', '507 기계 운동 목록으로');
-    toList.title = '507 기계 운동 첫 화면(목록)으로';
-    headEl.append(thumb, ht, toList, fold);
+    toList.setAttribute('aria-label', t.toListAria);
+    toList.title = t.toListTitle;
+    const lang = this.langButton();
+    lang.classList.add('mm-lang-sm');
+    headEl.append(thumb, ht, lang, toList, fold);
     side.append(headEl);
 
     const tabs = el('div', 'mm-tabs');
     tabs.setAttribute('role', 'tablist');
-    tabs.setAttribute('aria-label', '설명 보기');
-    for (const t of TABS) {
-      const tb = button(`mm-tab${t.id === this.tab ? ' is-on' : ''}`, t.label, () => {
-        this.tab = t.id;
+    tabs.setAttribute('aria-label', t.tabsAria);
+    for (const tt of tabsFor(this.lang, t)) {
+      const tb = button(`mm-tab${tt.id === this.tab ? ' is-on' : ''}`, tt.label, () => {
+        this.tab = tt.id;
         this.syncTabs();
       });
       tb.setAttribute('role', 'tab');
-      tb.dataset.tab = t.id;
+      tb.dataset.tab = tt.id;
       tabs.append(tb);
     }
 
@@ -443,13 +567,13 @@ export class Gallery implements AppMode {
     this.notesEl = el('div', 'mm-notes');
 
     const nav = el('div', 'mm-nav');
-    const prev = button('mm-btn', this.cur <= 1 ? '‹ 이전' : `‹ ${this.cur - 1}번`, () => this.step(-1));
+    const prev = button('mm-btn', this.cur <= 1 ? t.prev : t.prevN(this.cur - 1), () => this.step(-1));
     prev.disabled = this.cur <= 1;
-    const next = button('mm-btn is-primary', this.cur >= TOTAL ? '다음 ›' : `${this.cur + 1}번 ›`, () => this.step(1));
+    const next = button('mm-btn is-primary', this.cur >= TOTAL ? t.next : t.nextN(this.cur + 1), () => this.step(1));
     next.disabled = this.cur >= TOTAL;
     nav.append(prev, next);
 
-    const ext = el('a', 'mm-ext', '507movements.com에서 이 운동 보기');
+    const ext = el('a', 'mm-ext', t.ext);
     ext.href = `https://507movements.com/mm_${pad3(this.cur)}.html`;
     ext.target = '_blank';
     ext.rel = 'noopener noreferrer';
@@ -458,7 +582,12 @@ export class Gallery implements AppMode {
     wrap.append(fig, side);
     ctx.root.append(wrap);
 
-    if (hasModel(this.cur)) {
+    if (this.model) {
+      // 언어 전환으로 화면만 다시 만든 경우 — 모델은 그대로 쓴다
+      this.applyModelSettings();
+      this.buildCtl();
+      this.refreshNotes();
+    } else if (hasModel(this.cur)) {
       void loadModel(this.cur)
         .then((m) => {
           if (ep !== this.epoch) {
@@ -468,7 +597,7 @@ export class Gallery implements AppMode {
           }
           this.model = m;
           ctx.sceneMgr.add(m.group);
-          setTagsVisible(m.group, ctx.settings.showLabels);
+          this.applyModelSettings();
           this.flyDefault();
           this.buildCtl();
           this.refreshNotes();
@@ -492,14 +621,16 @@ export class Gallery implements AppMode {
   private fillHead(ht: HTMLElement, entry: CatalogEntry | null): void {
     ht.replaceChildren();
     const row = el('div', 'mm-sheet-row');
-    row.append(el('span', 'mm-tile-n', `${this.cur}번`), el('span', 'mm-tile-cat', entry ? this.catLabel(entry.cat) : '…'));
+    const t = this.t;
+    row.append(el('span', 'mm-tile-n', t.numLabel(this.cur)), el('span', 'mm-tile-cat', entry ? this.catLabel(entry.cat) : '…'));
     if (hasModel(this.cur)) row.append(el('span', 'mm-b3d', '3D'));
-    else row.append(el('span', 'mm-wait', '3D 모형 준비 중'));
-    ht.append(row, el('h2', 'mm-name', entry?.title ?? `${this.cur}번 운동`));
+    else row.append(el('span', 'mm-wait', t.wait3d));
+    ht.append(row, el('h2', 'mm-name', this.titleOf(entry, this.cur)));
   }
 
   private catLabel(cat: string): string {
-    return CATS.find((c) => c.id === cat || (c.id === 'tool' && cat === 'misc'))?.label ?? '공구·기타';
+    const id = cat === 'misc' || !CATS.includes(cat) ? 'tool' : cat;
+    return this.t.cats[id] ?? id;
   }
 
   private fillDetail(): void {
@@ -519,65 +650,97 @@ export class Gallery implements AppMode {
     const body = this.tabBody;
     if (!body) return;
     if (!entry) {
-      body.textContent = '설명을 불러오는 중…';
+      body.textContent = this.t.loadingDesc;
       return;
     }
+    if (this.lang === 'en') {
+      body.lang = 'en';
+      body.textContent = this.tab === 'easy' ? entry.easyEn ?? entry.en : entry.en;
+      return;
+    }
+    body.lang = this.tab === 'en' ? 'en' : 'ko';
     body.textContent = this.tab === 'easy' ? entry.easy : this.tab === 'ko' ? entry.ko : entry.en;
   }
 
   private buildCtl(): void {
     const wrap = this.wrap;
     if (!wrap) return;
+    const t = this.t;
     const ctl = el('div', 'mm-ctl');
-    this.playBtn = button('mm-ctl-btn is-primary', this.playing ? '정지' : '재생', () => this.togglePlay());
+    this.playBtn = button('mm-ctl-btn is-primary', this.playing ? t.pause : t.play, () => this.togglePlay());
     const spd = el('label', 'mm-speed');
-    spd.append(el('span', 'mm-speed-l', '속도'));
+    spd.append(el('span', 'mm-speed-l', t.speed));
     const range = el('input', 'mm-speed-in');
     range.type = 'range';
     range.min = '0';
     range.max = '3';
     range.step = '0.1';
     range.value = String(this.speed);
-    range.setAttribute('aria-label', '재생 속도(0~3배)');
+    range.setAttribute('aria-label', t.speedAria);
     range.addEventListener('input', () => {
       this.speed = Math.round(Number(range.value) * 10) / 10;
       if (this.speedOut) this.speedOut.textContent = `${this.speed.toFixed(1)}×`;
     });
     this.speedOut = el('span', 'mm-speed-v', `${this.speed.toFixed(1)}×`);
     spd.append(range, this.speedOut);
-    const rev = button(`mm-ctl-btn${this.reverse ? ' is-on' : ''}`, '역회전', () => {
+    const rev = button(`mm-ctl-btn${this.reverse ? ' is-on' : ''}`, t.reverse, () => {
       this.reverse = !this.reverse;
       rev.classList.toggle('is-on', this.reverse);
       rev.setAttribute('aria-pressed', String(this.reverse));
     });
-    rev.setAttribute('aria-pressed', 'false');
+    rev.setAttribute('aria-pressed', String(this.reverse));
     this.labelsToggle?.dispose();
     this.labelsToggle = null;
     const ctx = this.ctx;
     const parts: HTMLElement[] = [this.playBtn, spd, rev];
     if (ctx) {
-      this.labelsToggle = createLabelsToggle(ctx, {
+      const lb = createLabelsToggle(ctx, {
         syncSceneLayer: false,
         onToggle: (v) => {
           if (this.model) setTagsVisible(this.model.group, v);
+          this.leaders?.setVisible(v);
+          if (this.lang === 'en') lb.button.title = v ? t.labelsOn : t.labelsOff;
         }
       });
-      parts.push(this.labelsToggle.button);
+      this.labelsToggle = lb;
+      if (this.lang === 'en') {
+        const lsp = lb.button.querySelector('span');
+        if (lsp) lsp.textContent = t.labels;
+        lb.button.title = ctx.settings.showLabels ? t.labelsOn : t.labelsOff;
+      }
+      // 화살표 토글 — 이름표 버튼과 같은 모양, settings.showArrows 에 저장(번호를 옮겨도 유지)
+      const ab = el('button', 'lab-tag-btn mm-arrows-btn');
+      ab.type = 'button';
+      ab.dataset.mm = 'arrows-toggle';
+      ab.innerHTML = `${ICON.reset}<span></span>`;
+      const asp = ab.querySelector('span');
+      if (asp) asp.textContent = t.arrows;
+      this.paintArrows(ab, ctx.settings.showArrows);
+      ab.addEventListener('click', () => {
+        const v = !ctx.settings.showArrows;
+        ctx.settings.showArrows = v;
+        saveSettings(ctx.settings);
+        this.paintArrows(ab, v);
+        if (this.model) setArrowsVisible(this.model.group, v);
+      });
+      parts.push(lb.button, ab);
     }
-    parts.push(button('mm-ctl-btn', '시점 처음으로', () => this.flyDefault()));
+    parts.push(button('mm-ctl-btn', t.resetView, () => this.flyDefault()));
     ctl.append(...parts);
     wrap.append(ctl);
   }
 
   private togglePlay(): void {
     this.playing = !this.playing;
-    if (this.playBtn) this.playBtn.textContent = this.playing ? '정지' : '재생';
+    if (this.playBtn) this.playBtn.textContent = this.playing ? this.t.pause : this.t.play;
   }
 
   private refreshNotes(): void {
     const box = this.notesEl;
     if (!box) return;
-    const notes = this.model?.notes?.() ?? [];
+    const raw = this.model?.notes?.() ?? [];
+    const d = this.lang === 'en' ? this.enDict : null;
+    const notes = d ? raw.map((x) => translateNote(x, d)) : raw;
     if (notes.length === 0) {
       if (box.childElementCount > 0) {
         box.replaceChildren();
@@ -589,7 +752,7 @@ export class Gallery implements AppMode {
     if (key === this.notesKey) return;
     this.notesKey = key;
     box.replaceChildren();
-    const title = el('h3', 'mm-notes-h', '움직임 수치');
+    const title = el('h3', 'mm-notes-h', this.t.notesTitle);
     const list = el('div', 'mm-notes-list');
     for (const nt of notes) {
       const row = el('div', 'mm-notes-row');
@@ -606,8 +769,9 @@ export class Gallery implements AppMode {
     if (!ctx) return;
     const wrap = el('div', 'mm-wrap is-about');
     this.wrap = wrap;
+    wrap.lang = this.lang;
     const holder = el('div', 'mm-abouthold');
-    holder.append(el('p', 'mm-loading', '불러오는 중…'));
+    holder.append(el('p', 'mm-loading', this.t.loading));
     wrap.append(holder);
     ctx.root.append(wrap);
 
@@ -618,7 +782,7 @@ export class Gallery implements AppMode {
       if (ep !== this.epoch) return;
       this.catalog = list;
       holder.replaceChildren(
-        buildAbout(preface, listModels().length, () => this.ctx?.navigate?.('mm'))
+        buildAbout(preface, listModels().length, () => this.ctx?.navigate?.('mm'), this.lang, this.langButton())
       );
     });
   }

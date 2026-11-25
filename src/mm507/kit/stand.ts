@@ -15,11 +15,13 @@ export function displayStand(): THREE.Group {
   baseGeo.rotateX(Math.PI / 2);
   const base = mesh(baseGeo, wood());
   base.position.y = 0.09;
+  base.userData.mmStandPart = true; // 이름표 지시선 대상에서 뺀다
   g.add(base);
   // 뒤판: 앞면이 정확히 backZ에 오도록 두께 절반만큼 뒤로 배치
   const panelGeo = extrude(roundedRect(-2.2, 0.05, 2.2, 3.15, 0.09), 0.12, 0.01);
   const panel = mesh(panelGeo, wood(0xa17248));
   panel.position.z = STAGE.backZ - 0.06;
+  panel.userData.mmStandPart = true;
   g.add(panel);
   setMM(g, { kind: 'stand' });
   return g;

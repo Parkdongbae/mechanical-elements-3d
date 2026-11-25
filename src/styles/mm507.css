@@ -899,3 +899,45 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* 한/영 전환 버튼 — 지금 언어 쪽 글자를 강조 */
+.mm-top-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.mm-lang {
+  gap: 4px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.mm-lang-o {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.mm-lang-o.is-on {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.mm-lang-sep {
+  color: var(--line-strong);
+}
+
+.mm-lang-sm {
+  flex: none;
+  min-height: 36px;
+  padding: 0 10px;
+}
+
+.mm-ctl .mm-arrows-btn {
+  flex: none;
+}
+
+.mm-about-head .mm-lang {
+  align-self: flex-end;
+}
