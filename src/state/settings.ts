@@ -9,9 +9,13 @@ export interface AppSettings {
   showLabels: boolean;
   theme: ThemeSetting;
   quality: QualitySetting;
+  /** 507 상세 화면 회전·움직임 화살표 */
+  showArrows: boolean;
+  /** 507 화면 언어 */
+  mmLang: 'ko' | 'en';
 }
 
-export const DEFAULT_SETTINGS: AppSettings = { difficulty: 'medium', sound: false, showLabels: true, theme: 'light', quality: 'auto' };
+export const DEFAULT_SETTINGS: AppSettings = { difficulty: 'medium', sound: false, showLabels: true, theme: 'light', quality: 'auto', showArrows: true, mmLang: 'ko' };
 
 const KEY = 'mech3d-settings-v1';
 
@@ -26,7 +30,9 @@ export function loadSettings(): AppSettings {
         sound: s.sound === true,
         showLabels: s.showLabels !== false,
         theme: s.theme === 'dark' ? 'dark' : 'light',
-        quality: s.quality === 'low' || s.quality === 'high' ? s.quality : 'auto'
+        quality: s.quality === 'low' || s.quality === 'high' ? s.quality : 'auto',
+        showArrows: s.showArrows !== false,
+        mmLang: s.mmLang === 'en' ? 'en' : 'ko'
       };
     }
   } catch {

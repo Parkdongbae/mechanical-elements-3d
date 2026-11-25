@@ -3,7 +3,7 @@
 // 키트 kit/k143.ts 의 144 공용 부품 + kit/k144.ts 의 막대 안내)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, tag } from '../kit';
+import { displayStand, setMM, tag } from '../kit';
 import { glow } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 import { eyeRod, K144, lazyTongs144, linkBar, pivotPost144, type LazyTongs144 } from '../kit/k143';
@@ -118,6 +118,7 @@ export default function buildM144(): MovementModel {
       o.userData.noAO = true;
     });
   }
+  setMM(slide, { kind: 'arrow' }); // 화살표 끄기 토글 대상
   g.add(slide);
 
   // 이름표 4개 — 셋은 움직이는 부품을 따라간다

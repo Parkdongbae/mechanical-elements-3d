@@ -1,7 +1,7 @@
 // 012 고정 도르래 — 줄이 도르래 위를 넘어 1:1 (방향만 바뀜). 손이 줄을 당기면 추가 같은 길이만큼 오른다 (판화 12번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, displayStand, pulley, rod, ropeAround, rotArrow, tag, weight } from '../kit';
+import { Rope, displayStand, pulley, rod, ropeAround, rotArrow, setMM, tag, weight } from '../kit';
 import { castIron, glow, steel, wood } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 
@@ -80,6 +80,8 @@ export default function buildM012(): MovementModel {
   const arrowHead = mesh(new THREE.ConeGeometry(0.045, 0.1, 14), glow(0xd8362f, 0.85));
   arrowHead.position.copy(u3).multiplyScalar(0.37);
   arrowHead.quaternion.copy(alongU);
+  setMM(arrowShaft, { kind: 'arrow' }); // 화살표 끄기 토글 대상
+  setMM(arrowHead, { kind: 'arrow' });
   hand.add(grip, knob, arrowShaft, arrowHead);
   hand.add(tag('당기는 손(힘 = 무게)', v(0.45, 0.25, 0.1)));
   g.add(hand);

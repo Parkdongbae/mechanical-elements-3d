@@ -36,10 +36,72 @@ function para(text: string, cls = 'mm-about-p'): HTMLElement {
   return el('p', cls, text);
 }
 
-export function buildAbout(preface: PrefaceData | null, done3d: number, onList: () => void): HTMLElement {
+/** 영문 소개 — 한글 본문과 같은 사실만(서문 번역 인용은 한글 전용이라 뺀다) */
+function buildAboutEn(done3d: number, onList: () => void, langBtn?: HTMLElement): HTMLElement {
+  const art = el('article', 'mm-about mm-panel');
+  const head = el('header', 'mm-about-head');
+  if (langBtn) head.append(langBtn);
+  head.append(el('span', 'mm-eyebrow', 'About'), el('h2', 'mm-about-title', 'A picture dictionary of machines, 150 years ago'));
+  art.append(head);
+  art.append(
+    section(
+      'The book',
+      para('“Five Hundred and Seven Mechanical Movements” was first published in 1868. The material shown here is a scan of the 1871 printing (Cornell University Library copy).'),
+      para('It was compiled by Henry T. Brown, described on the title page as editor of the magazine “American Artisan”, and published by Brown, Coombs & Co. of New York.'),
+      para('The subtitle sets out its scope: movements important in dynamics, hydraulics, hydrostatics, pneumatics, steam engines, mill and other gearing, presses, horology and miscellaneous machinery, including many never published before and several only recently introduced.')
+    )
+  );
+  art.append(
+    section(
+      'How the book is laid out',
+      para('Each left-hand page holds nine or ten engravings, and the facing right-hand page holds the descriptions with the same numbers. The author noted in the preface that this facing arrangement makes reference easy.'),
+      para('The movements end with No. 507 on page 122, followed by advertisements of the period.')
+    )
+  );
+  const points = el('ul', 'mm-about-ul');
+  for (const t of [
+    'It was compiled because a collection of mechanical movements had long been needed.',
+    'The contents first appeared in the magazine “American Artisan”, across five volumes.',
+    'More than a quarter of the movements were new, and it held about three times as many as any earlier American book.',
+    'The classification is not complete, but a detailed index and facing pictures and text make it easy to search.'
+  ]) {
+    points.append(el('li', 'mm-about-li', t));
+  }
+  art.append(section('What the author says in the preface', points));
+  art.append(
+    section(
+      'Why it matters',
+      para('Before computers and video, inventors and engineers used this book as a picture dictionary to find which mechanism would produce the motion they needed.'),
+      para('The same principles are still inside machines 150 years later — a bicycle chain, a clock escapement and an engine crank are examples.'),
+      para('The book is in the public domain, so anyone can read it and build from it.')
+    )
+  );
+  const how = el('ul', 'mm-about-ul');
+  for (const t of [
+    'Pick an engraving in the list to browse the 507 movements.',
+    `Movements with a finished 3D model (${done3d} / 507 so far) actually move. They are being built in book order from No. 1.`,
+    'If an engraving is hard to follow, read the “Easy explanation” tab first.'
+  ]) {
+    how.append(el('li', 'mm-about-li', t));
+  }
+  art.append(section('How to use this site', how));
+  const ext = el('a', 'mm-ext', 'Also worth a visit — 507movements.com (animated engravings; that content belongs to that site)');
+  ext.href = 'https://507movements.com/';
+  ext.target = '_blank';
+  ext.rel = 'noopener noreferrer';
+  art.append(section('More', ext));
+  const nav = el('div', 'mm-about-nav');
+  nav.append(button('mm-btn is-primary', 'Go to the movements list', onList));
+  art.append(nav);
+  return art;
+}
+
+export function buildAbout(preface: PrefaceData | null, done3d: number, onList: () => void, lang: 'ko' | 'en' = 'ko', langBtn?: HTMLElement): HTMLElement {
+  if (lang === 'en') return buildAboutEn(done3d, onList, langBtn);
   const art = el('article', 'mm-about mm-panel');
 
   const head = el('header', 'mm-about-head');
+  if (langBtn) head.append(langBtn);
   head.append(el('span', 'mm-eyebrow', '소개'), el('h2', 'mm-about-title', '150년 전, 기계를 찾아보던 그림 사전'));
   art.append(head);
 

@@ -81,13 +81,60 @@ export function rotArrow(r: number, ccw: boolean): THREE.Group {
 
 /** 이름표 스프라이트 — stlShared.makeLabelSprite 재사용, layer 1 */
 export function tag(text: string, pos: THREE.Vector3): THREE.Sprite {
-  const w = 0.55 + text.length * 0.14;
-  const s = makeLabelSprite(text, '#f2b619', w, 0.34);
+  const s = makeLabelSprite(text, TAG_ACCENT, tagWidth(text), TAG_H);
   s.position.copy(pos);
   s.name = 'mm-tag';
   s.userData.mmTag = true;
+  s.userData.mmTagText = text; // 원래(한글) 글자 — 영문 전환 때 사전 키
   setMM(s, { kind: 'tag', text });
   return s;
+}
+
+const TAG_ACCENT = '#f2b619';
+const TAG_H = 0.34;
+
+/** 이름표 너비 — 한글이 든 글자는 예전 식 그대로, 라틴 글자만이면 글자 폭이 좁아 계수를 줄인다 */
+export function tagWidth(text: string): number {
+  if (/[ㄱ-힣]/.test(text)) return 0.55 + text.length * 0.14;
+  return 0.55 + text.length * 0.085;
+}
+
+/**
+ * root 아래 tag() 이름표 글자를 바꿔 그린다. dict 에 원래(한글) 글자가 있으면 그 글자로, 없거나 dict=null 이면 원래 글자로.
+ * 스프라이트 객체는 그대로 두고(모델이 위치를 움직이므로) 재질의 텍스처·크기만 바꾼다. visible 도 그대로.
+ */
+export function retextTags(root: THREE.Object3D, dict: Record<string, string> | null): void {
+  root.traverse((o) => {
+    if (o.userData.mmTag !== true || !(o instanceof THREE.Sprite)) return;
+    const mm = o.userData.mm as Record<string, unknown> | undefined;
+    const orig = typeof o.userData.mmTagText === 'string' ? o.userData.mmTagText : typeof mm?.text === 'string' ? mm.text : null;
+    if (orig === null) return;
+    const want = dict?.[orig] ?? orig;
+    const shown = typeof o.userData.mmTagShown === 'string' ? o.userData.mmTagShown : orig;
+    if (want === shown) return;
+    const fresh = makeLabelSprite(want, TAG_ACCENT, tagWidth(want), TAG_H);
+    const old = o.material;
+    o.material = fresh.material;
+    o.scale.x = fresh.scale.x;
+    o.scale.y = fresh.scale.y;
+    old.map?.dispose();
+    old.dispose();
+    o.userData.mmTagShown = want;
+  });
+}
+
+/**
+ * root 아래 회전·움직임 화살표(검사 표식 kind 'arrow' 인 객체)의 메시 visible 을 바꾼다.
+ * 화살표 그룹 자체의 visible 은 모델이 방향 전환에 쓰므로 건드리지 않는다 — 그룹을 다시 켜도 꺼진 메시는 꺼진 채로 남는다.
+ */
+export function setArrowsVisible(root: THREE.Object3D, visible: boolean): void {
+  root.traverse((o) => {
+    const mm = o.userData.mm as { kind?: unknown } | undefined;
+    if (mm?.kind !== 'arrow') return;
+    o.traverse((c) => {
+      if ((c as THREE.Mesh).isMesh === true) c.visible = visible;
+    });
+  });
 }
 
 /** root 아래 tag() 이름표의 visible 만 바꾼다(회전 화살표 등 다른 레이어 1 물체는 그대로) */
