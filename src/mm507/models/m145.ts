@@ -68,7 +68,7 @@ export default function buildM145(): MovementModel {
   const pivot = markPin(new THREE.Object3D());
   pivot.name = 'beamPivot';
   beam.add(pivot);
-  g.add(beam, shaftZ(K145.PX, K145.PY, 0.105));
+  g.add(beam, shaftZ(K145.PX, K145.PY, 0.25)); // 축이 들보(z 0.12~0.18)를 꿰고 앞으로 튀어나오게 — 0.105 면 들보 가운데에도 못 미쳤다(사용자 지적)
 
   // 미끄럼 받침대(원점 = 꼭대기 핀) — 발판이 단 윗면 0.49 에 닿고 레일 사이를 미끄러진다
   const standard = slidingStandard145(K145.OY - K145.floor, { pinTop: 0.12 });
