@@ -2,7 +2,7 @@
 // 홈에 꽂힌 따름 핀이 달린 미끄럼 블록은 안내 막대를 따라 끝에서 끝까지 고르게 왕복한다 (판화 108번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { K108, frame108, reverseCylinder108, slider108, traverse108 } from '../kit/k107';
 
 const XC = 0.25; // 실린더 축 x
@@ -31,6 +31,7 @@ export default function buildM108(): MovementModel {
   // 선반 틀(고정) — 위·아래 판과 안내 막대
   const frame = frame108(ZC);
   frame.name = 'frame';
+  frame.children[2]!.name = 'guideRod108';
   frame.position.set(XC, YM, ZC);
   g.add(frame);
 
@@ -57,7 +58,7 @@ export default function buildM108(): MovementModel {
     tag('홈 실린더', v(1.3, 1.8, 0.5)),
     tag('구동 기어', v(1.45, 0.95, 0.5)),
     blockTag,
-    tag('안내 막대', v(-1.35, 2.62, 0.3))
+    leaderTo(tag('안내 막대', v(-1.35, 2.62, 0.3)), 'guideRod108')
   );
 
   let s = traverse108(theta + TH0);

@@ -1,7 +1,7 @@
 // 113 랙과 피니언 — 피니언이 좌우로 흔들며 랙 달린 탁자를 왕복시킨다 (판화 113번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, spurGear, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, spurGear, tag, leaderTo } from '../kit';
 import { K113, k113State, rackTable113, wallYoke113 } from '../kit/k113';
 
 const PY = 1.4; // 피니언 축 높이
@@ -47,9 +47,9 @@ export default function buildM113(): MovementModel {
     g.add(a);
   }
 
-  const tagRack = tag('랙(판 밑에 붙음)', v(-0.8, 2.45, 0.3));
+  const tagRack = leaderTo(tag('랙(판 밑에 붙음)', v(-0.8, 2.45, 0.3)), 'rack');
   const tagPlate = tag('탁자 판', v(0.9, 2.45, 0.3));
-  g.add(tag('피니언(구동, 좌우로 흔들림)', v(0, 0.7, 0.35)), tag('굴림 바퀴', v(1.36, 1.3, 0.5)), tagRack, tagPlate);
+  g.add(tag('피니언(구동, 좌우로 흔들림)', v(0, 0.7, 0.35)), leaderTo(tag('굴림 바퀴', v(1.36, 1.3, 0.5)), 'rollerR'), tagRack, tagPlate);
 
   const place = (): void => {
     const s = k113State(theta);

@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { type MovementModel } from '../types';
 import { castIron, darkSteel } from '../../models/materials';
 import { circlePts, mesh, TAU } from '../../models/parts/geom';
-import { displayStand, markAnchor, rod, rotArrow, setMM, shaftZ, tag, wormScrew, wormWheel, type V2 } from '../kit';
+import { displayStand, markAnchor, rod, rotArrow, setMM, shaftZ, tag, leaderTo, wormScrew, wormWheel, type V2 } from '../kit';
 import { halfCollar, LeafSpring, leverArm, pinFinger, polyDepth, snailCam, snailOutline } from '../kit/k063';
 
 const D = Math.PI / 180;
@@ -166,7 +166,7 @@ export default function buildM064(): MovementModel {
     tag('웜 휠 B', v(-0.55, 1.15, 0.45)),
     tag('캠 A', v(-0.45, 1.85, 0.45)),
     tag('레버(고리)', v(-0.5, 2.35, 0.45)),
-    tag('잎스프링', v(0.55, 3.05, 0.45))
+    leaderTo(tag('잎스프링', v(0.55, 3.05, 0.45)), leaf.group)
   );
 
   let U = U0;

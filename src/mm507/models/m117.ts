@@ -1,7 +1,7 @@
 // 117 요크 안의 캠과 롤러 — 지름이 일정한 캠이 두 롤러 사이에서 요크를 위아래로 왕복시킨다 (판화 117번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { rollerTurn117, rollerYoke117, slideGuide116, valveCam117, yokeLift117 } from '../kit/k116';
 
 const CY = 1.75; // 캠 축 높이
@@ -44,7 +44,7 @@ export default function buildM117(): MovementModel {
 
   // 이름표 — 요크를 따라가는 것은 요크 그룹 안에(요크 로컬 = 세계 − (0, CY, ZC))
   yoke.add(
-    tag('롤러', v(0.64, 0.51, 0.3 - ZC)),
+    leaderTo(tag('롤러', v(0.64, 0.51, 0.3 - ZC)), 'rollerTop'),
     tag('요크(위아래 왕복)', v(-0.8, 0.95, 0.3 - ZC))
   );
   g.add(tag('캠(구동)', v(-0.92, 1.95, 0.3)), tag('막대 안내(고정)', v(0.82, 0.64, 0.3)));

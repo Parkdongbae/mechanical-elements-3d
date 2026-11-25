@@ -1,7 +1,7 @@
 // 084 엔진 조속기용 이중 랙 틀 — 계속 도는 손가락 캠 D 가 막대 A 로 올리고 내린 틀 B 의 윗랙·아랫랙을 한 피치씩 밀어 틀을 좌우로 옮긴다 (판화 84번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, pulley, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, pulley, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { fingerCam, k84State, rackFrame, wallGuide, yokeRod } from '../kit/k083';
 
 const CY = 1.45; // 캠 축 높이
@@ -37,6 +37,7 @@ export default function buildM084(): MovementModel {
   // 좌우 안내 블록 둘 + 막대 A 안내
   for (const s of [-1, 1]) {
     const gd = wallGuide(0.1, 0.24, 0.6, 'x');
+    gd.name = s < 0 ? 'guideL84' : 'guideR84';
     gd.position.set(s * 1.42, CY, 0.3);
     g.add(gd);
   }
@@ -53,8 +54,8 @@ export default function buildM084(): MovementModel {
   g.add(
     tagA,
     tagB,
-    tag('캠 D(손가락 하나)', v(0.7, 0.78, 0.4)),
-    tag('안내 블록', v(1.75, 0.78, 0.35)),
+    leaderTo(tag('캠 D(손가락 하나)', v(0.7, 0.78, 0.4)), 'camD'),
+    leaderTo(tag('안내 블록', v(1.75, 0.78, 0.35)), 'guideR84'),
     tag('큰 바퀴(캠 축 구동)', v(-0.75, 0.45, 0.15))
   );
 

@@ -1,7 +1,7 @@
 // 133 피니언·부채꼴 프레스 — 손 크랭크(피니언 축) → 피니언 10T → 이 부채꼴(64T 의 17개) → 연결봉 → 누름판 (판화 133번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, shaftZ, spurGear, tag } from '../kit';
+import { displayStand, shaftZ, spurGear, tag, leaderTo } from '../kit';
 import {
   K133, K133_Q, eyeRod131, handCrank131, platen133, press133, pressFrame133,
   sectorCrank133, swingArrows131, type Press133
@@ -71,7 +71,7 @@ export default function buildM133(): MovementModel {
   const platenTag = tag('누름판', v(-1.45, 2.0, 0.3));
   g.add(
     tag('손 크랭크(구동)', v(1.55, 2.25, 0.5)),
-    tag('피니언 10T', v(1.72, 0.92, 0.4)),
+    leaderTo(tag('피니언 10T', v(1.72, 0.92, 0.4)), pinion),
     tag('이 부채꼴(64T 의 17개)', v(1.4, 0.3, 0.4)),
     tag('연결봉', v(-1.5, 1.35, 0.45)),
     platenTag,

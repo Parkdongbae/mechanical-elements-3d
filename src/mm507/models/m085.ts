@@ -1,7 +1,7 @@
 // 085 캠으로 들어 올리는 낙하 막대 — 와이퍼 캠 둘이 돌기 B 를 밀어 올리고, 놓이면 막대 A 가 제 무게로 떨어진다 (판화 85번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { anvilBlock, k85Lift, k85Mode, K85, K85_BEND, stampFrame, stampRod, wiperCam } from '../kit/k083';
 
 const THETA_E0 = 2.6416; // theta → thetaE 오프셋 — t = 1 이 판화 자세(거의 다 들림, β 1.10)
@@ -38,7 +38,7 @@ export default function buildM085(): MovementModel {
   arrow.rotation.z = Math.PI - 0.15; // 화살표의 빈 틈(110°)을 캠–돌기 닿는 자리(축 왼쪽 위) 쪽으로 — 닿는 곳을 가리지 않게
   g.add(arrow);
   const tagB = tag('돌기 B', v(-0.55, 2.3, 0.4));
-  const tagHead = tag('스탬프 머리', v(-0.8, 0.55, 0.3));
+  const tagHead = leaderTo(tag('스탬프 머리', v(-0.8, 0.55, 0.3)), 'rodA');
   const tagRod = tag('막대 A(제 무게로 떨어짐)', v(-0.75, 1.45, 0.3));
   g.add(
     tagB,

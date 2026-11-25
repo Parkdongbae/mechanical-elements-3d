@@ -2,7 +2,7 @@
 //  설계표 docs/mm507-sheets/154.md · 부품은 kit/k154(이미 구현) 조립만 한다. 모든 자세는 state154(theta) 의 닫힌 식.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, displayStand, pulley, ropeAround, rotArrow, setMM, shaftZ, tag } from '../kit';
+import { Rope, displayStand, pulley, ropeAround, rotArrow, setMM, shaftZ, tag, leaderTo } from '../kit';
 import { bellCrank154, cord154, K154, LA_LOW154, PHI0_154, standard154, state154, studdedDisk154, weightBall154 } from '../kit/k154';
 
 const DEG = 180 / Math.PI;
@@ -73,7 +73,7 @@ export default function buildM154(): MovementModel {
   // 이름표 5개 — 벨 크랭크·롤러·추는 움직이는 부품을 따라간다
   g.add(tag('원판(구동)', v(-1.05, 1.98, 0.4)), tag('도르래', v(1.45, 2.78, 0.4)));
   const tagCrank = tag('벨 크랭크', v(0, 0, 0.4));
-  const tagRoller = tag('롤러', v(0, 0, 0.4));
+  const tagRoller = leaderTo(tag('롤러', v(0, 0, 0.4)), 'roller');
   const tagWeight = tag('추', v(0, 0, 0.4));
   g.add(tagCrank, tagRoller, tagWeight);
 

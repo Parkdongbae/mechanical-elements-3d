@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { darkSteel, wood } from '../../models/materials';
 import { lathe, mesh, tubeProfile } from '../../models/parts/geom';
-import { displayStand, lever, markPin, meshAngle, rod, rotArrow, setMM, shaftZ, spurGear, steppedPulley, tag, type V2 } from '../kit';
+import { displayStand, lever, markPin, meshAngle, rod, rotArrow, setMM, shaftZ, spurGear, steppedPulley, tag, leaderTo, type V2 } from '../kit';
 import { arcSlotLeverPlate, framePlate } from '../kit/k056';
 
 const MOD = 0.04;
@@ -156,7 +156,7 @@ export default function buildM056(): MovementModel {
   pArrow.position.set(P[0], P[1], 0.28);
   g.add(pArrow);
   g.add(
-    tag('피니언 14(구동)', v(0.6, 2.05, 0.35)),
+    leaderTo(tag('피니언 14(구동)', v(0.6, 2.05, 0.35)), 'pinion'),
     tag('단차 풀리', v(1.55, 0.55, 0.2)),
     tag('치우친 홈', v(-0.55, 1.12, 0.45))
   );

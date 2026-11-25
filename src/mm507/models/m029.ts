@@ -2,7 +2,7 @@
 // 원판(축 Z)이 구동, 평기어(축 Y)가 종동. 원판 1 회전 = 평기어 이 1개 = 1/16 회전.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rod, rotArrow, scrollDisc, shaftZ, spurGear, tag } from '../kit';
+import { displayStand, leaderTo, rod, rotArrow, scrollDisc, shaftZ, spurGear, tag } from '../kit';
 import { castIron, darkSteel, paint } from '../../models/materials';
 import { lathe, mesh, tubeProfile } from '../../models/parts/geom';
 
@@ -58,7 +58,7 @@ export default function buildM029(): MovementModel {
   g.add(
     tag('원판(나선 능선)', v(-0.9, 1.2, 0.3)),
     tag('평기어(축은 세로)', v(0.95, 2.1, 0.55)),
-    tag('능선이 톱니를 한 개씩 민다', v(0.1, 2.55, 0.4))
+    leaderTo(tag('능선이 톱니를 한 개씩 민다', v(0.1, 2.55, 0.4)), gearMesh)
   );
 
   return {

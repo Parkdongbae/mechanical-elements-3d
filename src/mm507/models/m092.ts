@@ -1,7 +1,7 @@
 // 092 보통의 크랭크 운동 — 크랭크 핀과 미끄럼 블록을 연결봉이 이어 회전 ↔ 직선 왕복을 바꾼다 (판화 92번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { connectingRod, crankWheel, crosshead, guideFrame, K92, sliderCrank92 } from '../kit/k092';
 
 const TAU = Math.PI * 2;
@@ -24,6 +24,7 @@ export default function buildM092(): MovementModel {
   wheel.name = 'wheel';
   wheel.position.set(CX, CY, ZW);
   g.add(wheel);
+  const pin92 = wheel.children.find((c) => (c as THREE.Mesh).isMesh === true && Math.abs(c.position.x - K92.crank) < 1e-6) ?? wheel;
 
   // 축 — 뒤판 보스(받침)에서 허브 앞까지(끝 너트 z ≤ 0.155 라 연결봉 아래로 지나간다)
   g.add(shaftZ(CX, CY, 0.155, 0.08));
@@ -52,7 +53,7 @@ export default function buildM092(): MovementModel {
   g.add(arrow);
   g.add(
     tag('크랭크 바퀴(구동)', v(-1.08, 2.8, 0.3)),
-    tag('크랭크 핀', v(-1.6, 0.65, 0.3)),
+    leaderTo(tag('크랭크 핀', v(-1.6, 0.65, 0.3)), pin92),
     tag('연결봉', v(0.45, 2.78, 0.35)),
     blockTag
   );

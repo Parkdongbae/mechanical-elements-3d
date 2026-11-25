@@ -1,7 +1,7 @@
 // 099 나선 안내 홈(드릴 이송) — 나선 리브 원판이 돌면 종동 핀이 골을 따라 막대를 위아래로 민다 (판화 99번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { SPIRAL099, feedGuide, spiralDiskAngle, spiralFollower, spiralFollowerRadius, spiralGuideDisk } from '../kit/k098';
 
 const CY = 2.25;
@@ -39,8 +39,8 @@ export default function buildM099(): MovementModel {
 
   g.add(
     tag('나선 안내 원판(구동)', v(-1.3, 3.1, 0.3)),
-    tag('나선 리브', v(1.35, 2.6, 0.3)),
-    tag('종동 핀과 이송 막대', v(1.0, 1.0, 0.45)),
+    leaderTo(tag('나선 리브', v(1.35, 2.6, 0.3)), 'rib099'),
+    leaderTo(tag('종동 핀과 이송 막대', v(1.0, 1.0, 0.45)), 'follower'),
     tag('안내 기둥(고정)', v(-0.95, 0.75, 0.3))
   );
 

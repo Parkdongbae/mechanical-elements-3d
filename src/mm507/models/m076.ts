@@ -1,7 +1,7 @@
 // 076 회전 수 계수기 (2) — 큰 바퀴의 스터드 D 가 한 바퀴에 한 번 탭핏 B 를 쳐서 톱니 바퀴 A 를 이 하나만큼 돌린다 (판화 76번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import {
   fixedArm,
   followerAngle,
@@ -65,7 +65,7 @@ export default function buildM076(): MovementModel {
   tappet.name = 'tappet';
   tappet.position.set(OX + TAP.c[0], OY + TAP.c[1], 0.1);
   g.add(tappet);
-  tappet.add(tag('B 탭핏(끝이 꺾인다)', v(-0.2, -0.65, 0.35)));
+  tappet.add(leaderTo(tag('B 탭핏(끝이 꺾인다)', v(-0.2, -0.65, 0.35)), 'tappet'));
   const noseB = nosePiece(TAP, 0.06);
   noseB.name = 'noseB';
   g.add(noseB);
@@ -86,7 +86,7 @@ export default function buildM076(): MovementModel {
 
   g.add(
     tag('A 톱니 바퀴(한 번에 이 하나)', v(-0.55, 1.05, 0.45)),
-    tag('C 고정 받침', v(1.2, 2.0, 0.45)),
+    leaderTo(tag('C 고정 받침', v(1.2, 2.0, 0.45)), 'armC'),
     tag('D 스터드', v(1.75, 2.45, 0.45)),
     tag('큰 바퀴(구동, 한 바퀴에 한 번 친다)', v(-1.5, 3.0, 0.3)),
     tag('멈춤 폴', v(-0.85, 2.7, 0.45))

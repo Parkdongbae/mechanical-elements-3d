@@ -1,7 +1,7 @@
 // 089 증기 기관 밸브용 편심 — 편심 원판 + 띠 + 막대 = 슬라이더 크랭크 (판화 89번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { eccentricSheave, eccentricStrap, valveRod, rodGuide } from '../kit/k089';
 
 const OX = -1.15;
@@ -36,7 +36,7 @@ export default function buildM089(): MovementModel {
   arr.position.set(OX, OY, 0.34);
   g.add(arr);
 
-  const tRod = tag('편심 막대', v(0.35, 2.15, 0.3));
+  const tRod = leaderTo(tag('편심 막대', v(0.35, 2.15, 0.3)), 'strap');
   const tVal = tag('밸브 막대(곧게 왕복)', v(1.5, 1.35, 0.3));
   g.add(
     tag('편심 원판(축에서 중심이 어긋남)', v(-1.15, 2.95, 0.3)),

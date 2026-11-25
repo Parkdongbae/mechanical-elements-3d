@@ -3,7 +3,7 @@
 //  설계표 docs/mm507-sheets/152.md · 부품은 전부 kit/k152(배치·trammel152 결과 대입만 한다)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, STAGE, tag } from '../kit';
+import { displayStand, rotArrow, STAGE, tag, leaderTo } from '../kit';
 import { K152, crossPiece152, drawingSheet152, traverseBar152, trammel152 } from '../kit/k152';
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
@@ -51,7 +51,7 @@ export default function buildM152(): MovementModel {
   const tagPen = tag('연필', v(0, 0, 0.45));
   const tagStudV = tag('스터드(세로 홈)', v(0, 0, 0.45));
   const tagStudH = tag('스터드(가로 홈)', v(0, 0, 0.45));
-  g.add(tag('십자 홈 받침(고정)', v(-1.5, 2.8, 0.45)), tagBar, tagPen, tagStudV, tagStudH);
+  g.add(leaderTo(tag('십자 홈 받침(고정)', v(-1.5, 2.8, 0.45)), cross), tagBar, tagPen, tagStudV, tagStudH);
 
   /** theta 의 닫힌 식으로 전체 자세를 다시 계산(누적 오차·역회전 없음) */
   const pose = (th: number): void => {

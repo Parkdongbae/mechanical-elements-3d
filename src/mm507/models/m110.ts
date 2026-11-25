@@ -1,7 +1,7 @@
 // 110 양쪽 나사 안내 롤러 — 롤러의 오른나사·왼나사에 반너트 둘이 번갈아 물려 막대가 좌우로 왕복한다 (판화 110번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { K110, frame110, roller110, rockShaft110, traverse110 } from '../kit/k110';
 
 const RX = -0.35; // 롤러 가운데 x
@@ -42,8 +42,8 @@ export default function buildM110(): MovementModel {
   g.add(arrow);
 
   // 이름표 — 앞 너트·뒤 너트·레버는 막대를 따라 좌우로 움직인다
-  const tagA = tag('A 앞 너트', v(-1.3, 2.72, 0.5));
-  const tagB = tag('B 뒤 너트', v(0.2, 2.72, 0.5));
+  const tagA = leaderTo(tag('A 앞 너트', v(-1.3, 2.72, 0.5)), 'halfNutA');
+  const tagB = leaderTo(tag('B 뒤 너트', v(0.2, 2.72, 0.5)), 'halfNutB');
   const tagL = tag('레버', v(1.44, 2.72, 0.4));
   g.add(tag('양쪽 나사 롤러(구동)', v(RX, 3.12, 0.3)), tagA, tagB, tagL);
 

@@ -1,7 +1,7 @@
 // 104 웜(나사)과 미끄럼대 위의 톱니바퀴 — 나사가 돌면 바퀴가 돌고, 바퀴를 돌리면 미끄럼대가 곧게 간다 (판화 104번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rod, rotArrow, tag, wormScrew } from '../kit';
+import { displayStand, rod, rotArrow, tag, wormScrew, leaderTo } from '../kit';
 import { K104, slideBed, solidWormWheel, wallBearingX, wheelCarriage, wormDrive104, wormSection } from '../kit/k104';
 
 const TAU = Math.PI * 2;
@@ -63,8 +63,8 @@ export default function buildM104(): MovementModel {
   g.add(wheelArrow, wheelArrowCw);
 
   // 이름표
-  const wheelTag = tag('웜 바퀴', v(0, CY, 0.35));
-  const carTag = tag('미끄럼대', v(0, 0.95, 0.35));
+  const wheelTag = leaderTo(tag('웜 바퀴', v(0, CY, 0.35)), 'wheel');
+  const carTag = leaderTo(tag('미끄럼대', v(0, 0.95, 0.35)), 'carriage');
   g.add(tag('웜(나사)', v(-1.5, 2.62, 0.35)), tag('베드(고정)', v(-1.4, 0.95, 0.35)), wheelTag, carTag);
 
   const frac = (a: number): number => a - Math.floor(a);

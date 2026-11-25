@@ -1,7 +1,7 @@
 // 106 홈 원통 캠의 등속 왕복 — 원통 겉면의 닫힌 홈(반 바퀴 나선·반 바퀴 되감기)이 핀을 좌우 등속으로 밀어낸다 (판화 106번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rod, rotArrow, tag } from '../kit';
+import { displayStand, rod, rotArrow, tag, leaderTo } from '../kit';
 import { ceilingSlab, followerBar, grooveCamX, grooveDrum, grooveProbe, hangerX, K106, wallBearingX } from '../kit/k104';
 
 const TAU = Math.PI * 2;
@@ -22,6 +22,7 @@ export default function buildM106(): MovementModel {
   // 원통 캠 — 축(로컬 X)을 원통 그룹의 자식으로 넣어 같이 돈다
   const drum = grooveDrum();
   drum.name = 'drum';
+  drum.children[0]!.name = 'drumBody106';
   drum.add(rod(v(-0.78, 0, 0), v(0.78, 0, 0), K106.shaftR));
   drum.position.set(DX, CY, ZC);
   g.add(drum);
@@ -36,12 +37,15 @@ export default function buildM106(): MovementModel {
   // 미끄럼 막대(보스·팔·핀) — 매 프레임 x 를 grooveCamX 로 다시 놓는다
   const bar = followerBar();
   bar.name = 'bar';
+  bar.children[0]!.name = 'slideRod106';
+  bar.children[4]!.name = 'pin106';
   g.add(bar);
 
   // 천장 걸이 2개(고정) — 두 가운데 x = −0.07 (원통 가운데보다 조금 왼쪽)
   for (const x of [-0.58, 0.44]) {
     const h = hangerX(CEIL - BY);
     h.position.set(x, BY, ZC);
+    if (x > 0) h.name = 'hangerR106';
     g.add(h);
   }
 
@@ -61,9 +65,9 @@ export default function buildM106(): MovementModel {
   g.add(arrow);
 
   // 이름표 4개 — 2개는 막대를 따라간다
-  const pinTag = tag('따라가는 핀', v(0, 0, 0));
-  const barTag = tag('미끄럼 막대', v(0, 0, 0));
-  g.add(tag('홈 원통 캠', v(-1.35, 0.75, 0.4)), tag('걸이(안내)', v(1.3, 2.25, 0.3)), pinTag, barTag);
+  const pinTag = leaderTo(tag('따라가는 핀', v(0, 0, 0)), 'pin106');
+  const barTag = leaderTo(tag('미끄럼 막대', v(0, 0, 0)), 'slideRod106');
+  g.add(leaderTo(tag('홈 원통 캠', v(-1.35, 0.75, 0.4)), 'drumBody106'), leaderTo(tag('걸이(안내)', v(1.3, 2.25, 0.3)), 'hangerR106'), pinTag, barTag);
 
   // notes 가 읽을 현재 값
   let a = theta - 1.6;

@@ -1,7 +1,7 @@
 // 080 갈고리 폴로 올리는 홈 랙 — 레버 C 가 흔들리면 X 자 갈고리 폴 둘이 번갈아 막대 A 의 톱니에 걸려 막대를 끌어올린다 (판화 80번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, shaftZ, tag } from '../kit';
+import { displayStand, shaftZ, tag, leaderTo } from '../kit';
 import { K80, hookPawl80, k80State, rockLever80, slotKeeper80, slottedRack80 } from '../kit/k080';
 
 const OY = 2.13; // 받침 핀 높이
@@ -48,7 +48,7 @@ export default function buildM080(): MovementModel {
     tag('레버 C', v(1.05, 2.62, 0.3)),
     tag('홈 랙 막대 A', v(-0.95, 0.62, 0.3)),
     tag('갈고리 폴', v(0.95, 1.2, 0.3)),
-    tag('받침 핀과 안내 블록', v(-1.15, 2.75, 0.3))
+    leaderTo(tag('받침 핀과 안내 블록', v(-1.15, 2.75, 0.3)), 'keeper')
   );
 
   let st = k80State(0);

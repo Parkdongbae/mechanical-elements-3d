@@ -1,7 +1,7 @@
 // 116 크랭크 대신 쓰는 이중 랙 — 틀이 곧게 왕복하면 두 피니언이 번갈아 래칫·폴로 축을 한 방향으로 돌린다 (판화 116번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K116, doubleRackFrame116, loosePinion116, ratchet116, slideGuide116, state116 } from '../kit/k116';
 
 const TAU = Math.PI * 2;
@@ -58,7 +58,7 @@ export default function buildM116(): MovementModel {
   arrow.position.set(0, CY, 0.3);
   g.add(arrow);
   const frameTag = tag('랙 틀(구동)', v(0, 2.5, 0.3));
-  g.add(frameTag, tag('윗랙·앞 피니언', v(-1.25, 2.95, 0.3)), tag('아랫랙·뒤 피니언', v(-1.2, 0.95, 0.3)), tag('래칫과 폴', v(1.2, 2.95, 0.3)), tag('출력 축(한 방향)', v(1.15, 0.95, 0.3)));
+  g.add(frameTag, tag('윗랙·앞 피니언', v(-1.25, 2.95, 0.3)), tag('아랫랙·뒤 피니언', v(-1.2, 0.95, 0.3)), tag('래칫과 폴', v(1.2, 2.95, 0.3)), leaderTo(tag('출력 축(한 방향)', v(1.15, 0.95, 0.3)), 'shaft'));
 
   const apply = (): void => {
     const s = state116(theta);

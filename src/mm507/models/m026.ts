@@ -2,7 +2,7 @@
 // 구동: 평기어(피니언 20). 크라운(24)은 5/6 속도로 따라 돈다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { PILLOW_BOSS_Y, crownGear, crownGearAngle, displayStand, pillow, rod, rotArrow, spurGear, tag } from '../kit';
+import { PILLOW_BOSS_Y, crownGear, crownGearAngle, displayStand, leaderTo, pillow, rod, rotArrow, spurGear, tag } from '../kit';
 import { castIron, darkSteel, paint } from '../../models/materials';
 import { lathe, mesh, tubeProfile } from '../../models/parts/geom';
 
@@ -66,7 +66,7 @@ export default function buildM026(): MovementModel {
 
   g.add(
     tag('평기어(구동)', v(-1.15, 2.3, 0.0)),
-    tag('크라운 기어', v(0.55, 0.9, 0.3)),
+    leaderTo(tag('크라운 기어', v(0.55, 0.9, 0.3)), crownMesh),
     tag('직각으로 맞물림', v(0.35, 2.3, 0.18))
   );
 

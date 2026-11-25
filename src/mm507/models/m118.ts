@@ -1,7 +1,7 @@
 // 118 행정을 두 배로 늘리기 — 연결봉이 미는 피니언이 고정 랙 위를 굴러, 윗랙이 두 배로 간다 (판화 118번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import {
   crankDisc118,
   fixedRackBed118,
@@ -80,7 +80,7 @@ export default function buildM118(): MovementModel {
   arrow.position.set(CXC, YP, 0.3);
   g.add(arrow);
   const topTag = tag('윗랙(두 배 이동)', v(PX, 2.45, 0.3));
-  const pinTag = tag('구르는 피니언', v(PX, 0.28, 0.35));
+  const pinTag = leaderTo(tag('구르는 피니언', v(PX, 0.28, 0.35)), 'pinion');
   g.add(topTag, pinTag, tag('고정 랙', v(1.7, 1.2, 0.3)), tag('크랭크(보충)', v(-1.2, 0.75, 0.3)));
 
   const apply = (): void => {

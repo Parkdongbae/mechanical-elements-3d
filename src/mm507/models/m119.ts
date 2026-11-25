@@ -1,7 +1,7 @@
 // 119 미끄럼 홈의 이중 랙 피니언 — 한 방향으로 도는 피니언이 타원 무한 랙의 위·아래를 번갈아 물어 랙을 왕복시킨다 (판화 119번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import {
   K119, PERIOD119, barGuide119, frameBeam119, mangle119, manglePinion119, oblongRack119, slottedBar119
 } from '../kit/k119';
@@ -26,6 +26,7 @@ export default function buildM119(): MovementModel {
 
   // 홈 막대(고정)
   const bar = slottedBar119(0.94, 0.94, 0.48, 0.22);
+  bar.name = 'slotBar119';
   bar.position.set(0, CY, 0.25);
   g.add(bar);
 
@@ -47,9 +48,9 @@ export default function buildM119(): MovementModel {
   const arrow = rotArrow(0.16, true);
   g.add(arrow);
 
-  const pinionTag = tag('피니언(구동)', v(0, 0, 0.45));
+  const pinionTag = leaderTo(tag('피니언(구동)', v(0, 0, 0.45)), 'pinion');
   const rackTag = tag('타원 무한 랙', v(0.36, CY - 0.17, 0.45));
-  g.add(pinionTag, rackTag, tag('홈 막대', v(1.0, 3.0, 0.3)), tag('틀(고정)', v(-1.55, 0.5, 0.3)));
+  g.add(pinionTag, rackTag, leaderTo(tag('홈 막대', v(1.0, 3.0, 0.3)), 'slotBar119'), tag('틀(고정)', v(-1.55, 0.5, 0.3)));
 
   let state = mangle119(theta);
   const apply = (): void => {

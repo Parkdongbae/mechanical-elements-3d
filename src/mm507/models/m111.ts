@@ -3,7 +3,7 @@
 // 나사산 모양은 원문·판화대로 방향이 반대(굵은 나사 오른나사, 가는 나사 왼나사) — 사용자 결정. 움직임은 설명(차)을 따른다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { K111, diff111, diffScrew111, nutFrame111, travelNut111 } from '../kit/k110';
 
 const ZC = 0.3; // 축의 깊이
@@ -28,6 +28,8 @@ export default function buildM111(): MovementModel {
   // 나사 한 몸(머리 + 굵은 나사 + 가는 나사 + 손잡이 막대) — 고정 너트 안에서 돌며 오르내린다
   const screw = diffScrew111(-1); // 안 나: 가는 나사는 왼나사(판화·원문대로 반대 방향)
   screw.name = 'screw';
+  screw.children[0]!.name = 'thickScrew111';
+  screw.children[1]!.name = 'thinScrew111';
   screw.position.set(0, Y0, ZC);
   g.add(screw);
 
@@ -45,7 +47,7 @@ export default function buildM111(): MovementModel {
   g.add(arrowUp, arrowDn);
 
   // 이름표 4개 — 이동 너트 것만 너트를 따라 오르내린다
-  g.add(tag('굵은 나사', v(-1.1, 2.75, ZC)), tag('고정 너트', v(1.3, Y_FIX, ZC)), tag('가는 나사', v(-1.1, 0.95, ZC)));
+  g.add(leaderTo(tag('굵은 나사', v(-1.1, 2.75, ZC)), 'thickScrew111'), tag('고정 너트', v(1.3, Y_FIX, ZC)), leaderTo(tag('가는 나사', v(-1.1, 0.95, ZC)), 'thinScrew111'));
   const tagNut = tag('이동 너트', v(1.3, Y_NUT, ZC));
   g.add(tagNut);
 

@@ -1,7 +1,7 @@
 // 012 고정 도르래 — 줄이 도르래 위를 넘어 1:1 (방향만 바뀜). 손이 줄을 당기면 추가 같은 길이만큼 오른다 (판화 12번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, displayStand, pulley, rod, ropeAround, rotArrow, setMM, tag, weight } from '../kit';
+import { Rope, displayStand, leaderTo, pulley, rod, ropeAround, rotArrow, setMM, tag, weight } from '../kit';
 import { castIron, glow, steel, wood } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 
@@ -90,7 +90,7 @@ export default function buildM012(): MovementModel {
   const arrow = rotArrow(0.55, true);
   arrow.position.set(CX, CY, 0.36);
   g.add(arrow);
-  g.add(tag('고정 도르래', v(0.95, 2.85, 0.35)));
+  g.add(leaderTo(tag('고정 도르래', v(0.95, 2.85, 0.35)), sheave));
 
   return {
     group: g,

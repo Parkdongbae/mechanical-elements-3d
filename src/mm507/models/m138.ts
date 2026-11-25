@@ -2,7 +2,7 @@
 //  변하는 속도의 번갈아 직선 운동을 한다 (판화 138번, 설계표 docs/mm507-sheets/138.md)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K138, camPlate138, lift138, rodBar138, rodGuide138 } from '../kit/k138';
 
 const PHASE0 = 1.6; // u = theta − PHASE0: t = 1 에서 u = 0 (판화 자세 — 발이 윗 골)
@@ -17,7 +17,9 @@ export default function buildM138(): MovementModel {
   g.add(displayStand());
 
   // 캠 축(고정) — 허브 구멍 0.10 을 틈 0.005 로 꿴다. 뒤판 보스가 받치고 끝 너트 z ≤ 0.28
-  g.add(shaftZ(0, K138.CY, 0.28, 0.095));
+  const camShaft = shaftZ(0, K138.CY, 0.28, 0.095);
+  camShaft.name = 'camShaft';
+  g.add(camShaft);
 
   // 삼날 캠(구동, 청동) — 원점 = 축, rotation.z = u
   const cam = camPlate138();
@@ -48,7 +50,7 @@ export default function buildM138(): MovementModel {
   const tagRod = tag('막대(왕복)', v(0.34, K138.CY + 0.85, 0.3));
   const tagFoot = tag('막대 발(접점)', v(-0.6, K138.CY + 0.05, 0.3));
   const tagGuide = tag('안내 2개(고정)', v(0.85, K138.G1, 0.3));
-  const tagShaft = tag('캠 축(고정)', v(0.9, 0.85, 0.3));
+  const tagShaft = leaderTo(tag('캠 축(고정)', v(0.9, 0.85, 0.3)), 'camShaft');
   g.add(tagCam, tagRod, tagFoot, tagGuide, tagShaft);
 
   /** theta 의 닫힌 식으로 전체 자세를 다시 계산(누적 오차·역회전 없음) */

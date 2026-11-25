@@ -2,7 +2,7 @@
 // 풀리 옆선이 곧지 않고 곡선: 판화대로 위 풀리는 오목(나팔꼴), 아래 풀리는 볼록(종꼴) (판화 10번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, PILLOW_BOSS_Y, STAGE, carryTags, displayStand, openBeltPath, pillow, rod, tag, type V2 } from '../kit';
+import { Belt, PILLOW_BOSS_Y, STAGE, carryTags, displayStand, leaderTo, openBeltPath, pillow, rod, tag, type V2 } from '../kit';
 import { brass, bronze, castIron, darkSteel, paint } from '../../models/materials';
 import { TAU, lathe, mesh, tubeProfile } from '../../models/parts/geom';
 
@@ -120,8 +120,8 @@ export default function buildM010(): MovementModel {
   const belt = new Belt(f0.path, { width: 0.1, thickness: 2 * E, style: 'flat', widthDirs: f0.wd });
   g.add(belt.group);
 
-  g.add(tag('구동 원뿔 풀리', v3(-1.25, YT + 0.32, Z0 + 0.1)));
-  g.add(tag('종동 원뿔 풀리', v3(1.25, YB - 0.32, Z0 + 0.1)));
+  g.add(leaderTo(tag('구동 원뿔 풀리', v3(-1.25, YT + 0.32, Z0 + 0.1)), pTop));
+  g.add(leaderTo(tag('종동 원뿔 풀리', v3(1.25, YB - 0.32, Z0 + 0.1)), pWrap));
 
   return {
     group: g,

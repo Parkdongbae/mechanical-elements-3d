@@ -20,6 +20,7 @@ import {
   shaftZ,
   spurGear,
   tag,
+  leaderTo,
   type V2
 } from '../kit';
 import { carrierArm, guideRoller, ringFlange } from '../kit/k057';
@@ -203,11 +204,11 @@ export default function buildM057(): MovementModel {
   g.add(aTop, aRing, aSun, aPin);
 
   // ── 이름표 ──
-  const pinTag = tag('피니언(자전+공전)', v(0, 0, 0.3));
+  const pinTag = leaderTo(tag('피니언(자전+공전)', v(0, 0, 0.3)), 'pinion');
   g.add(
     tag('구동 풀리', v(0.75, 3.05, 0.4)),
     tag('링 기어(안쪽 이, 열린 벨트)', v(-1.35, 1.9, 0.3)),
-    tag('태양 기어(엇걸이 로프)', v(1.3, 1.75, 0.4)),
+    leaderTo(tag('태양 기어(엇걸이 로프)', v(1.3, 1.75, 0.4)), 'sun'),
     pinTag,
     tag('캐리어(판화에 없는 받침)', v(1.25, 0.45, 0.1))
   );

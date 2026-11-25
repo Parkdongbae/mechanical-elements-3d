@@ -1,7 +1,7 @@
 // 004 같은 평면의 직각 전동 — 엇걸이 밧줄이 아래 가운데 수직축 드럼을 여러 바퀴 감는다 (판화 4번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, displayStand, pulley, ROPE_R, rod, rotArrow, shaftZ, tag, type V2 } from '../kit';
+import { Belt, displayStand, leaderTo, pulley, ROPE_R, rod, rotArrow, shaftZ, tag, type V2 } from '../kit';
 import { brass, castIron, darkSteel } from '../../models/materials';
 import { lathe, mesh } from '../../models/parts/geom';
 
@@ -212,7 +212,7 @@ export default function buildM004(): MovementModel {
   g.add(
     tag('구동 풀리', v(1.05, 2.95, 0.4)),
     tag('안내 풀리', v(-1.95, 1.4, 0.4)),
-    tag('종동 풀리(수직축)', v(1.0, 0.5, 0.6))
+    leaderTo(tag('종동 풀리(수직축)', v(1.0, 0.5, 0.6)), gSpin)
   );
 
   return {

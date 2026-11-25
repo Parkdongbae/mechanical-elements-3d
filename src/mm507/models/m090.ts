@@ -2,7 +2,7 @@
 // 요크는 흔들림 없이 가로로만 왕복한다(89번의 막대 옆흔들림을 없앤 꼴, 판화 90번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { eccentricSheave, rodGuide, slotYoke } from '../kit/k089';
 
 const ZP = 0.1; // 기구 평면 z
@@ -47,7 +47,7 @@ export default function buildM090(): MovementModel {
 
   // 이름표
   g.add(
-    tag('편심 원판', v(-0.75, 2.95, 0.3)),
+    leaderTo(tag('편심 원판', v(-0.75, 2.95, 0.3)), 'sheave'),
     tag('길쭉한 요크(원판이 안에서 위아래로 미끄러짐)', v(0.6, 3.05, 0.3)),
     tag('막대(흔들림 없이 가로로만 왕복)', v(1.55, 2.1, 0.3)),
     tag('고정 안내', v(-1.3, 1.3, 0.3))

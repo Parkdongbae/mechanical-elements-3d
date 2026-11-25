@@ -3,7 +3,7 @@
 // 모든 자세는 누적 theta 의 닫힌 식 swing134 에서 절대로 다시 계산한다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { Rope, displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K134, RC134, ROPE_Y134, carriageRail134, drumRopePath134, ropeCarriage134, ropeDrum134, swing134 } from '../kit/k134';
 
 const DEG = Math.PI / 180;
@@ -50,7 +50,7 @@ export default function buildM134(): MovementModel {
   g.add(arrowCcw, arrowCw);
 
   // 이름표 4개 — 미끄럼대 이름표만 따라간다
-  g.add(tag('드럼(구동 — 고른 속도로 돈다)', new THREE.Vector3(-1.35, 2.55, 0.3)));
+  g.add(leaderTo(tag('드럼(구동 — 고른 속도로 돈다)', new THREE.Vector3(-1.35, 2.55, 0.3)), drum));
   g.add(tag('밧줄(드럼에 꼭 한 바퀴 감김)', new THREE.Vector3(1.35, 2.2, 0.3)));
   const tagCarriage = tag('미끄럼대(줄에 끌려 곧게 간다)', new THREE.Vector3(0, 0.62, 0.35));
   g.add(tagCarriage);

@@ -1,7 +1,7 @@
 // 121 디스크 휠과 클릭 — 막대의 오르내림이 디스크를 흔들고, 디스크에 달린 걸쇠(클릭)가 코그휠을 한 방향으로 간헐 회전시킨다 (판화 121번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K121, cogWheel121, click121, diskWheel121, feed121 } from '../kit/k119';
 import { connectingRod, crosshead, guideFrame } from '../kit/k092';
 
@@ -68,8 +68,8 @@ export default function buildM121(): MovementModel {
   const rodTag = tag('막대', v(1.2, 1.6, 0.3));
   g.add(
     tag('디스크', v(-1.6, 0.45, 0.3)),
-    tag('코그휠', v(0.95, 0.45, 0.3)),
-    tag('걸쇠(클릭)', v(-0.9, 2.78, 0.3)),
+    leaderTo(tag('코그휠', v(0.95, 0.45, 0.3)), 'cog'),
+    leaderTo(tag('걸쇠(클릭)', v(-0.9, 2.78, 0.3)), 'click'),
     rodTag,
     tag('미끄럼 블록', v(1.5, 2.6, 0.3))
   );

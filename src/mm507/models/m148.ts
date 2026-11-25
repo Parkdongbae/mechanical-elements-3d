@@ -3,7 +3,7 @@
 //  기어 1회전에 한 번 왔다 갔다 흔든다 (판화 148번 · 설계표 docs/mm507-sheets/148.md)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, spurGear, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, spurGear, tag, leaderTo } from '../kit';
 import { crankLever148, frame148, gearWeb148, K148, lever148 } from '../kit/k148';
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
@@ -46,11 +46,11 @@ export default function buildM148(): MovementModel {
   g.add(arrowP, arrowG);
 
   // 이름표 5개 — 크랭크 레버·롤러 핀 표는 움직이는 부품을 따라간다
-  const tagPinion = tag('핀니언(구동)', v(-1.75, 1.85, 0.3));
+  const tagPinion = leaderTo(tag('핀니언(구동)', v(-1.75, 1.85, 0.3)), pinion);
   const tagGear = tag('큰 기어(4:1)', v(0.9, 2.6, 0.3));
   const tagLever = tag('크랭크 레버', v(0, 0, 0.3));
-  const tagRoller = tag('롤러 핀', v(0, 0, 0.3));
-  const tagFrame = tag('프레임(고정)', v(1.85, 1.05, 0.3));
+  const tagRoller = leaderTo(tag('롤러 핀', v(0, 0, 0.3)), lever);
+  const tagFrame = leaderTo(tag('프레임(고정)', v(1.85, 1.05, 0.3)), frame);
   g.add(tagPinion, tagGear, tagLever, tagRoller, tagFrame);
 
   /** theta 의 닫힌 식으로 전체 자세를 다시 계산 — 누적 오차·역회전 없음 */

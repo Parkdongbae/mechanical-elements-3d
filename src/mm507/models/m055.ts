@@ -2,7 +2,7 @@
 // 서로 다른 속도를 준다. A 와 C 는 반대 방향, 속도는 이 수에 반비례 (판화 55번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, internalGear, meshAngle, ringRoot, rotArrow, shaftZ, spurGear, tag } from '../kit';
+import { displayStand, internalGear, meshAngle, ringRoot, rotArrow, shaftZ, spurGear, tag, leaderTo } from '../kit';
 import { darkSteel, paint, steel } from '../../models/materials';
 import { lathe, mesh, rodProfile } from '../../models/parts/geom';
 
@@ -76,10 +76,10 @@ export default function buildM055(): MovementModel {
   g.add(aB, aA, aC);
   // 이름표 — 모두 링 바깥에
   g.add(
-    tag('B 피니언(구동, 원문은 D)', v(-1.55, 1.85, 0.3)),
-    tag('A 안쪽 기어 20', v(0.55, 3.2, 0.3)),
+    leaderTo(tag('B 피니언(구동, 원문은 D)', v(-1.55, 1.85, 0.3)), pinionB),
+    leaderTo(tag('A 안쪽 기어 20', v(0.55, 3.2, 0.3)), gearA),
     tag('C 링 기어 44', v(-0.6, 3.2, 0.3)),
-    tag('받침 롤러(판화에 없음)', v(1.45, 0.75, 0.3))
+    leaderTo(tag('받침 롤러(판화에 없음)', v(1.45, 0.75, 0.3)), rollers[0]!)
   );
 
   return {

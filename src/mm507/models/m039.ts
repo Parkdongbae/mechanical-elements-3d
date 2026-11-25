@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { castIron, darkSteel, steel } from '../../models/materials';
 import { extrude, lathe, mesh, rodProfile, stadiumShape, TAU } from '../../models/parts/geom';
-import { displayStand, meshAngle, pulley, rotArrow, shaftZ, spurGear, tag, type V2 } from '../kit';
+import { displayStand, leaderTo, meshAngle, pulley, rotArrow, shaftZ, spurGear, tag, type V2 } from '../kit';
 
 const NT = 20; // 태양·유성 잇수(같음)
 const MOD = 0.04; // 피치 반지름 0.4
@@ -65,6 +65,9 @@ export default function buildM039(): MovementModel {
   const tSun = tag('태양 기어', v(S[0] - 1.2, S[1] - 0.2, 0.4));
   const tPlanet = tag('유성 기어', v(0, 0, 0.4));
   const tRod = tag('연결봉', v(0, 0, 0.4));
+  leaderTo(tSun, sun);
+  leaderTo(tPlanet, planet);
+  leaderTo(tRod, rodG);
   g.add(tSun, tPlanet, tRod);
 
   return {

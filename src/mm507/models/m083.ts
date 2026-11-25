@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { bronze } from '../../models/materials';
 import { circlePath, extrude, mesh, roundedRect } from '../../models/parts/geom';
-import { displayStand, markPin, rotArrow, setMM, shaftZ, tag } from '../kit';
+import { displayStand, markPin, rotArrow, setMM, shaftZ, tag, leaderTo } from '../kit';
 import { coilSpring } from '../kit/gear2';
 import {
   crownRatchetWheel,
@@ -120,7 +120,7 @@ export default function buildM083(): MovementModel {
   g.add(
     tag('래칫 바퀴 D(윗면 톱니 30)', v(-1.45, 0.75, 0.3)),
     tag('앞 부채꼴 C(오른쪽으로 갈 때 밂)', v(-1.5, 1.55, 0.7)),
-    tag('뒤 부채꼴 C(왼쪽으로 갈 때 밂)', v(0.45, 1.3, 0.0)),
+    leaderTo(tag('뒤 부채꼴 C(왼쪽으로 갈 때 밂)', v(0.45, 1.3, 0.0)), 'arcBack'),
     tag('로커 축 B', v(-1.1, 1.95, 0.75)),
     tag('막대 A(왕복)', v(0.3, 2.3, 0.75))
   );

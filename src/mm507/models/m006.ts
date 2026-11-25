@@ -2,7 +2,7 @@
 // 아래 두 풀리에 왕복 회전을 준다 (판화 6번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, beltPathAround, displayStand, pulley, rotArrow, rod, shaftZ, tag, type V2 } from '../kit';
+import { Belt, beltPathAround, displayStand, leaderTo, pulley, rotArrow, rod, shaftZ, tag, type V2 } from '../kit';
 import { brass, bronze, darkSteel, paint } from '../../models/materials';
 import { annularSector, extrude, lathe, merge, mesh, rodProfile, TAU } from '../../models/parts/geom';
 
@@ -145,7 +145,7 @@ export default function buildM006(): MovementModel {
   }
   g.add(
     tag('레버(왕복)', v(1.0, 2.75, 0.4)),
-    tag('반원 세그먼트', v(-0.95, 1.65, 0.4)),
+    leaderTo(tag('반원 세그먼트', v(-0.95, 1.65, 0.4)), leverG),
     tag('종동 풀리', v(1.5, 1.32, 0.4))
   );
 

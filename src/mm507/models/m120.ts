@@ -1,7 +1,7 @@
 // 120 집게형 기어 장치 — 한 축의 두 피니언이 바깥 이 부채꼴과 안쪽 이 활 틀을 맞물려 두 턱을 함께 오므린다 (판화 120번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K120, pincer120, pinion119, ringJaw120, sectorJaw120, spacer119 } from '../kit/k119';
 
 const PY = 2.2; // 피벗 높이
@@ -32,6 +32,7 @@ export default function buildM120(): MovementModel {
   // 바깥 이 부채꼴 + 왼쪽 턱(앞 층), 안쪽 이 활 틀 + 오른쪽 턱(뒤 층)
   const sector = sectorJaw120();
   sector.name = 'sectorJaw';
+  sector.children[0]!.name = 'sectorTeeth120';
   sector.position.set(0, PY, ZF);
   g.add(sector);
   const ring = ringJaw120();
@@ -62,9 +63,9 @@ export default function buildM120(): MovementModel {
   g.add(
     tag('왼쪽 턱', v(-1.35, 2.9, 0.3)),
     tag('오른쪽 턱', v(1.4, 2.9, 0.3)),
-    tag('바깥 이 조각', v(-1.4, 2.1, 0.3)),
+    leaderTo(tag('바깥 이 조각', v(-1.4, 2.1, 0.3)), 'sectorTeeth120'),
     tag('안쪽 이 틀', v(-1.45, 0.5, 0.3)),
-    tag('피니언 축(구동)', v(1.25, 0.38, 0.3))
+    leaderTo(tag('피니언 축(구동)', v(1.25, 0.38, 0.3)), 'pinionShaft')
   );
 
   let cur = pincer120(theta);

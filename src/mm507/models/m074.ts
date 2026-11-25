@@ -1,7 +1,7 @@
 // 074 간헐 베벨 기어 장치 — 이가 일부만 난 베벨 C 가 마주 보는 베벨 A·B 를 번갈아 서로 반대로 돌린다 (판화 74번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { wallBearing } from '../kit/gear6';
 import { rodY } from '../kit/k053';
 import { shaftX } from '../kit/k061';
@@ -72,10 +72,10 @@ export default function buildM074(): MovementModel {
   g.add(arrC, arrA, arrB);
 
   g.add(
-    tag('A (반 바퀴 돌고 쉼)', v(-1.35, 2.4, 0.3)),
-    tag('B (A 와 반대로)', v(1.35, 2.4, 0.3)),
-    tag('C 이가 일부만 난 베벨(구동)', v(1.25, 0.95, 0.4)),
-    tag('이를 깎아 낸 민 면', v(-1.15, 1.05, 0.4))
+    leaderTo(tag('A (반 바퀴 돌고 쉼)', v(-1.35, 2.4, 0.3)), 'gearA'),
+    leaderTo(tag('B (A 와 반대로)', v(1.35, 2.4, 0.3)), 'gearB'),
+    leaderTo(tag('C 이가 일부만 난 베벨(구동)', v(1.25, 0.95, 0.4)), 'gearC'),
+    leaderTo(tag('이를 깎아 낸 민 면', v(-1.15, 1.05, 0.4)), 'gearC')
   );
 
   let spinA = 0;

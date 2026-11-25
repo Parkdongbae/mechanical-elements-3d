@@ -1,7 +1,7 @@
 // 009 원뿔 풀리 변속 — 마주 보는 원뿔 풀리 위로 벨트 위치가 이동하며 속도비가 연속(무단) 변한다 (판화 9번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, PILLOW_BOSS_Y, conePulley, displayStand, pillow, rod, tag } from '../kit';
+import { Belt, PILLOW_BOSS_Y, conePulley, displayStand, leaderTo, pillow, rod, tag } from '../kit';
 import { bronze, castIron } from '../../models/materials';
 
 const YT = 2.5; // 구동(위) 축 높이
@@ -118,8 +118,8 @@ export default function buildM009(): MovementModel {
   g.add(belt.group);
 
   // 이름표
-  g.add(tag('구동 원뿔 풀리', v3(1.0, YT + 0.25, Z + 0.1)));
-  g.add(tag('종동 원뿔 풀리', v3(1.0, YB + 0.25, Z + 0.1)));
+  g.add(leaderTo(tag('구동 원뿔 풀리', v3(1.0, YT + 0.25, Z + 0.1)), pT));
+  g.add(leaderTo(tag('종동 원뿔 풀리', v3(1.0, YB + 0.25, Z + 0.1)), pB));
 
   return {
     group: g,

@@ -1,7 +1,7 @@
 // 128 세 날개 축과 턱 달린 네모 틀 — 축이 계속 돌면 틀이 곧게 왕복 (판화 128번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { slideGuide128, toothedFrame128, wiper128, wiperStar128 } from '../kit/k128';
 
 const CX = 0; // 축 x
@@ -44,7 +44,7 @@ export default function buildM128(): MovementModel {
   // 이름표 — 위 턱·아래 턱은 틀을 따라간다
   const tagJ1 = tag('위 턱', v(0.5, 2.85, 0.3));
   const tagJ2 = tag('아래 턱', v(-0.5, 0.65, 0.3));
-  g.add(tag('세 날개 축(구동)', v(-0.75, 2.85, 0.3)), tagJ1, tagJ2, tag('안내 블록', v(1.75, 2.2, 0.3)));
+  g.add(leaderTo(tag('세 날개 축(구동)', v(-0.75, 2.85, 0.3)), 'wiper'), tagJ1, tagJ2, leaderTo(tag('안내 블록', v(1.75, 2.2, 0.3)), 'guideR'));
 
   let st = wiper128(0);
   const apply = (): void => {

@@ -4,7 +4,7 @@
 // 차동 관계 αA + αC = 2φ. 베벨은 판화와 달리 M–R 틈에 드러내고, 케이지·축받이는 보충 부품(판화에 없음).
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, bevelGear, crossedBeltPath, displayStand, openBeltPath, pulley, rotArrow, tag } from '../kit';
+import { Belt, bevelGear, crossedBeltPath, displayStand, openBeltPath, pulley, rotArrow, tag, leaderTo } from '../kit';
 import { carryTags } from '../kit/mm';
 import { bearingX, beltLoopYZ, crossedLoopYZ, diffCarrier, rimMarks, shaftX, tubeZ } from '../kit/k061';
 
@@ -129,7 +129,7 @@ export default function buildM062(): MovementModel {
   const grpA = lower();
   grpA.add(shaftX(-1.9, 1.9, 0, 0));
   grpA.add(pivotX(XM, 1, named(pulley(R, { width: 0.4, flat: true }), 'pulleyM'), rimMarks(R, 0.4, 4), tubeZ(0.05, 0.075, 0.2, 0.42)));
-  grpA.add(pivotX(XA, 1, bevelGear(NT, 0.025, { width: 0.1, bore: 0.05, driver: true })));
+  grpA.add(pivotX(XA, 1, named(bevelGear(NT, 0.025, { width: 0.1, bore: 0.05, driver: true }), 'bevelA')));
   // R(운반 풀리) + 케이지 + 유성 P
   const carrier = lower();
   carrier.add(pivotX(XR, 1, named(pulley(R, { width: 0.4, flat: true, hub: 0.1 }), 'pulleyR'), rimMarks(R, 0.4, 4)));
@@ -178,7 +178,7 @@ export default function buildM062(): MovementModel {
   g.add(
     tag('구동 드럼', v(-0.2, 3.1, 0.5)),
     tag('작은 풀리', v(1.45, 3.15, 0.5)),
-    tag('차동 베벨', v(-0.05, 1.7, 0.5)),
+    leaderTo(tag('차동 베벨', v(-0.05, 1.7, 0.5)), 'bevelA'),
     tag('운반 풀리', v(0.3, 0.38, 0.5)),
     tag('넷째 풀리', v(1.55, 0.38, 0.5))
   );

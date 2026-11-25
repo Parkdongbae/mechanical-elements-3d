@@ -1,7 +1,7 @@
 // 125 복잡한 변형 운동 — 기어 셋의 크랭크 핀이 저울대 두 단을 거쳐 세로 막대 하나를 민다 (판화 125번, 설계표 125.md)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import {
   K125,
   barGuide125,
@@ -77,7 +77,7 @@ export default function buildM125(): MovementModel {
     g.add(a);
   }
 
-  const tagBar = tag('세로 막대 (출력)', v(0.45, 2.98, 0.3));
+  const tagBar = leaderTo(tag('세로 막대 (출력)', v(0.45, 2.98, 0.3)), 'bar');
   g.add(
     tag('구동 기어 (18잇수)', v(-1.7, 0.72, 0.3)),
     tag('기어 24·30잇수', v(1.5, 1.6, 0.3)),

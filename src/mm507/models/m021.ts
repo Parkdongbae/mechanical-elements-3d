@@ -1,7 +1,7 @@
 // 021 도르래 배열 — 고정 도르래 F + 움직도르래 M, 판화 연결을 그대로 계산한 이득 3배 (판화 21번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, arcPoints, ceilingBeam, displayStand, pulleyBlock, rod, ropeEnd, rotArrow, tag, weight } from '../kit';
+import { Rope, arcPoints, ceilingBeam, displayStand, leaderTo, pulleyBlock, rod, ropeEnd, rotArrow, tag, weight } from '../kit';
 import { steel } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 
@@ -66,7 +66,7 @@ export default function buildM021(): MovementModel {
   g.add(arrow);
 
   // 이름표 — 움직이는 부품 것은 매 프레임 따라간다
-  const tagF = tag('F 고정 도르래', v(1.15, 2.72, 0.4));
+  const tagF = leaderTo(tag('F 고정 도르래', v(1.15, 2.72, 0.4)), blockF);
   const tagM = tag('M 움직도르래', v(-1.15, 1.65, 0.4));
   const tagW = tag('짐', v(0.95, 0.51, 0.4));
   const tagPull = tag('당기는 곳', v(-1.0, 0.95, 0.4));

@@ -2,7 +2,7 @@
 //  지레에 매달린 막대 둘이 번갈아 오르내린다 (판화 149번, 설계표 docs/mm507-sheets/149.md)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { wallBearing } from '../kit/gear6';
 import { K149, camLevers149, hangRod, lobeCam, leverPoint, rodAim, rollerLever } from '../kit/k149';
 
@@ -71,8 +71,8 @@ export default function buildM149(): MovementModel {
 
   // 이름표 4개 — '위 지레'·'아래 지레'는 움직이는 부품을 따라간다
   const tagCam = tag('캠 둘(구동)', v(1.45, 0.72, 0.5));
-  const tagUpper = tag('위 지레', v(0, 0, 0.3));
-  const tagLower = tag('아래 지레', v(0, 0, 0.6));
+  const tagUpper = leaderTo(tag('위 지레', v(0, 0, 0.3)), leverBack);
+  const tagLower = leaderTo(tag('아래 지레', v(0, 0, 0.6)), leverFront);
   const tagRod = tag('왕복 막대', v(-0.8, 0.95, 0.5));
   g.add(tagCam, tagUpper, tagLower, tagRod);
 

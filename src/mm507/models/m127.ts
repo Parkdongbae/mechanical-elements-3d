@@ -1,7 +1,7 @@
 // 127 공기 펌프용 랙과 피니언 — 레버를 흔들면 같은 축의 피니언이 돌고 양옆 랙이 반대로 오르내린다 (판화 127번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, spurGear, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, spurGear, tag, leaderTo } from '../kit';
 import { K127, backRoller127, handLever127, pumpCylinder127, pump127, rack127, rp127, stemOff127 } from '../kit/k125';
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
@@ -60,7 +60,7 @@ export default function buildM127(): MovementModel {
 
   const leverTag = tag('레버', v(-1.3, CY + 0.25, 0.3));
   const rackTag = tag('랙과 피스톤', v(-1.3, CY - 1.05, 0.3));
-  g.add(tag('피니언 (18잇수)', v(1.5, 3.05, 0.35)), tag('펌프 실린더', v(1.4, 0.5, 0.3)), leverTag, rackTag);
+  g.add(leaderTo(tag('피니언 (18잇수)', v(1.5, 3.05, 0.35)), 'pinion'), tag('펌프 실린더', v(1.4, 0.5, 0.3)), leverTag, rackTag);
 
   const apply = (): { phi: number; yL: number } => {
     const { phi, yL, yR } = pump127(theta);

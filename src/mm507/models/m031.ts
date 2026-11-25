@@ -1,7 +1,7 @@
 // 031 웜과 웜기어 — 가로축 웜이 세로 평면의 웜 휠(30개)을 위에서 물어 돌린다 (판화 31번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rod, rotArrow, shaftZ, tag, wormScrew, wormWheel, STAGE } from '../kit';
+import { displayStand, leaderTo, rod, rotArrow, shaftZ, tag, wormScrew, wormWheel, STAGE } from '../kit';
 import { castIron } from '../../models/materials';
 import { extrude, mesh, roundedRect } from '../../models/parts/geom';
 
@@ -51,7 +51,7 @@ export default function buildM031(): MovementModel {
   ao.rotation.y = Math.PI / 2;
   ao.position.set(0.6, YA, Z);
   g.add(aw, ao);
-  g.add(tag('웜(구동)', v(-0.95, YA + 0.4, 0.3)), tag('웜 휠 30', v(1.25, 1.35, 0.3)));
+  g.add(leaderTo(tag('웜(구동)', v(-0.95, YA + 0.4, 0.3)), worm), tag('웜 휠 30', v(1.25, 1.35, 0.3)));
 
   return {
     group: g,

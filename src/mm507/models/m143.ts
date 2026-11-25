@@ -4,7 +4,7 @@
 // 키트 kit/k143.ts 의 143 공용 부품)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag, wormScrew } from '../kit';
+import { displayStand, rotArrow, tag, wormScrew, leaderTo } from '../kit';
 import {
   crankWormWheel143,
   fixedFrame143,
@@ -44,6 +44,7 @@ export default function buildM143(): MovementModel {
   sledge.name = 'sledge';
   sledge.position.set(0, K143.BY, 0);
   g.add(sledge);
+  const sledgeBody = sledge.children[0] ?? sledge; // 틀 몸체(웜·웜 바퀴가 올라타기 전의 첫 부품)
 
   // 웜 — 이동 틀의 자식: 틀과 함께 축 위를 미끄러진다(키 홈)
   const worm = wormScrew(K143.wormRoot, K143.wormOuter, K143.pitch, K143.wormLen, { driver: true });
@@ -85,7 +86,7 @@ export default function buildM143(): MovementModel {
   // 웜 축 상자(풀리가 y 0.93~1.69 를 덮는 x ±2.0 밴드) 밖의 빈 곳에 둔다
   const tagWorm = tag('웜(축 위 미끄러짐)', v(0, 1.75, 0.35));
   const tagWheel = tag('웜 바퀴', v(-0.72, 0.62, 0.35));
-  const tagSledge = tag('이동 틀(왕복)', v(0.62, 0.62, 0.35));
+  const tagSledge = leaderTo(tag('이동 틀(왕복)', v(0.62, 0.62, 0.35)), sledgeBody);
   g.add(
     tag('웜 축 풀리(구동)', v(K143.pulleyX, 1.85, 0.35)),
     tagWorm,

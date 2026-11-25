@@ -3,7 +3,7 @@
 // 클러치는 벨 크랭크(ㄴ자 레버) + 당김 막대로 민다. 설계표 docs/mm507-sheets/053.md 그대로.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { bevelGear, displayStand, rotArrow, setMM, tag } from '../kit';
+import { bevelGear, displayStand, leaderTo, rotArrow, setMM, tag } from '../kit';
 import { armBearing, clawRing, doubleClutch, pivotBeam, pullRod, rodX, rodY, shiftBellCrank, shiftYoke } from '../kit/k053';
 import { darkSteel, paint } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
@@ -180,11 +180,11 @@ export default function buildM053(): MovementModel {
     tag('베벨 기어 C', v(-0.6, 2.3, 0.6)),
     tag('헐거운 기어 A', v(-0.95, 2.05, 0.6)),
     tag('헐거운 기어 B', v(1.15, 2.2, 0.6)),
-    tag('이중 클러치(깃 위를 미끄러짐)', v(-1.3, 1.3, 0.6)),
+    leaderTo(tag('이중 클러치(깃 위를 미끄러짐)', v(-1.3, 1.3, 0.6)), clutch),
     tag('가로 출력축', v(1.6, 1.45, 0.6)),
     tag('벨 크랭크(시프트 레버)', v(1.2, 0.8, 0.6)),
     tag('당김 막대(올리면 B 쪽)', v(-1.3, 0.6, 0.6)),
-    tag('요크(홈에 걸림, 판화에 없음)', v(1.25, 1.2, 0.6))
+    leaderTo(tag('요크(홈에 걸림, 판화에 없음)', v(1.25, 1.2, 0.6)), yoke)
   );
 
   const pose = (): void => {

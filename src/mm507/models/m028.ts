@@ -1,7 +1,7 @@
 // 028 브러시 휠(마찰 바퀴) — 수평 원판이 윗바퀴를 마찰로 돌린다. 윗바퀴가 축 위를 미끄러져 속도비가 바뀐다 (판화 28번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { PILLOW_BOSS_Y, displayStand, pillow, pulley, rod, rotArrow, tag } from '../kit';
+import { PILLOW_BOSS_Y, displayStand, leaderTo, pillow, pulley, rod, rotArrow, tag } from '../kit';
 import { bronze, castIron, darkSteel, paint, rubber } from '../../models/materials';
 import { lathe, mesh, rodProfile, tubeProfile } from '../../models/parts/geom';
 
@@ -33,9 +33,11 @@ export default function buildM028(): MovementModel {
   // 원판 피벗(수직축 Y)
   const disc = new THREE.Group();
   disc.position.set(DX, 0, ZD);
-  disc.add(mesh(lathe(tubeProfile(0.047, 0.42, 1.53, 1.59, 0.006), 64), bronze({ roughness: 0.34 })));
+  const discPlate = mesh(lathe(tubeProfile(0.047, 0.42, 1.53, 1.59, 0.006), 64), bronze({ roughness: 0.34 }));
+  disc.add(discPlate);
   // 고무 덮개는 가운데까지 덮는다 — ρ = 0(멈춤) 을 지날 때도 윗바퀴 아랫점(1.60)이 고무 위에 닿아 있게
-  disc.add(mesh(lathe(rodProfile(0.405, 1.59, 1.6, 0, 0.002), 64), rubber()));
+  const rubberCover = mesh(lathe(rodProfile(0.405, 1.59, 1.6, 0, 0.002), 64), rubber());
+  disc.add(rubberCover);
   const flare: V2[] = [[0.05, 1.28], [0.085, 1.28], [0.09, 1.36], [0.13, 1.47], [0.19, 1.53], [0.05, 1.53], [0.05, 1.28]];
   disc.add(mesh(lathe(flare, 40), darkSteel()));
   disc.add(rod(v(0, 0.28, 0), v(0, 1.5, 0), 0.04));
@@ -83,9 +85,9 @@ export default function buildM028(): MovementModel {
   g.add(arrow);
 
   g.add(
-    tag('수평 원판(구동)', v(0.6, 1.25, 0.3)),
+    leaderTo(tag('수평 원판(구동)', v(0.6, 1.25, 0.3)), discPlate),
     tag('윗바퀴(미끄러짐)', v(0.5, 2.05, 0.3)),
-    tag('고무 덮개', v(-1.45, 1.45, 0.3)),
+    leaderTo(tag('고무 덮개', v(-1.45, 1.45, 0.3)), rubberCover),
     tag('수직축', v(0.25, 0.6, 0.3))
   );
 

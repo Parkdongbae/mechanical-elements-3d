@@ -1,7 +1,7 @@
 // 096 하트 모양 캠과 작도법 — 하트 캠이 돌면 가로 막대가 일정한 속도로 오간다(판화 96번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { coilSpring, displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { coilSpring, displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { barGuide, camBar, heartCam96, heartRollerX96 } from '../kit/k095';
 
 const CX = -0.85; // 캠 축
@@ -50,12 +50,12 @@ export default function buildM096(): MovementModel {
   g.add(arrow);
 
   g.add(
-    tag('하트 캠(구동)', v(-1.3, 2.95, 0.3)),
+    leaderTo(tag('하트 캠(구동)', v(-1.3, 2.95, 0.3)), cam.children[0] as THREE.Object3D),
     tag('작도판: 동심원 6칸·방사선 12개', v(-0.6, 0.55, 0.3)),
     tag('가로 막대(일정한 속도로 왕복)', v(0.9, 2.3, 0.3))
   );
   // 롤러·스프링 이름표는 막대의 자식 — 막대와 함께 오간다(로컬 원점 = 롤러 중심)
-  bar.add(tag('롤러', v(0.12, 0.3, 0.2)), tag('되돌림 스프링', v(0.4, -0.3, 0.2)));
+  bar.add(leaderTo(tag('롤러', v(0.12, 0.3, 0.2)), 'bar'), tag('되돌림 스프링', v(0.4, -0.3, 0.2)));
 
   const state = { xr: XR0, psi: 0 };
 
