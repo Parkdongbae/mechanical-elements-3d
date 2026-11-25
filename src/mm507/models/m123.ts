@@ -1,7 +1,7 @@
 // 123 크랭크 대용 이중 랙 — 랙의 왕복이 반쪽 이 부채꼴 둘을 번갈아 돌리고, 부채꼴 축의 평기어가 가운데 기어를 한 방향으로 계속 돌린다 (판화 123번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, spurGear, tag } from '../kit';
+import { displayStand, rotArrow, spurGear, tag, leaderTo } from '../kit';
 import { angles123, catchPiece, doubleRack, guideStud, K123, K123_D, studZ, toothSector } from '../kit/k122';
 
 const TAU = Math.PI * 2;
@@ -70,8 +70,8 @@ export default function buildM123(): MovementModel {
     tag('이중 랙', v(0.7, 3.0, 0.3)),
     tag('이 부채꼴', v(-0.8, 2.45, 0.3)),
     tag('평기어', v(-1.0, 1.05, 0.3)),
-    tag('가운데 기어', v(0.85, 0.85, 0.3)),
-    tag('멈춤쇠·걸림쇠', v(0.95, 2.6, 0.3))
+    leaderTo(tag('가운데 기어', v(0.85, 0.85, 0.3)), 'centreGear'),
+    leaderTo(tag('멈춤쇠·걸림쇠', v(0.95, 2.6, 0.3)), 'catch')
   );
 
   const pose = (): void => {

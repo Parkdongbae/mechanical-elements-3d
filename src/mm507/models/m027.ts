@@ -10,7 +10,7 @@
 //   그 벽 위를 미끄럼 없이 구른다: 큰 바퀴에 대한 롤러 회전각 = |s|/RR (s = 홈을 따른 롤러 위치, 중심을 지날 때 닿는 벽이 바뀌어도 이어진다).
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, multiGenevaDriver, rod, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, leaderTo, multiGenevaDriver, rod, rotArrow, shaftZ, tag } from '../kit';
 import { brass, castIron, darkSteel, paint, steel } from '../../models/materials';
 import { circlePts, lathe, loft, mesh, tubeProfile, type V2 } from '../../models/parts/geom';
 
@@ -148,9 +148,9 @@ export default function buildM027(): MovementModel {
   g.add(a1, a2);
 
   g.add(
-    tag('작은 삼각 바퀴(구동)', v(1.35, 0.8, 0.3)),
-    tag('큰 바퀴(홈 6개)', v(1.35, 2.75, 0.2)),
-    tag('롤러(홈 벽을 따라 구름)', v(-1.15, 0.95, 0.3))
+    leaderTo(tag('작은 삼각 바퀴(구동)', v(1.35, 0.8, 0.3)), driver),
+    leaderTo(tag('큰 바퀴(홈 6개)', v(1.35, 2.75, 0.2)), wheel),
+    leaderTo(tag('롤러(홈 벽을 따라 구름)', v(-1.15, 0.95, 0.3)), rollers[0] as THREE.Object3D)
   );
 
   /** 모든 자세를 누적각 θ 에서 다시 계산 */

@@ -1,7 +1,7 @@
 // 137 팽창 편심(프랑스식) — 크랭크축에 고정된 편심이 갈라진 진동 팔을 흔들고, 팔 아래 끝의 밸브 막대가 세로 왕복 (판화 137번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, STAGE, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, STAGE, tag, leaderTo } from '../kit';
 import { castIron } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 import { K137, Y_TIP137, eccentric137, forkArm137, rock137, valveRod137 } from '../kit/k137';
@@ -71,7 +71,7 @@ export default function buildM137(): MovementModel {
   g.add(tag('편심(크랭크축에 고정)', v(-1.6, 2.55, 0.3)));
   g.add(tag('갈라진 진동 팔(오른쪽 눈 축)', v(1.55, 2.5, 0.3)));
   g.add(tag('위 굴른 — 편심 테에 맞물림', v(-1.45, 2.75, 0.3)));
-  const tagRod = tag('밸브 막대(팔 아래 끝에 붙음)', v(0, 0, 0.3));
+  const tagRod = leaderTo(tag('밸브 막대(팔 아래 끝에 붙음)', v(0, 0, 0.3)), rod);
   g.add(tagRod);
 
   let A = rock137(0);

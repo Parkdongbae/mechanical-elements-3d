@@ -9,6 +9,7 @@ import {
   displayStand,
   openBeltPath,
   carryTags,
+  leaderTo,
   pillow,
   pulley,
   rod,
@@ -157,12 +158,12 @@ export default function buildM007(): MovementModel {
   g.add(rod(v(0.78, 2.0, -0.28), v(0.78, 2.0, 0.585), 0.015), rod(v(1.52, 2.0, -0.28), v(1.52, 2.0, 0.585), 0.015));
 
   // 이름표
-  const forkTag = tag('벨트 옮기개', v(0.93, 2.28, 0.58));
+  const forkTag = leaderTo(tag('벨트 옮기개', v(0.93, 2.28, 0.58)), fork);
   g.add(
-    tag('구동 풀리', v(1.7, 2.62, 0.3)),
-    tag('고정 풀리(축 b)', v(0.25, 0.6, 0.5)),
-    tag('헐거운 풀리', v(1.15, 0.42, 0.5)),
-    tag('고정 풀리(축 a)', v(1.95, 0.6, 0.5)),
+    leaderTo(tag('구동 풀리', v(1.7, 2.62, 0.3)), pU),
+    leaderTo(tag('고정 풀리(축 b)', v(0.25, 0.6, 0.5)), pF1),
+    leaderTo(tag('헐거운 풀리', v(1.15, 0.42, 0.5)), pL),
+    leaderTo(tag('고정 풀리(축 a)', v(1.95, 0.6, 0.5)), pF2),
     tag('베벨 기어 A', v(-1.7, 0.5, 0.45)),
     tag('베벨 기어 B', v(-0.5, 0.74, 0.45)),
     tag('베벨 기어 C', v(-1.125, 1.62, 0.5)),

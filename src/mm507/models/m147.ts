@@ -3,7 +3,7 @@
 //  (판화 147번, 설계표 docs/mm507-sheets/147.md, 키트 kit/k146.ts 의 147 공용 부품 — 새 부품 없음)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import {
   K147,
   camShaft147,
@@ -75,8 +75,8 @@ export default function buildM147(): MovementModel {
   // 이름표 5개 — 십자머리 이름표는 함께 오르내린다
   const tagShaft = tag('세로축(구동)', v(-0.75, 0.55, 0.3));
   const tagCam = tag('둥근 경사면(축에 고정)', v(-1.15, 1.05, 0.3));
-  const tagHead = tag('날개 달린 십자머리(축에 헐겁게)', v(-1.35, 1.6, 0.3));
-  const tagRoller = tag('마찰 롤러', v(0.95, 1.2, 0.3));
+  const tagHead = leaderTo(tag('날개 달린 십자머리(축에 헐겁게)', v(-1.35, 1.6, 0.3)), head);
+  const tagRoller = leaderTo(tag('마찰 롤러', v(0.95, 1.2, 0.3)), rollerA);
   const tagLever = tag('밸브 레버', v(1.35, 2.0, 0.36));
 
   g.add(camShaft, head, collar, lever, post, footstep, midBearing, arrow, tagShaft, tagCam, tagHead, tagRoller, tagLever);

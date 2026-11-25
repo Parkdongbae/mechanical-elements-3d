@@ -1,7 +1,7 @@
 // 105 나사 찍기 프레스 — 고정 너트 속의 세 줄 오른나사. 팔을 돌리면 나사가 돌면서 내려가 램을 누른다 (판화 105번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { flyBar, K105, multiStartScrew, pressFrame, pressRam, screwPress105 } from '../kit/k104';
 
 const SX = -0.1; // 나사 축 x
@@ -48,9 +48,9 @@ export default function buildM105(): MovementModel {
 
   // 이름표 4개(z 0.3) — 두 개는 부품을 따라간다
   const barTag = tag('플라이 바(구동)', v(SX, 2.68, 0.3));
-  const ramTag = tag('램(찍는 쇠)', v(-1.1, 0.82, 0.3));
+  const ramTag = leaderTo(tag('램(찍는 쇠)', v(-1.1, 0.82, 0.3)), 'ram');
   g.add(barTag, ramTag);
-  g.add(tag('세 줄 나사', v(-1.05, 1.3, 0.3)), tag('몸체와 너트', v(1.4, 1.45, 0.3)));
+  g.add(leaderTo(tag('세 줄 나사', v(-1.05, 1.3, 0.3)), 'screw'), tag('몸체와 너트', v(1.4, 1.45, 0.3)));
 
   // 팔 자세의 고정 어긋남: t = 1(theta 1.6)에 팔이 그림 평면에 놓여 판화와 같은 모양이 되게
   const barPhase = -screwPress105(1.6).alpha;

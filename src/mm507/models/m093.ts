@@ -1,7 +1,7 @@
 // 093 홈 요크 크랭크 — 크랭크 핀이 홈 파인 요크 속을 좌우로 미끄러지며 요크(막대)를 정확한 사인 운동으로 밀어 올린다 (판화 93번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { crankDisc, K93, rodGuideY, scotchYoke93, slotYoke } from '../kit/k092';
 
 const CY = 1.72; // 축 높이
@@ -22,6 +22,7 @@ export default function buildM093(): MovementModel {
   disc.name = 'disc';
   disc.position.set(0, CY, ZD);
   g.add(disc);
+  const pin93 = disc.children.find((c) => (c as THREE.Mesh).isMesh === true && Math.abs(c.position.x - K93.crank) < 1e-6) ?? disc;
 
   // 축 — 끝 너트가 z 0.125 까지라 막대(z 0.14 부터) 뒤로 지나간다
   g.add(shaftZ(0, CY, 0.125, 0.06));
@@ -48,7 +49,7 @@ export default function buildM093(): MovementModel {
   g.add(arrow);
   g.add(
     tag('크랭크 원판(구동)', v(-1.3, 1.45, 0.3)),
-    tag('크랭크 핀', v(1.3, 2.3, 0.3)),
+    leaderTo(tag('크랭크 핀', v(1.3, 2.3, 0.3)), pin93),
     tag('홈 요크', v(1.35, 1.72, 0.3)),
     tag('위아래로만 움직이는 막대', v(1.3, 0.55, 0.3))
   );

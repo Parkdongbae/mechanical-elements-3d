@@ -1,7 +1,7 @@
 // 081 결손 기어로 올리는 랙 막대 — 이가 일부만 있는 평기어 A 가 랙 막대 B 를 올리고, 이가 벗어나면 스프링 C 가 되돌린다 (판화 81번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { coilSpring } from '../kit/gear2';
 import { guideBracket81, mutilatedGear81, rackLift81, rackRod81, ROD81 } from '../kit/k080';
 
@@ -56,7 +56,7 @@ export default function buildM081(): MovementModel {
 
   g.add(
     tag('결손 기어 A(이 5개)', v(1.05, 2.05, 0.3)),
-    tag('랙 막대 B', v(-0.95, 1.3, 0.3)),
+    leaderTo(tag('랙 막대 B', v(-0.95, 1.3, 0.3)), 'rackB'),
     tag('안내판(고정)', v(-0.95, 0.7, 0.3))
   );
 

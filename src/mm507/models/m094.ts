@@ -1,7 +1,7 @@
 // 094 가변 크랭크 — 방사 홈 판과 나선 홈 판을 서로 돌리면 둘을 함께 지나는 볼트(크랭크 핀)의 반지름이 바뀐다 (판화 94번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K94, crankBolt, radialSlotPlate, spiralGroovePlate, variableCrank94 } from '../kit/k092';
 
 const CY = 1.75; // 축 높이
@@ -52,8 +52,8 @@ export default function buildM094(): MovementModel {
 
   g.add(
     tag('방사 홈 판(앞)', v(-1.35, 3.0, 0.3)),
-    tag('나선 홈 판(뒤)', v(1.35, 3.0, 0.3)),
-    tag('볼트(크랭크 핀)', v(-1.55, 0.6, 0.3)),
+    leaderTo(tag('나선 홈 판(뒤)', v(1.35, 3.0, 0.3)), 'spiralPlate'),
+    leaderTo(tag('볼트(크랭크 핀)', v(-1.55, 0.6, 0.3)), 'bolt'),
     tag('판을 서로 돌리면 볼트가 안팎으로', v(0.6, 0.4, 0.3))
   );
 

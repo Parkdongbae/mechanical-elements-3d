@@ -11,6 +11,7 @@ import {
   rotArrow,
   shaftZ,
   spurGear,
+  leaderTo,
   tag
 } from '../kit';
 import { castIron, darkSteel, steel } from '../../models/materials';
@@ -106,7 +107,7 @@ export default function buildM035(): MovementModel {
   const ae = rotArrow(0.42, false);
   ae.position.set(PIVOT[0], PIVOT[1], 0.4);
   g.add(ap, ae);
-  g.add(tag('타원 기어', v(1.6, 0.62, 0.3)), tag('홈 막대', v(-1.5, 2.9, 0.3)), tag('피니언(일정 속도)', v(-1.45, 1.75, 0.3)));
+  g.add(tag('타원 기어', v(1.6, 0.62, 0.3)), tag('홈 막대', v(-1.5, 2.9, 0.3)), leaderTo(tag('피니언(일정 속도)', v(-1.45, 1.75, 0.3)), pinion));
 
   const cb = Math.cos(BETA);
   const sb = Math.sin(BETA);

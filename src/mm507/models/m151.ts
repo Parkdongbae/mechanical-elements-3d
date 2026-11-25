@@ -3,7 +3,7 @@
 //  (판화 151번, 설계표 docs/mm507-sheets/151.md — 새 부품은 kit/k149.ts 에 이미 있음)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag, wormScrew, wormWheel } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, wormScrew, wormWheel, leaderTo } from '../kit';
 import { pedestalX } from '../kit/gear6';
 import { K151, guideRail151, screwNuts151, slideNut151, twinScrew151 } from '../kit/k149';
 
@@ -66,7 +66,7 @@ export default function buildM151(): MovementModel {
   // 이름표 4개 — 너트 둘은 움직이는 너트를 따라간다
   const tagNutL = tag('오른나사 너트', v(0, 0, 0.6));
   const tagNutR = tag('왼나사 너트', v(0, 0, 0.6));
-  g.add(tag('웜(구동)', v(0.85, 2.4, 0.5)), tag('웜 휠 24', v(0.62, 0.55, 0.6)), tagNutL, tagNutR);
+  g.add(tag('웜(구동)', v(0.85, 2.4, 0.5)), leaderTo(tag('웜 휠 24', v(0.62, 0.55, 0.6)), 'wormWheel'), tagNutL, tagNutR);
 
   /** theta 의 닫힌 식으로 전체 자세를 다시 계산(누적 오차·역회전 없음) */
   const pose = (th: number): void => {

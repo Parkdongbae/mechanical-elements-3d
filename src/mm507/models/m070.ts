@@ -1,7 +1,7 @@
 // 070 스터드 원판 간헐 회전 — 구동 바퀴 C 의 테·탭핏이 스터드 원판 A 를 한 바퀴에 스터드 하나(36°)씩 돌린다 (판화 70번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K70, rimDriver, studDisc, studWheelAngle } from '../kit/k069';
 
 const AX = -0.91;
@@ -48,7 +48,7 @@ export default function buildM070(): MovementModel {
   g.add(
     tag('구동 바퀴 C(앞판은 비쳐 보이게)', v(1.3, 3.05, 0.5)),
     tag('탭핏 B(틈 가운데)', v(0.2, 0.5, 0.5)),
-    tag('테의 틈(스터드가 드나듦)', v(-0.3, 3.05, 0.5)),
+    leaderTo(tag('테의 틈(스터드가 드나듦)', v(-0.3, 3.05, 0.5)), 'wheelC'),
     tag('A(스터드 10개)', v(-1.5, 3.05, 0.3)),
     tag('테 바깥면이 스터드를 받쳐 잠금', v(1.2, 0.5, 0.5))
   );

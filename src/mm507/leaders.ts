@@ -173,11 +173,19 @@ export class TagLeaders {
       const text = String(tag.userData.mmTagText ?? '').split('(')[0] ?? '';
       // 점수 = 표면까지 거리 × 배율(factorFor). 경계구 최소 거리로 정렬해 가까운 것부터 정밀 계산,
       // 가장 좋은 배율로도 지금 최고점을 못 넘는 구가 나오면 멈춘다
+      // 모델이 대상을 직접 정했으면(tag.userData.leaderTarget = 객체 또는 이름) 그 객체 아래 메시만 후보로 — 자동 고르기가 틀린 이름표용
+      const lt = tag.userData.leaderTarget as THREE.Object3D | string | undefined;
+      const forced = typeof lt === 'string' ? root.getObjectByName(lt) ?? null : lt instanceof THREE.Object3D ? lt : null;
+      const under = (m: THREE.Object3D): boolean => {
+        for (let q: THREE.Object3D | null = m; q; q = q.parent) if (q === forced) return true;
+        return false;
+      };
       const cands = meshes
-        .map((x) => ({ ...x, lb: Math.max(0, x.c.distanceTo(p) - x.r), f: factorFor(text, x.desc) }))
-        .filter((x) => x.lb < MAX_DIST)
+        .filter((x) => forced === null || under(x.m))
+        .map((x) => ({ ...x, lb: Math.max(0, x.c.distanceTo(p) - x.r), f: forced ? 1 : factorFor(text, x.desc) }))
+        .filter((x) => forced !== null || x.lb < MAX_DIST)
         .sort((a, b) => a.lb - b.lb);
-      let bestScore = MAX_DIST;
+      let bestScore = forced ? Infinity : MAX_DIST;
       let target: THREE.Mesh | null = null;
       for (const cd of cands) {
         if (cd.lb * MIN_FACTOR >= bestScore) break;

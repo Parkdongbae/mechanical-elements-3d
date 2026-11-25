@@ -3,7 +3,7 @@
 // (설계표 docs/mm507-sheets/146.md, 키트 kit/k146.ts — 새 부품 없음, 배치만)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { frontBearing146, grooveYoke146, K146, pinDisc146, scotchYoke146, stemGuide146 } from '../kit/k146';
 
 const DEG = 180 / Math.PI;
@@ -51,7 +51,7 @@ export default function buildM146(): MovementModel {
   const tagDisc = tag('핀 원판(구동)', v(-1.3, 1.5, 0.3));
   const tagYoke = tag('고리 홈이 파인 요크', v(1.35, CY, 0.2));
   const tagStem = tag('위아래로 왕복하는 막대', v(1.2, 2.95, 0.2));
-  const tagGuide = tag('막대 안내(고정)', v(-1.0, 2.42, 0.2));
+  const tagGuide = leaderTo(tag('막대 안내(고정)', v(-1.0, 2.42, 0.2)), guideUp);
   const tagBearing = tag('앞 축받이', v(1.45, 0.75, 0.5));
   g.add(tagDisc, tagYoke, tagStem, tagGuide, tagBearing);
 

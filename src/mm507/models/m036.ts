@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { type MovementModel } from '../types';
 import { brass, castIron, darkSteel, paint, steel } from '../../models/materials';
 import { extrude, lathe, mesh, rodProfile, roundedRect, tubeProfile } from '../../models/parts/geom';
-import { displayStand, mangleTrack, rod, shaftZ, spurGear, tag } from '../kit';
+import { displayStand, leaderTo, mangleTrack, rod, shaftZ, spurGear, tag } from '../kit';
 
 const XC = 0; // 휠 중심
 const YC = 1.85;
@@ -71,7 +71,7 @@ export default function buildM036(): MovementModel {
 
   g.add(
     tag('맹글 휠', v(1.35, 2.75, 0.35)),
-    tag('피니언', v(0.75, 0.88, 0.5)),
+    leaderTo(tag('피니언', v(0.75, 0.88, 0.5)), pinion),
     tag('세운 막대(홈)', v(-0.75, 0.62, 0.5)),
     tag('톱니 고리', v(-1.35, 2.25, 0.35))
   );

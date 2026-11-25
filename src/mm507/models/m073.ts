@@ -1,7 +1,7 @@
 // 073 스프링 래칫 간헐 회전 — 구동 원판 D 의 굽은 스프링 B 가 센 스프링 C 에 눌려 래칫 바퀴 A 를 한 바퀴에 한 이씩 민다 (판화 73번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { CatchSpring73, K73, driveDisc73, ratchet73State, ratchetWheel73, springPost73, stopSpring73 } from '../kit/k071';
 
 const OX = 0.3;
@@ -56,6 +56,7 @@ export default function buildM073(): MovementModel {
   D.name = 'discD';
   D.position.set(OX, OY, 0);
   const B = new CatchSpring73();
+  B.group.name = 'springB73';
   D.add(B.group);
   g.add(D);
 
@@ -85,9 +86,9 @@ export default function buildM073(): MovementModel {
 
   g.add(
     tag('구동 원판 D', v(1.3, 0.72, 0.3)),
-    tag('래칫 바퀴 A(이 10개)', v(1.35, 3.12, 0.3)),
-    tag('판스프링 B(끝에 걸쇠)', v(-0.35, 3.15, 0.3)),
-    tag('센 스프링 C(걸쇠를 누르고 되돌림을 막음)', v(-1.4, 2.55, 0.35)),
+    leaderTo(tag('래칫 바퀴 A(이 10개)', v(1.35, 3.12, 0.3)), 'ratchetA'),
+    leaderTo(tag('판스프링 B(끝에 걸쇠)', v(-0.35, 3.15, 0.3)), 'springB73'),
+    leaderTo(tag('센 스프링 C(걸쇠를 누르고 되돌림을 막음)', v(-1.4, 2.55, 0.35)), 'springC'),
     tag('고정 받침', v(-1.2, 0.5, 0.4))
   );
 

@@ -1,7 +1,7 @@
 // 059 두 단 속도 기어 — 위 원동 드럼의 벨트가 헐거운·가운데·오른쪽 풀리로 옮겨 가며 아래 축 B 를 느리게/빠르게 돌린다 (판화 59번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, meshAngle, pulley, rod, rotArrow, spurGear, tag, STAGE } from '../kit';
+import { displayStand, meshAngle, pulley, rod, rotArrow, spurGear, tag, leaderTo, STAGE } from '../kit';
 import { hollowShaft, rimStripes, verticalBelt, wallBracket } from '../kit/k059';
 
 const ZC = 0.28; // 모든 축 높이(깊이 z)
@@ -135,7 +135,7 @@ export default function buildM059(): MovementModel {
   g.add(
     tag('원동 드럼', v(0.75, 3.1, 0.5)),
     tag('헐거운 풀리', v(-0.72, 2.12, 0.75)),
-    tag('고정 풀리(느림)', v(-0.2, 2.3, 0.75)),
+    leaderTo(tag('고정 풀리(느림)', v(-0.2, 2.3, 0.75)), 'pulleyM'),
     tag('속 빈 축 풀리(빠름)', v(0.45, 2.12, 0.75)),
     tag('작은 기어', v(-1.45, 1.95, 0.5)),
     tag('큰 기어', v(1.3, 2.15, 0.5)),

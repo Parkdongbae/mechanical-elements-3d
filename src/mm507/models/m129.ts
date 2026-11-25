@@ -1,7 +1,7 @@
 // 129 중국식 윈들러스(차동 권양기) — 통을 돌리면 큰 통은 감고 작은 통은 풀어 움직도르래가 천천히 오른다 (판화 129번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, displayStand, rotArrow, tag } from '../kit';
+import { Rope, displayStand, leaderTo, rotArrow, tag } from '../kit';
 import {
   K129,
   diffBarrel129,
@@ -57,8 +57,8 @@ export default function buildM129(): MovementModel {
     g.add(a);
   }
 
-  const blockTag = tag('움직도르래', v(0.95, 1.14, 0.75));
-  g.add(tag('큰 통', v(-1.8, 2.95, 0.5)), tag('작은 통', v(0.7, 3.4, 0.5)), tag('크랭크', v(1.75, 2.15, 0.5)), blockTag);
+  const blockTag = leaderTo(tag('움직도르래', v(0.95, 1.14, 0.75)), block);
+  g.add(leaderTo(tag('큰 통', v(-1.8, 2.95, 0.5)), coilBig), tag('작은 통', v(0.7, 3.4, 0.5)), tag('크랭크', v(1.75, 2.15, 0.5)), blockTag);
 
   let winding = true;
   let lift = 0;

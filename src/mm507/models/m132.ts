@@ -1,7 +1,7 @@
 // 132 프레스의 비스듬한 막대 — 윗 원판이 제자리에서 비틀리면 막대 둘이 곧게 서면서 누름판을 내린다 (판화 132번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, tag } from '../kit';
+import { displayStand, leaderTo, tag } from '../kit';
 import { K132, aimBar132, ballBar132, pressFrame132, pressPlaten132, swingArrows131, twist132, twistHead132 } from '../kit/k131';
 
 const DEG = Math.PI / 180;
@@ -50,9 +50,9 @@ export default function buildM132(): MovementModel {
   const platenTag = tag('누름판', v(1.75, 1.05, 0.3));
   g.add(
     platenTag,
-    tag('지레(구동)', v(1.65, 2.42, 0.3)),
-    tag('윗 원판(제자리에서 돈다)', v(-1.75, 2.15, 0.3)),
-    tag('비스듬한 막대 2개', v(-1.75, 1.7, 0.3)),
+    leaderTo(tag('지레(구동)', v(1.65, 2.42, 0.3)), head),
+    leaderTo(tag('윗 원판(제자리에서 돈다)', v(-1.75, 2.15, 0.3)), head),
+    leaderTo(tag('비스듬한 막대 2개', v(-1.75, 1.7, 0.3)), barA),
     tag('틀(고정)', v(1.75, 3.05, 0.3))
   );
 

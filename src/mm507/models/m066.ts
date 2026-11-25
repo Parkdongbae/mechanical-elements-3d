@@ -1,7 +1,7 @@
 // 066 추를 이용한 점프 운동 — 웜기어 B 는 쉬지 않고 돌고, 속 빈 축에 붙은 추 달린 팔이 핀에 올려졌다가 꼭대기에서 떨어진다 (판화 66번)
 import * as THREE from 'three';
 import type { MovementModel } from '../types';
-import { displayStand, rod, rotArrow, shaftZ, tag, wormScrew, wormWheel, STAGE } from '../kit';
+import { displayStand, rod, rotArrow, shaftZ, tag, leaderTo, wormScrew, wormWheel, STAGE } from '../kit';
 import { armWeight } from '../kit/k065';
 import { halfCutTube } from '../kit/k067';
 import { castIron, darkSteel } from '../../models/materials';
@@ -95,10 +95,10 @@ export default function buildM066(): MovementModel {
   // 이름표는 늘 위에 그려지므로 추가 도는 고리띠(O 에서 반지름 0.78 ~ 1.32) 밖, 네 귀퉁이·오른쪽 가에 둔다
   g.add(
     tag('웜(구동)', v(1.3, 0.45, 0.3)),
-    tag('웜기어 B(천천히 계속 돈다)', v(-1.45, 0.45, 0.3)),
+    leaderTo(tag('웜기어 B(천천히 계속 돈다)', v(-1.45, 0.45, 0.3)), 'wheelB'),
     tag('추 D 달린 팔(속 빈 축에 고정)', v(1.4, 2.95, 0.6)),
-    tag('핀(웜기어 축에 박힘)', v(-1.4, 2.95, 0.6)),
-    tag('반쯤 잘린 속 빈 축', v(1.72, 2.35, 0.5))
+    leaderTo(tag('핀(웜기어 축에 박힘)', v(-1.4, 2.95, 0.6)), 'pin'),
+    leaderTo(tag('반쯤 잘린 속 빈 축', v(1.72, 2.35, 0.5)), 'hollow')
   );
 
   let alphaNow = 0;

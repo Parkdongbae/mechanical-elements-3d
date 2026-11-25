@@ -1,7 +1,7 @@
 // 100 급속 귀환 크랭크(홈 지레) — 크랭크 핀이 지레의 긴 홈 안을 미끄러져 지레가 갈 때는 천천히, 올 때는 빨리 돌아온다 (판화 100번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { crankArmPin, QUICK100, slottedLever, slottedLeverAngle } from '../kit/k098';
 import { mesh } from '../../models/parts/geom';
 import { ghost } from '../../models/materials';
@@ -48,7 +48,7 @@ export default function buildM100(): MovementModel {
 
   g.add(
     tag('크랭크(구동)', v(-1.55, 1.25, 0.3)),
-    tag('크랭크 핀', v(-1.55, 2.7, 0.3)),
+    leaderTo(tag('크랭크 핀', v(-1.55, 2.7, 0.3)), 'pin100'),
     tag('홈 지레', v(0.0, 2.7, 0.3)),
     tag('받침축', v(1.2, 2.45, 0.3))
   );

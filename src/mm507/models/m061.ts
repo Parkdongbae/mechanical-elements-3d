@@ -3,7 +3,7 @@
 // 판화 61번: 축이 가로(세계 X)인 옆모습. 판화에서 풀리 안에 숨은 베벨은 M 과 R 사이에 드러낸다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, bevelGear, carryTags, displayStand, openBeltPath, pulley, rotArrow, tag } from '../kit';
+import { Belt, bevelGear, carryTags, displayStand, openBeltPath, pulley, rotArrow, tag, leaderTo } from '../kit';
 import { bearingX, beltLoopYZ, brakeBand, diffCarrier, rimMarks, shaftX, tubeZ } from '../kit/k061';
 
 const YU = 2.5; // 위 축 높이
@@ -186,7 +186,7 @@ export default function buildM061(): MovementModel {
   g.add(
     tag('구동 드럼', v(-0.2, 3.1, 0.5)),
     tag('헐거운 풀리', v(-1.2, 0.38, 0.5)),
-    tag('차동 베벨', v(-0.05, 1.7, 0.5)),
+    leaderTo(tag('차동 베벨', v(-0.05, 1.7, 0.5)), 'bevelP'),
     tag('운반 풀리', v(0.85, 0.38, 0.5)),
     tag('제동 밴드', v(1.5, 1.42, 0.5)) // 설계표 y 1.30 은 아래 축 그룹 상자(y ≤ 1.33) 안이라 조금 올림
   );

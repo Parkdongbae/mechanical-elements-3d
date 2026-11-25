@@ -1,7 +1,7 @@
 // 065 탭핏 구동 간헐 회전 — 구동 원판 C 의 탭핏이 스터드 원판 D 의 스터드를 쳐서 한 바퀴에 한 칸(1/10 바퀴)씩만 돌리고, 정지 레버가 막는다 (판화 65번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag, setMM } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo, setMM } from '../kit';
 import { notchedDisk, stopLever, studDisk, tappetArm } from '../kit/k065';
 
 const TAU = Math.PI * 2;
@@ -112,8 +112,8 @@ export default function buildM065(): MovementModel {
   aD.position.set(DC[0], DC[1], 0.42);
   g.add(aC, aD);
   g.add(
-    tag('구동 바퀴 C (홈)', new THREE.Vector3(-0.95, 3.05, 0.5)),
-    tag('탭핏 A', new THREE.Vector3(0.0, 2.75, 0.5)),
+    leaderTo(tag('구동 바퀴 C (홈)', new THREE.Vector3(-0.95, 3.05, 0.5)), 'diskC'),
+    leaderTo(tag('탭핏 A', new THREE.Vector3(0.0, 2.75, 0.5)), 'tappetA'),
     tag('스터드 바퀴 D (10개)', new THREE.Vector3(0.95, 3.05, 0.5)),
     tag('정지 레버', new THREE.Vector3(0.3, 0.8, 0.5))
   );

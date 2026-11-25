@@ -1,7 +1,7 @@
 // 130 쇠판 자르는 가위 — 편심 캠이 위 날의 긴 팔을 들어 날을 닫고, 긴 팔 무게로 다시 벌어진다 (판화 130번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, leaderTo, rotArrow, shaftZ, tag } from '../kit';
 import { eccentricCam130, pivotPin130, shear130, shearBase130, shearLower130, shearUpper130 } from '../kit/k128';
 
 const TAU = Math.PI * 2;
@@ -62,7 +62,7 @@ export default function buildM130(): MovementModel {
     camTag,
     tag('위 날(긴 팔 무게로 벌어짐)', v(-0.7, 2.5, 0.3)),
     tag('아래 날(고정)', v(1.35, 1.15, 0.35)),
-    tag('받침 핀', v(0.46, 2.65, 0.3))
+    leaderTo(tag('받침 핀', v(0.46, 2.65, 0.3)), pivot)
   );
 
   const pose = (th: number): { psi: number; gamma: number; bladeDeg: number } => shear130(th);

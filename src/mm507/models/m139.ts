@@ -4,7 +4,7 @@
 //  (설계표 docs/mm507-sheets/139.md — 모델은 배치·motion139 대입, 따라가는 이름표만 담당)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import {
   K139,
   crank139,
@@ -64,11 +64,11 @@ export default function buildM139(): MovementModel {
 
   // 이름표 5개 — '피니언' 하나만 고정, 나머지 넷은 부품을 따라간다
   //  (고정 이름표는 틀 상자 x ±1.16 밖, 크랭크 중심 0.9 밖에 둔다 — 가림·따라가기 경보 피함)
-  g.add(tag('피니언(구동·고정축)', v(-1.45, 2.62, 0.3)));
-  const tagRack = tag('내부 랙', v(-1.32, K139.PY - 0.5, 0.3));
+  g.add(leaderTo(tag('피니언(구동·고정축)', v(-1.45, 2.62, 0.3)), pinion));
+  const tagRack = leaderTo(tag('내부 랙', v(-1.32, K139.PY - 0.5, 0.3)), rack);
   const tagFrame = tag('직사각형 틀', v(1.28, 1.02, 0.3));
   const tagBar = tag('동기 바', v(0, K139.Ay + 0.16, 0.3));
-  const tagWheel = tag('바퀴', v(-1.28, 0.62, 0.3));
+  const tagWheel = leaderTo(tag('바퀴', v(-1.28, 0.62, 0.3)), wheelL);
   g.add(tagRack, tagFrame, tagBar, tagWheel);
 
   // theta 의 닫힌 식으로 전체 자세를 다시 놓는다(절대 자세 — 역회전·누적 오차 없음)

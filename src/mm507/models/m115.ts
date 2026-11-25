@@ -1,7 +1,7 @@
 // 115 두 바퀴로 움직이는 이중 랙 — 같은 기어 둘이 고리 틀의 위·아래 랙을 함께 민다 (판화 115번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, spurGear, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, spurGear, tag, leaderTo } from '../kit';
 import { barGuide113, K115, k115Frame, k115State, rackFrame113 } from '../kit/k113';
 
 const CY = 1.75; // 틀 가운데선(두 기어가 물리는 높이)
@@ -54,8 +54,8 @@ export default function buildM115(): MovementModel {
 
   const tagFrame = tag('이중 랙 틀', v(0.9, 2.8, 0.3));
   g.add(
-    tag('위 기어(구동)', v(-0.9, 2.8, 0.3)),
-    tag('아래 기어(반대로 돎)', v(0.9, 0.72, 0.3)),
+    leaderTo(tag('위 기어(구동)', v(-0.9, 2.8, 0.3)), 'gearA'),
+    leaderTo(tag('아래 기어(반대로 돎)', v(0.9, 0.72, 0.3)), 'gearB'),
     tagFrame,
     tag('막대 안내', v(-1.48, 1.3, 0.35))
   );

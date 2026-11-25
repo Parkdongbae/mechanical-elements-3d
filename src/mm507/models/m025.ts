@@ -2,7 +2,7 @@
 // 위 기어 A(수직 축)가 구동, 왼쪽 기어 B(가로 축)가 따라 돈다. 정면에서는 ㄱ자 띠 두 개.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { bevelGear, displayStand, rod, rotArrow, tag } from '../kit';
+import { bevelGear, displayStand, leaderTo, rod, rotArrow, tag } from '../kit';
 import { darkSteel, paint, steel } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 
@@ -52,7 +52,8 @@ export default function buildM025(): MovementModel {
   pivB.position.set(-0.08, 1.35, 0.18);
   pivB.rotation.y = Math.PI / 2;
   const spinB = new THREE.Group();
-  spinB.add(bevelGear(TEETH, MOD, { width: 0.24, spokes: 0 }), shaftAssembly());
+  const gearB = bevelGear(TEETH, MOD, { width: 0.24, spokes: 0 });
+  spinB.add(gearB, shaftAssembly());
   pivB.add(spinB);
   g.add(pivB);
 
@@ -81,7 +82,7 @@ export default function buildM025(): MovementModel {
   // 이름표
   g.add(
     tag('구동 베벨 A', v(1.3, 1.95, 0.4)),
-    tag('베벨 B', v(-0.95, 0.95, 0.4)),
+    leaderTo(tag('베벨 B', v(-0.95, 0.95, 0.4)), gearB),
     tag('수직 축', v(0.95, 2.45, 0.4)),
     tag('가로 축', v(-1.0, 1.72, 0.4)),
     // 실제 맞물림 점은 왼쪽 위 모서리 (−0.08, 1.73) — 그 바로 위에 둔다

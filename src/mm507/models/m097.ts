@@ -1,7 +1,7 @@
 // 097 홈이 파인 하트 캠 — 하트 홈이 롤러를 양쪽에서 잡아 스프링 없이 일정한 속도로 왕복 (판화 97번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { barGuide, camBar, groovedHeartDisc97, HEART97, heartPitch97 } from '../kit/k095';
 
 const CX = -0.7; // 원판 축 x
@@ -37,7 +37,7 @@ export default function buildM097(): MovementModel {
   guide2.position.set(1.15, CY, 0.215);
   g.add(guide1, guide2);
   // 롤러 이름표는 막대 그룹 안에 — 막대와 함께 오간다(t = 1 에서 세계 (−0.1, 2.3, 0.3))
-  bar.add(tag('롤러(홈 속)', v(0.38, 0.55, 0.2)));
+  bar.add(leaderTo(tag('롤러(홈 속)', v(0.38, 0.55, 0.2)), 'roller'));
 
   // 회전 방향 화살표(반시계) + 이름표 — 화살표는 막대 봉(z 0.17~0.26) 앞 z 0.3 에(봉을 뚫고 지나가지 않게)
   const arrow = rotArrow(0.45, true);

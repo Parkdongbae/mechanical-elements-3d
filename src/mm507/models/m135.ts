@@ -1,7 +1,7 @@
 // 135 삼각 편심 변형 — 뒤 원판 앞면에 삼각 태핏을 볼트로 달아 돌리고, 네모 틀이 태핏에 얹혀 왕복하다 끝에서 잠깐 쉰다 (판화 135번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { rodGuide } from '../kit/k089';
 import { K135, plainShaftZ, tappetDisc135, tappetLift135, valveYoke135 } from '../kit/k134';
 
@@ -52,8 +52,8 @@ export default function buildM135(): MovementModel {
   // 이름표 5개 — 틀 이름표만 틀을 따라간다
   g.add(
     tag('뒤 원판(축과 한 중심)', v(-1.4, 2.5, 0.3)),
-    tag('삼각 태핏(축은 위 꼭짓점 자리)', v(-1.5, 1.25, 0.3)),
-    tag('볼트(태핏을 원판에 고정 — 축이 아님)', v(1.6, 1.2, 0.3)),
+    leaderTo(tag('삼각 태핏(축은 위 꼭짓점 자리)', v(-1.5, 1.25, 0.3)), cam),
+    leaderTo(tag('볼트(태핏을 원판에 고정 — 축이 아님)', v(1.6, 1.2, 0.3)), cam),
     tag('고정 안내', v(0.8, 2.95, 0.3))
   );
   const tagFrame = tag('밸브 막대의 틀(끝에서 잠깐 쉰다)', v(1.45, 2.0, 0.3));

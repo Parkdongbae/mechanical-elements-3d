@@ -2,7 +2,7 @@
 // 판화처럼 드릴 축을 끝에서 본다(축 = Z). 모든 자세는 누적 theta 의 닫힌 식(fiddle124)에서 절대로 다시 계산한다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, displayStand, rotArrow, tag } from '../kit';
+import { Rope, displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { K124, K124_C, bow, drillSpindle, fiddle124, fiddlePath124, poseBow124, spindleBearing } from '../kit/k122';
 
 const DEG = Math.PI / 180;
@@ -22,6 +22,7 @@ export default function buildM124(): MovementModel {
 
   const spindle = drillSpindle();
   spindle.name = 'spindle';
+  spindle.children[spindle.children.length - 1]!.name = 'bit124';
   spindle.position.set(K124_C[0], K124_C[1], K124.zS);
   g.add(spindle);
 
@@ -43,9 +44,9 @@ export default function buildM124(): MovementModel {
 
   const tagBow = tag('활', new THREE.Vector3());
   // 시위 이름표: 아래 가닥(활이 어디 있든 늘 0.69 이상 남는 쪽) 바로 오른쪽 아래에 고정 — 시위 직선은 제자리이므로 따라갈 필요 없다
-  const tagString = tag('시위', new THREE.Vector3(K124.T[0] - U[0] * 0.42 - N[0] * 0.22, K124.T[1] - U[1] * 0.42 - N[1] * 0.22, 0.5));
+  const tagString = leaderTo(tag('시위', new THREE.Vector3(K124.T[0] - U[0] * 0.42 - N[0] * 0.22, K124.T[1] - U[1] * 0.42 - N[1] * 0.22, 0.5)), 'string');
   const tagSpool = tag('실패', new THREE.Vector3(0.95, 1.2, 0.5));
-  const tagDrill = tag('드릴 축과 날', new THREE.Vector3(1.3, 1.75, 0.7));
+  const tagDrill = leaderTo(tag('드릴 축과 날', new THREE.Vector3(1.3, 1.75, 0.7)), 'bit124');
   g.add(tagBow, tagString, tagSpool, tagDrill);
 
   function apply(): void {

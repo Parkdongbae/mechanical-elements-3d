@@ -1,7 +1,7 @@
 // 102 볼트와 너트 — 볼트를 돌리면(구동) 돌지 못하게 잡힌 너트가 나사를 따라 오르내린다 (판화 102번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, tag } from '../kit';
+import { displayStand, tag, leaderTo } from '../kit';
 import { bolt102, boltShelf102, hexNut102, nutRail102, screwBolt102, turnArrows } from '../kit/k101';
 
 const ZC = 0.3; // 볼트 축의 깊이
@@ -48,11 +48,11 @@ export default function buildM102(): MovementModel {
   // 이름표 — 너트 이름표만 너트를 따라 오르내린다
   const tagNut = tag('너트(오르내림)', v(1.3, NUT_Y, 0.4));
   g.add(
-    tag('볼트(구동)', v(-1.2, 2.95, 0.4)),
+    leaderTo(tag('볼트(구동)', v(-1.2, 2.95, 0.4)), 'bolt'),
     tag('나사산', v(-0.95, 2.25, 0.4)),
     tagNut,
     tag('머리 받침 선반', v(1.4, 2.78, 0.4)),
-    tag('돌림 막이', v(-1.1, 0.95, 0.3))
+    leaderTo(tag('돌림 막이', v(-1.1, 0.95, 0.3)), 'rail')
   );
 
   // 모든 자세는 theta 의 닫힌 식 bolt102 로 다시 계산(누적 오차·역회전 없음)

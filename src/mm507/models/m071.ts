@@ -1,7 +1,7 @@
 // 071 안쪽 테 잠금 간헐 회전 — 구동 바퀴 B 의 테 안쪽 면이 스터드 원판 C 를 잠그고, 탭핏 A 가 한 바퀴에 스터드 하나(36°)씩 민다 (판화 71번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K71, notchedRimWheel71, pushSpan71, studAngle71, studWheel71 } from '../kit/k071';
 
 const CX = -0.62; // 스터드 원판 C
@@ -44,8 +44,8 @@ export default function buildM071(): MovementModel {
   g.add(
     tag('구동 바퀴 B(앞판은 비쳐 보이게)', v(1.3, 3.05, 0.5)),
     tag('탭핏 A', v(0.75, 0.45, 0.5)),
-    tag('위쪽 틈(스터드가 들어옴)', v(-0.2, 3.05, 0.5)),
-    tag('아래쪽 틈(스터드가 나감)', v(-0.45, 0.45, 0.5)),
+    leaderTo(tag('위쪽 틈(스터드가 들어옴)', v(-0.2, 3.05, 0.5)), 'wheelB'),
+    leaderTo(tag('아래쪽 틈(스터드가 나감)', v(-0.45, 0.45, 0.5)), 'wheelB'),
     tag('C(스터드 10개)', v(-1.5, 3.05, 0.3))
   );
 

@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { castIron, darkSteel } from '../../models/materials';
 import { annularSector, extrude, mesh } from '../../models/parts/geom';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, displayStand, pulley, rotArrow, shaftZ, tag } from '../kit';
+import { Belt, displayStand, pulley, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { setMM } from '../kit/mm';
 import { K160, PoleSpring160, bandPath160, bandStaple158, bellStandard158, pivotPin158, treadle160, treadleBar158 } from '../kit/k158';
 
@@ -128,10 +128,10 @@ export default function buildM160(): MovementModel {
 
   // 이름표 5개 — 발판 끝·고리쇠·띠 셋은 움직이는 부품을 따라간다
   const tagTreadle = tag('발판(구동)', v(0, 0, 0.4));
-  const tagStaple = tag('띠 고리쇠', v(0, 0, 0.3));
+  const tagStaple = leaderTo(tag('띠 고리쇠', v(0, 0, 0.3)), staple);
   const tagBand = tag('띠(가죽)', v(0, 0, 0.3));
   const tagDrum = tag('도르래(종동)', v(1.5, 1.35, 0.3));
-  const tagClamp = tag('스프링 물림쇠(고정)', v(-1.4, 1.95, 0.3));
+  const tagClamp = leaderTo(tag('스프링 물림쇠(고정)', v(-1.4, 1.95, 0.3)), clamp);
   g.add(tagTreadle, tagStaple, tagBand, tagDrum, tagClamp);
 
   let prevDrum: number | null = null;

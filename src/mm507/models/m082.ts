@@ -2,7 +2,7 @@
 // 두 발판은 풀리 C 를 넘는 줄로 묶여 한쪽을 밟으면 다른 쪽이 올라온다 (판화 82번, 설계표 docs/mm507-sheets/082.md)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, displayStand, pulley, ropeAround, rotArrow, shaftZ, tag } from '../kit';
+import { Rope, displayStand, pulley, ropeAround, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import {
   K82,
   eyeRod82,
@@ -115,9 +115,9 @@ export default function buildM082(): MovementModel {
   g.add(
     tag('래칫 바퀴 A(톱니 30)', v(-1.35, 1.1, 0.5)),
     tag('흔들 팔 B와 폴', v(0.95, 2.95, 0.5)),
-    tag('풀리 C', v(1.6, 1.95, 0.5)),
+    leaderTo(tag('풀리 C', v(1.6, 1.95, 0.5)), 'pulleyC'),
     tag('발판 D', v(1.75, 1.2, 0.5)),
-    tag('이음대', v(-0.1, 1.2, 0.5))
+    leaderTo(tag('이음대', v(-0.1, 1.2, 0.5)), 'rod1')
   );
 
   const eye1 = treadle1.userData.eye as THREE.Object3D;

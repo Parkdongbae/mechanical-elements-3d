@@ -1,7 +1,7 @@
 // 016 스페인 바턴 — 고정 도르래 A 아래 움직도르래 M·B, 자유 끝을 당기면 추가 4배 속도로 오른다 (판화 16번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, arcPoints, ceilingBeam, displayStand, pulleyBlock, rod, ropeEnd, rotArrow, tag, weight } from '../kit';
+import { Rope, arcPoints, ceilingBeam, displayStand, leaderTo, pulleyBlock, rod, ropeEnd, rotArrow, tag, weight } from '../kit';
 
 const Z = 0.22; // 도르래·줄 중심 면
 const R = 0.2; // 도르래 반지름
@@ -53,7 +53,7 @@ export default function buildM016(): MovementModel {
   const arrow = rotArrow(0.3, false);
   arrow.position.set(0, AY, 0.4);
   g.add(arrow);
-  const tagA = tag('A 고정 도르래', v(0.9, 2.8, 0.4));
+  const tagA = leaderTo(tag('A 고정 도르래', v(0.9, 2.8, 0.4)), blockA);
   const tagB = tag('B 움직도르래', v(1.1, 2.15, 0.4));
   const tagM = tag('M 움직도르래', v(-1.1, 0.92, 0.4));
   const tagW = tag('추', v(-0.9, 0.41, 0.4));

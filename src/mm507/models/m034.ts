@@ -1,7 +1,7 @@
 // 034 내접 기어 — 큰 링 기어의 안쪽 이에 작은 피니언이 왼쪽에서 맞물려 두 기어가 같은 방향으로 돈다 (판화 34번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, internalGear, ringRoot, rotArrow, shaftZ, spurGear, tag } from '../kit';
+import { displayStand, internalGear, leaderTo, ringRoot, rotArrow, shaftZ, spurGear, tag } from '../kit';
 import { darkSteel, paint, steel } from '../../models/materials';
 import { lathe, mesh, rodProfile } from '../../models/parts/geom';
 
@@ -63,7 +63,7 @@ export default function buildM034(): MovementModel {
   a2.position.set(C2[0] + 0.55, C2[1], 0.26);
   g.add(a1, a2);
   // 이름표는 링 바깥 모서리에(링의 이를 가리지 않게)
-  g.add(tag('구동 피니언 20', v(-1.62, 3.0, 0.3)), tag('링 기어 48', v(1.68, 3.0, 0.3)));
+  g.add(leaderTo(tag('구동 피니언 20', v(-1.62, 3.0, 0.3)), pinion), tag('링 기어 48', v(1.68, 3.0, 0.3)));
 
   return {
     group: g,

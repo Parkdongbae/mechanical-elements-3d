@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { darkSteel, steel, wood } from '../../models/materials';
 import { lathe, mesh, rodProfile } from '../../models/parts/geom';
-import { ROPE_R, Rope, arcPoints, displayStand, markAnchor, pulley, rotArrow, shaftZ, tag, weight } from '../kit';
+import { ROPE_R, Rope, arcPoints, displayStand, markAnchor, pulley, rotArrow, shaftZ, tag, leaderTo, weight } from '../kit';
 import { D86, K86, aFrame86, dragCam86, hookCatch86, state86, stopBlock86 } from '../kit/k086';
 
 const D2R = Math.PI / 180;
@@ -93,10 +93,10 @@ export default function buildM086(): MovementModel {
   g.add(arrow);
   g.add(
     tag('헐거운 바퀴 A', v(1.05, 1.45, 0.1)),
-    tag('캠 C(구동)', v(0.9, 2.47, 0.2)),
+    leaderTo(tag('캠 C(구동)', v(0.9, 2.47, 0.2)), 'camC'),
     tag('갈고리 걸쇠 B', v(-1.05, 1.35, 0.2)),
-    tag('멈춤 턱', v(0.95, 2.9, 0.1)),
-    tag('펌프 대(추)', v(-0.95, 0.55, 0.1))
+    leaderTo(tag('멈춤 턱', v(0.95, 2.9, 0.1)), 'stopBlock'),
+    leaderTo(tag('펌프 대(추)', v(-0.95, 0.55, 0.1)), 'bucket')
   );
 
   let st = state86(0);

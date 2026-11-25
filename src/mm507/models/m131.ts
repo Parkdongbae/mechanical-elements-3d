@@ -1,7 +1,7 @@
 // 131 홈 팔과 이 부채꼴 — 크랭크 원판이 돌면 핀이 홈 팔 안에서 미끄러지며 부채꼴을 흔들고, 랙이 왕복한다 (판화 131번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, leaderTo, rotArrow, shaftZ, tag } from '../kit';
 import { K131, K131_RACK_Y, crankDisc131, rack131, rackGuide131, rock131, slottedSector131 } from '../kit/k131';
 
 const TAU = Math.PI * 2;
@@ -30,7 +30,8 @@ export default function buildM131(): MovementModel {
   // 랙(강철) + 안내 둘(고정)
   const rack = rack131();
   rack.position.set(0, K131_RACK_Y, ZA);
-  g.add(rack, rackGuide131(-K131.guideX), rackGuide131(K131.guideX));
+  const guideR = rackGuide131(K131.guideX);
+  g.add(rack, rackGuide131(-K131.guideX), guideR);
 
   // 회전 방향 화살표(반시계) — 원판 앞면 바로 앞, 팔보다 뒤
   const arrow = rotArrow(0.3, true);
@@ -38,13 +39,13 @@ export default function buildM131(): MovementModel {
   g.add(arrow);
 
   // 이름표 5개('랙'만 랙을 따라간다)
-  const rackTag = tag('랙', v(0, 0.3, 0.3));
+  const rackTag = leaderTo(tag('랙', v(0, 0.3, 0.3)), rack);
   g.add(
     tag('크랭크 원판(구동)', v(-1.15, 2.75, 0.25)),
-    tag('홈 팔', v(1.2, 2.6, 0.25)),
-    tag('이 부채꼴', v(-1.3, 1.45, 0.25)),
+    leaderTo(tag('홈 팔', v(1.2, 2.6, 0.25)), sector),
+    leaderTo(tag('이 부채꼴', v(-1.3, 1.45, 0.25)), sector),
     rackTag,
-    tag('랙 안내(고정)', v(1.75, 1.05, 0.25))
+    leaderTo(tag('랙 안내(고정)', v(1.75, 1.05, 0.25)), guideR)
   );
 
   return {

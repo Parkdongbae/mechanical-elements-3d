@@ -2,7 +2,7 @@
 //  지레의 굴림 바퀴에 닿는 캠을 바꾸고, 밸브 막대의 행정이 달라진다 (판화 150번, 설계표 docs/mm507-sheets/150.md)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { wallBearing } from '../kit/gear6';
 import { K150, camStack150, hangRod, leverPoint, rollerLever, rodAim, valve150 } from '../kit/k149';
 
@@ -26,7 +26,9 @@ export default function buildM150(): MovementModel {
   const camShaft = shaftZ(K150.S[0], K150.S[1], 0.62, K150.shaftR);
   camShaft.name = 'camShaft';
   g.add(camShaft);
-  g.add(shaftZ(K150.Q[0], K150.Q[1], 0.58, 0.05));
+  const pivotShaft = shaftZ(K150.Q[0], K150.Q[1], 0.58, 0.05);
+  pivotShaft.name = 'pivotShaft';
+  g.add(pivotShaft);
 
   // 캠 묶음: 바탕 원이 같은 캠 세 장(작은 캠이 맨 앞), 축 위에서 앞뒤로 미끄러진다
   const stack = camStack150();
@@ -60,8 +62,8 @@ export default function buildM150(): MovementModel {
   // 이름표 4개 — '굴림 바퀴와 지레'·'밸브 막대'는 움직이는 부품을 따라간다
   const tagCam = tag('캠 묶음(구동)', v(-1.25, 0.8, 0.5));
   const tagRoller = tag('굴림 바퀴와 지레', v(0, 0, 0.6));
-  const tagRod = tag('밸브 막대', v(0, 0, 0.6));
-  const tagPivot = tag('지레 받침', v(1.55, 2.25, 0.6));
+  const tagRod = leaderTo(tag('밸브 막대', v(0, 0, 0.6)), valveRod);
+  const tagPivot = leaderTo(tag('지레 받침', v(1.55, 2.25, 0.6)), 'pivotShaft');
   g.add(tagCam, tagRoller, tagRod, tagPivot);
 
   /** theta 의 닫힌 식으로 전체 자세를 다시 계산(누적 오차·역회전 없음) */

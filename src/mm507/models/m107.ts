@@ -1,7 +1,7 @@
 // 107 홈 캠으로 만드는 왕복 — 물결 홈 드럼이 돌면 핀이 홈 벽에 밀려 막대가 걸이 사이에서 좌우 왕복한다 (판화 107번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { wallBearing } from '../kit/gear6';
 import { K107, cam107, cam107Curve, camDrum107, hangerFrame107, sliderBar107 } from '../kit/k107';
 
@@ -24,6 +24,7 @@ export default function buildM107(): MovementModel {
 
   // 미끄럼 막대(가운데 블록 + 핀) — 원점 = 막대 축 위·핀 바로 위
   const bar = sliderBar107();
+  bar.children[4]!.name = 'slidePin107';
   g.add(bar);
 
   // 천장 들보와 걸이 2개(고정) — 원점 = 막대 축의 가운데
@@ -44,7 +45,7 @@ export default function buildM107(): MovementModel {
   const barTag = tag('미끄럼 막대', v(1.25, BY, 0.4));
   g.add(
     tag('홈 캠(구동)', v(-1.25, 1.0, 0.5)),
-    tag('핀(따름쇠)', v(1.05, 1.88, 0.5)),
+    leaderTo(tag('핀(따름쇠)', v(1.05, 1.88, 0.5)), 'slidePin107'),
     barTag,
     tag('천장 걸이(고정)', v(0, 2.95, 0.3))
   );

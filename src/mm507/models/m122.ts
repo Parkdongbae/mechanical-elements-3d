@@ -1,7 +1,7 @@
 // 122 두 기어로 만드는 가변 왕복 — 크랭크 핀 달린 두 평기어(30:25) → 연결봉 둘 → 뜬 지레 → 수평 막대 (판화 122번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { wallBearing } from '../kit/gear6';
 import { connectingRod } from '../kit/k092';
 import {
@@ -24,6 +24,7 @@ export default function buildM122(): MovementModel {
 
   const gear1 = crankGear(K122.z1, K122.m, K122.r1, K122_PIN1_LOCAL, { pinName: 'pin1', driver: true });
   gear1.name = 'gear1';
+  gear1.children[gear1.children.length - 3]!.name = 'crankPin122';
   gear1.position.set(K122_O1[0], K122_O1[1], 0);
   g.add(gear1);
 
@@ -62,7 +63,7 @@ export default function buildM122(): MovementModel {
   g.add(arrow1, arrow2);
 
   // 이름표 — 크랭크 핀·뜬 지레는 따라간다
-  const pinTag = tag('크랭크 핀', v(0, 0, 0.35));
+  const pinTag = leaderTo(tag('크랭크 핀', v(0, 0, 0.35)), 'crankPin122');
   const leverTag = tag('뜬 지레', v(0, 0, 0.4));
   g.add(
     tag('큰 기어 30T', v(-1.7, 3.15, 0.3)),

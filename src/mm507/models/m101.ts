@@ -1,7 +1,7 @@
 // 101 매달린 홈 막대 슬라이더 — 천장에 매달린 홈 난 막대가 흔들리며 수평 막대를 직선으로 왕복시킨다 (판화 101번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, tag } from '../kit';
+import { displayStand, tag, leaderTo } from '../kit';
 import { K101, barGuide101, ceilingHanger101, slideBar101, slottedArm101, swing101, turnArrows } from '../kit/k101';
 
 const PX = 0; // 걸이 축 x
@@ -45,6 +45,7 @@ export default function buildM101(): MovementModel {
   // 수평 막대(종동) — 핀이 홈 막대의 홈을 꿰고 있다
   const bar = slideBar101(ARM_Z, 0.205, 0.25);
   bar.name = 'bar';
+  bar.children[1]!.name = 'slidePin101';
   bar.position.set(PX, BY, BAR_Z);
   g.add(bar);
 
@@ -54,10 +55,10 @@ export default function buildM101(): MovementModel {
   g.add(arrow.group);
 
   // 이름표 — 수평 막대·미끄럼 핀 둘은 막대를 따라간다
-  g.add(tag('홈 막대(구동)', v(PX - 1.2, 2.65, 0.3)));
+  g.add(leaderTo(tag('홈 막대(구동)', v(PX - 1.2, 2.65, 0.3)), 'arm'));
   g.add(tag('안내 받침(고정)', v(1.25, 2.62, 0.3)));
   const tagBar = tag('수평 막대', v(PX - 1.1, 1.42, 0.3));
-  const tagPin = tag('미끄럼 핀', v(PX + 0.95, 1.45, 0.3));
+  const tagPin = leaderTo(tag('미끄럼 핀', v(PX + 0.95, 1.45, 0.3)), 'slidePin101');
   g.add(tagBar, tagPin);
 
   // notes 패널용 마지막 값

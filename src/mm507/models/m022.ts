@@ -1,7 +1,7 @@
 // 022 도르래 배열 — 019 의 연결을 F 를 오른쪽으로 옮겨 펼친 형태, 이득 8 = 2³ (판화 22번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, arcPoints, ceilingBeam, displayStand, pulleyBlock, rod, ropeEnd, rotArrow, tag, weight } from '../kit';
+import { Rope, arcPoints, ceilingBeam, displayStand, leaderTo, pulleyBlock, rod, ropeEnd, rotArrow, tag, weight } from '../kit';
 import { steel } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 
@@ -68,10 +68,10 @@ export default function buildM022(): MovementModel {
   g.add(arrow);
 
   // 이름표 — 움직이는 부품 것은 매 프레임 따라간다
-  const tagF = tag('F 고정 도르래', v(1.25, 2.66, 0.4));
-  const tagM1 = tag('m1', v(-1.15, 1.96, 0.4));
-  const tagM2 = tag('m2', v(-1.15, 1.48, 0.4));
-  const tagM3 = tag('m3', v(-1.15, 1.00, 0.4));
+  const tagF = leaderTo(tag('F 고정 도르래', v(1.25, 2.66, 0.4)), blockF);
+  const tagM1 = leaderTo(tag('m1', v(-1.15, 1.96, 0.4)), blockM1);
+  const tagM2 = leaderTo(tag('m2', v(-1.15, 1.48, 0.4)), blockM2);
+  const tagM3 = leaderTo(tag('m3', v(-1.15, 1.00, 0.4)), blockM3);
   const tagW = tag('짐', v(-1.15, 0.55, 0.4));
   const tagPull = tag('당기는 곳', v(1.25, 1.40, 0.4));
   g.add(tagF, tagM1, tagM2, tagM3, tagW, tagPull);

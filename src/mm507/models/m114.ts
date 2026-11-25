@@ -1,7 +1,7 @@
 // 114 결손 피니언과 이중 랙 — 이가 일부 빠진 피니언이 위·아래 랙을 번갈아 밀어 회전을 직선 왕복으로 바꾼다 (판화 114번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K114, barGuide113, k114State, mutilatedPinion113, rackFrame113 } from '../kit/k113';
 
 const TAU = Math.PI * 2;
@@ -41,7 +41,7 @@ export default function buildM114(): MovementModel {
 
   const topTag = tag('위 랙(물리면 왼쪽으로)', v(0, 2.45, 0.3));
   const botTag = tag('아래 랙(물리면 오른쪽으로)', v(0, 1.08, 0.3));
-  g.add(tag('결손 피니언(구동)', v(0, 0.75, 0.35)), topTag, botTag, tag('막대 안내', v(1.36, 2.2, 0.35)));
+  g.add(leaderTo(tag('결손 피니언(구동)', v(0, 0.75, 0.35)), 'pinion'), topTag, botTag, tag('막대 안내', v(1.36, 2.2, 0.35)));
 
   let state = k114State(0);
   const apply = (): void => {

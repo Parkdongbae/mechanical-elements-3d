@@ -3,7 +3,7 @@
 // (설계표 docs/mm507-sheets/142.md, 키트 kit/k142.ts — 모든 자세는 planet142(theta) 의 닫힌 식)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { barGuide142, disk142, guideBar142, K142, planet142, rod142, spurGear142, studPinion142 } from '../kit/k142';
 
 const TAU = Math.PI * 2;
@@ -58,9 +58,9 @@ export default function buildM142(): MovementModel {
   // 이름표 6개 — 평기어·연결 막대·안내 막대 셋은 움직이는 부품을 따라간다
   const tagDisk = tag('원판(구동)', v(-1.15, 2.75, 0.3));
   const tagStud = tag('고정 피니언', v(1.15, 2.05, 0.3));
-  const tagGear = tag('평기어(자전·공전)', v(-0.6, 1.6, 0.3));
-  const tagRod = tag('연결 막대', v(-0.4, 1.05, 0.3));
-  const tagBar = tag('안내 막대(왕복)', v(0.95, 0.7, 0.3));
+  const tagGear = leaderTo(tag('평기어(자전·공전)', v(-0.6, 1.6, 0.3)), gear);
+  const tagRod = leaderTo(tag('연결 막대', v(-0.4, 1.05, 0.3)), rod);
+  const tagBar = leaderTo(tag('안내 막대(왕복)', v(0.95, 0.7, 0.3)), bar);
   const tagGuide = tag('안내(고정)', v(1.18, 1.62, 0.3));
   g.add(tagDisk, tagStud, tagGear, tagRod, tagBar, tagGuide);
 

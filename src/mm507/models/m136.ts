@@ -1,7 +1,7 @@
 // 136 톱니 모양 캠 바퀴 — 테 옆면에 톱니 난 왕관 캠이 돌아, 스프링으로 톱니에 눌린 따름 막대를 좌우로 밀었다 당긴다 (판화 136번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { coilSpring, displayStand, rotArrow, tag } from '../kit';
+import { coilSpring, displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { shaftX } from '../kit/k061';
 import { pedestalX } from '../kit/gear6';
 import {
@@ -82,9 +82,9 @@ export default function buildM136(): MovementModel {
   // 이름표 5개 — 막대 이름표만 막대를 따라간다
   g.add(
     tag('옆면 톱니 캠 바퀴(구동)', v(-0.95, 2.3, 0.3)),
-    tag('누름 스프링(막대를 톱니에 붙인다)', v(1.55, 1.15, 0.7)),
-    tag('세운 판(고정)', v(1.5, 1.6, 0.7)),
-    tag('축받이', v(-1.6, 1.75, 0.3))
+    leaderTo(tag('누름 스프링(막대를 톱니에 붙인다)', v(1.55, 1.15, 0.7)), spring),
+    leaderTo(tag('세운 판(고정)', v(1.5, 1.6, 0.7)), bracket),
+    leaderTo(tag('축받이', v(-1.6, 1.75, 0.3)), 'pedestal')
   );
   const tagRod = tag('따름 막대(톱니 모양대로 좌우로)', v(XW + 0.75, 1.95, ZR));
   g.add(tagRod);

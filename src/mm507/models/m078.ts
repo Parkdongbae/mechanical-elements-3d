@@ -1,7 +1,7 @@
 // 078 폴 래칫 구동 변형 — 레버 B 의 갈고리 폴 2개가 번갈아 톱니 바퀴 A 를 당긴다 (판화 78번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K78, aFrame78, handLever78, hookPawl78, sawWheel78, solve78, state78 } from '../kit/k077';
 
 const OX = -0.3;
@@ -48,7 +48,7 @@ export default function buildM078(): MovementModel {
     tag('톱니 바퀴 A(28개)', v(0.85, 0.5, 0.4)),
     tag('손잡이 레버 B', v(0.7, 2.75, 0.4)),
     tag('폴 1(위로 당김)', v(-1.6, 1.75, 0.4)),
-    tag('폴 2(오른쪽으로 당김)', v(-0.9, 2.42, 0.4)),
+    leaderTo(tag('폴 2(오른쪽으로 당김)', v(-0.9, 2.42, 0.4)), 'pawl2'),
     tag('A 자 틀', v(0.75, 0.2, 0.4))
   );
 

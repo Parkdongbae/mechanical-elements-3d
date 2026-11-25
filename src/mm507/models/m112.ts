@@ -1,7 +1,7 @@
 // 112 페르시아식 드릴 — 손잡이 너트를 급한 나사 몸통을 따라 오르내리면 몸통이 번갈아 돈다 (판화 112번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, rotArrow, tag, leaderTo } from '../kit';
 import { drill112, drillHead112, drillNut112, drillStock112, setSection112, stockSpan112, workBlock112 } from '../kit/k110';
 
 const ZC = 0.3; // 모든 부품의 깊이
@@ -26,6 +26,7 @@ export default function buildM112(): MovementModel {
   // 드릴 몸통 — 날 + 물림쇠 + 급한 나사 + 핀. 돈다
   const stock = drillStock112();
   stock.name = 'stock';
+  stock.children[0]!.name = 'bit112';
   stock.position.set(0, TIP, ZC);
   g.add(stock);
 
@@ -55,7 +56,7 @@ export default function buildM112(): MovementModel {
     tag('머리(고정)', v(1.2, 2.75, ZC)),
     tag('급한 나사 몸통', v(-1.3, 2.2, ZC)),
     nutTag,
-    tag('드릴 날', v(-1.0, 0.75, ZC))
+    leaderTo(tag('드릴 날', v(-1.0, 0.75, ZC)), 'bit112')
   );
 
   let D = drill112(0);

@@ -4,7 +4,7 @@
 // 입력 레버는 판화에 없음(보충 — 왕복 입력이 보이게).
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, leaderTo, rotArrow, tag } from '../kit';
 import { ratchetBevelDrive, type RatchetState } from '../kit/gear6';
 
 const DEG = 180 / Math.PI;
@@ -33,15 +33,19 @@ export default function buildM049(): MovementModel {
   g.add(aTop, aIn1, aIn2);
 
   const a = asm.anchors;
+  // 지시선 대상: 래칫 휠 = 베벨 L/R 묶음의 둘째 자식, 폴 = 입력축 묶음의 8·12번째 자식
+  const gL = asm.group.getObjectByName('bevelL')!.children[0]!.children[1]!;
+  const gR = asm.group.getObjectByName('bevelR')!.children[0]!.children[1]!;
+  const inKids = asm.group.getObjectByName('inputShaft')!.children;
   const pick = (k: string): THREE.Vector3 => a[k] ?? new THREE.Vector3();
   g.add(
     tag('입력 레버(왕복)', pick('lever')),
-    tag('래칫 휠 L', pick('ratchetL')),
-    tag('래칫 휠 R', pick('ratchetR')),
+    leaderTo(tag('래칫 휠 L', pick('ratchetL')), gL),
+    leaderTo(tag('래칫 휠 R', pick('ratchetR')), gR),
     tag('베벨 기어 L·R + 꼭대기 기어', pick('bevel')),
-    tag('폴(걸쇠) L', pick('pawlL')),
-    tag('폴(걸쇠) R', pick('pawlR')),
-    tag('세로 출력축', pick('top'))
+    leaderTo(tag('폴(걸쇠) L', pick('pawlL')), inKids[8]!),
+    leaderTo(tag('폴(걸쇠) R', pick('pawlR')), inKids[12]!),
+    leaderTo(tag('세로 출력축', pick('top')), 'bevelTop')
   );
 
   return {

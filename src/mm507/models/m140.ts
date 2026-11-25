@@ -2,7 +2,7 @@
 //  (설계표 docs/mm507-sheets/140.md, 키트 kit/k140.ts 공용 — 모델은 배치·toggle140 대입, 링크 셋은 공용 geom)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, setMM, tag } from '../kit';
+import { displayStand, rotArrow, setMM, tag, leaderTo } from '../kit';
 import { K140, barLen140, kneePin140, pressFrame140, pressRam140, toggle140, toggleLever140 } from '../kit/k140';
 import { extrude, lathe, mesh, stadiumShape, tubeProfile } from '../../models/parts/geom';
 import { steel } from '../../models/materials';
@@ -69,7 +69,7 @@ export default function buildM140(): MovementModel {
   // 이름표 6개 — 넷은 부품을 따라가고 둘은 고정(z 0.3)
   const tagLever = tag('ㄱ자 레버(구동)', v(1.5, 2.6, 0.3));
   const tagKnee = tag('토글 무릎', v(-1.0, 2.0, 0.3));
-  const tagRam = tag('램·펀치', v(-1.0, 1.2, 0.3));
+  const tagRam = leaderTo(tag('램·펀치', v(-1.0, 1.2, 0.3)), ram);
   const tagBar = tag('가로 링크', v(-0.2, 2.3, 0.3));
   g.add(
     tagLever,

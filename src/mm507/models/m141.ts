@@ -2,7 +2,7 @@
 //  (설계표 docs/mm507-sheets/141.md, 키트 kit/k140.ts 공용)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, displayStand, openBeltPath, planar, pulley, rotArrow, shaftZ, tag } from '../kit';
+import { Belt, displayStand, openBeltPath, planar, pulley, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K141, sawFrame141, sawTable141 } from '../kit/k140';
 
 /** 띠 중심선 반지름 = 바퀴 반지름 + 띠 두께 절반 */
@@ -49,8 +49,8 @@ export default function buildM141(): MovementModel {
   g.add(arrowU, arrowL);
   g.add(
     tag('위 바퀴', new THREE.Vector3(1.15, 2.85, 0.3)),
-    tag('아래 바퀴(구동)', new THREE.Vector3(-0.75, 0.55, 0.5)),
-    tag('톱날(곧게 내려가며 켠다)', new THREE.Vector3(1.45, 1.95, 0.3)),
+    leaderTo(tag('아래 바퀴(구동)', new THREE.Vector3(-0.75, 0.55, 0.5)), wheelL),
+    leaderTo(tag('톱날(곧게 내려가며 켠다)', new THREE.Vector3(1.45, 1.95, 0.3)), 'band'),
     tag('테이블', new THREE.Vector3(1.45, 1.4, 0.45)),
     tag('주물 기둥', new THREE.Vector3(-1.45, 2.55, 0.3))
   );

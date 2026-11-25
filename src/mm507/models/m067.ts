@@ -1,7 +1,7 @@
 // 067 텀블러를 이용한 점프 운동 — 웜기어 B 의 축에 박힌 핀 C 가 속 빈 축에 붙은 반달 추 E(텀블러)를 올렸다가 놓으면 추가 쏟아진다 (판화 67번)
 import * as THREE from 'three';
 import type { MovementModel } from '../types';
-import { displayStand, rod, rotArrow, shaftZ, tag, wormScrew, wormWheel, STAGE } from '../kit';
+import { displayStand, rod, rotArrow, shaftZ, tag, leaderTo, wormScrew, wormWheel, STAGE } from '../kit';
 import { halfCutTube, tumblerCom, tumblerWeight } from '../kit/k067';
 import { castIron, darkSteel } from '../../models/materials';
 import { extrude, mesh, roundedRect } from '../../models/parts/geom';
@@ -89,7 +89,7 @@ export default function buildM067(): MovementModel {
 
   g.add(
     tag('반달 추 E(텀블러, 속 빈 축에 고정)', v(-0.7, 3.15, 0.35)),
-    tag('핀 C(축에 고정)', v(0.55, 2.5, 0.5)),
+    leaderTo(tag('핀 C(축에 고정)', v(0.55, 2.5, 0.5)), 'pinC'),
     tag('웜 기어 B', v(-1.25, 1.0, 0.3)),
     tag('웜(구동)', v(-0.2, 0.62, 0.3))
   );

@@ -2,7 +2,7 @@
 //  설계표 docs/mm507-sheets/155.md · 부품은 kit/k155 + kit/k092(연결봉·안내틀·크로스헤드) 조립만 한다
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rod, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rod, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { K155, WHEEL_REF155, elbowLever155, guidedRod, pawl155, squareToothWheel, state155 } from '../kit/k155';
 import { connectingRod, crosshead, guideFrame } from '../kit/k092';
 
@@ -76,7 +76,7 @@ export default function buildM155(): MovementModel {
   // 이름표 5개 — 레버·폴·블록은 움직이는 부품을 따라간다
   const tagLever = tag('엘보 레버', v(0, 0, 0.4));
   const tagPawl = tag('폴', v(0, 0, 0.4));
-  const tagBlock = tag('왕복 블록', v(0, 0, 0.4));
+  const tagBlock = leaderTo(tag('왕복 블록', v(0, 0, 0.4)), block);
   g.add(tag('톱니바퀴(22이)', v(-1.3, 2.15, 0.3)), tagLever, tagPawl, tagBlock, tag('안내틀(고정)', v(1.45, 2.72, 0.3)));
 
   /** theta 의 닫힌 식으로 전체 자세를 다시 계산(누적 오차·역회전 없음) */

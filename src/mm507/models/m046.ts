@@ -3,7 +3,7 @@
 // 부품·체인 경로·운동식은 모두 kit/gear6.ts 의 fuseeSystem 이 만든다. 모델은 풀림각 ψ 와 표시만 맡는다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, leaderTo, rotArrow, tag } from '../kit';
 import { fuseeSystem, wallBearing, type FuseeState } from '../kit/gear6';
 
 const XB = -0.85; // 태엽통 축 x
@@ -46,7 +46,7 @@ export default function buildM046(): MovementModel {
   g.add(
     tag('태엽통(태엽이 안에 있음)', v(XB, 2.35, 0.4)),
     tag('퓨지(계단 원뿔 도르래)', v(XF, 2.45, 0.4)),
-    tag('체인', v(0, 0.95, 0.7)),
+    leaderTo(tag('체인', v(0, 0.95, 0.7)), 'chain'),
     tag('체인이 걸린 반지름', v(1.68, 1.4, 0.45))
   );
 

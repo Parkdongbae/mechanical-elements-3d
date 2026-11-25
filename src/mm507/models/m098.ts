@@ -1,7 +1,7 @@
 // 098 불규칙 진동 운동(고리 홈 팔) — 원판의 크랭크 핀이 흔들리는 팔의 닫힌 고리 홈을 한 바퀴 돌며 팔을 불규칙하게 흔든다 (판화 98번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { crankPinDisk, loopArmAngle, loopGrooveArm, LOOP098 } from '../kit/k098';
 
 const OX = -0.75; // 원판 중심
@@ -45,7 +45,7 @@ export default function buildM098(): MovementModel {
 
   g.add(
     tag('원판(구동)', v(-1.55, 2.75, 0.3)),
-    tag('크랭크 핀', v(-0.75, 0.3, 0.3)),
+    leaderTo(tag('크랭크 핀', v(-0.75, 0.3, 0.3)), 'pin098'),
     tag('고리 홈 팔(흔들림)', v(0.2, 2.75, 0.3)),
     tag('받침축', v(1.05, 1.15, 0.3))
   );

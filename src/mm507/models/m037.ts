@@ -8,7 +8,7 @@ import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { brass, castIron, darkSteel, paint, steel } from '../../models/materials';
 import { lathe, merge, mesh, TAU } from '../../models/parts/geom';
-import { displayStand, flutedCone, rod, tag } from '../kit';
+import { displayStand, flutedCone, leaderTo, rod, tag } from '../kit';
 
 const ZC = 0.3; // 축이 지나는 깊이(원뿔 반지름이 깊이 방향으로 나오므로 앞으로 당긴다) — 원뿔이 z −0.18 ~ 0.78 안에 든다
 const D = 0.656; // 축 사이 거리 = pL + pR
@@ -112,7 +112,8 @@ export default function buildM037(): MovementModel {
     cyl.rotateY(psi[i]!);
     studs.push(cyl);
   }
-  right.add(mesh(merge(studs), steel()));
+  const studMesh = mesh(merge(studs), steel());
+  right.add(studMesh);
   right.add(mesh(new THREE.BoxGeometry(0.1, 0.012, 0.03), paint(0xf2b619)).translateX(rb1 * 0.6).translateY(H + 0.002));
   g.add(right);
 
@@ -135,7 +136,7 @@ export default function buildM037(): MovementModel {
   g.add(
     tag('홈 원뿔(구동, 일정 속도)', v(XL - 0.35, 2.95, 0.7)),
     tag('돌기 원뿔(피동, 속도 변함)', v(XR + 0.85, 2.95, 0.7)),
-    tag('나선 모양 돌기', v(XR + 0.9, 1.1, 0.85))
+    leaderTo(tag('나선 모양 돌기', v(XR + 0.9, 1.1, 0.85)), studMesh)
   );
 
   return {

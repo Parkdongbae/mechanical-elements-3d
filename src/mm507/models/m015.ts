@@ -1,7 +1,7 @@
 // 015 화이트 도르래 — 한 몸 단차 풀리 블록 2개에 줄 7가닥을 번갈아 감고, 힘의 비 1 : 7 (판화 15번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, displayStand, rod, ropeAround, rotArrow, steppedPulley, tag, weight } from '../kit';
+import { Rope, displayStand, leaderTo, rod, ropeAround, rotArrow, steppedPulley, tag, weight } from '../kit';
 import { castIron, steel, wood } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 
@@ -77,7 +77,8 @@ export default function buildM015(): MovementModel {
   load.position.set(0, -0.53 + 0.011 + 0.0135 - 0.048 - 0.2, 0.2); // −0.7535
   load.add(tag('추', v(0.45, 0.05, 0.1)));
   hangL.add(load);
-  hangL.add(rod(v(0.065, 0, 0.335), v(0.065, 0, 0.37), 0.02)); // 줄 끝 묶는 핀
+  const tiePin = rod(v(0.065, 0, 0.335), v(0.065, 0, 0.37), 0.02); // 줄 끝 묶는 핀
+  hangL.add(tiePin);
   hangL.position.y = LY0;
   g.add(hangL);
 
@@ -100,10 +101,10 @@ export default function buildM015(): MovementModel {
   arrowL.position.set(0, LY0, 0.45);
   g.add(arrowU, arrowL);
   g.add(
-    tag('위 블록(고정, 홈 4개)', v(1.05, 2.85, 0.45)),
-    tag('아래 블록(움직, 홈 3개)', v(1.05, 1.6, 0.45)),
-    tag('당기는 끝(7배 이동)', v(-1.0, 1.0, 0.45)),
-    tag('묶은 곳', v(0.7, 1.15, 0.45))
+    leaderTo(tag('위 블록(고정, 홈 4개)', v(1.05, 2.85, 0.45)), pU),
+    leaderTo(tag('아래 블록(움직, 홈 3개)', v(1.05, 1.6, 0.45)), pL),
+    leaderTo(tag('당기는 끝(7배 이동)', v(-1.0, 1.0, 0.45)), handle),
+    leaderTo(tag('묶은 곳', v(0.7, 1.15, 0.45)), tiePin)
   );
 
   return {

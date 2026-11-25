@@ -1,7 +1,7 @@
 // 091 삼각 편심 — 뢸로 삼각형 캠의 꼭짓점에 축이 꿰여 있고, 네모 틀이 위·아래 닳음 띠로 캠을 물고 왕복하다 멈춘다 (판화 91번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, shaftZ, tag } from '../kit';
+import { displayStand, rotArrow, shaftZ, tag, leaderTo } from '../kit';
 import { camFrame, rodGuide, triangularCam, triCamLift } from '../kit/k089';
 
 const ZP = 0.1; // 기구 평면 z
@@ -44,10 +44,10 @@ export default function buildM091(): MovementModel {
   g.add(arrow);
 
   g.add(
-    tag('삼각 편심(축이 꼭짓점에 꿰임)', v(-1.35, 2.35, 0.3)),
+    leaderTo(tag('삼각 편심(축이 꼭짓점에 꿰임)', v(-1.35, 2.35, 0.3)), 'cam'),
     tag('틀(위아래로 왕복하다 멈춤)', v(1.4, 2.2, 0.3)),
     tag('닳음 띠(캠이 닿는 곧은 면)', v(1.45, 1.5, 0.3)),
-    tag('고정 안내', v(0.75, 2.9, 0.3))
+    leaderTo(tag('고정 안내', v(0.75, 2.9, 0.3)), 'guideT')
   );
 
   let thE = 0;

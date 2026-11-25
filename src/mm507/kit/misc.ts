@@ -168,3 +168,9 @@ export function circleIntersect(c1: BV2, r1: number, c2: BV2, r2: number, up: bo
   const s = up ? 1 : -1;
   return [c1[0] + ux * a - uy * h * s, c1[1] + uy * a + ux * h * s];
 }
+
+/** 이름표 지시선이 가리킬 부재를 직접 정한다(자동 고르기가 틀릴 때). target = 그 부재 객체 또는 모델 안 객체 이름 */
+export function leaderTo(tagSprite: THREE.Object3D, target: THREE.Object3D | string): THREE.Object3D {
+  tagSprite.userData.leaderTarget = target;
+  return tagSprite;
+}

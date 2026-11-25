@@ -2,7 +2,7 @@
 // 아래 블록이 d 오르면 자유단은 8d 내려온다(줄 가닥 수 8 = 힘의 이득 8배). (판화 14번)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Rope, displayStand, pulley, rod, ropeAround, rotArrow, tag, type RopeCircle, type V2 } from '../kit';
+import { Rope, displayStand, leaderTo, pulley, rod, ropeAround, rotArrow, tag, type RopeCircle, type V2 } from '../kit';
 import { castIron, darkSteel, steel, wood } from '../../models/materials';
 import { mesh } from '../../models/parts/geom';
 
@@ -144,8 +144,8 @@ export default function buildM014(): MovementModel {
   lower.add(arrowL);
 
   // 이름표
-  g.add(tag('위 블록(고정)', v(1.25, 2.9, 0.35)));
-  lower.add(tag('아래 블록(움직)', v(1.0, 0.28, 0.3)));
+  g.add(leaderTo(tag('위 블록(고정)', v(1.25, 2.9, 0.35)), upper));
+  lower.add(leaderTo(tag('아래 블록(움직)', v(1.0, 0.28, 0.3)), lower));
   lower.add(tag('추', v(0.5, -0.85, 0.2)));
 
   // 줄 + 자유단 손잡이
