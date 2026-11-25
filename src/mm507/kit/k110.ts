@@ -95,13 +95,92 @@ export interface ScrewGeoOpts {
   cap1?: boolean;
 }
 
-/** 나사 면 지오메트리 — 축 = 로컬 +Y, y0~y1. 점 = (r·sin th, y, r·cos th) */
+/**
+ * 나사 면 지오메트리 — 축 = 로컬 +Y, y0~y1. 점 = (r·sin th, y, r·cos th).
+ * 격자를 축에 나란하게(θ × y) 찍으면 비스듬한 산 모서리가 칸마다 꺾여 계단처럼 보였다(사용자 지적: 110·111번).
+ * 그래서 격자 한 축을 나선(산 위상 u 가 일정한 선)에 맞춘다: y = w + hand·lead·θ/2π, w 는 나선 좌표.
+ * w 행은 산 모양의 꺾이는 곳(꼭대기 양끝·옆구리 양끝)에 정확히 놓아 사다리꼴이 매끈하고 또렷하게 나온다. 양 끝은 y 를 잘라 평면으로 막는다.
+ */
 export function screwGeo(s: ThreadSpec, y0: number, y1: number, o: ScrewGeoOpts = {}): THREE.BufferGeometry {
-  const rows = Math.max(2, Math.ceil(((y1 - y0) / s.pitch) * (o.rows ?? 10)));
-  const ys: number[] = [];
-  for (let j = 0; j <= rows; j++) ys.push(y0 + ((y1 - y0) * j) / rows);
+  const lead = threadLead(s);
+  const segs = Math.max(48, o.segs ?? 96) * 2;
+  const crest = s.crest ?? 0.4;
+  const flank = s.flank ?? 0.1;
   const u0 = o.u0 ?? 0;
-  return radialSurface((th, y) => threadR(s, th, y, u0), ys, o.segs ?? 60, o.cap0 === false ? null : 0, o.cap1 === false ? null : 0, 40);
+  // 한 피치 안 w 표본(피치 비율): 골 구간을 몇 칸 + 산 모서리 4점
+  const rootN = Math.max(2, Math.round((o.rows ?? 10) / 3));
+  const a = 0.5 - crest / 2 - flank;
+  const b = 0.5 - crest / 2;
+  const c = 0.5 + crest / 2;
+  const d = 0.5 + crest / 2 + flank;
+  const per: number[] = [];
+  for (let k = 0; k < rootN; k++) per.push((a * k) / rootN);
+  per.push(a, b, (b + c) / 2, c, d);
+  for (let k = 1; k < rootN; k++) per.push(d + ((1 - d) * k) / rootN);
+  // w 는 θ 에 따른 y 이동을 모두 덮도록 넓게
+  const shiftMax = Math.max(0, s.hand * lead);
+  const shiftMin = Math.min(0, s.hand * lead);
+  const wA = y0 - shiftMax;
+  const wB = y1 - shiftMin;
+  // 위상 u = w/pitch + u0' 가 per 값이 되도록 w 를 고른다(threadU: v = y/p − hand·starts·θ/2π + u0)
+  const ws: number[] = [];
+  const n0 = Math.floor(wA / s.pitch + u0) - 1;
+  const n1 = Math.ceil(wB / s.pitch + u0) + 1;
+  for (let n = n0; n <= n1; n++) for (const f of per) ws.push((n + f - u0) * s.pitch);
+  const wsIn = ws.filter((w) => w >= wA - s.pitch && w <= wB + s.pitch);
+  const R = s.rCore;
+  const pos: number[] = [];
+  const cols = segs + 1;
+  for (let jj = 0; jj < wsIn.length; jj++) {
+    for (let ii = 0; ii <= segs; ii++) {
+      const th = (ii / segs) * TAU;
+      const yRaw = wsIn[jj]! + (s.hand * lead * th) / TAU;
+      const y = Math.min(y1, Math.max(y0, yRaw));
+      const r = threadR(s, th, yRaw, u0);
+      pos.push(r * Math.sin(th), y, r * Math.cos(th));
+    }
+  }
+  const idx: number[] = [];
+  for (let jj = 0; jj < wsIn.length - 1; jj++) {
+    for (let ii = 0; ii < segs; ii++) {
+      const p00 = jj * cols + ii;
+      const p10 = p00 + 1;
+      const p01 = p00 + cols;
+      const p11 = p01 + 1;
+      idx.push(p00, p10, p01, p10, p11, p01);
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setIndex(idx);
+  geo.computeVertexNormals();
+  const parts: THREE.BufferGeometry[] = [geo.toNonIndexed()];
+  parts[0]!.computeVertexNormals();
+  // 끝 마개(속 빈 축 끝을 막는다)
+  const cap = (y: number, up: boolean): THREE.BufferGeometry => {
+    const g = new THREE.CircleGeometry(R + s.depth * 0.5, segs);
+    g.rotateX(up ? -Math.PI / 2 : Math.PI / 2);
+    g.translate(0, y, 0);
+    g.deleteAttribute('uv');
+    return g.toNonIndexed();
+  };
+  if (o.cap0 !== false) parts.push(cap(y0, false));
+  if (o.cap1 !== false) parts.push(cap(y1, true));
+  // 큰 배열을 펼쳐 넣으면(…spread) 호출 스택이 넘친다 → 미리 잡은 Float32Array 에 복사
+  const total = parts.reduce((n, g) => n + g.getAttribute('position').array.length, 0);
+  const all = new Float32Array(total);
+  const nor = new Float32Array(total);
+  let off = 0;
+  for (const g of parts) {
+    const pa = g.getAttribute('position').array as Float32Array;
+    all.set(pa, off);
+    nor.set(g.getAttribute('normal').array as Float32Array, off);
+    off += pa.length;
+  }
+  const out = new THREE.BufferGeometry();
+  out.setAttribute('position', new THREE.BufferAttribute(all, 3));
+  out.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+  return out;
 }
 
 /** 축에 수직인 단면 윤곽(검사용). 로컬 z 가 축(+)을 향하도록 놓은 holder 좌표: (lx, ly) = (r·sin th, −r·cos th) */
