@@ -196,7 +196,12 @@ export function disk142(): THREE.Group {
   g.add(mesh(tubeZ(0.033, K.R, -K.T / 2, K.T / 2), bronzeBody)); // 판(중앙 구멍 0.033 — 축 0.03)
   g.add(mesh(tubeZ(K.rimIn, K.R, -K.T / 2 + 0.005, K.T / 2 + 0.014), bronzeBody)); // 테 띠(앞 0.014 돌출)
   g.add(mesh(tubeZ(0.033, 0.1, -K.T / 2 - 0.012, K.T / 2 + 0.012), darkSteel())); // 허브
-  g.add(meshAt(new THREE.BoxGeometry(0.1, 0.014, 0.006), paint(MARK), -0.44, 0.3, K.T / 2 + 0.006)); // 도는 표시줄
+  { // 도는 표시줄: 반지름 방향으로 테 안쪽(r 0.40~0.50)에 — 예전엔 가로로 놓여 테 가장자리에 걸쳐 보였다(사용자 지적)
+    const a = 2.5;
+    const m = meshAt(new THREE.BoxGeometry(0.1, 0.014, 0.006), paint(MARK), 0.45 * Math.cos(a), 0.45 * Math.sin(a), K.T / 2 + 0.006);
+    m.rotation.z = a;
+    g.add(m);
+  }
   g.add(meshAt(cylZ(0.075, 0.02, 0.07), darkSteel(), 0, -K.d, 0)); // 스터드 보스
   g.add(meshAt(cylZ(0.04, 0.02, K.zGear - K.gearW / 2), steel(), 0, -K.d, 0)); // 스터드(평기어 허브 구멍 0.042 이 앉는다)
   g.add(meshAt(cylZ(0.056, K.zGear + 0.039, K.zGear + 0.053), darkSteel(), 0, -K.d, 0)); // 스터드 끝 캡 0.224~0.238
@@ -232,7 +237,12 @@ export function spurGear142(): THREE.Group {
   }
   g.add(meshAt(cylZ(0.03, 0.28, 0.41, 0.004, 24), steel(), px, py, 0)); // 크랭크 핀(눈이 앉는 자리)
   g.add(meshAt(cylZ(0.044, 0.402, 0.42, 0.004, 24), darkSteel(), px, py, 0)); // 핀 덮개
-  g.add(meshAt(new THREE.BoxGeometry(0.06, 0.012, 0.006), paint(MARK), 0.13, -0.13, K.zGear + K.gearW / 2 + 0.003)); // 자전 표시줄
+  { // 자전 표시줄: 이뿌리(r 0.17) 안쪽 몸통에 반지름 방향으로 — 예전엔 이 사이에 걸쳐 튀어나와 보였다(사용자 지적)
+    const a = -Math.PI / 4;
+    const m = meshAt(new THREE.BoxGeometry(0.06, 0.012, 0.006), paint(MARK), 0.12 * Math.cos(a), 0.12 * Math.sin(a), K.zGear + K.gearW / 2 + 0.003);
+    m.rotation.z = a;
+    g.add(m);
+  }
   const pin = pinMark('crankPin', px, py, 0); // 표식 층 z 0 — 막대 윗눈 구멍 윤곽과 다각형 짝
   pin.userData.outline = circlePts(0.028, 24);
   g.add(pin);
