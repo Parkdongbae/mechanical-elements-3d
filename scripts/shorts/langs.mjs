@@ -21,6 +21,8 @@ export function parseLangs(arg, def = 'both') {
 
 const SYS = 'C:/Windows/Fonts';
 const APP_URL = 'mechanical-elements-3d.vercel.app';
+/** 영어 설명란 안내(사용자 지시 2026-11-26): 일·중·힌디·아랍 사용자는 다른 채널로 */
+export const OTHER_LANG_EN = 'Chinese, Hindi, Arabic and Japanese speakers, please visit https://www.youtube.com/channel/UCKNs2uVXcGmB_48FMUyhtzQ';
 
 /**
  * voice: edge-tts 목소리 / sans·serif: 카드(Chrome) 글꼴 / ass: 자막 글꼴 이름 / sysFonts: 자막용으로 복사할 시스템 글꼴
@@ -94,7 +96,9 @@ export function metaText(n, lang, url) {
   const book = `Henry T. Brown, "Five Hundred and Seven Mechanical Movements" (1868)`;
   const M = {
     ko: { title: `[한] [507 기계 운동 #${n}] ${title} #shorts`, app: `▶ 앱에서 직접 돌려 보기: ${url}`, src: `원서: Henry T. Brown, 『Five Hundred and Seven Mechanical Movements』(1868), ${n}번`, hash: '#507기계운동 #기계 #기구학 #shorts', tags: ['507 기계 운동', '기계', '기구학', '기계요소', '과학', title, 'mechanism', 'engineering', '507movements', 'shorts'], playlist: '507 기계 운동 (한국어)' },
-    en: { title: `[EN] [507 Mechanical Movements #${n}] ${title} #shorts`, app: `▶ Spin it yourself in the app: ${url}`, src: `From ${book}, No. ${n}`, hash: '#507movements #mechanism #engineering #shorts', tags: ['507 mechanical movements', 'mechanism', 'engineering', 'kinematics', 'machine design', title, 'how it works', '507movements', 'shorts'], playlist: '507 Mechanical Movements (English)' },
+    en: { title: `[EN] [507 Mechanical Movements #${n}] ${title} #shorts`, app: `▶ Spin it yourself in the app: ${url}
+
+${OTHER_LANG_EN}`, src: `From ${book}, No. ${n}`, hash: '#507movements #mechanism #engineering #shorts', tags: ['507 mechanical movements', 'mechanism', 'engineering', 'kinematics', 'machine design', title, 'how it works', '507movements', 'shorts'], playlist: '507 Mechanical Movements (English)' },
     ja: { title: `[日] [${t.series} #${n}] ${title} #shorts`, app: `▶ アプリで自分で回してみる: ${url}`, src: `原書: ${book}, ${n}番`, hash: '#507機械運動 #機械 #機構学 #shorts', tags: ['507の機械運動', '機械', '機構学', '機械要素', '仕組み', title, 'mechanism', '507movements', 'shorts'], playlist: '507の機械運動（日本語）' },
     zh: { title: `[中] [${t.series} #${n}] ${title} #shorts`, app: `▶ 在应用里亲手转一转: ${url}`, src: `原著: ${book}, 第${n}号`, hash: '#507种机械运动 #机械 #机构学 #shorts', tags: ['507种机械运动', '机械', '机构学', '机械原理', '科普', title, 'mechanism', '507movements', 'shorts'], playlist: '507种机械运动（中文）' },
     hi: { title: `[हि] [${t.series} #${n}] ${title} #shorts`, app: `▶ ऐप में खुद घुमाकर देखें: ${url}`, src: `स्रोत: ${book}, संख्या ${n}`, hash: '#507movements #मशीन #इंजीनियरिंग #shorts', tags: ['507 यांत्रिक गतियाँ', 'मशीन', 'इंजीनियरिंग', 'यांत्रिकी', title, 'mechanism', 'engineering', '507movements', 'shorts'], playlist: '507 यांत्रिक गतियाँ (हिन्दी)' },
