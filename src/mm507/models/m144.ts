@@ -3,13 +3,14 @@
 // 키트 kit/k143.ts 의 144 공용 부품 + kit/k144.ts 의 막대 안내)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, tag } from '../kit';
+import { glow } from '../../models/materials';
+import { mesh } from '../../models/parts/geom';
 import { eyeRod, K144, lazyTongs144, linkBar, pivotPost144, type LazyTongs144 } from '../kit/k143';
 import { rodGuide144 } from '../kit/k144';
 
 const DEG = 180 / Math.PI;
 /** d = dMid + dAmp·sin(theta − WIDEN_ARG) 의 위상(≈1.993). cos(theta − WIDEN_ARG) > 0 이면 펴지는 중 */
-const WIDEN_ARG = 1.6 - K144.phase;
 /** 교차점 리벳 핀의 로컬 z 범위 — A·B 두 층의 눈을 한 핀으로 꿴다 */
 const RIVET_Z: [number, number] = [-0.045, 0.08];
 /** 핀 표식이 모이는 월드 z 평면 */
@@ -101,12 +102,23 @@ export default function buildM144(): MovementModel {
   guideR.position.set(1.648, K144.CY, 0);
   g.add(guideL, guideR);
 
-  // 회전 방향 화살표 2개(오른아래 막대 M3→B4 의 흔들림) — 펴질 때 반시계, 접힐 때 시계, 하나만 보인다
-  const arrowCCW = rotArrow(0.15, true);
-  arrowCCW.position.set(K144.XF, K144.CY, 0.33);
-  const arrowCW = rotArrow(0.15, false);
-  arrowCW.position.set(K144.XF, K144.CY, 0.33);
-  g.add(arrowCCW, arrowCW);
+  // 움직임 화살표: 왼쪽 막대 위에서 좌우로 — 막대가 지금 가는 쪽을 가리키고 막대를 따라간다(사용자 지적: 회전 화살표 대신)
+  const slide = new THREE.Group();
+  {
+    const mat = glow(0xd8362f, 0.85);
+    const shaftGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.42, 12);
+    shaftGeo.rotateZ(Math.PI / 2);
+    slide.add(mesh(shaftGeo, mat));
+    const headGeo = new THREE.ConeGeometry(0.05, 0.13, 16);
+    headGeo.rotateZ(-Math.PI / 2); // 끝이 +X
+    headGeo.translate(0.27, 0, 0);
+    slide.add(mesh(headGeo, mat));
+    slide.traverse((o) => {
+      o.layers.set(1);
+      o.userData.noAO = true;
+    });
+  }
+  g.add(slide);
 
   // 이름표 4개 — 셋은 움직이는 부품을 따라간다
   const tagL = tag('왼쪽 막대(3배 왕복)', v(-0.7, 1.62, 0.3));
@@ -126,6 +138,7 @@ export default function buildM144(): MovementModel {
     const m4 = A.mid[4]!;
     rodL.position.x = m0;
     rodR.position.x = m4;
+    slide.position.set(m0 - 0.75, K144.CY + 0.17, K144.zEye + 0.05);
     tagL.position.set(m0 - 0.35, 1.62, 0.3);
     tagR.position.set(m4 + 0.3, 1.6, 0.3);
     tagLinks.position.set((m0 + A.out[0]!) / 2, K144.CY + A.h / 2 + 0.14, 0.3);
@@ -146,10 +159,11 @@ export default function buildM144(): MovementModel {
     },
     update(dt: number, speed: number): void {
       theta += OMEGA * speed * dt;
-      pose(lazyTongs144(theta));
-      const widening = Math.cos(theta - WIDEN_ARG) >= 0; // d 가 늘어나는 동안 = 펴지는 동안
-      arrowCCW.visible = widening;
-      arrowCW.visible = !widening;
+      const A = lazyTongs144(theta);
+      pose(A);
+      // 왼쪽 막대가 지금 움직이는 방향(역재생 반영)
+      const v = (lazyTongs144(theta + 0.01).mid[0]! - A.mid[0]!) * (speed < 0 ? -1 : 1);
+      if (Math.abs(v) > 1e-7) slide.scale.x = v > 0 ? 1 : -1;
     }
   };
 }
