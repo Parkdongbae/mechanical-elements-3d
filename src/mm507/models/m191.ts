@@ -69,7 +69,7 @@ export default function buildM191(): MovementModel {
     group: g,
     notes: () => [
       { label: '속도비 아래/위', value: `${cur.ratio.toFixed(2)} (중심 거리 ${C191.toFixed(2)})` },
-      { label: '접점 반지름', value: `위 ${(K191.rmin * Math.exp(cur.phi1 / (6.2832 / Math.log(K191.rmax / K191.rmin)))).toFixed(2)}` },
+      { label: '접점 반지름', value: `위 기어 ${(K191.rmin * Math.exp(cur.phi1 / (6.2832 / Math.log(K191.rmax / K191.rmin)))).toFixed(2)}` },
       { label: '진행', value: `${Math.round(cur.u * 100)} %` },
       { label: '원리', value: '접점의 반지름이 점점 커져 아래 기어가 점점 빨리 돈다. 끝의 계단 벽에서 멈춘다' }
     ],
