@@ -96,8 +96,9 @@ function buildAboutEn(done3d: number, onList: () => void, langBtn?: HTMLElement)
   return art;
 }
 
-export function buildAbout(preface: PrefaceData | null, done3d: number, onList: () => void, lang: 'ko' | 'en' = 'ko', langBtn?: HTMLElement): HTMLElement {
-  if (lang === 'en') return buildAboutEn(done3d, onList, langBtn);
+/** 소개 글은 한국어·영어만 있다 — 일·중·힌디·아랍은 영어 소개를 보인다 */
+export function buildAbout(preface: PrefaceData | null, done3d: number, onList: () => void, lang: string = 'ko', langBtn?: HTMLElement): HTMLElement {
+  if (lang !== 'ko') return buildAboutEn(done3d, onList, langBtn);
   const art = el('article', 'mm-about mm-panel');
 
   const head = el('header', 'mm-about-head');

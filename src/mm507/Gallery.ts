@@ -10,7 +10,7 @@ import { buildAbout, loadPreface, type PrefaceData } from './about';
 import { createLabelsToggle } from '../labs/common/labels';
 import { retextTags, setArrowsVisible, setTagsVisible } from './kit/misc';
 import { TagLeaders } from './leaders';
-import { loadEnDict, translateNote, uiText, type MmLang, type ModelDict, type UiText } from './lang';
+import { MM_LANGS, isMmLang, loadDict, translateNote, uiText, type MmLang, type ModelDict, type UiText } from './lang';
 import { saveSettings } from '../state/settings';
 import { ICON } from '../ui/icons';
 
@@ -101,9 +101,9 @@ export function mmSeenCount(): number {
 }
 
 type TabId = 'easy' | 'ko' | 'en';
-/** 한글: 쉬운 풀이·번역·원문 / 영문: 쉬운 설명(easyEn, 없으면 원문)·원문 */
+/** 한글: 쉬운 풀이·번역·원문 / 그 밖의 언어: 쉬운 설명(그 언어, 없으면 영어)·영어 원문 */
 function tabsFor(lang: MmLang, t: UiText): { id: TabId; label: string }[] {
-  if (lang === 'en') {
+  if (lang !== 'ko') {
     return [
       { id: 'easy', label: t.tabEasy },
       { id: 'en', label: t.tabEn }
@@ -141,7 +141,9 @@ export class Gallery implements AppMode {
   private speedOut: HTMLElement | null = null;
   private zoomEl: HTMLElement | null = null;
   private labelsToggle: { button: HTMLButtonElement; sync(): void; dispose(): void } | null = null;
-  private enDict: ModelDict | null = null;
+  /** 지금 언어의 사전(ko 면 null) — buildView 가 화면을 만들기 전에 받아 둔다 */
+  private dict: ModelDict | null = null;
+  private dictLang: MmLang = 'ko';
   /** 이름표 지시선 — 모델이 첫 자세를 잡은 뒤(첫 update 프레임) 만든다 */
   private leaders: TagLeaders | null = null;
   private notesKey = '';
@@ -215,7 +217,8 @@ export class Gallery implements AppMode {
   }
 
   private get lang(): MmLang {
-    return this.ctx?.settings.mmLang === 'en' ? 'en' : 'ko';
+    const v = this.ctx?.settings.mmLang;
+    return isMmLang(v) ? v : 'ko';
   }
 
   private get t(): UiText {
@@ -225,17 +228,36 @@ export class Gallery implements AppMode {
   /** 지금 kind 의 화면을 새로 만든다(모델이 있으면 다시 불러오지 않고 쓴다) */
   private buildView(): void {
     const ep = ++this.epoch;
-    if (this.lang === 'en' && this.tab === 'ko') this.tab = 'easy';
-    if (this.kind === 'about') this.buildAboutView(ep);
-    else if (this.kind === 'list') this.buildList(ep);
-    else this.buildDetail(ep);
+    const lang = this.lang;
+    if (lang !== 'ko' && this.tab === 'ko') this.tab = 'easy';
+    // 앱 위쪽 모드 이름(main.ts 의 #mode-name)도 고른 언어로
+    const modeName = document.querySelector<HTMLElement>('#mode-name');
+    if (modeName) modeName.textContent = this.t.appTitle;
+    const go = (): void => {
+      if (ep !== this.epoch) return;
+      if (this.kind === 'about') this.buildAboutView(ep);
+      else if (this.kind === 'list') this.buildList(ep);
+      else this.buildDetail(ep);
+    };
+    // 제목·쉬운 풀이·이름표가 사전에 있으므로 사전을 먼저 받는다(ko 는 사전 없음)
+    if (lang === 'ko') {
+      this.dict = null;
+      this.dictLang = 'ko';
+      go();
+    } else if (this.dict && this.dictLang === lang) go();
+    else
+      void loadDict(lang).then((d) => {
+        this.dict = d;
+        this.dictLang = lang;
+        go();
+      });
   }
 
-  /** 한/영 전환 — 설정 저장 후 화면 문구·제목·3D 이름표를 다시 그린다 */
-  private toggleLang(): void {
+  /** 언어 바꾸기 — 설정 저장 후 화면 문구·제목·3D 이름표를 다시 그린다 */
+  private setLang(lang: MmLang): void {
     const ctx = this.ctx;
-    if (!ctx) return;
-    ctx.settings.mmLang = this.lang === 'en' ? 'ko' : 'en';
+    if (!ctx || lang === this.lang) return;
+    ctx.settings.mmLang = lang;
     saveSettings(ctx.settings);
     this.closeZoom();
     this.labelsToggle?.dispose();
@@ -246,21 +268,30 @@ export class Gallery implements AppMode {
     this.buildView();
   }
 
-  private langButton(): HTMLButtonElement {
-    const en = this.lang === 'en';
-    const b = el('button', 'mm-btn mm-lang');
-    b.type = 'button';
+  /** 언어 고르기(6개 언어) — 이름은 그 언어로 쓴다 */
+  private langButton(): HTMLSelectElement {
+    const b = el('select', 'mm-btn mm-lang');
     b.dataset.mm = 'lang-toggle';
-    b.append(el('span', en ? 'mm-lang-o' : 'mm-lang-o is-on', '한'), el('span', 'mm-lang-sep', '/'), el('span', en ? 'mm-lang-o is-on' : 'mm-lang-o', 'EN'));
+    for (const x of MM_LANGS) {
+      const o = el('option', '', `${x.short} ${x.label}`);
+      o.value = x.id;
+      o.lang = x.id;
+      if (x.id === this.lang) o.selected = true;
+      b.append(o);
+    }
     b.title = this.t.langTitle;
     b.setAttribute('aria-label', this.t.langTitle);
-    b.addEventListener('click', () => this.toggleLang());
+    b.addEventListener('change', () => {
+      if (isMmLang(b.value)) this.setLang(b.value);
+    });
     return b;
   }
 
   private titleOf(entry: CatalogEntry | null, n: number): string {
-    if (this.lang === 'en') return entry?.titleEn ?? this.t.untitled(n);
-    return entry?.title ?? this.t.untitled(n);
+    const lang = this.lang;
+    if (lang === 'ko') return entry?.title ?? this.t.untitled(n);
+    if (lang === 'en') return entry?.titleEn ?? this.t.untitled(n);
+    return this.dict?.titles[String(n)] ?? entry?.titleEn ?? this.t.untitled(n);
   }
 
   /** 모델 그룹에 지금 설정(이름표·화살표·언어)을 입힌다 — 모델 로드 직후, 언어 전환 후 */
@@ -270,10 +301,12 @@ export class Gallery implements AppMode {
     if (!ctx || !m) return;
     setTagsVisible(m.group, ctx.settings.showLabels);
     setArrowsVisible(m.group, ctx.settings.showArrows);
-    if (this.lang === 'en') {
-      void loadEnDict().then((d) => {
-        if (this.model !== m || this.lang !== 'en') return;
-        this.enDict = d;
+    if (this.lang !== 'ko') {
+      const lang = this.lang;
+      void loadDict(lang).then((d) => {
+        if (this.model !== m || this.lang !== lang) return;
+        this.dict = d;
+        this.dictLang = lang;
         retextTags(m.group, d.tags);
         this.notesKey = '';
         this.refreshNotes();
@@ -383,6 +416,7 @@ export class Gallery implements AppMode {
     this.wrap = wrap;
     const t = this.t;
     wrap.lang = this.lang;
+    wrap.dir = this.lang === 'ar' ? 'rtl' : 'ltr';
 
     const top = el('header', 'mm-top');
     const head = el('div', 'mm-top-head');
@@ -513,6 +547,7 @@ export class Gallery implements AppMode {
     this.wrap = wrap;
     const t = this.t;
     wrap.lang = this.lang;
+    wrap.dir = this.lang === 'ar' ? 'rtl' : 'ltr';
     const entry = this.catalog.find((e) => e.n === this.cur) ?? null;
     if (!hasModel(this.cur)) wrap.classList.add('is-no3d');
 
@@ -652,9 +687,11 @@ export class Gallery implements AppMode {
       body.textContent = this.t.loadingDesc;
       return;
     }
-    if (this.lang === 'en') {
-      body.lang = 'en';
-      body.textContent = this.tab === 'easy' ? entry.easyEn ?? entry.en : entry.en;
+    if (this.lang !== 'ko') {
+      const own = this.lang === 'en' ? entry.easyEn : this.dict?.easy[String(this.cur)];
+      const easy = own ?? entry.easyEn;
+      body.lang = this.tab === 'easy' && easy === own ? this.lang : 'en';
+      body.textContent = this.tab === 'easy' ? easy ?? entry.en : entry.en;
       return;
     }
     body.lang = this.tab === 'en' ? 'en' : 'ko';
@@ -698,11 +735,11 @@ export class Gallery implements AppMode {
         onToggle: (v) => {
           if (this.model) setTagsVisible(this.model.group, v);
           this.leaders?.setVisible(v);
-          if (this.lang === 'en') lb.button.title = v ? t.labelsOn : t.labelsOff;
+          if (this.lang !== 'ko') lb.button.title = v ? t.labelsOn : t.labelsOff;
         }
       });
       this.labelsToggle = lb;
-      if (this.lang === 'en') {
+      if (this.lang !== 'ko') {
         const lsp = lb.button.querySelector('span');
         if (lsp) lsp.textContent = t.labels;
         lb.button.title = ctx.settings.showLabels ? t.labelsOn : t.labelsOff;
@@ -747,7 +784,7 @@ export class Gallery implements AppMode {
     const box = this.notesEl;
     if (!box) return;
     const raw = this.model?.notes?.() ?? [];
-    const d = this.lang === 'en' ? this.enDict : null;
+    const d = this.lang !== 'ko' ? this.dict : null;
     const notes = d ? raw.map((x) => translateNote(x, d)) : raw;
     if (notes.length === 0) {
       if (box.childElementCount > 0) {
@@ -778,6 +815,7 @@ export class Gallery implements AppMode {
     const wrap = el('div', 'mm-wrap is-about');
     this.wrap = wrap;
     wrap.lang = this.lang;
+    wrap.dir = this.lang === 'ar' ? 'rtl' : 'ltr';
     const holder = el('div', 'mm-abouthold');
     holder.append(el('p', 'mm-loading', this.t.loading));
     wrap.append(holder);

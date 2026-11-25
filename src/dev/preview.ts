@@ -9,7 +9,7 @@
 // 공통 옵션: &theme=dark  &q=low  &cam=x,y,z,tx,ty,tz  &t=3 (시뮬레이션을 t초 진행 후 정지)  &speed=배율(mm 전용, 기본 1)
 //           &labels=0|1 (이름표 끔/켬 — 실험은 설정을 덮어쓰고, mm 은 화살표는 두고 이름표만)
 //           &mmsrc=/src/경로.ts (mm 전용: 레지스트리 대신 그 모듈을 불러옴 — 옛 판·임시 모델 검사)
-//           &lang=ko|en (mm 전용: en 이면 이름표 글자를 영어 사전으로 — Gallery 와 같은 retextTags)
+//           &lang=ko|en|ja|zh|hi|ar (mm 전용: ko 가 아니면 이름표 글자를 그 언어 사전으로 — Gallery 와 같은 retextTags)
 //           &arrows=0|1 (mm 전용: 회전·움직임 화살표 메시 끔/켬 — Gallery 와 같은 setArrowsVisible)
 //           &leaders=1 (mm 전용: 이름표 지시선 TagLeaders — 쇼츠 녹화용. labels=0 이면 숨김)
 // mm 전용(지시서 20 · 3-1): &t=T 는 실시간 프레임을 기다리지 않고 update(0.02, speed) 를 T 까지 한꺼번에 돌린다
@@ -54,7 +54,7 @@ import { loadModel } from '../mm507/registry';
 import { countTags, setTagsVisible } from '../mm507/kit';
 import { retextTags, setArrowsVisible } from '../mm507/kit/misc';
 import { TagLeaders } from '../mm507/leaders';
-import { loadEnDict } from '../mm507/lang';
+import { isMmLang, loadDict, type MmLang } from '../mm507/lang';
 import buildKitDemo from '../mm507/kitDemo';
 import type { MovementModel } from '../mm507/types';
 import '../styles/tokens.css';
@@ -230,7 +230,7 @@ if (modeArg && MODE_CTORS[modeArg]) {
       }
       // 영어 이름표는 사전을 받은 뒤에 바꾼다 → 지시선·준비 신호는 그 뒤(이름표 폭이 바뀌므로)
       const langReady: Promise<unknown> =
-        q.get('lang') === 'en' ? loadEnDict().then((d) => retextTags(m.group, d.tags)) : Promise.resolve();
+        isMmLang(q.get('lang')) && q.get('lang') !== 'ko' ? loadDict(q.get('lang') as MmLang).then((d) => retextTags(m.group, d.tags)) : Promise.resolve();
       return langReady.then(() => {
         m.group.updateMatrixWorld(true);
         if (q.get('leaders') === '1') {

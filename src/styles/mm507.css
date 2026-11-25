@@ -976,3 +976,22 @@
     display: none;
   }
 }
+
+/* 언어 고르기(6개 언어 select) — 버튼 모양 유지 */
+select.mm-lang {
+  appearance: auto;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--accent);
+  max-width: 10em;
+}
+
+/* 한·영 밖의 글자(아랍어 이음꼴, 데바나가리, 한자·가나): 자간을 벌리면 글자가 끊기고, 숫자 글꼴에는 그 글자가 없다 */
+.mm-wrap:is(:lang(ar), :lang(hi), :lang(ja), :lang(zh)) :is(.mm-notes-v, .mm-notes-h) {
+  letter-spacing: 0;
+  font-family: inherit;
+}
+
+.mm-wrap[dir='rtl'] .mm-notes-v {
+  text-align: left;
+}
