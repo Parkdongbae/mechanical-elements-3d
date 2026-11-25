@@ -10,6 +10,8 @@ MODEL="zai-coding-plan/glm-5.3-flash"
 mkdir -p shots/mm/log
 
 glm() { # glm <작업>
+  # DEADLINE=HHMM 이 지나면 새 GLM 작업을 시작하지 않는다(사용자: 15~19시는 GLM 토큰이 빨리 닳음)
+  if [ -n "${DEADLINE:-}" ] && [ "$(date +%H%M)" -ge "$DEADLINE" ]; then echo LIMIT; return; fi
   if [ -n "${ALT:-}" ]; then bash "$ALT" bash scripts/mm507/glm_run.sh "$1" "$MODEL" > /dev/null 2>&1
   else bash scripts/mm507/glm_run.sh "$1" "$MODEL" > /dev/null 2>&1; fi
   if grep -q "Usage limit reached" "shots/mm/log/$1.log" 2>/dev/null; then echo LIMIT; fi
@@ -43,7 +45,7 @@ one() {
   echo "$id ${v:-ERR} $((SECONDS - t0))s" > "$out"
 }
 export -f one glm
-export MODEL ALT SKIP_LINT
+export MODEL ALT SKIP_LINT DEADLINE
 
 seq "$A" "$B" | xargs -P "$P" -I{} bash -c 'one {}'
 cat shots/mm/log/pipe-*.txt 2>/dev/null | sort > shots/mm/log/pipe-summary.txt

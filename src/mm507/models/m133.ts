@@ -78,6 +78,7 @@ export default function buildM133(): MovementModel {
     tag('머리(고정)', v(-1.5, 2.85, 0.3))
   );
 
+  let spd = 1; // 역재생이면 −1
   const apply = (): void => {
     const A = press133(theta);
     sector.rotation.z = A.sector;
@@ -87,6 +88,8 @@ export default function buildM133(): MovementModel {
     rod.rotation.z = A.rodAngle;
     platen.position.set(K133.P[0], A.eyeY, K133.zCol);
     platenTag.position.set(-1.45, 2.0 + A.rise, 0.3);
+    // 피니언은 왕복한다 — 화살표를 지금 도는 방향으로(예전엔 set 을 부르지 않아 늘 반시계였다: 사용자 지적)
+    arrows.set(Math.sign(press133(theta + 0.01).pinion - A.pinion) * spd);
   };
   apply();
 
@@ -104,9 +107,8 @@ export default function buildM133(): MovementModel {
     },
     update(dt: number, speed: number): void {
       theta += OMEGA * speed * dt;
+      spd = speed < 0 ? -1 : 1;
       apply();
-      // 화살표 = 크랭크가 지금 도는 방향(반시계 +, 역회전이면 뒤집힌다)
-      arrows.set(Math.sign(Math.sin(theta - 1.6)) * (speed < 0 ? -1 : 1));
     }
   };
 }
