@@ -1,6 +1,7 @@
 // 진입점: 머신 전환, 미션 진행, 조립 애니메이션, 정답/오답 판정, 메인 루프
 
 import * as THREE from 'three';
+import { inject } from '@vercel/analytics';
 import './styles/tokens.css';
 import './styles/app.css';
 import './styles/modes.css';
@@ -45,6 +46,9 @@ import { playCorrectSound, playWrongSound } from './ui/sound';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#scene');
 if (!canvas) throw new Error('#scene canvas not found');
+
+// Initialize Vercel Web Analytics
+inject();
 
 let settings: AppSettings = loadSettings();
 const sceneMgr = new SceneManager(canvas, { theme: settings.theme, quality: settings.quality === 'auto' ? guessQuality() : settings.quality });
