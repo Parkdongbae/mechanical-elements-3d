@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { displayStand, leaderTo, rotArrow, shaftZ, tag } from '../kit';
-import { K185, LEN185, bar185, die185, eccRod185, eccentric185, frame185, gear185, lever185, link185, linkMotion185, rocker185, valveStem185 } from '../kit/k185';
+import { K185, LEN185, VALVE185, bar185, die185, eccRod185, eccentric185, frame185, gear185, lever185, link185, linkMotion185, piston185, ports185, rocker185, shaftRateAt185, valveStem185 } from '../kit/k185';
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
 const TAU = Math.PI * 2;
@@ -60,12 +60,28 @@ export default function buildM185(): MovementModel {
   lift.name = 'liftRod';
   g.add(lever, lift);
 
-  // 회전 화살표(축, 반시계)
-  const arrow = rotArrow(0.4, true);
-  arrow.position.set(S[0], S[1], 0.3);
-  g.add(arrow);
+  // 피스톤(증기실 아래 실린더 속, 앞을 잘라 보임)
+  const piston = piston185();
+  piston.name = 'piston';
+  g.add(piston);
 
-  // 이름표 6개(링크·다이는 따라간다)
+  // 증기 색 표시판(틀 안): 열린 증기 구멍 = 주황(증기 들어감), 배기 쪽 = 파랑
+  const fillOf = (n: string): THREE.Mesh => frame.getObjectByName(n) as THREE.Mesh;
+  const portL = fillOf('portL');
+  const portR = fillOf('portR');
+  const exhaust = fillOf('exhaust');
+  const cylL = fillOf('cylL');
+  const cylR = fillOf('cylR');
+  const valve = stem.getObjectByName('slideValve') as THREE.Object3D;
+
+  // 회전 화살표(축): 정방향 = 반시계, 역방향 = 시계, 멈추면 숨김
+  const arrowF = rotArrow(0.4, true);
+  arrowF.position.set(S[0], S[1], 0.3);
+  const arrowR = rotArrow(0.4, false);
+  arrowR.position.set(S[0], S[1], 0.3);
+  g.add(arrowF, arrowR);
+
+  // 이름표 9개(링크·다이는 따라간다, 증기실 안 셋은 왼쪽 바깥에서)
   const linkTag = leaderTo(tag('굽은 홈 링크', v(0.8, 0.75, 0.6)), link);
   const dieTag = leaderTo(tag('슬라이드(다이)', v(-0.7, 0.75, 0.6)), die);
   g.add(
@@ -74,13 +90,28 @@ export default function buildM185(): MovementModel {
     leaderTo(tag('밸브 막대', v(-0.35, 2.7, 0.6)), stem),
     leaderTo(tag('흔들 레버', v(0.8, 2.15, 0.6)), rocker),
     linkTag,
-    dieTag
+    dieTag,
+    leaderTo(tag('미끄럼 밸브', v(-2.0, 2.45, 0.6)), valve),
+    leaderTo(tag('증기 구멍', v(-2.05, 1.85, 0.6)), portL),
+    leaderTo(tag('배기 구멍', v(-2.05, 1.3, 0.6)), exhaust)
   );
 
+  const OFF = new THREE.Color(0x3a3d42);
+  const LIVE = new THREE.Color(0xffa040);
+  const EXH = new THREE.Color(0x5aa0e0);
+  const paintFill = (m: THREE.Mesh, s: number): void => {
+    const mat = m.material as THREE.MeshStandardMaterial;
+    const f = Math.min(1, Math.abs(s) * 1.6);
+    mat.color.copy(OFF).lerp(s > 0 ? LIVE : EXH, f);
+    mat.emissive.copy(mat.color);
+    mat.emissiveIntensity = 0.15 + 0.5 * f;
+  };
+
   let st = linkMotion185(0);
+  let rate = 1;
   const apply = (): void => {
     st = linkMotion185(theta);
-    shaft.rotation.z = theta;
+    shaft.rotation.z = st.phi;
     eccF.rotation.z = st.phiF;
     eccB.rotation.z = st.phiB;
     rodF.position.set(st.Ef[0], st.Ef[1], K185.zF);
@@ -98,6 +129,20 @@ export default function buildM185(): MovementModel {
     lever.rotation.z = st.lam;
     lift.position.set(st.Q[0], st.Q[1], K185.zLift);
     lift.rotation.z = ang(st.Q, st.H);
+    piston.position.set(st.xp, VALVE185.rodY, VALVE185.zc);
+    const pt = ports185(st.dV);
+    paintFill(portL, pt.left);
+    paintFill(portR, pt.right);
+    paintFill(cylL, pt.left);
+    paintFill(cylR, pt.right);
+    paintFill(exhaust, -Math.max(Math.abs(pt.left), Math.abs(pt.right)));
+    cylL.position.x = VALVE185.boreX0;
+    cylL.scale.x = Math.max(0.001, st.xp - VALVE185.pT - VALVE185.boreX0);
+    cylR.position.x = st.xp + VALVE185.pT;
+    cylR.scale.x = Math.max(0.001, VALVE185.boreX1 - st.xp - VALVE185.pT);
+    rate = shaftRateAt185(theta);
+    arrowF.visible = rate > 0.05;
+    arrowR.visible = rate < -0.05;
     linkTag.position.set(st.link[0] + 0.75, 0.75, 0.6);
     dieTag.position.set(st.D[0] - 0.75, 0.75, 0.6);
   };
@@ -113,11 +158,12 @@ export default function buildM185(): MovementModel {
     group: g,
     view: { pos: [0, 1.8, 6.4], target: [0, 1.75, 0] },
     notes: () => [
-      { label: '축', value: `${(theta / TAU).toFixed(1)} 바퀴` },
+      { label: '축 회전', value: rate > 0.05 ? `정방향(반시계)${rate < 0.95 ? ' — 느려지는 중' : ''}` : rate < -0.05 ? `역방향(시계)${rate > -0.95 ? ' — 느려지는 중' : ''}` : '정지(레버 가운데 — 밸브가 증기를 거의 안 넣음)' },
+      { label: '축 각', value: `${(st.phi / TAU).toFixed(2)} 바퀴` },
       { label: '레버 자리', value: gearText(gear185(theta)) },
       { label: '다이 자리', value: `홈 가운데에서 ${st.sDie >= 0 ? '위' : '아래'}로 ${Math.abs(st.sDie).toFixed(2)}` },
-      { label: '밸브 막대 위치', value: st.V[0].toFixed(3) },
-      { label: '원리', value: '다이가 홈 끝에 가까울수록 밸브가 크게 움직이고, 가운데면 거의 멈춘다' }
+      { label: '미끄럼 밸브', value: `${st.dV >= 0 ? '오른쪽' : '왼쪽'}으로 ${Math.abs(st.dV).toFixed(3)} — ${st.dV >= 0 ? '왼쪽' : '오른쪽'} 구멍에 증기, 반대쪽은 배기` },
+      { label: '원리', value: '다이가 홈 끝에 가까울수록 밸브가 크게 움직이고, 가운데면 거의 멈춘다. 전진·후진 편심이 증기 넣는 때를 바꿔 축이 반대로 돈다' }
     ],
     update(dt: number, speed: number): void {
       theta += OMEGA * speed * dt;

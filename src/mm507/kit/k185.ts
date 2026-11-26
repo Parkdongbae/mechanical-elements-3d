@@ -2,7 +2,7 @@
 //  → 홈 속 슬라이드(다이) → 흔들 레버 → 밸브 연결봉 → 밸브 막대
 // 운동식 linkMotion185(theta) 는 순수 함수(고정 초기값에서 뉴턴 반복 → 결정적).
 import * as THREE from 'three';
-import { brass, bronze, castIron, darkSteel, steel } from '../../models/materials';
+import { brass, bronze, castIron, darkSteel, paint, steel } from '../../models/materials';
 import { circlePts, extrude, lathe, mesh, pathFrom, rodProfile, roundedRect, shapeFrom } from '../../models/parts/geom';
 import type { V2 } from '../../models/parts/geom';
 import { markPin, setMM } from './mm';
@@ -78,6 +78,8 @@ export const LEN185 = {
 } as const;
 
 export interface State185 {
+  phi: number; // 기관 축 각
+  g: number; // 레버 자리
   lam: number;
   Q: V2;
   phiF: number;
@@ -94,6 +96,9 @@ export interface State185 {
   rock: number; // 흔들 레버 회전(로컬 −Y 가 다이 쪽)
   U: V2;
   V: V2;
+  valveX: number; // 미끄럼 밸브 가운데 x
+  dV: number; // 밸브 변위(밸브 자리 가운데 기준)
+  xp: number; // 피스톤 가운데 x
 }
 
 const smooth = (x: number): number => {
@@ -117,8 +122,43 @@ export function gear185(theta: number): number {
   return 0.5;
 }
 /** 레버 각 — 기어 자리 +1(전진)이면 짧은 팔이 내려가 링크가 내려가고 다이가 위 끝(전진 편심 쪽)에 온다 */
+export function leverAngleG185(g: number): number {
+  return K185.lamMid - K185.lamAmp * g;
+}
 export function leverAngle185(theta: number): number {
-  return K185.lamMid - K185.lamAmp * gear185(theta);
+  return leverAngleG185(gear185(theta));
+}
+
+// ───────────── 기관 축 각 φ(theta) — 밸브 장치가 증기 넣는 때를 바꾸므로 축 빠르기·방향은 레버 자리로 정해진다 ─────────────
+/** 레버 자리 g → 축 상대 각속도(+1 정방향 = 반시계, −1 역방향). |g| 가 작으면(밸브 거의 멈춤) 서서히 0 */
+export function shaftRate185(g: number): number {
+  return Math.sign(g) * smooth(Math.abs(g) / 0.45);
+}
+// 축 속도 표: 레버 표 한 주기(16 바퀴)를 잘게 나눠 누적(구간 안은 속도 선형 → 2 차식 적분, 닫힌 식)
+const NS = 200; // 1 바퀴당 표본
+const W_TAB: number[] = [];
+const CUM: number[] = [0];
+for (let i = 0; i <= GEAR_PERIOD185 * NS; i++) W_TAB.push(shaftRate185(gear185((i / NS) * TAU)));
+const at = (a: number[], i: number): number => a[i] ?? 0;
+for (let i = 1; i < W_TAB.length; i++) CUM.push(at(CUM, i - 1) + (at(W_TAB, i - 1) + at(W_TAB, i)) / (2 * NS));
+const RAW_TURNS = at(CUM, CUM.length - 1);
+/** 한 주기 동안 축이 도는 바퀴 수(정수로 맞춤) */
+export const SHAFT_TURNS185 = Math.max(1, Math.round(RAW_TURNS));
+const SCALE = SHAFT_TURNS185 / RAW_TURNS;
+/** theta(시간 각) → 기관 축 각 φ. 한 주기 끝에서 정확히 SHAFT_TURNS185 바퀴(2π 정수배)로 닫힌다 */
+export function shaftAngle185(theta: number): number {
+  const n = theta / TAU;
+  const k = Math.floor(n / GEAR_PERIOD185);
+  const u = (n - GEAR_PERIOD185 * k) * NS;
+  const i = Math.min(W_TAB.length - 2, Math.floor(u));
+  const f = u - i;
+  const w0 = at(W_TAB, i);
+  const loc = at(CUM, i) + (w0 * f + ((at(W_TAB, i + 1) - w0) * f * f) / 2) / NS;
+  return TAU * (k * SHAFT_TURNS185 + loc * SCALE);
+}
+/** theta → 축 상대 각속도(표시용, 크기 보정 포함) */
+export function shaftRateAt185(theta: number): number {
+  return shaftRate185(gear185(theta)) * SCALE;
 }
 
 type Vec3 = [number, number, number];
@@ -156,13 +196,13 @@ function solveLink(Ef: V2, Eb: V2, Q: V2): Pose {
   return u;
 }
 
-/** theta(축 각) → 모든 부품 자세 */
-export function linkMotion185(theta: number): State185 {
+/** 축 각 phi 와 레버 자리 g → 모든 부품 자세 */
+export function linkState185(phi: number, g: number): State185 {
   const { S, e, delta, Rs, R, ru, yV, Lv } = K185;
-  const lam = leverAngle185(theta);
+  const lam = leverAngleG185(g);
   const Q = leverQ185(lam);
-  const phiF = theta + Math.PI / 2 + delta;
-  const phiB = theta - Math.PI / 2 - delta;
+  const phiF = phi + Math.PI / 2 + delta;
+  const phiB = phi - Math.PI / 2 - delta;
   const Ef: V2 = [S[0] + e * Math.cos(phiF), S[1] + e * Math.sin(phiF)];
   const Eb: V2 = [S[0] + e * Math.cos(phiB), S[1] + e * Math.sin(phiB)];
   const u = solveLink(Ef, Eb, Q);
@@ -193,7 +233,61 @@ export function linkMotion185(theta: number): State185 {
   const rock = Math.atan2(D[1] - R[1], D[0] - R[0]) + Math.PI / 2;
   const U: V2 = [R[0] - (ru / rr) * (D[0] - R[0]), R[1] - (ru / rr) * (D[1] - R[1])];
   const V: V2 = [U[0] - Math.sqrt(Math.max(0, Lv * Lv - (U[1] - yV) ** 2)), yV];
-  return { lam, Q, phiF, phiB, Ef, Eb, link: u, T, B, H, D, sDie, dieAng, rock, U, V };
+  const valveX = V[0] + VALVE185.off;
+  const dV = valveX - VALVE185.xs;
+  const xp = VALVE185.xs - VALVE185.pA * Math.cos(phi + VALVE185.pBeta);
+  return { phi, g, lam, Q, phiF, phiB, Ef, Eb, link: u, T, B, H, D, sDie, dieAng, rock, U, V, valveX, dV, xp };
+}
+
+/** theta(시간 각) → 모든 부품 자세. 축 각 φ = shaftAngle185(theta), 레버 자리 = gear185(theta) */
+export function linkMotion185(theta: number): State185 {
+  return linkState185(shaftAngle185(theta), gear185(theta));
+}
+
+// ───────────── 증기실(밸브 상자) 안: D 형 미끄럼 밸브와 밸브 자리 ─────────────
+// 밸브 자리 가운데 xs, 증기 구멍 둘(가운데에서 ±0.06~0.10), 가운데 배기 구멍(±0.03). 밸브 바깥 끝 ±0.10, 속 빈 곳 ±0.06(겹침 0)
+export const VALVE185 = {
+  xs: -1.13, // 밸브 자리 가운데(실린더 가운데와 같음)
+  pIn: 0.06, // 증기 구멍 안쪽 끝
+  pOut: 0.1, // 증기 구멍 바깥쪽 끝 = 밸브 바깥 끝
+  ex: 0.03, // 배기 구멍 반폭
+  seatY: 1.92, // 밸브 자리 윗면
+  chestTop: 2.075, // 증기실 천장
+  xin: -1.38, // 증기 들어오는 관
+  boreY0: 1.3,
+  boreY1: 1.6,
+  boreX0: -1.56,
+  boreX1: -0.7,
+  pR: 0.145, // 피스톤 반지름
+  pT: 0.04, // 피스톤 반두께
+  pA: 0.24, // 피스톤 진폭
+  rodY: 1.45,
+  zc: 0.26, // 앞 층 가운데(z 0.10~0.42)
+  off: 0, // 밸브 가운데 = 밸브 막대 끝 핀 x + off (아래에서 정함)
+  pBeta: 0 // 피스톤 위상(아래에서 정함)
+};
+{
+  // 가운데(g = 0)에서 한 바퀴 평균 밸브 막대 자리 → 밸브 가운데가 밸브 자리 가운데에 오게
+  let m = 0;
+  const N = 72;
+  for (let i = 0; i < N; i++) m += linkState185((i / N) * TAU, 0).V[0];
+  VALVE185.off = VALVE185.xs - m / N;
+  // 전진 끝(g = 1)에서 밸브 변위 d ≈ a cos φ + b sin φ = D sin(φ + β) → 피스톤 x = xs − A cos(φ + β): 왼쪽 구멍에 증기가 들 때 피스톤이 오른쪽으로 간다
+  let a = 0;
+  let b = 0;
+  for (let i = 0; i < N; i++) {
+    const p = (i / N) * TAU;
+    const d = linkState185(p, 1).dV;
+    a += (2 / N) * d * Math.cos(p);
+    b += (2 / N) * d * Math.sin(p);
+  }
+  VALVE185.pBeta = Math.atan2(a, b);
+}
+/** 밸브 변위 d → 왼쪽·오른쪽 구멍의 상태: +1 = 증기 들어감(열린 폭 비율), −1 = 배기, 0 = 닫힘 */
+export function ports185(d: number): { left: number; right: number } {
+  const w = VALVE185.pOut - VALVE185.pIn;
+  const f = Math.min(1, Math.abs(d) / w);
+  return d >= 0 ? { left: f, right: -f } : { left: -f, right: f };
 }
 
 // ───────────── 형상 도우미 ─────────────
@@ -246,12 +340,63 @@ export function frame185(): THREE.Group {
   const g = new THREE.Group();
   const b = K185.block;
   const zs = K185.zR;
-  // 덩이: (−z, y) 단면을 X 로 뽑음 — 밸브 막대 구멍
-  const sh = roundedRect(-b.z1, b.y0, 0.3, b.y1, 0.02);
-  sh.holes.push(pathFrom(circlePts(0.03, 24, -zs, K185.yV)));
-  const geo = extrude(sh, b.x1 - b.x0, 0.01);
-  geo.rotateY(Math.PI / 2);
-  g.add(meshAt(geo, castIron(), (b.x0 + b.x1) / 2, 0, 0));
+  // 증기실 덩이(앞을 잘라 낸 단면): 뒤 덩이 z −0.30~0.10 + 앞 층 z 0.10~0.42 는 벽·밸브 자리·통로 사이 쇠만 남김
+  const VS = VALVE185;
+  const zf0 = 0.1;
+  const zf1 = b.z1;
+  const box = (x0: number, y0: number, x1: number, y1: number, z0: number, z1: number, mat: THREE.Material): THREE.Mesh =>
+    meshAt(new THREE.BoxGeometry(x1 - x0, y1 - y0, z1 - z0), mat, (x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
+  g.add(box(b.x0, b.y0, b.x1, b.y1, -0.3, zf0, castIron()));
+  const xs = VS.xs;
+  const { pIn, pOut, ex, seatY, chestTop, xin, boreX0, boreX1, boreY0, boreY1, rodY } = VS;
+  const yH0 = 1.74; // 가로 통로 아래
+  const yH1 = 1.8; // 가로 통로 위
+  const pL: [number, number] = [boreX0 + 0.04, boreX0 + 0.1]; // 왼쪽 실린더 끝 구멍
+  const pR: [number, number] = [boreX1 - 0.08, boreX1 - 0.02];
+  const rects: [number, number, number, number][] = [
+    [b.x0, chestTop, xin - 0.04, b.y1], // 천장 왼쪽(증기 들어오는 구멍 왼쪽)
+    [xin + 0.04, chestTop, b.x1, b.y1], // 천장 오른쪽
+    [boreX1, 2.06, b.x1, chestTop], // 오른쪽 벽 위(밸브 막대 틈 위)
+    [boreX1, rodY + 0.02, b.x1, 2.0], // 오른쪽 벽 가운데
+    [boreX1, b.y0, b.x1, rodY - 0.02], // 오른쪽 벽 아래(피스톤 막대 틈 아래)
+    [b.x0, b.y0, boreX0, chestTop], // 왼쪽 벽
+    [boreX0, b.y0, boreX1, boreY0], // 실린더 아래
+    [boreX0, yH1, xs - pOut, seatY], // 밸브 자리 왼쪽
+    [xs + pOut, yH1, boreX1, seatY], // 밸브 자리 오른쪽
+    [boreX0, boreY1, pL[0], yH1], // 왼쪽 통로 바깥
+    [pR[1], boreY1, boreX1, yH1] // 오른쪽 통로 바깥
+  ];
+  // 가운데 섬: 증기 구멍 둘 사이(배기 구멍이 파임) ~ 실린더 윗벽
+  const island = shapeFrom([
+    [xs - pIn, seatY], [xs - ex, seatY], [xs - ex, 1.68], [xs + ex, 1.68], [xs + ex, seatY], [xs + pIn, seatY],
+    [xs + pIn, yH0], [pR[0], yH0], [pR[0], boreY1], [pL[1], boreY1], [pL[1], yH0], [xs - pIn, yH0]
+  ]);
+  const cut = paint(0xb4483c, { roughness: 0.6 }); // 잘린 면 표시(빨강)
+  const zm = (zf0 + zf1) / 2;
+  for (const r of rects) {
+    g.add(box(r[0], r[1], r[2], r[3], zf0, zf1, castIron()));
+    g.add(box(r[0], r[1], r[2], r[3], zf1, zf1 + 0.005, cut));
+  }
+  g.add(meshAt(extrude(island, zf1 - zf0), castIron(), 0, 0, zm));
+  g.add(meshAt(extrude(island, 0.005), cut, 0, 0, zf1 + 0.0025));
+  // 증기 들어오는 관(천장 위, 속 빈 관 + 테)
+  g.add(meshAt(lathe([[0.035, 0], [0.05, 0], [0.05, 0.07], [0.068, 0.07], [0.068, 0.09], [0.035, 0.09]], 28), steel(), xin, b.y1, zm));
+  // 피스톤 막대 패킹(오른쪽 면)
+  g.add(meshAt(lathe([[0.024, 0], [0.05, 0], [0.05, 0.05], [0.04, 0.06], [0.024, 0.06]], 28).rotateZ(-Math.PI / 2), brass(), b.x1 - 0.003, rodY, zm));
+  // 증기 색 표시판(뒤 덩이 앞면에 붙음): 증기실, 증기 구멍·통로 둘, 배기 구멍, 실린더 왼쪽·오른쪽 방
+  // 통로(증기 구멍·배기 구멍)는 앞 층 깊이 거의 다 채워(z 0.10~0.39) 비스듬히 봐도 색이 보이게
+  const fill = (name: string, sh: THREE.Shape, color: number, deep = false): void => {
+    const t = deep ? 0.29 : 0.006;
+    const m = meshAt(extrude(sh, t), new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.3, roughness: 0.7, metalness: 0 }), 0, 0, zf0 + t / 2);
+    m.name = name;
+    g.add(m);
+  };
+  fill('steamChest', shapeFrom([[boreX0, seatY], [boreX1, seatY], [boreX1, chestTop], [xin + 0.04, chestTop], [xin + 0.04, b.y1], [xin - 0.04, b.y1], [xin - 0.04, chestTop], [boreX0, chestTop]]), 0xffa040);
+  fill('portL', shapeFrom([[xs - pOut, seatY], [xs - pIn, seatY], [xs - pIn, yH0], [pL[1], yH0], [pL[1], boreY1], [pL[0], boreY1], [pL[0], yH1], [xs - pOut, yH1]]), 0x3a3d42, true);
+  fill('portR', shapeFrom([[xs + pOut, seatY], [xs + pIn, seatY], [xs + pIn, yH0], [pR[0], yH0], [pR[0], boreY1], [pR[1], boreY1], [pR[1], yH1], [xs + pOut, yH1]]), 0x3a3d42, true);
+  fill('exhaust', roundedRect(xs - ex, 1.68, xs + ex, seatY, 0.002), 0x3a3d42, true);
+  fill('cylL', roundedRect(0, boreY0, 1, boreY1, 0), 0x3a3d42);
+  fill('cylR', roundedRect(0, boreY0, 1, boreY1, 0), 0x3a3d42);
   // 패킹 상자(오른쪽 면) + 누름 너트
   g.add(meshAt(lathe([[0.03, 0], [0.065, 0], [0.065, 0.06], [0.05, 0.075], [0.03, 0.075]], 32).rotateZ(-Math.PI / 2), brass(), b.x1 - 0.003, K185.yV, zs));
   g.add(meshAt(lathe([[0.03, 0], [0.075, 0], [0.075, 0.02], [0.03, 0.02]], 6).rotateZ(-Math.PI / 2), darkSteel(), b.x1 + 0.03, K185.yV, zs));
@@ -284,7 +429,7 @@ export function frame185(): THREE.Group {
   for (const a of [a0 + 0.06, a1 - 0.06]) {
     const x = P[0] + rq * Math.cos(a);
     const y = P[1] + rq * Math.sin(a);
-    g.add(meshAt(cylZ(0.03, -0.3, K185.zQuad - 0.019), darkSteel(), x, y, 0));
+    g.add(meshAt(cylZ(0.03, -0.3, K185.zQuad - 0.019), darkSteel(), x, y, 0)); // 뒤판(z −0.30)에 박힌 받침
     g.add(meshAt(cylZ(0.06, -0.3, -0.24), castIron(), x, y, 0));
   }
   // 흔들 레버 받침 가로대(덩이 오른쪽 면에서 앞으로) + 받침 핀
@@ -426,13 +571,47 @@ export function bar185(len: number, mat: 'steel' | 'brass' = 'steel'): THREE.Gro
   return flatBar(len, 0.028, 0.048, 0.04, mat === 'brass' ? brass() : steel());
 }
 
-/** 밸브 막대: 원점 = 끝 눈(연결봉 핀), −X 로 덩이 속까지. z 가운데 0 */
+/** 미끄럼 밸브(D 형): 원점 = 밸브 아랫면 가운데(밸브 자리 위), +X 막대 쪽. 속 빈 곳(배기 통로)이 아래로 열림 */
+export function slideValve185(): THREE.Group {
+  const g = new THREE.Group();
+  const { pIn, pOut } = VALVE185;
+  const h = 0.08;
+  const pts: V2[] = [[-pOut, 0], [-pIn, 0], [-pIn, 0.025]];
+  for (let i = 1; i < 12; i++) {
+    const a = Math.PI - (i / 12) * Math.PI;
+    pts.push([pIn * Math.cos(a), 0.025 + 0.025 * Math.sin(a)]);
+  }
+  pts.push([pIn, 0.025], [pIn, 0], [pOut, 0], [pOut, h - 0.012], [pOut - 0.012, h], [-pOut + 0.012, h], [-pOut, h - 0.012]);
+  g.add(mesh(extrude(shapeFrom(pts), 0.24, 0.004), bronze()));
+  // 막대를 무는 귀(위, 막대 쪽 끝)
+  g.add(meshAt(new THREE.BoxGeometry(0.06, 0.07, 0.08), bronze(), pOut - 0.035, h + 0.03, 0.01));
+  return g;
+}
+
+/** 밸브 막대: 원점 = 끝 눈(연결봉 핀), −X 로 증기실 속 미끄럼 밸브까지(밸브 포함, name 'slideValve'). z 가운데 0 */
 export function valveStem185(): THREE.Group {
   const g = new THREE.Group();
-  g.add(mesh(cylX(0.022, -0.58, -0.03), steel()));
+  const VS = VALVE185;
+  const vx = VS.off; // 밸브 가운데(로컬, 음수)
+  g.add(mesh(cylX(0.022, vx + VS.pOut - 0.05, -0.03), steel()));
   g.add(mesh(cylZ(0.045, -0.025, 0.025), steel()));
   g.add(pinAt(0, 0, -0.025, K185.zV - K185.zR + 0.03));
   g.add(named('pinV', 0, 0, K185.zV - K185.zR));
+  const valve = slideValve185();
+  valve.name = 'slideValve';
+  valve.position.set(vx, VS.seatY + 0.001 - K185.yV, 0.27 - K185.zR);
+  g.add(valve);
+  return g;
+}
+
+/** 피스톤 + 피스톤 막대(오른쪽으로, 패킹을 지나 나옴): 원점 = 피스톤 가운데 */
+export function piston185(): THREE.Group {
+  const g = new THREE.Group();
+  const { pR, pT } = VALVE185;
+  g.add(mesh(cylX(pR, -pT, pT, 0.006, 40), steel()));
+  // 피스톤 링 홈 표시 둘
+  for (const x of [-0.018, 0.018]) g.add(mesh(cylX(pR + 0.001, x - 0.004, x + 0.004, 0.001, 40), darkSteel()));
+  g.add(mesh(cylX(0.018, pT - 0.005, 0.8, 0.004), steel()));
   return g;
 }
 
