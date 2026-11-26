@@ -7,7 +7,7 @@
 //         크랭크·레버 삐걱 = 각속도 방향이 바뀌는 순간, 벨트 = 종동 풀리 한 바퀴마다 삐걱 + 회전 속도에 비례한 마찰음.
 import fs from 'node:fs';
 import path from 'node:path';
-import { FPS, ROOT, T, ensureDir, ffmpeg, pad3, workDir } from './lib.mjs';
+import { FPS, ROOT, ensureDir, ffmpeg, pad3, timeline, workDir } from './lib.mjs';
 
 export const SR = 48000;
 const LIB = path.join(ROOT, 'assets', 'shorts', 'sfx');
@@ -294,7 +294,7 @@ function unwrap(a) {
   return out;
 }
 /** 클로즈업 구간에서 조금 크게(×1.5), 아웃트로 끝으로 갈수록 작게 */
-function gainAt(t) {
+function gainAt(T, t) {
   let g = 1;
   if (t > T.closeIn - 0.3 && t < T.closeEnd + 0.3) g = 1.5;
   if (t > T.end - 1.5) g *= Math.max(0, (T.end - t) / 1.5);
@@ -302,6 +302,7 @@ function gainAt(t) {
 }
 
 export function buildTrack(n, { tags = [] } = {}) {
+  const T = timeline(n);
   const md = workDir(n);
   const motion = JSON.parse(fs.readFileSync(path.join(md, 'motion.json'), 'utf8'));
   const { parts, frames } = motion;
@@ -312,7 +313,7 @@ export function buildTrack(n, { tags = [] } = {}) {
   const put = (name, t, g) => {
     const x = loadSample(name);
     const i0 = Math.round(t * SR);
-    const gg = g * gainAt(t);
+    const gg = g * gainAt(T, t);
     for (let i = 0; i < x.length && i0 + i < out.length; i++) if (i0 + i >= 0) out[i0 + i] += x[i] * gg;
     events.push({ name, t: Math.round(t * 1000) / 1000 });
   };
@@ -325,7 +326,7 @@ export function buildTrack(n, { tags = [] } = {}) {
       const k = Math.min(env.length - 1, Math.floor(f));
       const k2 = Math.min(env.length - 1, k + 1);
       const e = env[k] + (env[k2] - env[k]) * (f - k);
-      out[i] += x[(i - start) % x.length] * e * g * gainAt(i / SR);
+      out[i] += x[(i - start) % x.length] * e * g * gainAt(T, i / SR);
     }
   };
   const tOf = (i) => T.rec0 + i / FPS;

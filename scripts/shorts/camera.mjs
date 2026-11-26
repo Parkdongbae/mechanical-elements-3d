@@ -6,7 +6,7 @@
 //   → closeEnd 머묾(0.5배 재생, 이름표 강조) → pullEnd 전체로 물러남 → end(아웃트로) 천천히 돎
 import fs from 'node:fs';
 import path from 'node:path';
-import { FPS, REC_FRAMES, ROOT, T, ensureDir, lerp, pad3, smooth } from './lib.mjs';
+import { FPS, ROOT, ensureDir, lerp, pad3, recFrames, smooth, timeline } from './lib.mjs';
 
 /** 페이지 안에서: 부품 상자, 이름표, 접촉점, 화각 */
 async function sceneInfo(page) {
@@ -119,10 +119,13 @@ async function projectBox(page, cam, box) {
 const DEG = Math.PI / 180;
 
 export async function planCamera(page, n, { force = false } = {}) {
+  const T = timeline(n); // 번호별 시간표(15·20·25초)
+  const REC_FRAMES = recFrames(n);
   const file = path.join(ensureDir(path.join(ROOT, 'shorts', '_work', 'cam')), `${pad3(n)}.json`);
   if (!force && fs.existsSync(file)) {
     const old = JSON.parse(fs.readFileSync(file, 'utf8'));
-    if (old.manual === true) return old;
+    // 손본 계획(manual)은 프레임 수가 이 번호의 길이와 같을 때만 그대로 쓴다
+    if (old.manual === true && old.frames?.length === REC_FRAMES) return old;
   }
   const info = await sceneInfo(page);
   const [mn, mx] = info.box;

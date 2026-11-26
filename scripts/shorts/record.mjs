@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { BASE, H, REC_FRAMES, W, ensureDir, pad3, workDir } from './lib.mjs';
+import { BASE, H, W, ensureDir, pad3, recFrames, workDir } from './lib.mjs';
 import { parseLangs } from './langs.mjs';
 import { planCamera } from './camera.mjs';
 
@@ -82,6 +82,7 @@ export async function record(n, lang, { browser, forceCam = false, motion = true
   browser ??= await launch();
   const page = await openModel(browser, n, lang);
   const plan = await planCamera(page, n, { force: forceCam });
+  const REC_FRAMES = recFrames(n);
   const out = ensureDir(path.join(workDir(n, lang), 'frames'));
   for (const f of fs.readdirSync(out)) fs.unlinkSync(path.join(out, f));
   let parts = null;

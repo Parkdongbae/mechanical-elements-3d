@@ -4,7 +4,7 @@
 // --sheet: 각 영상의 대표 프레임 4장(분할 화면·작동·클로즈업·아웃트로)을 모은 shorts/preview-NNN.png
 import fs from 'node:fs';
 import path from 'node:path';
-import { FFMPEG, ROOT, T, ffmpeg, pad3, probe, rel, run } from './lib.mjs';
+import { FFMPEG, ROOT, ffmpeg, lenOf, pad3, probe, rel, run, timeline } from './lib.mjs';
 import { ALL_LANGS, parseLangs } from './langs.mjs';
 
 function loudness(file) {
@@ -36,7 +36,8 @@ export function checkFile(file, want) {
 
 /** 대표 프레임 4장(세로 4편 → 4행, 가로 2편은 아래 행) */
 export function sheet(n) {
-  const times = [2.3, 6.0, 9.6, 13.6];
+  const T = timeline(n);
+  const times = lenOf(n) === 15 ? [2.3, 6.0, 9.6, 13.6] : [2.3, (T.ghostEnd + T.orbitEnd) / 2, (T.closeIn + T.closeEnd) / 2, T.end - 0.8];
   const work = path.join(ROOT, 'shorts', '_work', 'sheet');
   fs.mkdirSync(work, { recursive: true });
   const rows = [];
@@ -62,8 +63,8 @@ if (process.argv[1] && path.basename(process.argv[1]) === 'check.mjs') {
   const n = Number(process.argv[2]);
   const res = [];
   for (const lang of parseLangs(process.argv.find((a) => a.startsWith('--langs='))?.slice(8), 'all').filter((l) => fs.existsSync(path.join(ROOT, 'shorts', l, `${pad3(n)}.mp4`)))) {
-    res.push(checkFile(path.join(ROOT, 'shorts', lang, `${pad3(n)}.mp4`), { w: 1080, h: 1920, maxDur: 14.5 }));
-    res.push(checkFile(path.join(ROOT, 'shorts', lang, `${pad3(n)}-wide.mp4`), { w: 1920, h: 1080, maxDur: T.end + 0.2 }));
+    res.push(checkFile(path.join(ROOT, 'shorts', lang, `${pad3(n)}.mp4`), { w: 1080, h: 1920, maxDur: timeline(n).end + 0.1 }));
+    res.push(checkFile(path.join(ROOT, 'shorts', lang, `${pad3(n)}-wide.mp4`), { w: 1920, h: 1080, maxDur: timeline(n).end + 0.2 }));
   }
   for (const r of res) console.log(`${r.ok ? 'OK ' : 'ERR'} ${r.file}  ${r.size ?? ''} ${r.dur ?? ''}초 ${r.fps ?? ''}fps ${r.lufs ?? ''}LUFS  ${r.codec ?? ''} ${r.issues.join(' / ')}`);
   if (process.argv.includes('--sheet')) console.log('미리보기:', rel(sheet(n)));
