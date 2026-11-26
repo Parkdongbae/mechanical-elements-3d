@@ -1,10 +1,13 @@
-// 194 맹글 휠 3 — 이(구멍)의 줄이 하나뿐이라 두 방향의 속도가 같다. 피니언 축은 휠의 안내 홈과 세운 막대의 홈이 붙들고, 피니언의 이 못이 타원 구멍에 들어가 휠을 정·역으로 돌린다 (판화 194번)
+// 194 맹글 휠 3 — 이(구멍)의 줄이 하나뿐이라 두 방향의 속도가 같다. 피니언 축 끝 굴림대가 휠 면의 안내 홈 속을 달려 피니언을 이 자리 쪽으로 붙들고(세운 막대의 홈은 오르내림 안내),
+// 피니언 이마다 뒤로 난 못이 바닥 있는 이 자리(구멍) 속에 들어가 막이를 밀어 휠을 정·역으로 돌린다 (판화 194번)
 import * as THREE from 'three';
 import { type MovementModel } from '../types';
-import { castIron, darkSteel, paint, steel } from '../../models/materials';
+import { bronze, castIron, darkSteel, paint, steel } from '../../models/materials';
 import { extrude, lathe, mesh, rodProfile, roundedRect, tubeProfile } from '../../models/parts/geom';
-import { displayStand, leaderTo, mangleTrack, rod, shaftZ, spurGear, tag } from '../kit';
-import { K194, PITCH194, RING194, RP194, slotWheel194 } from '../kit/k194';
+import { displayStand, leaderTo, mangleTrack, rod, shaftZ, tag } from '../kit';
+import { setMM } from '../kit/mm';
+import { K194, PITCH194, RING194, RP194, slotWheel194, Z194 } from '../kit/k194';
+import { grooveRoller } from '../kit/k192';
 
 const TAU = Math.PI * 2;
 const XC = 0;
@@ -61,27 +64,33 @@ export default function buildM194(): MovementModel {
   wheel.name = 'wheel';
   wheel.position.set(XC, YC, 0);
   wheel.add(slotWheel194(ps));
-  const hubGeo = lathe(rodProfile(0.15, K194.z0, K194.zPlate + 0.08, 0.012, 0.012), 40);
+  const hubGeo = lathe(rodProfile(0.1, K194.z0, K194.zPlate + 0.06, 0.012, 0.012), 40); // 안쪽 팔의 피니언 이끝(반지름 0.124)과 비키게 0.1
   hubGeo.rotateX(Math.PI / 2);
   wheel.add(at(hubGeo, darkSteel(), 0, 0, 0));
-  wheel.add(at(new THREE.BoxGeometry(0.1, 0.03, 0.012), paint(0xf2b619), 1.02, 0, K194.zPlate + 0.006));
+  wheel.add(at(new THREE.BoxGeometry(0.1, 0.03, 0.012), paint(0xf2b619), 1.02, 0, Z194.zFace + 0.006));
   g.add(wheel, shaftZ(XC, YC, 0.4, 0.04));
 
-  // 피니언: 앞 층의 얇은 기어 + 이마다 뒤로 난 못(구멍에 들어간다) + 축
+  // 피니언(사용자 지적 수정 — 걸리는 곳이 보이게): 핀 피니언(랜턴 피니언). 앞판(반지름 0.205) 둘레에 핀 12개가 박혀 판 밖으로 반쯤 드러나고,
+  // 핀이 뒤로 길게 나와 섬 위 이 자리 띠 높이(z 0.05~0.08)에서 막이 사이 이 자리(바닥 있는 구멍) 속에 들어가 막이를 밀어 휠을 돌린다. 핀 끝은 섬 앞면 위 0.007
   const pinion = new THREE.Group();
   pinion.name = 'pinion';
-  const zFront = K194.zPlate + 0.015; // 피니언 판 뒷면 z
+  const zFront = Z194.zBand + 0.01; // 앞판 뒷면 z (띠 앞면과 틈 0.01)
+  const PIN_R = 0.023;
   const pegs = new THREE.Group();
   pegs.name = 'pegs';
-  const gear = spurGear(K194.nz, K194.m, { width: 0.04, spokes: 0, driver: true });
-  gear.position.z = zFront + 0.02;
+  const gear = new THREE.Group();
+  gear.add(at(cylZ(RP194 - 0.04, zFront, zFront + 0.035, 48), bronze({ roughness: 0.34 }), 0, 0, 0));
+  gear.add(at(new THREE.BoxGeometry(0.06, 0.016, 0.008), paint(0xf2b619), 0.1, 0, zFront + 0.038));
+  setMM(gear, { kind: 'gear', fn: 'pinPinion194', teeth: K194.nz, module: K194.m, internal: false, rp: RP194, ra: RP194 + PIN_R, rf: RP194 - PIN_R, width: 0.035, axis: 'z' });
   pinion.add(gear);
   for (let j = 0; j < K194.nz; j++) {
     const a = (j + 0.5) * S;
-    pegs.add(at(cylZ(0.021, K194.zPlate - 0.045, zFront + 0.005, 16), steel(), Math.cos(a) * RP194, Math.sin(a) * RP194, 0));
+    pegs.add(at(cylZ(PIN_R, Z194.zFace + 0.007, zFront + 0.04, 16), steel(), Math.cos(a) * RP194, Math.sin(a) * RP194, 0));
   }
   pinion.add(pegs);
-  pinion.add(rod(v(0, 0, zFront + 0.03), v(0, 0, 0.3), 0.022));
+  // 축: 뒤로는 휠 면 안내 홈(바닥 z 0.02, 벽 z 0.02~0.05) 속 굴림대, 앞으로는 세운 막대의 홈(z 0.32~0.36)을 지나 와셔까지
+  pinion.add(rod(v(0, 0, 0.035), v(0, 0, 0.4), 0.022));
+  pinion.add(grooveRoller(0.03, Z194.zBot + 0.004, Z194.zFace - 0.003));
   pinion.position.set(XC, YC - K194.R1, 0);
   g.add(pinion);
 
@@ -99,13 +108,14 @@ export default function buildM194(): MovementModel {
   g.add(at(new THREE.BoxGeometry(0.34, 0.14, 0.26), castIron(), 0, 0.25, 0.32));
   const washer = lathe(tubeProfile(0.02, 0.05, 0, 0.012, 0.003), 24);
   washer.rotateX(Math.PI / 2);
-  pinion.add(at(washer, darkSteel(), 0, 0, 0.275));
+  pinion.add(at(washer, darkSteel(), 0, 0, 0.365));
 
   g.add(
     leaderTo(tag('맹글 휠', v(1.35, 2.75, 0.35)), wheel),
     leaderTo(tag('피니언', v(0.85, 0.85, 0.5)), pinion),
     tag('세운 막대(홈)', v(-0.75, 0.62, 0.5)),
-    tag('이 구멍 고리', v(-1.4, 2.4, 0.35))
+    tag('이 자리(구멍) 띠', v(-1.4, 2.4, 0.35)),
+    leaderTo(tag('안내 홈', v(-1.45, 1.2, 0.35)), wheel.getObjectByName('guideGroove')!)
   );
 
   let thetaP = theta0;
@@ -120,13 +130,6 @@ export default function buildM194(): MovementModel {
     wheel.rotation.z = r.wheel;
     pinion.position.y = YC - r.dist;
     pinion.rotation.z = thetaP;
-    // 고리 둘레(구멍이 있는 곳)에 든 못만 보인다 — 나머지 이는 판 위(앞 층)에서 구멍 없는 면 위를 지난다
-    const cy = YC - r.dist;
-    pegs.children.forEach((c, j) => {
-      const a = (j + 0.5) * S + thetaP;
-      const d = Math.hypot(Math.cos(a) * RP194, cy - YC + Math.sin(a) * RP194);
-      c.visible = Math.abs(d - RING194) < 0.1;
-    });
   };
   place();
   dir = 0;
