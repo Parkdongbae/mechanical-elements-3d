@@ -78,7 +78,7 @@ export default function buildM165(): MovementModel {
     notes: () => {
       const P = pose165(theta);
       return [
-        { label: '캠', value: `${(theta / TAU).toFixed(1)} 바퀴 (물결 6 → 막대 6 왕복)` },
+        { label: '캠', value: `${(theta / TAU).toFixed(1)} 바퀴 (물결 5 → 막대 5 왕복)` },
         { label: '흔들막대 각', value: `${((P.beta * 180) / Math.PI).toFixed(1)}°` },
         { label: '수직 막대 높이', value: `${P.pinY.toFixed(3)}` },
         { label: '닿음', value: '수직 막대의 무게가 굴림대를 물결에 눌러 준다' }

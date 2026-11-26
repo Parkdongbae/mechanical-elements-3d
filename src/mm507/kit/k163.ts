@@ -31,18 +31,21 @@ export const K163 = {
   gm: 0.025,
   gR: 0.2,
   // 지레: 받침점 P, 홈 고리 쪽 팔 끝(쉼 자세) C0, 옆 팔 길이 La(쉼 자세 수평), 연결봉 Lk
-  P: [-0.52, 1.46] as [number, number],
+  P: [-0.42, 1.6] as [number, number],
   C0: [-0.7, 1.61] as [number, number],
-  La: 0.4,
-  Lk: 0.46,
+  La: 0.28,
+  Lk: 0.6,
   collarDrop: 0.22, // 슬리브 원점 → 홈 고리 가운데
   zL: 0.4, // 지레 판 가운데 z
   zK: 0.46, // 연결봉 평면 z
   // 시간
-  aF: 0.4, // 빠름 머무름 반폭(rad of v)
+  aF: 0.3, // 빠름 머무름 반폭(rad of v) — 빠름이 세져 수문 축 닫힘에 맞게 줄임
   tau: 0.3, // 단계 사이 넘어감
-  V0: 0.724, // t = 1 이 '알맞음' 머무름 한가운데
-  kap: 0.75 // 스핀들 각 = kap·∫w dv
+  V0: 0.336, // t = 1 이 '알맞음' 머무름 한가운데((aF+tau + π−aS−tau)/2 − 1.6/3)
+  kap: 0.75, // 스핀들 각 = kap·∫w dv
+  // 기관 속도 인자 w = wM + wA·S — 느림 1.5 · 알맞음 4 · 빠름 6.5(빠름/느림 4.3배, 사용자 지적으로 2.5~5.5 에서 넓힘)
+  wM: 4,
+  wA: 2.5
 } as const;
 
 export const GX163 = K163.P[0] + K163.La; // 연결봉·포크의 세로 안내선 x
@@ -79,12 +82,12 @@ function buildTables(): Tables163 {
     let g = 0;
     for (let i = 0; i < NT; i++) {
       const s = stepS(((i + 0.5) / NT) * TAU, aS);
-      g += engage(s) * (4 + 1.5 * s);
+      g += engage(s) * (K163.wM + K163.wA * s);
     }
     return g;
   };
   let lo = 0.3;
-  let hi = 2.0;
+  let hi = 2.4;
   for (let k = 0; k < 60; k++) {
     const mdl = (lo + hi) / 2;
     if (sumGate(mdl) > 0) lo = mdl;
@@ -97,7 +100,7 @@ function buildTables(): Tables163 {
   const gate = new Float64Array(NT + 1);
   for (let i = 0; i < NT; i++) {
     const s = stepS((i + 0.5) * dv, aS);
-    const dphi = K163.kap * (4 + 1.5 * s) * dv;
+    const dphi = K163.kap * (K163.wM + K163.wA * s) * dv;
     const e = engage(s);
     phi[i + 1] = phi[i]! + dphi;
     belt[i + 1] = belt[i]! + (e !== 0 ? dphi : 0);
@@ -192,7 +195,7 @@ export function state163(theta: number): State163 {
   return {
     v,
     S,
-    w: 4 + 1.5 * S,
+    w: K.wM + K.wA * S,
     belt: e > 0 ? 'low' : e < 0 ? 'up' : 'loose',
     phiS: per * T163.perPhi + lookup(T163.phi, f) - PHI1,
     beltAng: per * T163.perBelt + lookup(T163.belt, f),
