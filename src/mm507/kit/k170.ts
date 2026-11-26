@@ -168,7 +168,9 @@ export function spin170(): THREE.Group {
   const tee = new THREE.Group();
   tee.name = 'tee';
   tee.add(flatPlate(hullOf([[0, 0, 0.04], [0, 0.1, 0.022]], 24), [circlePts(0.0215, 20)], [-0.044, 0.044], castIron()));
-  tee.add(meshAt(cylY(0.02, 0.09, 0.6, 0.004, 20), steel(), 0, 0, 0));
+  const valveRod = meshAt(cylY(0.02, 0.09, 0.6, 0.004, 20), steel(), 0, 0, 0);
+  valveRod.name = 'valveRod'; // 이름표 '밸브 막대' 지시선 대상
+  tee.add(valveRod);
   tee.add(zPin(0.02, -0.09, 0.09, 0.034, 'both'));
   tee.add(pinMark('teePin', 0, 0, 0));
   g.add(tee);
