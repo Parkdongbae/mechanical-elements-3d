@@ -298,7 +298,7 @@ export function shaftBearing179(): THREE.Group {
 
 /**
  * 편심 바퀴(축에 헐겁게, 돈다): 원점 = 축 축선. 바퀴 z 0.26~0.40, 두르는 테 0.40~0.425,
- * 반원형 홈 벽 0.40~0.435, 위·아래 리벳 귀, 편심 핀(−0.16, 0).
+ * 반원형 홈 벽 0.40~0.435, 위·아래 리벳 귀, 편심 핀(+0.16, 0 — 홈 위 다리판 z 0.445~0.465 에 서고 머리 0.535~0.55).
  * userData.outlines.pocketHole = 홈 자유 공간(돌기가 다니는 자리).
  */
 export function eccentric179(): THREE.Group {
@@ -321,11 +321,22 @@ export function eccentric179(): THREE.Group {
     g.add(meshAt(extrude(shapeFrom(tab), 0.08, 0.004, 8), iron, 0, 0, 0.33));
     g.add(meshAt(cylZ(0.018, 0.37, 0.385, 0.003, 16), steel(), 0.352 * ca, 0.352 * sa, 0));
   }
-  // 편심 핀(편심 막대의 눈이 꿰는 자리) — 로컬 (−0.16, 0)
-  g.add(meshAt(cylZ(0.075, K179.zSheave1, 0.44, 0.004, 28), steel(), -K179.throwR, 0, 0));
-  g.add(meshAt(cylZ(K179.pinR, K179.zSheave1, 0.52, 0.004, 24), steel(), -K179.throwR, 0, 0));
-  g.add(meshAt(cylZ(0.055, 0.51, 0.525, 0.003, 24), darkSteel(), -K179.throwR, 0, 0));
-  g.add(pinMark('rodPin', -K179.throwR, 0, 0.48));
+  // 편심 핀(편심 막대의 눈이 꿰는 자리) — 로컬 (+0.16, 0) = reverse179 의 pin(E + e·(cosψ, sinψ)).
+  // 핀 밑은 돌기가 미끄러지는 홈 자리(반지름 0.08~0.15, z ~0.44)라 핀을 바퀴에서 바로 세우지 않고,
+  // 바깥 테(0° 쪽, 홈 벽 17.7° 와 떨어짐)에서 세운 받침 덩이 + 홈 위를 건너는 다리판(z 0.445~0.465)에 얹는다. 편심 막대는 0.47~0.53, 핀 머리 0.535~0.55.
+  const tx = K179.throwR;
+  g.add(meshAt(new THREE.BoxGeometry(0.1, 0.07, 0.065), iron, 0.265, 0, 0.4325));
+  const bridge = shapeFrom([
+    [tx, -0.045],
+    [0.315, -0.035],
+    [0.315, 0.035],
+    [tx, 0.045]
+  ] as V2[]);
+  g.add(meshAt(extrude(bridge, 0.02, 0.003, 8), iron, 0, 0, 0.455));
+  g.add(meshAt(cylZ(0.075, 0.445, 0.465, 0.004, 28), steel(), tx, 0, 0));
+  g.add(meshAt(cylZ(K179.pinR, 0.445, 0.545, 0.004, 24), steel(), tx, 0, 0));
+  g.add(meshAt(cylZ(0.055, 0.535, 0.55, 0.003, 24), darkSteel(), tx, 0, 0));
+  g.add(pinMark('rodPin', tx, 0, 0.5));
   g.userData.outlines = { pocketHole: pocketHole179() };
   setMM(g, { kind: 'eccentric', r: K179.sheaveR });
   return g;
@@ -348,7 +359,7 @@ function shapeFromWall(): THREE.Shape {
 }
 
 /**
- * 편심 막대(후크 달림): 원점 = 아래 눈 중심(편심 핀), 로컬 +X 를 후크 쪽, z 0~0.06(세계 0.45~0.51).
+ * 편심 막대(후크 달림): 원점 = 아래 눈 중심(편심 핀), 로컬 +X 를 후크 쪽, z −0.03~0.03(세계 0.47~0.53).
  * 눈(구멍 0.048) → 막대 → 후크 덩이(U 홈은 아래가 열려 핀을 물고, 위로 들리면 빠진다).
  * child `hookPin`(U 가운데), `crossPin`(링크 거는 핀).
  */
@@ -385,10 +396,10 @@ export function eccRod179(): THREE.Group {
   );
   head.add(mesh(extrude(headShape, 0.06, 0.004, 8), darkSteel()));
   // 링크 거는 핀(머리 위쪽)
-  head.add(meshAt(cylZ(0.02, 0, 0.105, 0.004, 20), steelM, 0, K179.crossDy, 0));
-  head.add(meshAt(cylZ(0.026, 0.09, 0.105, 0.003, 20), darkSteel(), 0, K179.crossDy, 0));
+  head.add(meshAt(cylZ(0.02, 0, 0.085, 0.004, 20), steelM, 0, K179.crossDy, 0));
+  head.add(meshAt(cylZ(0.026, 0.07, 0.085, 0.003, 20), darkSteel(), 0, K179.crossDy, 0));
   head.add(pinMark('hookPin', 0, 0, 0.03));
-  head.add(pinMark('crossPin', 0, K179.crossDy, 0.075));
+  head.add(pinMark('crossPin', 0, K179.crossDy, 0.055));
   g.add(head);
   setMM(g, { kind: 'rod', length: K179.rodL });
   return g;
@@ -457,9 +468,9 @@ export function lever179(): THREE.Group {
   const eye = shapeFrom(circlePts(0.055, 28));
   eye.holes.push(pathFrom(circlePts(0.03, 20)));
   g.add(meshAt(extrude(eye, 0.06, 0.004, 20), darkSteel(), K179.leverLen, 0, 0));
-  g.add(meshAt(cylZ(0.02, 0, 0.105, 0.004, 20), steel(), K179.leverArm, 0, 0));
-  g.add(meshAt(cylZ(0.026, 0.09, 0.105, 0.003, 20), darkSteel(), K179.leverArm, 0, 0));
-  g.add(pinMark('leverPin', K179.leverArm, 0, 0.075));
+  g.add(meshAt(cylZ(0.02, 0, 0.135, 0.004, 20), steel(), K179.leverArm, 0, 0));
+  g.add(meshAt(cylZ(0.026, 0.12, 0.135, 0.003, 20), darkSteel(), K179.leverArm, 0, 0));
+  g.add(pinMark('leverPin', K179.leverArm, 0, 0.105));
   setMM(g, { kind: 'lever', length: K179.leverLen });
   return g;
 }

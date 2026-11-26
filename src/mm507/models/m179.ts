@@ -22,8 +22,8 @@ const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(
 const E = K179.E;
 /** 심축 중심선 높이: 심축 둥근 막대 y = 후크 U 홈 안의 돌기 높이(홈선 − 0.029) − 돌기 높이 0.11 */
 const SPINDLE_Y = K179.slotY - 0.029 - 0.11;
-const ROD_Z = 0.48;
-const LINK_Z = 0.535;
+const ROD_Z = 0.5;
+const LINK_Z = 0.555;
 const LEVER_Z = 0.45;
 
 export default function buildM179(): MovementModel {
