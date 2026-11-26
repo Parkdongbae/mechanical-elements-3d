@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { castIron } from '../../models/materials';
-import { displayStand, rotArrow, spurGear, tag } from '../kit';
+import { displayStand, leaderTo, rotArrow, spurGear, tag } from '../kit';
 import { wallBearing } from '../kit/gear6';
 import { CL162, K162, STUD162, bevelShaft162, frame162, gate162, gov162, looseGear162, setPose162, spin162 } from '../kit/k162';
 
@@ -84,6 +84,8 @@ export default function buildM162(): MovementModel {
   const tagBall = tag('공', v(0, 0, 0.6));
   const tagClutch = tag('클러치 핀', v(0, 0, 0.6));
   const tagGate = tag('수문(셔틀)', v(0, 0, 0.6));
+  // 클러치 핀 이름표는 두 베벨 사이 클러치 고리·핀을 가리킨다(자동 고르기가 위 베벨을 가리켰음 — 사용자 지적)
+  leaderTo(tagClutch, 'clutch');
   g.add(
     tag('구동 축', v(-0.5, 1.78, 0.6)),
     tag('아래 수평축', v(-0.3, 0.62, 0.6)),

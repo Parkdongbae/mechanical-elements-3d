@@ -307,8 +307,12 @@ export function pawlOutline155(): V2[] {
   const rb = K.rRoot + K.nibClear;
   const n1b = pol(rb, a1);
   const n1t = pol(K.nibTop, a1);
-  const n2t = pol(K.nibTop, a2);
   const n2b = pol(rb, a2);
+  // 코 등쪽(반시계 쪽)은 이끝 원 바로 바깥(r = rTip + 0.012)까지만 반지름선, 그 위는 몸통 쪽으로
+  // 넓게 퍼지는 둥근 목(필릿)으로 잇는다 — 꺾인 오목 모서리가 없어 부러질 듯한 가는 목이 생기지 않는다(사용자 지적).
+  // 이끝 원 안쪽(이골에 들어가는 부분)은 그대로라 맞물림·들림 풀이는 바뀌지 않는다.
+  const n2m = pol(K.rTip + 0.012, a2);
+  const neck = pol(K.nibTop + 0.05, a2 + 9 * DEG);
   const hc: V2 = [pv[0] + K.horn[0], pv[1] + K.horn[1]];
   const hornArc = arc(hc[0], hc[1], K.hornR, -20 * DEG, 170 * DEG, 10);
   const bossArc = arc(pv[0], pv[1], K.bossR, 60 * DEG, 320 * DEG, 20);
@@ -318,8 +322,8 @@ export function pawlOutline155(): V2[] {
     ...hornArc,
     ...quad(hornArc[hornArc.length - 1]!, [0.2, 0.915], bossArc[0]!, 10),
     ...bossArc,
-    ...quad(bossArc[bossArc.length - 1]!, [0.24, 0.8], n2t, 10),
-    n2t,
+    ...quad(bossArc[bossArc.length - 1]!, [0.2, 0.84], neck, 10),
+    ...quad(neck, pol(K.rTip + 0.02, a2 + 2.5 * DEG), n2m, 12).slice(1),
     n2b
   ];
   return world.map((p): V2 => [p[0] - pv[0], p[1] - pv[1]]);

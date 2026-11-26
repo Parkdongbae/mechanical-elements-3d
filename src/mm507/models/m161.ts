@@ -3,7 +3,7 @@
 //  설계표 docs/mm507-sheets/161.md · 부품은 전부 kit/k161(이미 구현됨) — 이 파일은 배치·자세 대입만 한다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, leaderTo, rotArrow, tag } from '../kit';
 import { bedFrame161, drive161, gov161, K161, setPose161, spin161, valveLever161 } from '../kit/k161';
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
@@ -43,12 +43,18 @@ export default function buildM161(): MovementModel {
   g.add(arrowSpin, arrowDrive);
 
   // 이름표 6개 — 공·슬라이드·조절 지레 셋은 움직이는 부재를 따라간다
-  const tagCrown = tag('크라운 기어(베벨)', v(0.6, 2.95, 0.3));
+  const tagCrown = tag('크라운 기어(베벨)', v(-0.85, 2.75, 0.3));
   const tagDrive = tag('구동 축(피니언)', v(1.15, 2.85, 0.3));
   const tagValve = tag('밸브 지레(고정)', v(-1.05, 1.2, 0.3));
   const tagBall = tag('공', v(0, 0, 0.3));
   const tagSlide = tag('슬라이드', v(0, 0, 0.3));
   const tagAdj = tag('조절 지레', v(0, 0, 0.3));
+  // 지시선 대상을 직접 정한다(자동 고르기가 크라운 대신 축받이·공 대신 팔 등을 가리켰음 — 사용자 지적)
+  leaderTo(tagCrown, 'crown');
+  leaderTo(tagDrive, 'pinionGear');
+  leaderTo(tagBall, 'ballL');
+  leaderTo(tagSlide, 'sleeve');
+  leaderTo(tagAdj, 'adjLever');
   g.add(tagCrown, tagDrive, tagValve, tagBall, tagSlide, tagAdj);
 
   /** theta 의 닫힌 식으로 전체 자세를 다시 계산(누적 오차·역회전 없음) */
