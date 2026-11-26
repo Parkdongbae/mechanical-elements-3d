@@ -173,8 +173,8 @@ export default function buildM163(): MovementModel {
     notes: () => {
       const s = state163(theta);
       return [
-        { label: '속도 인자', value: `${s.w.toFixed(2)} (느림 2.5 ~ 빠름 5.5)` },
-        { label: '팔 각', value: `${(s.alpha * DEG).toFixed(1)}°` },
+        { label: '속도 인자', value: `${s.w.toFixed(2)} (느림 1.5 ~ 빠름 6.5)` },
+        { label: '팔 각', value: `${(s.alpha * DEG).toFixed(1)}° (처짐 21° ~ 벌어짐 56°)` },
         { label: '벨트', value: beltText(s.belt) },
         { label: '수문 축', value: `${(s.gate * DEG).toFixed(0)}°` },
         { label: '설명', value: '빠르면 공이 벌어져 슬리브가 오르고 지레가 포크를 내려 벨트를 아래 풀리로, 느리면 위 풀리로 옮긴다 — 건너편 두 베벨 기어가 수문 축을 서로 반대로 돌린다' }
