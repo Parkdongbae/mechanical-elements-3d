@@ -296,6 +296,7 @@ export function pitman168(F: Four, o: { slotPin: boolean; linkEye?: boolean } = 
   g.add(flatPlate(outline, holes, ZL.pitman, steel()));
   if (o.slotPin) {
     const p1 = throughPin(K168.pinR, 0.055, ZL.pinHead, 0.045);
+    p1.name = 'slotPin'; // 이름표 '타원 궤도' 지시선 대상 — 이 핀이 타원을 그린다
     g.add(p1);
   }
   const p3 = throughPin(K168.pinR, 0.125, 0.265, 0.045);
