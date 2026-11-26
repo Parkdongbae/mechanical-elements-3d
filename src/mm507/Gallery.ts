@@ -468,9 +468,13 @@ export class Gallery implements AppMode {
     for (let i = 0; i < rangeCount; i++) {
       const a = i * RANGE_SIZE + 1;
       const b = Math.min(TOTAL, (i + 1) * RANGE_SIZE);
-      const rb = button(`mm-range${i === this.range ? ' is-on' : ''}`, `${a}–${b}`, () => {
+      const rb = button(`mm-range${i === this.range && this.cat === 'all' ? ' is-on' : ''}`, `${a}–${b}`, () => {
         this.range = i;
-        ranges.querySelectorAll('.mm-range').forEach((x, k) => x.classList.toggle('is-on', k === i));
+        // 분류를 고른 채 번호 구간을 누르면 분류를 '전체'로 되돌리고 그 구간을 보인다
+        if (this.cat !== 'all') {
+          this.cat = 'all';
+          filters.querySelectorAll('.mm-chip:not(.mm-only3d)').forEach((x, k) => x.classList.toggle('is-on', k === 0));
+        }
         this.renderTiles();
       });
       ranges.append(rb);
@@ -504,8 +508,10 @@ export class Gallery implements AppMode {
     if (!grid) return;
     if (this.catalog.length === 0) return;
     grid.replaceChildren();
-    const a = this.range * RANGE_SIZE + 1;
-    const b = Math.min(TOTAL, (this.range + 1) * RANGE_SIZE);
+    // 분류를 고르면 번호 구간과 상관없이 1~507 전체에서 찾는다
+    const allRange = this.cat !== 'all';
+    const a = allRange ? 1 : this.range * RANGE_SIZE + 1;
+    const b = allRange ? TOTAL : Math.min(TOTAL, (this.range + 1) * RANGE_SIZE);
     const list = this.catalog.filter((e) => e.n >= a && e.n <= b && inCat(e.cat, this.cat) && (!this.only3d || hasModel(e.n)));
     if (list.length === 0) {
       grid.append(el('p', 'mm-loading', this.t.emptyRange));
@@ -532,8 +538,9 @@ export class Gallery implements AppMode {
     }
     if (!this.rangeBar) return;
     this.rangeBar.querySelectorAll('.mm-range').forEach((x, k) => {
-      x.classList.toggle('is-on', k === this.range);
-      if (k === this.range) x.setAttribute('aria-current', 'true');
+      const on = !allRange && k === this.range;
+      x.classList.toggle('is-on', on);
+      if (on) x.setAttribute('aria-current', 'true');
       else x.removeAttribute('aria-current');
     });
   }
