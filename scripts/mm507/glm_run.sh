@@ -109,9 +109,13 @@ READ:
  2. The source facts: public/mm507/catalog.json entry with \"n\": $NUM (title, easy = Korean easy explanation, easyEn, ko, en), and src/mm507/i18n/ja.json, zh.json, hi.json, ar.json → titles[\"$NUM\"] and easy[\"$NUM\"].
 WRITE: in each of the six files add the key \"$NUM\" = {\"hook\": ..., \"body\": ..., \"cta\": ...}. Keep every other key unchanged and keep valid JSON (2-space indent).
  - hook: one short question that makes people curious about this mechanism.
- - body: one or two sentences with the working principle, only facts that are in the source. Never use engraving letters (A, B, C…) — they are not visible in the video.
+ - body: with the 15-second length, one or two sentences with the working principle; with 20 or 25 seconds, two or three sentences that explain the steps in order (first step, then next step, then the result). Only facts that are in the source. Never use engraving letters (A, B, C…) — they are not visible in the video.
  - cta: EXACTLY the same string as entry \"1\" of that file.
- - Length of hook+body+cta: ko 45~60 characters (no spaces), ja 45~58 characters, zh 40~58 characters, en 24~32 words, hi 18~25 words, ar 14~20 words. Each language is written natively, not word-for-word from Korean.
+ - Read shorts/scripts/len.json: the target video length for $NUM is 15 (default, when the number is not listed), 20 or 25 seconds. Lengths for hook+body+cta (characters are counted without spaces):
+     15 s: ko 45~60 characters, ja 45~58 characters, zh 40~58 characters, en 24~32 words, hi 18~25 words, ar 14~20 words.
+     20 s: ko 70~85 characters, ja 66~82 characters, zh 60~82 characters, en 36~46 words, hi 27~36 words, ar 21~28 words.
+     25 s: ko 90~105 characters, ja 85~100 characters, zh 78~100 characters, en 46~57 words, hi 35~44 words, ar 27~35 words.
+   Each language is written natively, not word-for-word from Korean.
 VERIFY: node scripts/shorts/scriptlint.mjs $NUM  — every line must start with OK. Fix and re-run until it does.
 $COMMON_SH"
     ;;
@@ -137,16 +141,13 @@ $COMMON_SH"
     NUM=$((10#$TASK))
     PROMPT="TASK: implement ONE movement model of the '507 Mechanical Movements' part: number $NUM.
 READ, in this order:
- 1. docs/mm507-sheets/$N.md  — the design sheet. Implement it exactly (parts, dimensions, motion, labels, notes). If it has a '키트 추가' section, also add exactly that to the kit file it names (optional parameters / new functions only; never change existing signatures).
- 2. docs/work-orders/16-507-전체계획.md section 3 (model conventions: display stand, front view like the engraving, function-style module, absolute pose from accumulated theta).
- 3. src/mm507/types.ts and src/mm507/kit/index.ts with the kit files it re-exports — use the kit, do not re-implement parts.
- 4. src/mm507/models/m001.ts if it exists (the reference model — copy its structure).
- 5. The original engraving public/mm507/fig/$N.png if you are able to view images (optional).
-WRITE src/mm507/models/m$N.ts with a default export of type MovementBuilder. Nothing else (except a '키트 추가' the sheet asks for).
-VERIFY: npx tsc --noEmit ; then run
-  node scripts/shot.mjs \"preview.html?mm=$NUM&t=1\" shots/mm/$N-a.png 6000
-  node scripts/shot.mjs \"preview.html?mm=$NUM&t=1.6\" shots/mm/$N-b.png 6000
-both must print 'saved' without 'CONSOLE ERRORS'. If the sheet's '확인' section names other times or camera angles, shoot those too as shots/mm/$N-c.png etc.
+ 1. docs/mm507-sheets/$N.md  — the design sheet (written by Opus from the engraving; it is the ground truth). Implement it exactly: parts, every number, motion, the support table (지지 표), the label table (이름표 표), the visible-motion section (눈에 보여야 할 동작), notes. Never edit the sheet. If something in it cannot work, do not invent a fix — say so in your summary.
+ 2. docs/work-orders/16-507-전체계획.md section 3 (model conventions) and docs/work-orders/20-507-속도향상.md section 4-3 (model rules).
+ 3. src/mm507/types.ts and src/mm507/kit/index.ts with the kit files it re-exports — use the kit, do not re-implement parts. Shared kit files are READ-ONLY. New parts go only in src/mm507/kit/k$N.ts (if the sheet's 키트 추가 asks for them).
+ 4. A similar finished model the sheet mentions (for structure), otherwise src/mm507/models/m200.ts.
+WRITE src/mm507/models/m$N.ts (default export MovementBuilder) and, only if needed, src/mm507/kit/k$N.ts. Nothing else.
+Give every part the object name used in the sheet's 검사 선언 and 이름표 표. Attach every label with leaderTo(tagSprite, '<name from 이름표 표>') (see src/mm507/kit/misc.ts) so its leader line points at the right part.
+VERIFY: npx tsc --noEmit ; then 'node scripts/mm507/autocheck.mjs $NUM' and fix until it prints PASS or only WARN (no fail). Report the final autocheck line.
 $COMMON"
     ;;
 esac
