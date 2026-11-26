@@ -38,7 +38,7 @@ export function checkFile(file, want) {
 export function sheet(n) {
   const T = timeline(n);
   const times = lenOf(n) === 15 ? [2.3, 6.0, 9.6, 13.6] : [2.3, (T.ghostEnd + T.orbitEnd) / 2, (T.closeIn + T.closeEnd) / 2, T.end - 0.8];
-  const work = path.join(ROOT, 'shorts', '_work', 'sheet');
+  const work = path.join(ROOT, 'shorts', '_work', 'sheet', pad3(n)); // 번호마다 따로(동시에 돌리면 그림이 섞였다)
   fs.mkdirSync(work, { recursive: true });
   const rows = [];
   const langs = ALL_LANGS.filter((l) => fs.existsSync(path.join(ROOT, 'shorts', l, `${pad3(n)}.mp4`)));
