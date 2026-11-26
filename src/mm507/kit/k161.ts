@@ -177,7 +177,9 @@ export function spin161(): THREE.Group {
     arm.rotation.z = s * K161.aIn;
     arm.add(mesh(taperPlate([0, 0], [0, -K161.armL], 0.02, 0.015, 0.032), steelM));
     arm.add(meshAt(cylZ(0.02, -0.042, 0.042), dark, 0, -K161.lug, 0)); // 러그 핀
-    arm.add(meshAt(new THREE.SphereGeometry(K161.rb, 24, 18), brass(), 0, -K161.armL, 0));
+    const ball = meshAt(new THREE.SphereGeometry(K161.rb, 24, 18), brass(), 0, -K161.armL, 0);
+    ball.name = `ball${side}`; // 이름표 '공' 지시선 대상
+    arm.add(ball);
     arm.add(pinMark(`armRoot${side}`, 0, 0, 0));
     arm.add(pinMark(`lugPin${side}`, 0, -K161.lug, 0));
     g.add(arm);
@@ -204,7 +206,9 @@ export function spin161(): THREE.Group {
     sleeve.add(pinMark(s > 0 ? 'sleevePinR' : 'sleevePinL', s * K161.sp, 0, 0));
   }
   sleeve.add(mesh(tubeY(0.034, 0.062, -0.185, -0.135), dark)); // 지레 허브
-  sleeve.add(mesh(taperPlate([-0.05, -0.16], [-0.45, -0.16], 0.02, 0.012, 0.028), steelM));
+  const adj = mesh(taperPlate([-0.05, -0.16], [-0.45, -0.16], 0.02, 0.012, 0.028), steelM);
+  adj.name = 'adjLever'; // 이름표 '조절 지레' 지시선 대상
+  sleeve.add(adj);
   sleeve.add(pinMark('leverTip', -0.45, -0.16, 0));
   g.add(sleeve);
   return g;
@@ -296,6 +300,7 @@ export function drive161(): THREE.Group {
   pivot.name = 'pinion';
   const pin = spurGear(K161.np, K161.m, { width: 0.07, spokes: 0, driver: true });
   pin.rotation.y = Math.PI / 2; // 로컬 Z(기어 축) → 세계 +X, 이 0 → −Z(최하점 시작)
+  pin.name = 'pinionGear'; // 이름표 '구동 축(피니언)' 지시선 대상
   pivot.add(pin);
   pivot.add(rod(new THREE.Vector3(-0.08, 0, 0), new THREE.Vector3(0.54, 0, 0), 0.023));
   const collar = tubeZ(0.024, 0.05, -0.02, 0.02);

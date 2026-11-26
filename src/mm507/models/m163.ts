@@ -3,7 +3,7 @@
 //  설계표 docs/mm507-sheets/163.md · 부품은 kit/k163 · kit/k162(조속기) · kit/k155(지레) · 공용 키트
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { Belt, bevelGear, displayStand, openBeltPath, pulley, rod, rotArrow, shaftZ, tag } from '../kit';
+import { Belt, bevelGear, displayStand, leaderTo, openBeltPath, pulley, rod, rotArrow, shaftZ, tag } from '../kit';
 import { wallBearing } from '../kit/gear6';
 import { connectingRod } from '../kit/k092';
 import { elbowLever } from '../kit/k155';
@@ -123,7 +123,11 @@ export default function buildM163(): MovementModel {
   const tagBall = tag('공', v(0, 0, 0.6));
   const tagLever = tag('꺾인 지레', v(0, 0, 0.6));
   const tagFork = tag('벨트 포크', v(0, 0, 0.6));
-  g.add(tag('풀리 셋', v(-1.45, YB, 0.6)), tag('벨트', v(0.45, 0.7, 0.6)), tag('수문 기어', v(1.6, 1.55, 0.6)), tagBall, tagLever, tagFork);
+  // 벨트·벨트 포크 이름표가 같은 곳(포크 끝)을 가리키던 것 — 대상을 따로 정하고 자리도 떼어 놓는다(사용자 지적)
+  const tagBelt = tag('벨트', v(0, 0, 0.6));
+  leaderTo(tagBelt, 'belt');
+  leaderTo(tagFork, 'fork');
+  g.add(tag('풀리 셋', v(-1.45, YB, 0.6)), tagBelt, tag('수문 기어', v(1.6, 1.55, 0.6)), tagBall, tagLever, tagFork);
 
   const pose = (th: number): void => {
     const s = state163(th);
@@ -154,7 +158,9 @@ export default function buildM163(): MovementModel {
     belt.setOffset(-r * s.beltAng);
     tagBall.position.set(SX + 0.75, s.ballY + 0.12, 0.6);
     tagLever.position.set(s.A[0] + 0.55, s.A[1] + 0.1, 0.6);
-    tagFork.position.set(GX163 + 0.55, s.yF - 0.25, 0.6);
+    tagFork.position.set(GX163 + 0.55, s.yF + 0.3, 0.6);
+    // 벨트 이름표는 두 풀리 사이 벨트 가운데 아래 — 포크와 떨어진 자리
+    tagBelt.position.set(XF - 0.75, s.yF - 0.35, 0.6);
   };
   pose(0);
 
