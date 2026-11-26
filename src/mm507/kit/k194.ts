@@ -1,10 +1,10 @@
-// 194 맹글 휠 3 전용 키트 — 이(홈)가 한 줄뿐인 맹글 휠: 타원 구멍이 늘어선 고리 모양 판, 피니언 축 안내 홈(닫힌 길), 구멍에 들어가는 이 못
+// 194 맹글 휠 3 전용 키트 — 이(홈)가 한 줄뿐인 맹글 휠: 바닥 있는 이 자리(구멍)가 늘어선 고리 띠, 피니언 축 안내 홈(휠 면에 파인 닫힌 홈), 이 자리에 들어가는 피니언 못
 //  피니언 중심의 닫힌 경로(바깥 팔 R1, 안쪽 팔 R2 = R1 − 2rp, 양끝 반원 ρ = rp)는 mangleTrack(rib) 와 같다. 구멍 고리의 피치 반지름 Rp = R1 − rp = R2 + rp.
 import * as THREE from 'three';
-import { darkSteel } from '../../models/materials';
-import { brass } from '../../models/materials';
-import { circlePts, extrude, loft, mesh, pathFrom, shapeFrom, TAU, type LoftLayer } from '../../models/parts/geom';
+import { bronze } from '../../models/materials';
+import { loft, merge, mesh, TAU, type LoftLayer } from '../../models/parts/geom';
 import type { V2 } from './belt';
+import { groovedDisc } from './k192';
 import { setMM } from './mm';
 
 export const K194 = {
@@ -15,7 +15,7 @@ export const K194 = {
   loop: 65, // 경로 길이 = 65 × 원피치
   RW: 1.15, // 휠 반지름
   z0: 0, // 판 뒷면
-  zPlate: 0.06 // 판 앞면
+  zPlate: 0.08 // 판 맨 앞면(이 자리 띠 앞면)
 };
 export const RP194 = (K194.nz * K194.m) / 2;
 export const RING194 = K194.R1 - RP194; // 구멍 고리 피치 반지름 0.655
@@ -75,37 +75,62 @@ export function slotOutline194(psi: number, halfLen = 0.03, r = 0.045): V2[] {
   return pts.map(([x, y]) => [x * c - y * s, x * s + y * c] as V2);
 }
 
-/** 구멍 판: 원판에 타원 구멍들(고리)을 뚫고 안내 홈 띠를 얹는다. 원점 = 휠 중심, 판 z ∈ [z0, zPlate] */
+/** 이 자리 띠의 반폭(고리 반지름 방향) — 못이 드나드는 구멍(이 자리)은 띠를 가로질러 양쪽으로 열린다 */
+export const BAND194 = 0.03;
+/** 층: 뒤판 뒷면 z0, 홈 바닥 zBot, 앞 층(바깥 조각·섬) 앞면 zFace, 이 자리 띠 앞면 zBand */
+export const Z194 = { zBot: 0.02, zFace: 0.05, zBand: 0.08 };
+/** 안내 홈 반폭 */
+export const GROOVE_HW194 = 0.037;
+
+/** 구멍 사이 이 막이(띠 조각) 하나의 윤곽: 구멍 a 의 +쪽 벽 ~ 구멍 b 의 −쪽 벽, 반지름 RING ± BAND */
+export function bandBlock194(pa: number, pb: number, halfW = 0.045): V2[] {
+  const r0 = RING194 - BAND194;
+  const r1 = RING194 + BAND194;
+  const side = (psi: number, sgn: number, r: number): V2 => [Math.cos(psi) * r - Math.sin(psi) * halfW * sgn, Math.sin(psi) * r + Math.cos(psi) * halfW * sgn];
+  const pts: V2[] = [];
+  const arc = (r: number, a0: number, a1: number): void => {
+    const n = 6;
+    for (let i = 1; i < n; i++) {
+      const a = a0 + ((a1 - a0) * i) / n;
+      pts.push([Math.cos(a) * r, Math.sin(a) * r]);
+    }
+  };
+  const ang = (p: V2): number => Math.atan2(p[1], p[0]);
+  const aIn = side(pa, 1, r0);
+  const aOut = side(pa, 1, r1);
+  const bOut = side(pb, -1, r1);
+  const bIn = side(pb, -1, r0);
+  pts.push(aIn, aOut);
+  arc(r1, ang(aOut), ang(aOut) + ((ang(bOut) - ang(aOut) + 3 * Math.PI) % TAU) - Math.PI);
+  pts.push(bOut, bIn);
+  arc(r0, ang(bIn), ang(bIn) + ((ang(aIn) - ang(bIn) + 3 * Math.PI) % TAU) - Math.PI);
+  return pts;
+}
+
+/**
+ * 맹글 휠 판(사용자 지적 수정): 뒤판 + 앞 층(안내 홈을 뺀 바깥 조각 + 고리 안쪽 섬) + 섬 위 이 자리 띠.
+ * 이 자리 띠 = 고리를 따라 늘어선 막이들 — 막이 사이가 바닥(섬 앞면)이 있는 오목한 이 자리(구멍)이고, 피니언 뒤 못이 그 속에 들어가 막이를 밀어 휠을 돌린다.
+ * 원점 = 휠 중심, 판 z ∈ [z0, zBand]
+ */
 export function slotWheel194(psis: number[]): THREE.Group {
   const g = new THREE.Group();
-  const holes = psis.map((p) => slotOutline194(p));
+  const L = K194.loop * PITCH194;
+  const disc = groovedDisc({ R1: K194.R1, R2: K194.R2, L, hw: GROOVE_HW194, rBack: K194.RW - 0.07, rFront: K194.RW - 0.07, z0: K194.z0, zBot: Z194.zBot, z1: Z194.zFace });
+  g.add(disc);
+  const blocks: V2[][] = [];
+  for (let j = 0; j + 1 < psis.length; j++) blocks.push(bandBlock194(psis[j]!, psis[j + 1]!));
   const layers: LoftLayer[] = [
-    { z: K194.z0, s: 1, hs: 1 },
-    { z: K194.zPlate, s: 1, hs: 1 }
+    { z: Z194.zFace, s: 1, hs: 1 },
+    { z: Z194.zBand, s: 1, hs: 1 }
   ];
-  const plate = mesh(loft(circlePts(K194.RW - 0.07, 128), holes, layers), brass({ roughness: 0.45 }));
-  g.add(plate);
+  const geos = blocks.map((b) => loft(b, [], layers));
+  const band = mesh(merge(geos), bronze({ roughness: 0.4 }));
+  band.name = 'toothBand';
+  g.add(band);
   const outlines: Record<string, V2[]> = {};
-  holes.forEach((h, i) => (outlines[`hole${i}`] = h));
-  g.userData.outlines = outlines; // 검사용(2D 윤곽 — 구멍)
-  // 안내 홈 띠(닫힌 길 둘레의 어두운 띠 — 피니언 축이 지나는 홈): 길을 ±w 로 부풀린 고리
-  const lp = loopPath194();
-  const N = 360;
-  const outer: V2[] = [];
-  const inner: V2[] = [];
-  const w = 0.03;
-  for (let i = 0; i < N; i++) {
-    const p = lp.at((lp.L * i) / N);
-    const nx = Math.sin(p.h);
-    const ny = -Math.cos(p.h);
-    outer.push([p.x + nx * w, p.y + ny * w]);
-    inner.push([p.x - nx * w, p.y - ny * w]);
-  }
-  const ring = shapeFrom(outer);
-  ring.holes.push(pathFrom(inner));
-  const groove = mesh(extrude(ring, 0.006, 0.001, 8), darkSteel());
-  groove.position.z = K194.zPlate + 0.004;
-  g.add(groove);
-  setMM(g, { kind: 'gear', fn: 'slotWheel194', teeth: psis.length, module: K194.m, internal: false, noncircular: true, axis: 'z', width: K194.zPlate - K194.z0 });
+  psis.forEach((p, i) => (outlines[`hole${i}`] = slotOutline194(p)));
+  g.userData.outlines = outlines; // 검사용(2D 윤곽 — 이 자리)
+  g.userData.blocks = blocks; // 검사용(2D 윤곽 — 막이)
+  setMM(g, { kind: 'gear', fn: 'slotWheel194', teeth: psis.length, module: K194.m, internal: false, noncircular: true, axis: 'z', width: Z194.zBand - Z194.zFace });
   return g;
 }

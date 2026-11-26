@@ -5,6 +5,7 @@ import { type MovementModel } from '../types';
 import { brass, castIron, darkSteel, paint, steel } from '../../models/materials';
 import { extrude, lathe, mesh, rodProfile, roundedRect, tubeProfile } from '../../models/parts/geom';
 import { displayStand, leaderTo, mangleTrack, rod, shaftZ, spurGear, tag } from '../kit';
+import { groovedDisc, grooveRoller } from '../kit/k192';
 
 const XC = 0; // 휠 중심
 const YC = 1.85;
@@ -39,9 +40,9 @@ export default function buildM193(): MovementModel {
   const wheel = new THREE.Group();
   wheel.name = 'wheel';
   wheel.position.set(XC, YC, 0);
-  const discGeo = lathe(rodProfile(RW, 0, 0.05, 0.008, 0.008), 72);
-  discGeo.rotateX(Math.PI / 2);
-  wheel.add(at(discGeo, brass(), 0, 0, 0.005));
+  // 원판 = 뒤판 + 앞 층(안내 홈 띠를 뺀 바깥 조각 + 고리 안쪽 섬): 판화의 이중선 띠 — 피니언 중심 경로를 따라 홈(반폭 0.037, 바닥 z 0.025)이 파여 피니언 축 끝 굴림대를 붙든다
+  const groove = groovedDisc({ R1: R_OUT, R2: R_IN, L: track.length, hw: 0.037, rBack: RW, rFront: RW - 0.07, z0: 0.005, zBot: 0.025, z1: 0.055 });
+  wheel.add(groove);
   const rimGeo = lathe(tubeProfile(RW - 0.07, RW, 0, 0.1, 0.01), 72);
   rimGeo.rotateX(Math.PI / 2);
   wheel.add(at(rimGeo, brass(), 0, 0, 0.005));
@@ -60,7 +61,9 @@ export default function buildM193(): MovementModel {
   pinion.name = 'pinion';
   const pinionGear = spurGear(NP, MOD, { width: 0.07, spokes: 0, driver: true });
   pinion.add(pinionGear);
-  pinion.add(rod(v(0, 0, -0.03), v(0, 0, 0.27), 0.022));
+  // 축: 뒤로는 휠 면의 안내 홈 속 굴림대(z 0.029~0.051), 앞으로는 세운 막대의 홈(z 0.30~0.34)을 지나 와셔까지
+  pinion.add(rod(v(0, 0, -0.06), v(0, 0, 0.28), 0.022));
+  pinion.add(grooveRoller(0.03, -0.071, -0.049));
   pinion.position.set(XC, YC - R_OUT, PZ);
   g.add(pinion);
 
@@ -78,13 +81,14 @@ export default function buildM193(): MovementModel {
   g.add(at(new THREE.BoxGeometry(0.34, 0.14, 0.24), castIron(), 0, 0.25, 0.3));
   const washer = lathe(tubeProfile(0.02, 0.05, 0, 0.012, 0.003), 24);
   washer.rotateX(Math.PI / 2);
-  pinion.add(at(washer, darkSteel(), 0, 0, 0.255));
+  pinion.add(at(washer, darkSteel(), 0, 0, 0.247));
 
   g.add(
     leaderTo(tag('맹글 휠', v(1.35, 2.75, 0.35)), wheel),
     leaderTo(tag('피니언', v(0.8, 0.85, 0.5)), pinion),
     tag('세운 막대(홈)', v(-0.75, 0.62, 0.5)),
-    tag('톱니 고리', v(-1.35, 2.25, 0.35))
+    tag('톱니 고리', v(-1.35, 2.25, 0.35)),
+    leaderTo(tag('안내 홈', v(-1.4, 1.2, 0.35)), groove)
   );
 
   return {

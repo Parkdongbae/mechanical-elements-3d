@@ -5,6 +5,7 @@ import { type MovementModel } from '../types';
 import { brass, castIron, darkSteel, paint, steel } from '../../models/materials';
 import { extrude, lathe, mesh, rodProfile, roundedRect, tubeProfile } from '../../models/parts/geom';
 import { displayStand, leaderTo, mangleTrack, rod, shaftZ, spurGear, tag } from '../kit';
+import { groovedDisc, grooveRoller } from '../kit/k192';
 
 const XC = 0; // 휠 중심
 const YC = 1.85;
@@ -34,9 +35,9 @@ export default function buildM192(): MovementModel {
   const wheel = new THREE.Group();
   wheel.name = 'wheel';
   wheel.position.set(XC, YC, 0);
-  const discGeo = lathe(rodProfile(RW, 0, 0.05, 0.008, 0.008), 64);
-  discGeo.rotateX(Math.PI / 2);
-  wheel.add(at(discGeo, brass(), 0, 0, 0.005));
+  // 원판 = 뒤판 + 앞 층(안내 홈 띠를 뺀 바깥 조각 + 고리 안쪽 섬): 피니언 중심 경로를 따라 홈(반폭 0.037, 바닥 z 0.025)이 파여 피니언 축 끝 굴림대를 붙든다
+  const groove = groovedDisc({ R1: 0.89, R2: 0.57, L: track.length, hw: 0.037, rBack: RW, rFront: RW - 0.07, z0: 0.005, zBot: 0.025, z1: 0.055 });
+  wheel.add(groove);
   const rimGeo = lathe(tubeProfile(RW - 0.07, RW, 0, 0.1, 0.01), 64);
   rimGeo.rotateX(Math.PI / 2);
   wheel.add(at(rimGeo, brass(), 0, 0, 0.005));
@@ -64,7 +65,9 @@ export default function buildM192(): MovementModel {
   // 피니언: 축이 세운 막대의 홈을 따라 오르내린다
   const pinion = new THREE.Group();
   pinion.add(spurGear(10, 0.022, { width: 0.07, spokes: 0, driver: true }));
-  pinion.add(rod(v(0, 0, -0.03), v(0, 0, 0.27), 0.022));
+  // 축: 뒤로는 휠 면의 안내 홈 속 굴림대(z 0.029~0.051), 앞으로는 세운 막대의 홈(z 0.30~0.34)을 지나 와셔까지
+  pinion.add(rod(v(0, 0, -0.06), v(0, 0, 0.28), 0.022));
+  pinion.add(grooveRoller(0.03, -0.071, -0.049));
   pinion.position.set(XC, YC - 0.7, PZ);
   g.add(pinion);
 
@@ -83,13 +86,14 @@ export default function buildM192(): MovementModel {
   // 막대 앞쪽 와셔
   const washer = lathe(tubeProfile(0.02, 0.05, 0, 0.012, 0.003), 24);
   washer.rotateX(Math.PI / 2);
-  pinion.add(at(washer, darkSteel(), 0, 0, 0.255));
+  pinion.add(at(washer, darkSteel(), 0, 0, 0.247));
 
   g.add(
     leaderTo(tag('맹글 휠', v(1.35, 2.85, 0.35)), 'wheel'),
     leaderTo(tag('피니언', v(0.75, 0.88, 0.5)), pinion),
     leaderTo(tag('피니언 안내 막대(고정)', v(-0.95, 0.62, 0.5)), 'guideBar'),
-    leaderTo(tag('톱니 홈(b·d)', v(-1.35, 2.75, 0.35)), 'wheel')
+    leaderTo(tag('톱니 홈(b·d)', v(-1.35, 2.75, 0.35)), 'wheel'),
+    leaderTo(tag('안내 홈', v(-1.4, 1.2, 0.35)), groove)
   );
 
   const pose = (): void => {
