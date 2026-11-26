@@ -42,7 +42,7 @@ export default function buildM166(): MovementModel {
   const moldTag = leaderTo(tag('벽돌 틀(왕복)', v(1.1, 1.85, 0.3)), mold);
   g.add(
     leaderTo(tag('크랭크 원판(구동)', v(-1.2, 2.55, 0.3)), disc),
-    leaderTo(tag('크랭크 핀', v(-1.75, 0.35, 0.3)), disc),
+    leaderTo(tag('크랭크 핀', v(-1.75, 0.35, 0.3)), 'crankPinHead'), // 원판이 아니라 핀 머리를 가리킨다(사용자 지적)
     rodTag,
     moldTag,
     leaderTo(tag('미끄럼 받침(고정)', v(1.35, 2.4, 0.3)), rail)

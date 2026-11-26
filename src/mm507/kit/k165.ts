@@ -1,9 +1,10 @@
 // 165번 전용 키트 — 물결 캠(수직 축)과 흔들막대·수직 막대
-//  캠: 수직 축에 꽂힌 둥근 판 + 아래로 드리운 테. 테의 아랫가장자리가 물결(6 마루). 축과 함께 돈다.
+//  캠: 수직 축에 꽂힌 둥근 판 + 아래로 드리운 테. 테의 아랫가장자리가 물결(5 마루 — 넓은 골 + 둥근 코). 축과 함께 돈다.
 //  흔들막대: 받침점 F(고정 핀)에 걸린 곧은 막대. 오른끝 굴림대가 캠 테 아랫가장자리 앞쪽 점에 아래에서 닿고,
 //  왼끝 긴 홈에 수직 막대의 핀이 든다. 수직 막대는 안내 둘 사이에서 위아래로만 움직인다.
 //  수직 막대의 무게가 왼끝을 눌러 굴림대가 늘 물결에 닿는다.
-//  pose165(theta): 캠 각 phi = theta(닫힌 식), 굴림대 높이는 물결 함수에서 바로 계산 → 주기 2π/6 로 닫힌다.
+//  pose165(theta): 캠 각 phi = theta(닫힌 식), 굴림대 높이는 물결 면에서 바로 계산 → 주기 2π/5 로 닫힌다.
+//  굴림대 r 0.12(판화 비례 — 캠 반지름의 약 1/4). 골(위로 오목) 곡률 반지름 ≥ 0.15 > 0.12 라 굴림대가 골 바닥까지 닿는다.
 import * as THREE from 'three';
 import { castIron, darkSteel, paint, steel } from '../../models/materials';
 import { extrude, hexPrism, lathe, mesh, rodProfile, stadiumShape, tubeProfile } from '../../models/parts/geom';
@@ -19,15 +20,16 @@ export const K165 = {
   Rm: 0.42, // 테 두께 가운데
   plateTop: 2.35, // 판 윗면
   plateBot: 2.3, // 판 아랫면(= 테 윗끝)
-  ym: 2.02, // 물결 가운데 높이
-  a: 0.08, // 물결 크기(±)
-  n: 6, // 물결 마루 수
+  ym: 2.09, // 물결 가운데 높이
+  a: 0.07, // 물결 크기 (edge = ym + a·(cos u − b·cos 2u), u = n·ψ → ym −0.081 ~ +0.060)
+  b: 0.15, // 골을 넓히고 코를 좁히는 2차 항
+  n: 5, // 물결 마루 수
   shaftR: 0.05,
   shaftTop: 3.05,
   shaftBot: 1.45,
   bearUp: 2.85, // 위 받침 높이
   bearLo: 1.6, // 아래 받침 높이
-  rr: 0.06, // 굴림대 반지름
+  rr: 0.12, // 굴림대 반지름
   zRoll: 0.67, // 굴림대 가운데 z (두께 0.05)
   zRod: 0.73, // 흔들막대 가운데 z (두께 0.04)
   zBar: 0.66, // 수직 막대 가운데 z (네모 0.06)
@@ -43,18 +45,28 @@ export const K165 = {
 
 /** 테 아랫가장자리 높이(캠 로컬 각 ψ — 로컬 점 = (r·sinψ, y, r·cosψ)) */
 export function edge165(psi: number): number {
-  return K165.ym + K165.a * Math.cos(K165.n * psi);
+  const u = K165.n * psi;
+  return K165.ym + K165.a * (Math.cos(u) - K165.b * Math.cos(2 * u));
 }
 
-/** 굴림대 가운데 x 가 축에서 ox 떨어졌을 때 물결에 닿는 굴림대 가운데 높이 */
-function rollY(phi: number, ox: number): number {
-  const { rr, Rm, clr } = K165;
+/**
+ * 굴림대 가운데 x 가 축에서 ox 떨어졌을 때 물결 면에 닿는 굴림대 가운데 높이.
+ * 굴림대 원(반지름 rr)의 윗반원 각 점(dx)과 굴림대 두께(z) 안의 테 아랫면 높이를 세계 각 atan2 로 정확히 읽어
+ * min(물결 − √(rr² − dx²)) — 굴림대 중심 궤적(물결 면의 rr 오프셋) 위의 점.
+ */
+export function rollY165(phi: number, ox: number, m = 48, mz = 5): number {
+  const { rr, clr, zRoll, ZC, R, Ri } = K165;
   let best = Infinity;
-  const m = 40;
-  for (let i = 0; i <= m; i++) {
-    const dx = -rr + (2 * rr * i) / m;
-    const y = edge165((ox + dx) / Rm - phi) - Math.sqrt(Math.max(0, rr * rr - dx * dx));
-    if (y < best) best = y;
+  for (let j = 0; j < mz; j++) {
+    const zr = zRoll - 0.025 + (0.05 * j) / (mz - 1) - ZC;
+    for (let i = 0; i <= m; i++) {
+      const dx = -rr + (2 * rr * i) / m;
+      const xs = ox + dx;
+      const r = Math.hypot(xs, zr);
+      if (r < Ri || r > R) continue;
+      const y = edge165(Math.atan2(xs, zr) - phi) - Math.sqrt(Math.max(0, rr * rr - dx * dx));
+      if (y < best) best = y;
+    }
   }
   return best - clr;
 }
@@ -76,12 +88,12 @@ export interface Pose165 {
 export function pose165(theta: number): Pose165 {
   const { Fx, Fy, Lr, AX, xb, Rm, rr } = K165;
   const phi = theta;
-  let beta = Math.asin((K165.ym - 0.09 - Fy) / Lr);
+  let beta = Math.asin((K165.ym - K165.a - rr - Fy) / Lr);
   let x = Fx + Lr * Math.cos(beta);
   let y = Fy + Lr * Math.sin(beta);
-  for (let k = 0; k < 5; k++) {
+  for (let k = 0; k < 6; k++) {
     x = Fx + Lr * Math.cos(beta);
-    y = rollY(phi, x - AX);
+    y = rollY165(phi, x - AX);
     beta = Math.asin(Math.max(-1, Math.min(1, (y - Fy) / Lr)));
   }
   x = Fx + Lr * Math.cos(beta);
@@ -113,14 +125,14 @@ function pinMark(name: string, x: number, y: number, z: number): THREE.Object3D 
 
 /**
  * 물결 캠 + 수직 축(한 몸). group 원점 = (AX, 0, ZC) — 로컬 y = 세계 y. rotation.y = phi.
- * 판 r 0.45 (y 2.30~2.35), 테 r 0.39~0.45 (아랫가장자리 = edge165(ψ), 1.94~2.10), 허브 r 0.1 (2.35~2.45),
+ * 판 r 0.45 (y 2.30~2.35), 테 r 0.39~0.45 (아랫가장자리 = edge165(ψ), 2.009~2.150), 허브 r 0.1 (2.35~2.45),
  * 축 r 0.05 (y 1.45~3.05, 아래 끝 뾰족), 위 받침 위의 깃 (2.91~2.95), 판 위 노랑 표시.
  */
 export function waveCam165(): THREE.Group {
   const { R, Ri, plateBot, plateTop, n: _n } = K165;
   void _n;
   const g = new THREE.Group();
-  const N = 288;
+  const N = 480;
   const pos: number[] = [];
   const idx: number[] = [];
   const ring = (r: number, outward: boolean): void => {
@@ -201,7 +213,7 @@ export function shaftBearing165(): THREE.Group {
 /**
  * 흔들막대 + 굴림대. group 원점 = 받침점 F (세계 z 0) — 모델은 (Fx, Fy, 0) 에 놓고 rotation.z = beta.
  * 막대 판(두께 0.04, z 0.71~0.75, 반폭 0.03): 로컬 x −1.03 ~ Lr. 받침점 구멍 0.039, 왼끝 긴 홈(로컬 x −0.995 ~ −0.855, 반폭 0.021).
- * 굴림대(child `roller`, r 0.06, z 0.645~0.695)는 로컬 (Lr, 0) 에서 축 핀(r 0.016)에 돈다 — 모델이 roller.rotation.z 를 준다.
+ * 굴림대(child `roller`, r 0.12, z 0.645~0.695)는 로컬 (Lr, 0) 에서 축 핀(r 0.016)에 돈다 — 모델이 roller.rotation.z 를 준다.
  */
 export function rockRod165(): { group: THREE.Group; roller: THREE.Group } {
   const { Lr, zRod, zRoll, rr } = K165;
@@ -226,7 +238,7 @@ export function rockRod165(): { group: THREE.Group; roller: THREE.Group } {
   const roller = new THREE.Group();
   roller.position.set(Lr, 0, 0);
   roller.add(mesh(tubeZ(0.019, rr, zRoll - 0.025, zRoll + 0.025, 0.006, 40), darkSteel()));
-  roller.add(meshAt(new THREE.BoxGeometry(0.012, 0.03, 0.004), paint(0xf2b619), 0, rr - 0.02, zRoll + 0.027));
+  roller.add(meshAt(new THREE.BoxGeometry(0.012, 0.03, 0.004), paint(0xf2b619), 0, rr - 0.035, zRoll + 0.027));
   roller.name = 'roller';
   setMM(roller, { kind: 'wheel', r: rr, width: 0.05, rim: 'flat', axis: 'z' });
   g.add(roller);

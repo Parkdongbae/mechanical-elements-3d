@@ -120,7 +120,8 @@ export function drum167(): THREE.Group {
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   geo.setIndex(idx);
   geo.computeVertexNormals();
-  const iron = castIron();
+  // 원통은 밝은 강철(검은 주철이면 나선 홈이 안 보여 구분이 안 됨 — 사용자 지적)
+  const iron = steel();
   g.add(mesh(geo, iron));
   // 마구리 원판(위는 +Y, 아래는 −Y 를 본다)
   for (const sy of [-1, 1]) {

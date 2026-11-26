@@ -144,7 +144,9 @@ export function crankDisc166(): THREE.Group {
     g.add(meshAt(extrude(annularSector(rp - 0.006, rp + 0.006, a0, a0 + TAU / 48), 0.002, 0, 4), dash, 0, 0, 0.061));
   }
   g.add(meshAt(cylZ(pinR, 0.055, 0.19, 0.006), steel(), rp, 0, 0));
-  g.add(meshAt(cylZ(0.075, 0.165, 0.19, 0.006), darkSteel(), rp, 0, 0));
+  const pinHead = meshAt(cylZ(0.075, 0.165, 0.19, 0.006), darkSteel(), rp, 0, 0);
+  pinHead.name = 'crankPinHead'; // 이름표 '크랭크 핀' 지시선 대상
+  g.add(pinHead);
   g.add(meshAt(new THREE.BoxGeometry(0.2, 0.035, 0.004), paint(0xf2b619), -0.6, 0, 0.062));
   g.add(pinMark('crankPin', rp, 0, K166.zR));
   setMM(g, { kind: 'wheel', r: R, width: 0.06, rim: 'flat', axis: 'z' });
