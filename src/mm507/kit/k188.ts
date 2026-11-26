@@ -105,13 +105,13 @@ function named(name: string, x: number, y: number, z: number): THREE.Object3D {
   o.position.set(x, y, z);
   return markPin(o);
 }
-/** 점열(스플라인)을 반폭 w 의 띠 윤곽으로 */
-function bandShape(pts: V2[], w: number, n = 40): THREE.Shape {
+/** 점열(스플라인)을 반폭 w 의 띠 윤곽으로(i0~i1 표본 구간만도 가능) */
+function bandShape(pts: V2[], w: number, n = 40, i0 = 0, i1 = n): THREE.Shape {
   const c = new THREE.SplineCurve(pts.map(([x, y]) => new THREE.Vector2(x, y)));
   const P = c.getSpacedPoints(n);
   const L: V2[] = [];
   const R: V2[] = [];
-  for (let i = 0; i <= n; i++) {
+  for (let i = i0; i <= i1; i++) {
     const t = c.getTangentAt(i / n);
     const p = P[i] ?? P[P.length - 1] ?? new THREE.Vector2();
     L.push([p.x - t.y * w, p.y + t.x * w]);
@@ -185,7 +185,11 @@ export function rod188(): THREE.Group {
   g.add(meshAt(cylZ(0.024, -0.03, dz + 0.03), darkSteel(), K[0], K[1], 0));
   g.add(meshAt(cylZ(0.04, dz + 0.03, dz + 0.042), darkSteel(), K[0], K[1], 0));
   // 손잡이 받침대(손잡이 끝이 놓이는 곳)
-  g.add(meshAt(new THREE.BoxGeometry(0.12, 0.04, dz + 0.055), steel(), REST188[0], barHi + 0.018, dz / 2 - 0.0075));
+  // 막대 윗면은 왼쪽으로 갈수록 낮아지므로(barHi → 0.07) 받침대 아랫면을 그 자리 윗면 아래까지 내려 막대에 박는다
+  const topAt = (x: number): number => 0.07 + ((x - x0) / (K[0] - 0.07 - x0)) * (barHi - 0.07);
+  const padTop = barHi + 0.038;
+  const padBot = topAt(REST188[0] - 0.06) - 0.012;
+  g.add(meshAt(new THREE.BoxGeometry(0.12, padTop - padBot, dz + 0.055), steel(), REST188[0], (padTop + padBot) / 2, dz / 2 - 0.0075));
   // 덮개(혹 + 꼬리): 앞 층, 꼬리 아래 받침으로 막대에 붙는다
   const cv = shapeFrom(
     new THREE.SplineCurve(
@@ -199,6 +203,9 @@ export function rod188(): THREE.Group {
   g.add(meshAt(new THREE.BoxGeometry(0.16, 0.06, zCover - zRod - 0.05), steel(), 0.5, 0.0, (zCover - zRod) / 2 + 0.01));
   return g;
 }
+
+/** 고리 뒤 가닥(엇지르는 가닥) 층 뒤로 물림 — 두 가닥 사이 틈 0.002 */
+export const DZB188 = 0.038;
 
 /** 손잡이 끝이 놓이는 받침대 자리(막대 로컬) */
 export const REST188: V2 = [K188.K[0] - 0.85, K188.barHi + 0.035];
@@ -215,15 +222,25 @@ export function handle188(): THREE.Group {
   g.add(mesh(extrude(arm, 0.036, 0.004), steel()));
   // 고리 손잡이: 왼쪽 위로 올라 둥글게 말려 막대 위 받침대로 내려온다
   const end: V2 = [REST188[0] - K188.K[0], REST188[1] - K188.K[1] + 0.005];
-  const loop = bandShape(
-    [[-0.03, 0.04], [-0.31, 0.25], [-0.74, 0.47], [-1.18, 0.62], [-1.4, 0.78], [-1.3, 0.94], [-0.93, 0.99], [-0.5, 0.93], [-0.25, 0.74], [-0.21, 0.5], [-0.37, 0.22], [-0.56, 0.08], [end[0] + 0.06, end[1] + 0.05], end],
-    0.032,
-    60
-  );
-  g.add(mesh(extrude(loop, 0.036, 0.004), steel()));
-  // 노치 a(고리 안쪽의 작은 홈 표시)
-  g.add(meshAt(new THREE.BoxGeometry(0.05, 0.05, 0.04).rotateZ(Math.PI / 4), darkSteel(), -0.25, 0.62, 0));
+  // 내려오는 가닥이 오르는 가닥을 엇지르므로(판화) 한 평면에서 서로 꿰뚫지 않게: 고리 오른쪽 아래(−0.21, 0.5 근처)에서
+  // 둘로 나눠 뒤 가닥(B)은 dzB 만큼 뒤 층으로, 나눈 자리는 두 층을 잇는 굽힘 마디(원기둥)로 붙인다
+  const loopPts: V2[] = [[-0.03, 0.04], [-0.31, 0.25], [-0.74, 0.47], [-1.18, 0.62], [-1.4, 0.78], [-1.3, 0.94], [-0.93, 0.99], [-0.5, 0.93], [-0.25, 0.74], [-0.21, 0.5], [-0.37, 0.22], [-0.56, 0.08], [end[0] + 0.06, end[1] + 0.05], end];
+  const N = 60;
+  const W = 0.032;
+  const samp = new THREE.SplineCurve(loopPts.map(([x, y]) => new THREE.Vector2(x, y))).getSpacedPoints(N);
+  let iS = 0;
+  samp.forEach((p, i) => {
+    const q = samp[iS] ?? p;
+    if (Math.hypot(p.x + 0.21, p.y - 0.5) < Math.hypot(q.x + 0.21, q.y - 0.5)) iS = i;
+  });
+  const pS = samp[iS] ?? new THREE.Vector2(-0.21, 0.5);
+  g.add(mesh(extrude(bandShape(loopPts, W, N, 0, iS), 0.036, 0.004), steel()));
+  g.add(meshAt(extrude(bandShape(loopPts, W, N, iS, N), 0.036, 0.004), steel(), 0, 0, -DZB188));
+  g.add(meshAt(cylZ(W + 0.004, -DZB188 - 0.018, 0.018), steel(), pS.x, pS.y, 0));
+  // 노치 a(고리 안쪽의 작은 이): 띠 안쪽 가장자리에 반쯤 묻혀 붙는다
+  const nA = new THREE.Vector2(-0.25, 0.62);
+  g.add(meshAt(new THREE.BoxGeometry(0.05, 0.05, 0.036).rotateZ(Math.PI / 4), darkSteel(), nA.x, nA.y, 0));
   g.add(named('jawTip', V_TIP[0], V_TIP[1], 0));
-  g.add(named('notchA', -0.25, 0.62, 0));
+  g.add(named('notchA', nA.x, nA.y, 0));
   return g;
 }
