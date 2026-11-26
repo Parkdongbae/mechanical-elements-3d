@@ -2,18 +2,18 @@
 //  → 홈 속 슬라이드(다이) → 흔들 레버 → 밸브 연결봉 → 밸브 막대
 // 운동식 linkMotion185(theta) 는 순수 함수(고정 초기값에서 뉴턴 반복 → 결정적).
 import * as THREE from 'three';
-import { brass, bronze, castIron, darkSteel, paint, steel } from '../../models/materials';
-import { circlePts, extrude, lathe, mesh, pathFrom, rodProfile, roundedRect, shapeFrom } from '../../models/parts/geom';
+import { brass, bronze, castIron, darkSteel, paint, steel, wood } from '../../models/materials';
+import { annularSector, circlePts, extrude, lathe, mesh, pathFrom, rodProfile, roundedRect, shapeFrom } from '../../models/parts/geom';
 import type { V2 } from '../../models/parts/geom';
 import { markPin, setMM } from './mm';
 
 // ───────────── 치수(세계 좌표, 판화 1 px = 0.0044) ─────────────
 export const K185 = {
-  S: [1.58, 1.32] as V2, // 기관 축(편심 둘)
+  S: [1.75, 1.32] as V2, // 기관 축 = 구동 바퀴 축(편심 둘이 이 축에 붙음). 판화보다 0.17 오른쪽(크로스헤드 자리)
   e: 0.08, // 편심 거리
   sheaveR: 0.19,
   strapR: 0.25,
-  delta: 0.0, // 앞섬각
+  delta: 0.0, // 앞섬각(0 — 흔들 레버·링크 기하만으로 앞섬 약 11° 가 생긴다, DRIVE185.lead)
   Rs: 1.5, // 링크 홈 호 반지름(편심 막대 길이와 같게)
   hp: 0.24, // 링크 핀 T·B 의 호 길이 자리(±)
   linkL: 0.31, // 링크 띠 끝(±)
@@ -22,16 +22,16 @@ export const K185 = {
   slotW: 0.03, // 홈 반폭
   dieL: 0.035, // 다이 반길이(홈 방향)
   H: [-0.08, 0] as V2, // 들기 귀 핀(링크 로컬)
-  M0: [0.06, 1.3] as V2, // 링크 가운데 기준 자리
-  R: [0.08, 1.69] as V2, // 흔들 레버 받침
+  M0: [0.23, 1.3] as V2, // 링크 가운데 기준 자리
+  R: [0.25, 1.69] as V2, // 흔들 레버 받침
   ru: 0.36, // 흔들 레버 윗팔
   yV: 2.03, // 밸브 막대 높이
   Lv: 0.42, // 밸브 연결봉
   P: [-0.7, 2.32] as V2, // 역전 레버 받침
-  armQ: 0.58, // 레버 짧은 팔(들기 막대 핀)
+  armQ: 0.75, // 레버 짧은 팔(들기 막대 핀)
   armHandle: 1.28, // 손잡이 끝
   lamMid: -0.1, // 레버 각 가운데(중립)
-  lamAmp: 0.18, // 레버 각 진폭
+  lamAmp: 0.14, // 레버 각 진폭(짧은 팔 0.75 — 다이가 홈 끝을 넘지 않게)
   quadR: 1.06, // 사분원(톱니 호) 반지름
   block: { x0: -1.62, x1: -0.64, y0: 1.1, y1: 2.11, z1: 0.42 },
   // 층(z 가운데)
@@ -99,6 +99,10 @@ export interface State185 {
   valveX: number; // 미끄럼 밸브 가운데 x
   dV: number; // 밸브 변위(밸브 자리 가운데 기준)
   xp: number; // 피스톤 가운데 x
+  psi: number; // 크랭크 각(구동 바퀴) = phi + 크랭크 위상
+  C: V2; // 크랭크 핀
+  xc: number; // 크로스헤드 핀 x(높이 DRIVE185.yc)
+  rodAng: number; // 연결봉 각(크로스헤드 → 크랭크 핀)
 }
 
 const smooth = (x: number): number => {
@@ -235,14 +239,46 @@ export function linkState185(phi: number, g: number): State185 {
   const V: V2 = [U[0] - Math.sqrt(Math.max(0, Lv * Lv - (U[1] - yV) ** 2)), yV];
   const valveX = V[0] + VALVE185.off;
   const dV = valveX - VALVE185.xs;
-  const xp = VALVE185.xs - VALVE185.pA * Math.cos(phi + VALVE185.pBeta);
-  return { phi, g, lam, Q, phiF, phiB, Ef, Eb, link: u, T, B, H, D, sDie, dieAng, rock, U, V, valveX, dV, xp };
+  // 구동: 크랭크 핀(구동 바퀴, 기관 축과 같은 축) → 연결봉 → 크로스헤드 → 피스톤 막대 → 피스톤 (슬라이더-크랭크)
+  const psi = phi + DRIVE185.alpha;
+  const Cp: V2 = [S[0] + DRIVE185.r * Math.cos(psi), S[1] + DRIVE185.r * Math.sin(psi)];
+  const xc = crossX185(psi);
+  const xp = xc - DRIVE185.Lr;
+  const rodAng = Math.atan2(Cp[1] - DRIVE185.yc, Cp[0] - xc);
+  return { phi, g, lam, Q, phiF, phiB, Ef, Eb, link: u, T, B, H, D, sDie, dieAng, rock, U, V, valveX, dV, xp, psi, C: Cp, xc, rodAng };
 }
 
 /** theta(시간 각) → 모든 부품 자세. 축 각 φ = shaftAngle185(theta), 레버 자리 = gear185(theta) */
 export function linkMotion185(theta: number): State185 {
   return linkState185(shaftAngle185(theta), gear185(theta));
 }
+
+// ───────────── 구동 장치: 피스톤 → 크로스헤드(안내봉 사이) → 연결봉(메인 로드) → 구동 바퀴 크랭크 핀 ─────────────
+// 구동 바퀴는 기관 축 S 에 있다(실제 기관차처럼 편심 둘도 이 축에 붙음). 크랭크 위상 alpha·피스톤 막대 길이 Lr 는 아래에서 정한다
+export const DRIVE185 = {
+  r: 0.2, // 크랭크 반지름(피스톤 행정 0.4)
+  L: 2.06, // 연결봉(메인 로드) 핀 사이
+  yc: 1.45, // 크로스헤드·피스톤 막대 높이
+  hw: 0.06, // 크로스헤드 반길이(x)
+  hh: 0.05, // 크로스헤드 반높이(y)
+  zRod: 0.63, // 연결봉 층(맨 앞 — 링크 장치 앞을 지난다)
+  Rw: 0.38, // 구동 바퀴 디딤면 반지름
+  zW0: 0.47, // 바퀴 뒤면(테두리 턱)
+  zW1: 0.55, // 바퀴 앞면
+  gx0: -0.64, // 안내봉 왼끝(증기실 오른쪽 면)
+  gx1: 0.0, // 안내봉 오른끝(멍에 −0.03~0)
+  alpha: 0, // 크랭크 위상(아래에서 정함)
+  lead: 0, // 앞섬(밸브가 피스톤 속도보다 앞선 각, 확인용)
+  Lr: 0.82 // 피스톤 가운데 → 크로스헤드 핀(아래에서 정함)
+};
+/** 크랭크 각 → 크로스헤드 핀 x (크랭크 왼쪽, 높이 yc) */
+export function crossX185(psi: number): number {
+  const { r, L, yc } = DRIVE185;
+  const dy = K185.S[1] + r * Math.sin(psi) - yc;
+  return K185.S[0] + r * Math.cos(psi) - Math.sqrt(L * L - dy * dy);
+}
+/** 레일 높이(윗면) */
+export const RAIL_TOP185 = K185.S[1] - DRIVE185.Rw;
 
 // ───────────── 증기실(밸브 상자) 안: D 형 미끄럼 밸브와 밸브 자리 ─────────────
 // 밸브 자리 가운데 xs, 증기 구멍 둘(가운데에서 ±0.06~0.10), 가운데 배기 구멍(±0.03). 밸브 바깥 끝 ±0.10, 속 빈 곳 ±0.06(겹침 0)
@@ -260,11 +296,9 @@ export const VALVE185 = {
   boreX1: -0.7,
   pR: 0.145, // 피스톤 반지름
   pT: 0.04, // 피스톤 반두께
-  pA: 0.24, // 피스톤 진폭
   rodY: 1.45,
   zc: 0.26, // 앞 층 가운데(z 0.10~0.42)
-  off: 0, // 밸브 가운데 = 밸브 막대 끝 핀 x + off (아래에서 정함)
-  pBeta: 0 // 피스톤 위상(아래에서 정함)
+  off: 0 // 밸브 가운데 = 밸브 막대 끝 핀 x + off (아래에서 정함)
 };
 {
   // 가운데(g = 0)에서 한 바퀴 평균 밸브 막대 자리 → 밸브 가운데가 밸브 자리 가운데에 오게
@@ -272,16 +306,35 @@ export const VALVE185 = {
   const N = 72;
   for (let i = 0; i < N; i++) m += linkState185((i / N) * TAU, 0).V[0];
   VALVE185.off = VALVE185.xs - m / N;
-  // 전진 끝(g = 1)에서 밸브 변위 d ≈ a cos φ + b sin φ = D sin(φ + β) → 피스톤 x = xs − A cos(φ + β): 왼쪽 구멍에 증기가 들 때 피스톤이 오른쪽으로 간다
-  let a = 0;
-  let b = 0;
-  for (let i = 0; i < N; i++) {
-    const p = (i / N) * TAU;
-    const d = linkState185(p, 1).dV;
-    a += (2 / N) * d * Math.cos(p);
-    b += (2 / N) * d * Math.sin(p);
+  // 밸브 변위 기본파 d ≈ D sin(φ + β): 전진 끝(g = +1) β_F, 후진 끝(g = −1) β_R
+  const beta = (gg: number): number => {
+    let a = 0;
+    let b = 0;
+    for (let i = 0; i < N; i++) {
+      const p = (i / N) * TAU;
+      const d = linkState185(p, gg).dV;
+      a += (2 / N) * d * Math.cos(p);
+      b += (2 / N) * d * Math.sin(p);
+    }
+    return Math.atan2(a, b);
+  };
+  const bF = beta(1);
+  const bR = beta(-1);
+  // 크로스헤드 x ≈ r cos ψ → 속도 ∝ −sin ψ · ψ'. 증기는 피스톤이 나아가는 쪽 뒤 방에 든다(왼쪽 방 = d > 0 이면 피스톤이 오른쪽으로):
+  //  전진(φ 증가) d ∝ sin(ψ + π + ε) → β_F = α + π + ε,  후진(φ 감소) d ∝ sin(ψ − ε) → β_R = α − ε  (ε = 앞섬)
+  const wrap = (x: number): number => Math.atan2(Math.sin(x), Math.cos(x));
+  const eps = wrap(bF - bR - Math.PI) / 2;
+  DRIVE185.lead = eps;
+  DRIVE185.alpha = wrap(bR + eps);
+  // 피스톤이 실린더 가운데(xs)를 중심으로 오가게 피스톤 막대 길이를 정한다
+  let lo = Infinity;
+  let hi = -Infinity;
+  for (let i = 0; i < 720; i++) {
+    const x = crossX185((i / 720) * TAU);
+    lo = Math.min(lo, x);
+    hi = Math.max(hi, x);
   }
-  VALVE185.pBeta = Math.atan2(a, b);
+  DRIVE185.Lr = (lo + hi) / 2 - VALVE185.xs;
 }
 /** 밸브 변위 d → 왼쪽·오른쪽 구멍의 상태: +1 = 증기 들어감(열린 폭 비율), −1 = 배기, 0 = 닫힘 */
 export function ports185(d: number): { left: number; right: number } {
@@ -438,7 +491,101 @@ export function frame185(): THREE.Group {
   g.add(meshAt(extrude(rail, 0.05, 0.005), castIron(), 0, 0, K185.zRail));
   g.add(meshAt(cylZ(0.06, K185.zRail - 0.025, K185.zRail + 0.04), castIron(), R[0], R[1], 0));
   g.add(meshAt(cylZ(0.022, K185.zR - 0.03, K185.zRail), darkSteel(), R[0], R[1], 0));
+  // 크로스헤드 안내봉 둘(증기실 오른쪽 면에서 오른쪽으로) + 오른끝 멍에
+  const DR = DRIVE185;
+  const gz0 = VS.zc - 0.07;
+  const gz1 = VS.zc + 0.07;
+  for (const [y0, y1] of [[DR.yc + DR.hh + 0.005, DR.yc + DR.hh + 0.045], [DR.yc - DR.hh - 0.045, DR.yc - DR.hh - 0.005]] as [number, number][]) {
+    g.add(box(b.x1, y0, DR.gx1, y1, gz0, gz1, steel()));
+    // 볼트 머리(앞면)
+    for (const x of [b.x1 + 0.05, DR.gx1 - 0.05]) g.add(meshAt(cylZ(0.012, gz1, gz1 + 0.012, 0.003, 12), darkSteel(), x, (y0 + y1) / 2, 0));
+  }
+  g.add(box(DR.gx1 - 0.03, DR.yc - DR.hh - 0.045, DR.gx1, DR.yc + DR.hh + 0.045, gz0, gz1, steel()));
   return g;
+}
+
+/** 크로스헤드 재질(몸통 쇠, 미끄럼 쇠 청동) */
+const DRIVE_MAT = { body: (): THREE.Material => steel(), shoe: (): THREE.Material => bronze() };
+
+/** 구동 바퀴(기관 축 S 에 박힘): 원점 = 축 중심, 크랭크 핀 = 로컬 +X r. 테두리 턱(뒤), 바큇살 10, 균형추(−X), 크랭크 핀(앞으로 연결봉 층까지) */
+export function driveWheel185(): THREE.Group {
+  const g = new THREE.Group();
+  const { Rw, zW0, zW1, r, zRod } = DRIVE185;
+  const zm = (zW0 + zW1) / 2;
+  const wheelMat = paint(0x2f5d3a, { roughness: 0.5 });
+  // 디딤면 테(앞쪽) + 턱(뒤쪽, 레일 안쪽에 걸림)
+  g.add(mesh(lathe([[Rw - 0.05, zW0 + 0.015], [Rw, zW0 + 0.015], [Rw, zW1 - 0.004], [Rw - 0.004, zW1], [Rw - 0.05, zW1]], 72).rotateX(Math.PI / 2), steel()));
+  g.add(mesh(lathe([[Rw - 0.05, zW0], [Rw + 0.035, zW0], [Rw + 0.035, zW0 + 0.006], [Rw, zW0 + 0.015], [Rw - 0.05, zW0 + 0.015]], 72).rotateX(Math.PI / 2), steel()));
+  // 바큇살
+  const n = 10;
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * TAU + Math.PI / n;
+    const sp = new THREE.BoxGeometry(Rw - 0.05 - 0.08 + 0.02, 0.034, 0.035);
+    sp.translate((Rw - 0.05 + 0.08) / 2, 0, 0);
+    sp.rotateZ(a);
+    g.add(meshAt(sp, wheelMat, 0, 0, zm));
+  }
+  // 바퀴통
+  const hub = new THREE.Shape();
+  hub.absarc(0, 0, 0.1, 0, TAU, false);
+  hub.holes.push(pathFrom(circlePts(0.052, 28)));
+  g.add(meshAt(extrude(hub, zW1 - zW0, 0.006), wheelMat, 0, 0, zm));
+  // 균형추(크랭크 반대편)
+  g.add(meshAt(extrude(annularSector(0.13, Rw - 0.05, Math.PI - 0.62, Math.PI + 0.62), 0.05, 0.006), wheelMat, 0, 0, zm));
+  // 크랭크 보스 + 크랭크 핀(앞으로)
+  const boss = new THREE.Shape();
+  boss.absarc(r, 0, 0.07, 0, TAU, false);
+  g.add(meshAt(extrude(boss, zW1 - zW0 - 0.01, 0.006), wheelMat, 0, 0, zm));
+  g.add(meshAt(cylZ(0.026, zW1 - 0.01, zRod + 0.032), steel(), r, 0, 0));
+  g.add(meshAt(cylZ(0.045, zRod + 0.03, zRod + 0.045, 0.004), darkSteel(), r, 0, 0));
+  // 테두리 노란 표지(도는 것이 잘 보이게)
+  g.add(meshAt(cylZ(0.018, zW1, zW1 + 0.006, 0.002, 12), steel({ color: 0xf2b619 }), 0, Rw - 0.025, 0));
+  g.add(named('pinC', r, 0, zRod));
+  return setMM(g, { kind: 'wheel', r: Rw, width: zW1 - zW0, rim: 'flat', axis: 'z' });
+}
+
+/** 연결봉(메인 로드): 원점 = 작은 끝(크로스헤드 핀), +X 로 L 에 큰 끝(크랭크 핀). z 가운데 0 */
+export function mainRod185(): THREE.Group {
+  const g = new THREE.Group();
+  const { L } = DRIVE185;
+  const bar = new THREE.Shape();
+  bar.moveTo(0.04, -0.026);
+  bar.lineTo(L - 0.06, -0.038);
+  bar.lineTo(L - 0.06, 0.038);
+  bar.lineTo(0.04, 0.026);
+  bar.closePath();
+  g.add(mesh(extrude(bar, 0.04, 0.005), steel()));
+  for (const [x, R0] of [[0, 0.05], [L, 0.07]] as [number, number][]) {
+    const eye = new THREE.Shape();
+    eye.absarc(x, 0, R0, 0, TAU, false);
+    eye.holes.push(pathFrom(circlePts(x === 0 ? 0.024 : 0.028, 24, x, 0)));
+    g.add(mesh(extrude(eye, 0.05, 0.005), steel()));
+  }
+  g.add(named('rodSmall', 0, 0, 0), named('rodBig', L, 0, 0));
+  return g;
+}
+
+/** 짧은 선로: 고정 자갈 둑 + 레일(name 'track'), 움직이는 침목(name 'sleeper', 셋에 하나 노랑) — 침목 x 는 모델이 흘린다 */
+export const SLEEPER185 = { x0: 1.24, x1: 2.14, pitch: 0.15, n: 6, w: 0.07 } as const;
+export function track185(): { fixed: THREE.Group; sleepers: THREE.Object3D[] } {
+  const fixed = new THREE.Group();
+  const top = RAIL_TOP185 - 0.001;
+  const zr = (DRIVE185.zW0 + 0.015 + DRIVE185.zW1) / 2; // 레일 머리 가운데 = 디딤면 가운데
+  // 자갈 둑(전시대 위)
+  fixed.add(meshAt(extrude(shapeFrom([[1.12, 0.18], [2.2, 0.18], [2.17, 0.76], [1.17, 0.76]]), 0.36, 0.01), paint(0x8a8a84, { roughness: 0.95 }), 0, 0, zr));
+  // 레일: 바닥·몸통·머리
+  const rx0 = 1.2;
+  const rx1 = 2.17;
+  const bx = (y0: number, y1: number, hz: number): THREE.Mesh => meshAt(new THREE.BoxGeometry(rx1 - rx0, y1 - y0, 2 * hz), steel(), (rx0 + rx1) / 2, (y0 + y1) / 2, zr);
+  fixed.add(bx(0.8, 0.814, 0.05), bx(0.812, top - 0.033, 0.009), bx(top - 0.035, top, 0.024));
+  fixed.name = 'track';
+  const sleepers: THREE.Object3D[] = [];
+  for (let i = 0; i < SLEEPER185.n; i++) {
+    const m = meshAt(new THREE.BoxGeometry(SLEEPER185.w, 0.04, 0.3), i % 3 === 0 ? paint(0xf2b619, { roughness: 0.6 }) : wood(0x5a3a22), 0, 0.78, zr);
+    m.name = 'sleeper';
+    sleepers.push(m);
+  }
+  return { fixed, sleepers };
 }
 
 /** 편심 바퀴(축에 박힘). 원점 = 축 중심, 편심 중심 = 로컬 +X e. z 가운데 0, 두께 0.06 */
@@ -604,14 +751,26 @@ export function valveStem185(): THREE.Group {
   return g;
 }
 
-/** 피스톤 + 피스톤 막대(오른쪽으로, 패킹을 지나 나옴): 원점 = 피스톤 가운데 */
+/** 피스톤 + 피스톤 막대(오른쪽 패킹을 지나) + 크로스헤드 + 크로스헤드 핀 'pinX': 원점 = 피스톤 가운데(한 덩어리로 움직인다) */
 export function piston185(): THREE.Group {
   const g = new THREE.Group();
   const { pR, pT } = VALVE185;
   g.add(mesh(cylX(pR, -pT, pT, 0.006, 40), steel()));
   // 피스톤 링 홈 표시 둘
   for (const x of [-0.018, 0.018]) g.add(mesh(cylX(pR + 0.001, x - 0.004, x + 0.004, 0.001, 40), darkSteel()));
-  g.add(mesh(cylX(0.018, pT - 0.005, 0.8, 0.004), steel()));
+  // 피스톤 막대 → 크로스헤드(안내봉 사이를 미끄러짐) → 앞으로 나온 받침 → 크로스헤드 핀(연결봉 층)
+  const { Lr, hw, hh, zRod } = DRIVE185;
+  const dz = zRod - VALVE185.zc;
+  g.add(mesh(cylX(0.018, pT - 0.005, Lr - hw + 0.004, 0.004), steel()));
+  const ch = new THREE.Group();
+  ch.name = 'crosshead';
+  ch.add(meshAt(new THREE.BoxGeometry(2 * hw, 2 * hh - 0.02, 0.12), DRIVE_MAT.body(), Lr, 0, 0));
+  for (const y of [hh - 0.006, -(hh - 0.006)]) ch.add(meshAt(new THREE.BoxGeometry(2 * hw, 0.012, 0.12), DRIVE_MAT.shoe(), Lr, y, 0)); // 미끄럼 쇠(청동)
+  ch.add(meshAt(new THREE.BoxGeometry(0.07, 0.08, dz - 0.025 - 0.06), DRIVE_MAT.body(), Lr, 0, (0.06 + dz - 0.025) / 2));
+  ch.add(meshAt(cylZ(0.022, dz - 0.03, dz + 0.035), darkSteel(), Lr, 0, 0));
+  ch.add(meshAt(cylZ(0.036, dz + 0.033, dz + 0.046, 0.004), darkSteel(), Lr, 0, 0));
+  g.add(ch);
+  g.add(named('pinX', Lr, 0, dz));
   return g;
 }
 
