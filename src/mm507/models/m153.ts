@@ -1,5 +1,5 @@
 // 153 스터드로 미는 왕복 장치 — 도는 원판의 스터드가 막대 아래 돌출부를 밀어 한쪽으로 보내고,
-//  반대쪽 스터드가 벨 크랭크의 아래팔을 밀면 윗팔이 막대 앞 스터드를 쳐 되보낸다(원판 한 바퀴에 막대 두 왕복)
+//  반대쪽 스터드가 벨 크랭크의 아래팔 끝을 아래에서 받쳐 들어 올리면 윗팔이 막대 앞 스터드를 쳐 되보낸다(원판 한 바퀴에 막대 두 왕복)
 //  설계표 docs/mm507-sheets/153.md · 부품은 전부 kit/k153(배치 + bell153(theta) 결과 대입만 한다)
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
@@ -59,7 +59,7 @@ export default function buildM153(): MovementModel {
   // 이름표 5개 — 막대·막대 스터드·아래팔 끝은 각 부품을 따라간다. 막대 둘은 상자 위(y 3.08)로 가림을 피한다
   const tagBar = tag('가로 막대', v(0, 3.08, 0.3));
   const tagStud = tag('막대 스터드', v(0, 3.08, 0.3));
-  const tagLo = tag('레버 아래팔', v(0, 1.35, 0.3));
+  const tagLo = tag('레버 아래팔', v(-1.3, 1.0, 0.3));
   g.add(
     tag('스터드 원판(구동)', v(1.15, 1.9, 0.3)),
     tag('벨 크랭크', v(-2.0, 1.35, 0.3)),
@@ -76,7 +76,7 @@ export default function buildM153(): MovementModel {
     lever.rotation.z = A.gamma;
     tagBar.position.set(A.bar + 1.28, 3.08, 0.3);
     tagStud.position.set(A.bar - 0.85, 3.08, 0.3);
-    tagLo.position.set(A.tipLo[0] - 0.05, A.tipLo[1] - 0.32, 0.3);
+    tagLo.position.set(A.tipLo[0] - 0.62, A.tipLo[1] - 0.6, 0.3); // 원판 상자 밖(왼쪽 아래)으로 — 패드가 원판 안쪽에 앉으므로
   };
   pose(theta);
 
@@ -89,7 +89,7 @@ export default function buildM153(): MovementModel {
         { label: '막대 위치', value: `${A.bar >= 0 ? '+' : ''}${A.bar.toFixed(2)} (행정 ${K153V.stroke.toFixed(2)})` },
         { label: '지금 구간', value: MODE_KR[A.mode] },
         { label: '원판', value: `${(theta / (2 * Math.PI)).toFixed(1)} 바퀴` },
-        { label: '레버 각', value: `${(A.gamma * DEG).toFixed(1)}° (−9°~+26°)` }
+        { label: '레버 각', value: `${(A.gamma * DEG).toFixed(1)}° (${(K153.gRest * DEG).toFixed(0)}°~+${(K153V.gStay * DEG).toFixed(0)}°)` }
       ];
     },
     update(dt: number, speed: number): void {
