@@ -113,6 +113,8 @@ export interface UiText {
   unfold: string;
   /** 폰에서 접힌 조작 막대를 펼치는 버튼 */
   ctlMore: string;
+  /** 그래픽 품질 고르기: [제목, 자동, 높음, 낮음] */
+  quality: [string, string, string, string];
   toList: string;
   toListAria: string;
   toListTitle: string;
@@ -166,6 +168,7 @@ const KO: UiText = {
   fold: '접기',
   unfold: '펼치기',
   ctlMore: '조작 ▾',
+  quality: ['그래픽 품질', '품질: 자동', '품질: 높음', '품질: 낮음'],
   toList: ' 목록',
   toListAria: '507 기계 운동 목록으로',
   toListTitle: '507 기계 운동 첫 화면(목록)으로',
@@ -230,6 +233,7 @@ const EN: UiText = {
   fold: 'Collapse',
   unfold: 'Expand',
   ctlMore: 'Controls ▾',
+  quality: ['Graphics quality', 'Quality: Auto', 'Quality: High', 'Quality: Low'],
   toList: ' List',
   toListAria: 'Back to the 507 movements list',
   toListTitle: 'Back to the 507 movements list',
@@ -294,6 +298,7 @@ const JA: UiText = {
   fold: 'たたむ',
   unfold: 'ひらく',
   ctlMore: '操作 ▾',
+  quality: ['グラフィック品質', '画質: 自動', '画質: 高', '画質: 低'],
   toList: ' 一覧',
   toListAria: '507の機械運動の一覧へ',
   toListTitle: '507の機械運動の最初の画面（一覧）へ',
@@ -358,6 +363,7 @@ const ZH: UiText = {
   fold: '收起',
   unfold: '展开',
   ctlMore: '控制 ▾',
+  quality: ['图形质量', '画质：自动', '画质：高', '画质：低'],
   toList: ' 列表',
   toListAria: '返回507种机械运动列表',
   toListTitle: '返回507种机械运动首页（列表）',
@@ -422,6 +428,7 @@ const HI: UiText = {
   fold: 'छिपाएँ',
   unfold: 'खोलें',
   ctlMore: 'नियंत्रण ▾',
+  quality: ['ग्राफ़िक्स गुणवत्ता', 'गुणवत्ता: स्वतः', 'गुणवत्ता: उच्च', 'गुणवत्ता: निम्न'],
   toList: ' सूची',
   toListAria: '507 गतियों की सूची पर वापस',
   toListTitle: '507 गतियों की सूची पर वापस',
@@ -486,6 +493,7 @@ const AR: UiText = {
   fold: 'طيّ',
   unfold: 'فتح',
   ctlMore: 'التحكم ▾',
+  quality: ['جودة الرسومات', 'الجودة: تلقائي', 'الجودة: عالية', 'الجودة: منخفضة'],
   toList: ' القائمة',
   toListAria: 'العودة إلى قائمة الحركات الـ507',
   toListTitle: 'العودة إلى قائمة الحركات الـ507',

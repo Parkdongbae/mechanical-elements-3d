@@ -11,7 +11,8 @@ import { createLabelsToggle } from '../labs/common/labels';
 import { retextTags, setArrowsVisible, setTagsVisible } from './kit/misc';
 import { TagLeaders } from './leaders';
 import { MM_LANGS, isMmLang, loadDict, translateNote, uiText, type MmLang, type ModelDict, type UiText } from './lang';
-import { saveSettings } from '../state/settings';
+import { guessQuality, saveSettings } from '../state/settings';
+import { catTip } from './catTips';
 import { ICON } from '../ui/icons';
 
 const TOTAL = 507;
@@ -287,6 +288,31 @@ export class Gallery implements AppMode {
     return b;
   }
 
+  /** 그래픽 품질 고르기(자동·높음·낮음) — 앱 설정과 같은 값(settings.quality)을 쓴다. 507 만 보는 사용자용 */
+  private qualityButton(): HTMLSelectElement {
+    const ctx = this.ctx;
+    const [title, auto, high, low] = this.t.quality;
+    const b = el('select', 'mm-btn mm-lang mm-quality');
+    for (const [id, label] of [['auto', auto], ['high', high], ['low', low]] as const) {
+      const o = el('option', '', label);
+      o.value = id;
+      if (id === (ctx?.settings.quality ?? 'auto')) o.selected = true;
+      b.append(o);
+    }
+    b.title = title;
+    b.setAttribute('aria-label', title);
+    b.addEventListener('change', () => {
+      if (!ctx) return;
+      const v = b.value === 'high' || b.value === 'low' ? b.value : 'auto';
+      ctx.settings.quality = v;
+      saveSettings(ctx.settings);
+      const wanted = v === 'auto' ? guessQuality() : v;
+      ctx.sceneMgr.adaptive = v === 'auto';
+      if (ctx.sceneMgr.getQuality() !== wanted) ctx.sceneMgr.setQuality(wanted);
+    });
+    return b;
+  }
+
   private titleOf(entry: CatalogEntry | null, n: number): string {
     const lang = this.lang;
     if (lang === 'ko') return entry?.title ?? this.t.untitled(n);
@@ -423,7 +449,7 @@ export class Gallery implements AppMode {
     const ht = el('div', 'mm-top-t');
     ht.append(el('h2', 'mm-title', t.appTitle), el('p', 'mm-sub', t.sub(TOTAL, this.seen.size)));
     const headBtns = el('div', 'mm-top-btns');
-    headBtns.append(this.langButton(), button('mm-btn', t.about, () => ctx.navigate?.('mm/about')));
+    headBtns.append(this.langButton(), this.qualityButton(), button('mm-btn', t.about, () => ctx.navigate?.('mm/about')));
     head.append(ht, headBtns);
     top.append(head);
 
@@ -434,6 +460,7 @@ export class Gallery implements AppMode {
         filters.querySelectorAll('.mm-chip').forEach((x) => x.classList.toggle('is-on', x === b));
         this.renderTiles();
       });
+      b.title = catTip(this.lang, c.id);
       filters.append(b);
     }
     const only = button(`mm-chip mm-only3d${this.only3d ? ' is-on' : ''}`, t.only3d, () => {
@@ -443,6 +470,7 @@ export class Gallery implements AppMode {
       this.renderTiles();
     });
     only.setAttribute('aria-pressed', String(this.only3d));
+    only.title = catTip(this.lang, 'only3d');
     filters.append(only);
 
     const jump = el('label', 'mm-jump');

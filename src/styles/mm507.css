@@ -903,9 +903,11 @@
 /* 한/영 전환 버튼 — 지금 언어 쪽 글자를 강조 */
 .mm-top-btns {
   display: flex;
+  flex-wrap: wrap; /* 언어·품질·책 소개가 좁은 화면에서 다음 줄로 */
   align-items: center;
   gap: 8px;
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .mm-lang {
