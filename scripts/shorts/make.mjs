@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { ROOT, pad3 } from './lib.mjs';
+import { ROOT, pad3, timeline } from './lib.mjs';
 import { launch, record } from './record.mjs';
 import { tts } from './tts.mjs';
 import { buildBase, buildCards } from './cards.mjs';
@@ -47,11 +47,17 @@ for (const n of nums) {
     await cardBrowser.close();
   }
   for (const lang of LANGS) compose(n, lang);
-  for (const lang of LANGS)
-    for (const [suf, want] of [['', { w: 1080, h: 1920, maxDur: 14.5 }], ['-wide', { w: 1920, h: 1080, maxDur: 14.6 }]]) {
+  const end = timeline(n).end;
+  for (const lang of LANGS) {
+    let ok = true;
+    for (const [suf, want] of [['', { w: 1080, h: 1920, maxDur: end + 0.1 }], ['-wide', { w: 1920, h: 1080, maxDur: end + 0.2 }]]) {
       const r = checkFile(path.join(ROOT, 'shorts', lang, `${pad3(n)}${suf}.mp4`), want);
+      ok &&= r.ok;
       console.log(`${r.ok ? 'OK ' : 'ERR'} ${r.file} ${r.dur}초 ${r.issues.join(' / ')}`);
     }
+    // 두 판이 다 통과하면 녹화 프레임(편당 약 70MB)을 지운다 — 디스크가 가득 차 제작이 멈춘 적이 있다(2026-11-27)
+    if (ok) fs.rmSync(path.join(ROOT, 'shorts', '_work', lang, pad3(n), 'frames'), { recursive: true, force: true });
+  }
   console.log(`[make] ${pad3(n)} ${((Date.now() - t0) / 1000).toFixed(0)}초`);
 }
 if (browser.isConnected()) await browser.close();

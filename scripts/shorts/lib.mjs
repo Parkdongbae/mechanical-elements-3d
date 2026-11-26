@@ -33,7 +33,46 @@ export const T = {
   pullEnd: 11.5, // 10.5~11.5 전체로 물러남
   end: 14.4 // 11.5~14.4 아웃트로(≤14.5초)
 };
-export const REC_FRAMES = Math.round((T.end - T.rec0) * FPS);
+export const REC_FRAMES = Math.round((T.end - T.rec0) * FPS); // 15초 값(호환용) — 번호별은 recFrames(n)
+
+/** 번호별 영상 길이 등급(초) — shorts/scripts/len.json {"34": 20, ...}, 없는 번호는 15 */
+export function lenOf(n) {
+  let m = {};
+  try {
+    m = JSON.parse(fs.readFileSync(path.join(ROOT, 'shorts', 'scripts', 'len.json'), 'utf8'));
+  } catch {}
+  const v = Number(m[String(n)]);
+  return v === 20 || v === 25 ? v : 15;
+}
+
+/**
+ * 번호별 시간표. 15초 = T 그대로. 20·25초는 늘어난 시간(len - 14.5)을
+ * 궤도 구간(ghostEnd~orbitEnd)에 40%, 클로즈업 구간(closeIn~closeEnd)에 60% 나누고 나머지 구간 길이는 그대로(end = len - 0.1).
+ */
+export function timeline(n) {
+  const len = lenOf(n);
+  if (len === 15) return T;
+  const extra = len - 14.5;
+  const r2 = (v) => Math.round(v * 100) / 100;
+  const dO = extra * 0.4;
+  const dC = extra - dO;
+  return {
+    introEnd: T.introEnd,
+    rec0: T.rec0,
+    splitEnd: T.splitEnd,
+    mergeEnd: T.mergeEnd,
+    ghostEnd: T.ghostEnd,
+    orbitEnd: r2(T.orbitEnd + dO),
+    closeIn: r2(T.closeIn + dO),
+    closeEnd: r2(T.closeEnd + dO + dC),
+    pullEnd: r2(T.pullEnd + extra),
+    end: r2(T.end + extra)
+  };
+}
+export function recFrames(n) {
+  const t = timeline(n);
+  return Math.round((t.end - t.rec0) * FPS);
+}
 
 export const pad3 = (n) => String(n).padStart(3, '0');
 export const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');

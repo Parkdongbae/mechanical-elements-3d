@@ -7,7 +7,7 @@
 //   compose.mjs 가 더빙·효과음만 뺀 줄기 파일을 따로 남기게 하면 바꿀 수 있다), 챕터 표시(설명란 타임스탬프) 만들기.
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, T, ensureDir, ffmpeg, pad3, rel } from './lib.mjs';
+import { ROOT, ensureDir, ffmpeg, pad3, rel, timeline } from './lib.mjs';
 
 function parseNums(s) {
   const out = [];
@@ -27,6 +27,7 @@ export function longform(lang, nums, outFile) {
   const chapters = [];
   let at = 0;
   clips.forEach((c, i) => {
+    const T = timeline(c.n); // 번호별 길이(15·20·25초)
     const s = i === 0 ? 0 : T.introEnd;
     const e = i === clips.length - 1 ? T.end : T.pullEnd;
     const d = e - s;

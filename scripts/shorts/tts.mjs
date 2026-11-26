@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { H, ROOT, T, W, WH, WW, ensureDir, pad3, probe, workDir } from './lib.mjs';
+import { H, ROOT, T, W, WH, WW, ensureDir, pad3, probe, timeline, workDir } from './lib.mjs';
 import { CFG, parseLangs } from './langs.mjs';
 
 export const VOICES = Object.fromEntries(Object.entries(CFG).map(([k, v]) => [k, v.voice]));
@@ -13,6 +13,11 @@ export const A_START = T.rec0 + 0.1; // 1.6초
 export const A_END = T.pullEnd - 0.2; // 11.3초
 export const B_START = T.pullEnd + 0.2; // 11.7초
 export const B_END = T.end - 0.1;
+/** 번호별 더빙 구간(영상 시각) — 위 상수는 15초 값 */
+export function dubWindow(n) {
+  const t = timeline(n);
+  return { A_START: t.rec0 + 0.1, A_END: t.pullEnd - 0.2, B_START: t.pullEnd + 0.2, B_END: t.end - 0.1 };
+}
 
 export function loadScript(n, lang) {
   const f = path.join(ROOT, 'shorts', 'scripts', `${lang}.json`);
@@ -122,6 +127,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 }
 
 export function tts(n, lang, { voice } = {}) {
+  const { A_START, A_END, B_START, B_END } = dubWindow(n);
   const sc = loadScript(n, lang);
   const dir = ensureDir(path.join(workDir(n, lang), 'dub'));
   voice ??= VOICES[lang];

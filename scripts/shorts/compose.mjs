@@ -6,7 +6,10 @@
 // 결과: shorts/<lang>/NNN.mp4, NNN-wide.mp4, NNN.json
 import fs from 'node:fs';
 import path from 'node:path';
-import { FPS, H, ROOT, T, W, WH, WW, ensureDir, ffmpeg, pad3, probe, rel, workDir } from './lib.mjs';
+import { FPS, H, ROOT, W, WH, WW, ensureDir, ffmpeg, pad3, probe, rel, timeline, workDir } from './lib.mjs';
+
+// 지금 합성 중인 번호의 시간표(compose 가 정한다 — 15·20·25초)
+let T = timeline(0);
 import { buildTrack } from './sfx.mjs';
 import { fontsDir, metaText, parseLangs } from './langs.mjs';
 
@@ -26,11 +29,12 @@ export function pickMusic(n) {
 
 /** 곡이 없을 때: 저음 패드(가온 화음 느린 숨) + 가벼운 리듬(부드러운 킥·셰이커) — 직접 합성, 저작권 문제 없음 */
 function tempMusic() {
-  const out = path.join(ensureDir(path.join(ROOT, 'shorts', '_work')), 'music-temp.wav');
+  const dur = Math.ceil(T.end) + 1; // 15초 → 16, 20초 → 21, 25초 → 26
+  const out = path.join(ensureDir(path.join(ROOT, 'shorts', '_work')), dur === 16 ? 'music-temp.wav' : `music-temp-${dur}.wav`);
   if (fs.existsSync(out)) return out;
   const pad = `0.10*sin(2*PI*110*t)*(0.6+0.4*sin(2*PI*0.25*t))+0.07*sin(2*PI*164.81*t)*(0.6+0.4*sin(2*PI*0.21*t+1))+0.06*sin(2*PI*220*t)+0.05*sin(2*PI*277.18*t)*(0.5+0.5*sin(2*PI*0.17*t))`;
   const kick = `0.35*sin(2*PI*(70-40*mod(t,0.5))*mod(t,0.5))*exp(-12*mod(t,0.5))`;
-  ffmpeg(['-f', 'lavfi', '-i', `aevalsrc='${pad}+${kick}':s=48000:d=16`, '-f', 'lavfi', '-i', 'anoisesrc=d=16:c=pink:r=48000:a=0.02', '-filter_complex', `[1]highpass=f=5000,volume='0.6+0.4*sin(2*PI*4*t)':eval=frame[sh];[0][sh]amix=inputs=2:normalize=0,lowpass=f=6000[a]`, '-map', '[a]', '-ac', '2', out]);
+  ffmpeg(['-f', 'lavfi', '-i', `aevalsrc='${pad}+${kick}':s=48000:d=${dur}`, '-f', 'lavfi', '-i', `anoisesrc=d=${dur}:c=pink:r=48000:a=0.02`, '-filter_complex', `[1]highpass=f=5000,volume='0.6+0.4*sin(2*PI*4*t)':eval=frame[sh];[0][sh]amix=inputs=2:normalize=0,lowpass=f=6000[a]`, '-map', '[a]', '-ac', '2', out]);
   return out;
 }
 
@@ -93,7 +97,7 @@ function outroButtons(cards, cx, y0, inputs, last) {
   ];
 }
 
-const ENC = ['-threads', '4', '-c:v', 'libx264', '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '19', '-r', String(FPS), '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-t', String(T.end)];
+const encArgs = () => ['-threads', '4', '-c:v', 'libx264', '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '19', '-r', String(FPS), '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-t', String(T.end)];
 
 /** 정지 그림 입력 — 필요한 시간만큼만(메모리: 1080×1920 RGBA 프레임이 쌓이지 않게) */
 function loopImg(f, dur = T.end) {
@@ -140,7 +144,7 @@ function composeVertical(n, lang, mix, outFile) {
     `[0]scale=${W * 2}:${H * 2},zoompan=z='1+0.06*on/${zoomFrames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${zoomFrames}:s=${W}x${H}:fps=${FPS},format=rgba,fade=t=out:st=${T.introEnd - 0.2}:d=0.25:alpha=1[intro]`,
     `[obend][intro]overlay=0:0:enable='lt(t,${T.introEnd + 0.1})',format=yuv420p[vout]`
   ].join(';');
-  ffmpeg([...inputs, '-filter_complex', fc, '-map', '[vout]', '-map', '12:a', ...ENC, rel(outFile)]);
+  ffmpeg([...inputs, '-filter_complex', fc, '-map', '[vout]', '-map', '12:a', ...encArgs(), rel(outFile)]);
 }
 
 /** 가로 1920×1080 — 왼쪽 판화, 가운데 3D(세로 녹화의 가운데 1080×1080), 오른쪽 제목·쉬운 풀이 */
@@ -175,7 +179,7 @@ function composeWide(n, lang, mix, outFile) {
     `[0]scale=${WW * 2}:${WH * 2},zoompan=z='1+0.05*on/${zoomFrames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${zoomFrames}:s=${WW}x${WH}:fps=${FPS},format=rgba,fade=t=out:st=${T.introEnd - 0.2}:d=0.25:alpha=1[intro]`,
     `[obend][intro]overlay=0:0:enable='lt(t,${T.introEnd + 0.1})',format=yuv420p[vout]`
   ].join(';');
-  ffmpeg([...inputs, '-filter_complex', fc, '-map', '[vout]', '-map', '11:a', ...ENC, rel(outFile)]);
+  ffmpeg([...inputs, '-filter_complex', fc, '-map', '[vout]', '-map', '11:a', ...encArgs(), rel(outFile)]);
 }
 
 /** 업로드 메타데이터(PRD §9) — 언어별 문구는 langs.mjs 의 metaText */
@@ -201,6 +205,7 @@ export function metadata(n, lang, music, extra = {}) {
 }
 
 export function compose(n, lang, { vertical = true, wide = true } = {}) {
+  T = timeline(n);
   const music = pickMusic(n);
   const sfxFile = path.join(workDir(n), 'sfx.wav');
   if (!fs.existsSync(sfxFile)) {
