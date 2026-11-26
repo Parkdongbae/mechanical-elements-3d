@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # 쇼츠 6개 언어를 GLM(glm-5.3-flash)이 주 작업자로 만드는 순서(지휘: Opus 가 세운 계획, 2026-11-25).
-# 사용: ALT=<alt.sh 경로> bash scripts/shorts/glm_shorts.sh <번호>   (번호 하나씩 — GLM 은 한 번에 1건)
+# 사용: ALT=/e/glm-keys/alt2.sh bash scripts/shorts/glm_shorts.sh <번호>   (번호 하나씩 — GLM 은 한 번에 1건)
 #  1) [GLM sh]    6개 언어 대본 쓰기 → scriptlint 통과할 때까지(최대 2번)
 #  2) [스크립트]  더빙 시험(tts all) — 시간 넘는 언어가 있으면
 #  3) [GLM shfix] 그 언어 대본 줄이기(더빙 다시 돌려 확인) → 다시 검사(최대 2번)
 #  4) [스크립트]  녹화·카드·효과음·합성·검사(make --langs=all, 40분 안팎 — GLM 대화 안에서 돌리지 않는다: 45분 제한·감시에 걸림)
-#  5) [GLM shrev] 6개 언어 제목·설명·대본 검수 보고 shorts/_work/review-NNN.md
+#  5) 검수는 GLM 이 하지 않는다(사용자 지시 2026-11-26) — 끝난 번호는 Claude(Sonnet/Opus)가 따로 검증한다
 #  그림(대조·미리보기) 확인은 Opus 가 한다(GLM flash 는 그림을 못 본다).
 #  기록: shorts/_work/glm-NNN.txt . GLM 감시(scripts/mm507/glm_watch.sh)를 함께 띄운다.
 set -u
@@ -51,7 +51,5 @@ grep -aE "^(OK|ERR)" "shorts/_work/make-$ID.log" >> "$OUT"
 node scripts/shorts/check.mjs "$N" --sheet >> "$OUT" 2>&1 || { say "검사 실패 — 멈춤(make-$ID.log 확인)"; exit 1; }
 say "4) 12편 검사 통과"
 
-# 5) 검수
-say "5) GLM 검수(shrev$N)"; glm "shrev$N"
-[ -f "shorts/_work/review-$ID.md" ] && cat "shorts/_work/review-$ID.md" >> "$OUT"
+# 5) 검수는 Claude 가 따로(이 실행기는 제작까지만)
 say "== $ID 끝"

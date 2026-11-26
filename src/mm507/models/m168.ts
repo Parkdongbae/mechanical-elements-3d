@@ -3,7 +3,7 @@
 //  설계표 docs/mm507-sheets/168.md · 부품·식은 전부 kit/k168 — 이 파일은 배치·자세 대입만 한다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, leaderTo, rotArrow, tag } from '../kit';
 import {
   K168, ZL, crank2, fixedPin, ghostPaths, pitman168, pose168, rocker168, slottedCrank168, topPin,
 } from '../kit/k168';
@@ -58,6 +58,8 @@ export default function buildM168(): MovementModel {
   const tagPitman = tag('피트먼', v(1.3, 1.1, 0.3));
   const tagRocker = tag('흔들이 막대', v(0.35, 2.5, 0.3));
   const tagEllipse = tag('타원 궤도', v(O[0], 2.7, 0.3));
+  // 타원 궤도 = 홈 크랭크와 피트먼이 만나는 P1 핀이 그리는 길 → 그 핀을 가리킨다(사용자 지적)
+  leaderTo(tagEllipse, 'slotPin');
   g.add(tagCrank, tagCrank2, tagPitman, tagRocker, tagEllipse);
 
   const pose = (th: number): void => {
