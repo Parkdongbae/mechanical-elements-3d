@@ -4,7 +4,6 @@
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { displayStand, leaderTo, rotArrow, tag } from '../kit';
-import { coneBevelGear } from '../kit/gear5';
 import { wallBearing } from '../kit/gear6';
 import {
   A200,
@@ -16,6 +15,7 @@ import {
   GU200,
   K200,
   PERIOD200,
+  bevel200,
   clutch200,
   fork200,
   forkGuide200,
@@ -46,20 +46,23 @@ export default function buildM200(): MovementModel {
   axis.name = 'axisY';
   axis.position.set(K.XC, 0, K.ZC);
   g.add(axis);
-  const shaft = mesh(lathe(rodProfile(K.shaftR, 0.85, 2.72, 0.006, 0.006), 28), steel());
+  const shaft = mesh(lathe(rodProfile(K.shaftR, 0.8, 2.72, 0.006, 0.006), 28), steel());
   axis.add(shaft);
-  const flag = mesh(new THREE.BoxGeometry(0.12, 0.02, 0.02), paint(0xf2b619));
-  flag.position.set(0.08, 2.62, 0);
-  axis.add(flag);
+  // 노란 표지 막대: 위 끝 · 아래 끝(같은 쪽을 가리킨다) — 세로축이 어느 속도로 도는지 위아래에서 다 보인다
+  for (const fy of [2.62, 0.86]) {
+    const flag = mesh(new THREE.BoxGeometry(0.14, 0.024, 0.024), paint(0xf2b619));
+    flag.position.set(0.09, fy, 0);
+    axis.add(flag);
+  }
   g.add(wallBearing(K.XC, 2.4, K.ZC, 'y', 0.046), wallBearing(K.XC, 1.05, K.ZC, 'y', 0.046));
 
   // 위 큰 베벨(이가 아래로, 꼭짓점 P 를 본다) · 아래 작은 베벨(이가 위로) — 헐거움
   const wU = wrapAt(FR_U);
-  const bevU = coneBevelGear(K.Nu, K.m, GU200, { face: K.face, bore: 0.05 });
+  const bevU = bevel200(K.Nu, K.m, GU200, { face: K.face, bore: 0.05, marker: 'web' });
   bevU.name = 'bevelU';
   wU.add(bevU);
   const wL = wrapAt(FR_L);
-  const bevL = coneBevelGear(K.Nl, K.m, GL200, { face: K.face, bore: 0.05 });
+  const bevL = bevel200(K.Nl, K.m, GL200, { face: K.face, bore: 0.05, marker: 'rim' });
   bevL.name = 'bevelL';
   wL.add(bevL);
   g.add(wU, wL);
@@ -78,7 +81,7 @@ export default function buildM200(): MovementModel {
   const pin = new THREE.Group();
   pin.name = 'pinion';
   wP.add(pin);
-  pin.add(coneBevelGear(K.Np, K.m, B200, { face: K.face, bore: 0.03, driver: true }));
+  pin.add(bevel200(K.Np, K.m, B200, { face: K.face, bore: 0.03, hubR: 0.055, driver: true }));
   const pShaft = mesh(lathe(rodProfile(0.026, -0.05, 1.19, 0.004, 0.004), 20), steel());
   pShaft.rotation.x = -PI / 2; // 로컬 +Y → −Z(피니언 뒤쪽, 오른쪽 아래)
   pin.add(pShaft);

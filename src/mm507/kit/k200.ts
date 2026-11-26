@@ -3,9 +3,10 @@
 // 기하: 세 원뿔(위 베벨 γU · 아래 베벨 γL · 피니언 β)이 세로축 위 한 점 P 를 꼭짓점으로 공유하고, 피니언 피치 원뿔의
 // 위 모선이 위 베벨에, 아래 모선이 아래 베벨에 동시에 닿는다(판화 그대로) — γU + γL + 2β = π, 피니언 축 기울기 δ = (γU − γL)/2.
 import * as THREE from 'three';
-import { castIron, darkSteel, paint } from '../../models/materials';
+import { brass, bronze, castIron, darkSteel, paint } from '../../models/materials';
 import { lathe, mesh, tubeProfile } from '../../models/parts/geom';
 import { STAGE } from './stand';
+import { setMM } from './mm';
 
 export const K200 = {
   m: 0.032,
@@ -184,5 +185,165 @@ export function forkGuide200(): THREE.Group {
     r.position.set(K.XC + sx * 0.071, yc, STAGE.backZ + 0.025);
     g.add(r);
   }
+  return g;
+}
+
+// ── 200번 전용 곧은 베벨 기어(사용자 지적: 칼날 같던 이 → 튼튼한 원뿔대 몸통 + 짧고 굵은 이) ──
+// coneBevelGear 와 같은 틀(로컬 원점 = 큰 쪽 피치원 중심, +Z = 꼭짓점 쪽, 이 0 이 로컬 +X)이라 위상 식이 그대로 맞는다.
+// 이 단면은 큰 쪽 등가 원뿔(back cone) 위에 두고(이 높이 = 원뿔 법선 방향, 이끝 1.0m · 이뿌리 1.2m, 압력각 20°,
+// 피치원 위 이 두께 ≈ 이 사이 폭), 모든 점이 꼭짓점을 향해 줄어든다(곧은 베벨). 몸통 = 림 + 웨브 + 앞뒤 허브.
+export interface Bevel200Opts {
+  face?: number;
+  bore?: number;
+  hubR?: number;
+  driver?: boolean;
+  /** 노란 표지: 'web' = 뒷면 웨브 반지름 막대, 'rim' = 림 바깥(뒤 원뿔면) 띠 */
+  marker?: 'web' | 'rim';
+}
+const MARK200 = 0xf2b619;
+
+export function bevel200(teeth: number, module: number, delta: number, opts: Bevel200Opts = {}): THREE.Group {
+  const face = opts.face ?? K.face;
+  const bore = opts.bore ?? 0.05;
+  const hubR = opts.hubR ?? 0.095;
+  const R = (teeth * module) / 2;
+  const L = R / Math.sin(delta);
+  const A = R / Math.tan(delta);
+  const sd = Math.sin(delta);
+  const cd = Math.cos(delta);
+  const ad = module; // 이끝 높이
+  const dd = 1.2 * module; // 이뿌리 깊이
+  const hIn = -dd - 0.5 * module; // 이 띠의 안쪽 바닥(몸통 속에 묻힘)
+  const tanA = Math.tan((20 * Math.PI) / 180);
+  const tp = (Math.PI * module) / 4 - 0.02 * module; // 피치원 위 이 반두께(뒤틈 조금)
+  const body = opts.driver === true ? bronze({ roughness: 0.34 }) : brass();
+  body.side = THREE.DoubleSide;
+  const g = new THREE.Group();
+
+  const apex = V(0, 0, A);
+  const toSmall = (p: THREE.Vector3, k: number): THREE.Vector3 => apex.clone().add(p.clone().sub(apex).multiplyScalar(k));
+  const kS = (L - face) / L;
+  // 한 이: 이 사이 가운데 → 뿌리 모서리 → 이끝 모서리 ×2 → 뿌리 모서리 (호 길이는 큰 쪽 피치원 R 기준, 각으로 바꿔 둔다)
+  const pitchA = (2 * Math.PI) / teeth;
+  const prof: { a: number; h: number }[] = [];
+  const rootH = tp + dd * tanA;
+  const tipH = tp - ad * tanA;
+  for (let i = 0; i < teeth; i++) {
+    const c = i * pitchA;
+    const toA = (s: number, h: number): number => c + s / (R + h * cd);
+    prof.push({ a: c - pitchA / 2, h: -dd });
+    prof.push({ a: toA(-rootH, -dd), h: -dd });
+    prof.push({ a: toA(-tipH, ad), h: ad });
+    prof.push({ a: toA(tipH, ad), h: ad });
+    prof.push({ a: toA(rootH, -dd), h: -dd });
+  }
+  const at = (a: number, h: number): THREE.Vector3 => {
+    const r = R + h * cd;
+    return V(r * Math.cos(a), r * Math.sin(a), h * sd);
+  };
+  const M = prof.length;
+  const oB = prof.map((p) => at(p.a, p.h));
+  const iB = prof.map((p) => at(p.a, hIn));
+  const oS = oB.map((p) => toSmall(p, kS));
+  const iS = iB.map((p) => toSmall(p, kS));
+  const pos: number[] = [];
+  const tri = (a: THREE.Vector3, b: THREE.Vector3, c: THREE.Vector3): void => {
+    pos.push(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z);
+  };
+  const quad = (a: THREE.Vector3, b: THREE.Vector3, c: THREE.Vector3, d: THREE.Vector3): void => {
+    tri(a, b, c);
+    tri(a, c, d);
+  };
+  for (let i = 0; i < M; i++) {
+    const j = (i + 1) % M;
+    quad(oB[i]!, oB[j]!, oS[j]!, oS[i]!); // 이 겉면
+    quad(iB[j]!, iB[i]!, iS[i]!, iS[j]!); // 안쪽 바닥(몸통 속)
+    quad(iB[i]!, iB[j]!, oB[j]!, oB[i]!); // 큰 쪽 끝면(뒤 원뿔)
+    quad(iS[j]!, iS[i]!, oS[i]!, oS[j]!); // 작은 쪽 끝면
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.computeVertexNormals();
+  g.add(mesh(geo, body));
+
+  // 몸통(회전체, (r, z) 반시계): 뒤 허브 → 웨브 뒷면 → 림 뒤(뒤 원뿔면) → 뿌리 원뿔 아래 → 웨브 앞면 → 앞 허브
+  const hB = -dd - 0.2 * module; // 몸통 겉면 = 이 띠 바닥보다 조금 위(겹침)
+  const nRZ = (k: number, h: number): [number, number] => [k * (R + h * cd), k * h * sd + A * (1 - k)];
+  const kL = 1 - 0.004 / L;
+  const kSs = kS + 0.004 / L;
+  const qL = nRZ(kL, hB);
+  const qS = nRZ(kSs, hB);
+  const tR = Math.max(0.035, 1.3 * module); // 림 두께(뒤 원뿔 방향)
+  const bRim: [number, number] = [qL[0] - tR * cd, qL[1] - tR * sd];
+  const zBack = Math.min(bRim[1], -0.03);
+  const zHB = zBack - 0.04;
+  const zT = face * cd;
+  const zHF = zT + 0.05;
+  const zFront = Math.min(qS[1], zHF - 0.02);
+  const c = 0.006;
+  const lp: [number, number][] = [
+    [bore, zHB],
+    [hubR - c, zHB],
+    [hubR, zHB + c],
+    [hubR, zBack],
+    [bRim[0], zBack],
+    [bRim[0], bRim[1]],
+    qL,
+    qS,
+    ...(zFront < qS[1] - 1e-6 ? [[qS[0], zFront] as [number, number]] : []),
+    [hubR, zFront],
+    [hubR, zHF - c],
+    [hubR - c, zHF],
+    [bore, zHF],
+    [bore, zHB]
+  ];
+  const lg = lathe(lp, Math.max(48, teeth * 4));
+  lg.rotateX(Math.PI / 2);
+  g.add(mesh(lg, body));
+  // 허브 쇠 테(앞뒤)
+  const ringZ = (rIn: number, rOut: number, z0: number, z1: number, mat: THREE.Material): THREE.Mesh => {
+    const rg = lathe(tubeProfile(rIn, rOut, z0, z1, 0.003), 36);
+    rg.rotateX(Math.PI / 2);
+    return mesh(rg, mat);
+  };
+  g.add(ringZ(bore + 0.002, hubR + 0.006, zHB - 0.012, zHB + 0.004, darkSteel()));
+
+  // 노란 표지
+  const mk = paint(MARK200);
+  if (opts.marker === 'web') {
+    const len = bRim[0] - hubR - 0.02;
+    const bar = mesh(new THREE.BoxGeometry(len, 0.045, 0.014), mk);
+    bar.position.set(hubR + 0.01 + len / 2, 0, zBack - 0.006);
+    g.add(bar);
+  } else if (opts.marker === 'rim') {
+    // 뒤 원뿔면(qL → bRim) 위 띠: 원뿔 법선 방향으로 놓인 판
+    const mid = V((qL[0] + bRim[0]) / 2, 0, (qL[1] + bRim[1]) / 2);
+    const out = V(sd, 0, -cd); // 뒤 원뿔면 바깥 법선(꼭짓점 반대쪽 모선 방향)
+    const plate = mesh(new THREE.BoxGeometry(0.012, 0.1, tR * 0.9), mk);
+    plate.position.copy(mid.addScaledVector(out, 0.005));
+    plate.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(out, V(0, 1, 0), V(cd, 0, sd)));
+    g.add(plate);
+  }
+  // 앞 허브 옆면 세로 띠(노랑) — 클러치 쪽에서 베벨 자체의 회전이 보인다
+  if (opts.marker !== undefined) {
+    const hl = zHF - zFront - 0.012;
+    const hs = mesh(new THREE.BoxGeometry(0.008, 0.032, hl), mk);
+    hs.position.set(hubR + 0.002, 0, zFront + 0.004 + hl / 2);
+    g.add(hs);
+  }
+  // 이 0 이끝 모선 띠(노랑)
+  const t0 = at(0, ad + 0.0015);
+  const t1 = toSmall(t0, kS);
+  const strip = mesh(new THREE.BoxGeometry(0.014, 0.003, t0.distanceTo(t1) * 0.92), mk);
+  strip.position.copy(t0.clone().add(t1).multiplyScalar(0.5));
+  const sz = t1.clone().sub(t0).normalize();
+  const sy = V(cd, 0, sd).addScaledVector(sz, -V(cd, 0, sd).dot(sz)).normalize();
+  strip.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(sy.clone().cross(sz), sy, sz));
+  g.add(strip);
+
+  const ra = R + ad * cd;
+  const rf = R - dd * cd;
+  g.userData.bevel = { teeth, module, delta, R, A, zT };
+  setMM(g, { kind: 'gear', fn: 'coneBevelGear', teeth, module, internal: false, rp: R, ra, rf, width: zT, axis: 'z', delta, apex: [0, 0, A] }); // 검사 표식
   return g;
 }
