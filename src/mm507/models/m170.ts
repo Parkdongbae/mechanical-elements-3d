@@ -3,7 +3,7 @@
 //  설계표 docs/mm507-sheets/170.md · 부품·식은 kit/k170 — 이 파일은 배치·자세 대입만 한다.
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
-import { displayStand, rotArrow, tag } from '../kit';
+import { displayStand, leaderTo, rotArrow, tag } from '../kit';
 import { K170, drive170, frame170, gov170, setPose170, spin170 } from '../kit/k170';
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
@@ -36,6 +36,7 @@ export default function buildM170(): MovementModel {
 
   const tagBall = tag('공', v(0, 0, 0.3));
   const tagRod = tag('밸브 막대', v(0, 0, 0.3));
+  leaderTo(tagRod, 'valveRod'); // 마름모 꼭짓점이 아니라 위로 뻗은 막대를 가리킨다(사용자 지적)
   const tagArms = tag('엇갈린 팔', v(0.95, 2.0, 0.3));
   const tagArc = tag('곡선 막대', v(-1.25, 2.0, 0.3));
   const tagCrown = tag('크라운 기어', v(1.15, 0.72, 0.3));
