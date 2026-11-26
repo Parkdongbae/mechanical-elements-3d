@@ -1516,6 +1516,29 @@ async function pageAnalyze({ decl, times: T0 }) {
         }
         return b;
       };
+      // 부품(메시들)의 꼭짓점을 법선 n 에 투영한 [최소, 최대] — 두 범위 사이 틈(겹치면 음수)
+      const nRange = (o, n) => {
+        let lo = Infinity, hi = -Infinity;
+        const v = V();
+        o.traverse((m) => {
+          if (!m.isMesh || !visibleChain(m)) return;
+          const pos = m.geometry?.attributes?.position;
+          if (!pos) return;
+          const step = Math.max(1, Math.floor(pos.count / 2000));
+          for (let i = 0; i < pos.count; i += step) {
+            const d = v.fromBufferAttribute(pos, i).applyMatrix4(m.matrixWorld).dot(n);
+            if (d < lo) lo = d;
+            if (d > hi) hi = d;
+          }
+        });
+        return [lo, hi];
+      };
+      const layerGap = (a, b, n) => {
+        const [a0, a1] = nRange(a, n);
+        const [b0, b1] = nRange(b, n);
+        if (!Number.isFinite(a0) || !Number.isFinite(b0)) return -1;
+        return Math.max(b0 - a1, a0 - b1);
+      };
       let worst = { d: 0 };
       let pairsSeen = 0;
       const SAMPLES = 60;
@@ -1535,6 +1558,8 @@ async function pageAnalyze({ decl, times: T0 }) {
             const inv = B.o.matrixWorld.clone().invert();
             const ptsA = sub(A.pts, 400).map(([x, y]) => V(x, y, 0).applyMatrix4(A.o.matrixWorld).applyMatrix4(inv));
             if (Math.abs(ptsA[0].z) > 0.3) continue; // 다른 층
+            // 두 부품의 실제 두께 범위(법선 방향)가 겹치지 않으면 다른 층 — 앞뒤 층으로 나뉜 폴·돌기·걸쇠를 같은 평면으로 보던 거짓 불합격(206·217·218)
+            if (layerGap(A.o, B.o, nB) > 0.002) continue;
             let minx = Infinity, maxx = -Infinity, miny = Infinity, maxy = -Infinity;
             for (const [x, y] of B.pts) (minx = Math.min(minx, x)), (maxx = Math.max(maxx, x)), (miny = Math.min(miny, y)), (maxy = Math.max(maxy, y));
             if (B.hole) {
