@@ -111,7 +111,7 @@ export default function buildM220(): MovementModel {
   crank1.add(mark);
 
   // 손목 핀: 판을 뚫고 뒤로(세계 z −0.06~0.21), 홈 속을 미끄러진다
-  const pin = cylZ(0.04, 0.27, steel(), 0.75, 0, -0.075);
+  const pin = cylZ(0.04, 0.26, steel(), 0.75, 0, -0.08); // 앞끝을 노란 머리 속(로컬 0.05)에서 끝나게 — 머리 앞면과 같은 높이라 깜빡이던 것(2026-11-27 사용자 지적)
   pin.name = 'pin';
   setMM(pin, { kind: 'pin', point: [0, 0, 0.075] }); // 링크 검사점: 판 평면 위 (0.75, 0)
   crank1.add(pin);
