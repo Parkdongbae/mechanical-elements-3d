@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { displayStand, leaderTo, rotArrow, spurGear, tag } from '../kit';
-import { K197, LH197, LOOP197, RP197, endArc197, loop197, rack197, rail197, shaftGuide197 } from '../kit/k197';
+import { K197, LH197, LOOP197, RP197, endArc197, loop197, pinionBody197, rack197, rail197, shaftGuide197 } from '../kit/k197';
 import { darkSteel, paint, steel } from '../../models/materials';
 import { lathe, mesh, rodProfile } from '../../models/parts/geom';
 
@@ -52,6 +52,10 @@ export default function buildM197(): MovementModel {
   const pivot = new THREE.Group();
   pivot.name = 'pinion';
   const pinion = spurGear(K197.N, K197.m, { width: K197.pinionW, spokes: 4, driver: true });
+  // 이 윤곽을 핀 랙용(핀이 훑는 영역을 깎은 모양)으로 교체 — 핀이 이 사이 골에 꼭 맞게
+  const body0 = pinion.children[0] as THREE.Mesh;
+  body0.geometry.dispose();
+  body0.geometry = pinionBody197();
   pivot.add(pinion);
   const capGeo = lathe(rodProfile(0.06, 0, 0.032, 0.006, 0.008), 28);
   capGeo.rotateX(Math.PI / 2);

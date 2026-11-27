@@ -1,7 +1,7 @@
 // 197번 맹글 랙 전용 키트 — 핀 랙(스타디움 판 + 핀 줄), 피니언 중심 경로, 축 안내판, 끝 안내 호
 import * as THREE from 'three';
 import { castIron, darkSteel, paint, steel } from '../../models/materials';
-import { annularSector, extrude, lathe, merge, mesh, rodProfile, roundedRect, stadiumShape} from '../../models/parts/geom';
+import { annularSector, circlePts, extrude, lathe, loft, merge, mesh, rodProfile, roundedRect, stadiumShape} from '../../models/parts/geom';
 import { STAGE } from './stand';
 import { setMM } from './mm';
 
@@ -128,4 +128,68 @@ export function endArc197(dir: 1 | -1): THREE.Group {
   const geo = extrude(annularSector(0.32, 0.37, a0, a1), depth, 0.004, 24);
   g.add(atZ(geo, castIron(), 0, 0, (K197.zPlate1 + STAGE.backZ) / 2));
   return g;
+}
+
+/**
+ * 핀 랙에 맞춘 피니언 이 윤곽(기어 로컬, 이골 중심 = 각 0). 핀(반지름 pinR + 여유 0.002)이 구름 운동으로
+ * 훑는 영역을 반지름 방향으로 깎아 낸 포락선이라, 핀이 늘 이 사이 골에 꼭 들어가 한쪽 옆면에 닿는다.
+ */
+export function pinionOutline197(): [number, number][] {
+  const K = K197;
+  const rho = K.pinR + 0.002;
+  const ra = RP197 + K.m;
+  const step = (2 * Math.PI) / K.N;
+  const discs: [number, number][] = [];
+  for (let si = 0; si <= 240; si++) {
+    const s = -2 * P197 + (4 * P197 * si) / 240;
+    const psi = 1.5 * Math.PI + s / RP197;
+    const c = Math.cos(-psi);
+    const sn = Math.sin(-psi);
+    for (let j = -3; j <= 3; j++) {
+      const x = j * P197 + s;
+      const y = -RP197;
+      discs.push([x * c - y * sn, x * sn + y * c]);
+    }
+  }
+  const radius = (th: number): number => {
+    let best = ra;
+    const dx = Math.cos(th);
+    const dy = Math.sin(th);
+    for (const [cx, cy] of discs) {
+      const b = cx * dx + cy * dy;
+      const d2 = cx * cx + cy * cy - b * b;
+      if (d2 > rho * rho) continue;
+      const h = b - Math.sqrt(rho * rho - d2);
+      if (h > 0 && h < best) best = h;
+    }
+    return best;
+  };
+  const per = 72;
+  const one: number[] = [];
+  for (let i = 0; i < per; i++) one.push(radius(-step / 2 + (step * i) / per));
+  const pts: [number, number][] = [];
+  for (let t = 0; t < K.N; t++) {
+    for (let i = 0; i < per; i++) {
+      const a = t * step - step / 2 + (step * i) / per;
+      pts.push([Math.cos(a) * one[i]!, Math.sin(a) * one[i]!]);
+    }
+  }
+  return pts;
+}
+
+/** 피니언 몸통(핀 랙용 이): spurGear 의 림과 같은 층 구성, 이 윤곽만 교체 */
+export function pinionBody197(): THREE.BufferGeometry {
+  const K = K197;
+  const w = K.pinionW;
+  const ra = RP197 + K.m;
+  const rf = RP197 - 1.25 * K.m;
+  const rRim = rf * 0.72;
+  const c = Math.min(K.m * 0.35, w * 0.16);
+  const layers = [
+    { z: -w / 2, s: (ra - c) / ra, hs: (rRim + c) / rRim },
+    { z: -w / 2 + c, s: 1, hs: 1 },
+    { z: w / 2 - c, s: 1, hs: 1 },
+    { z: w / 2, s: (ra - c) / ra, hs: (rRim + c) / rRim }
+  ];
+  return loft(pinionOutline197(), [circlePts(rRim, 64)], layers);
 }
