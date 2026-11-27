@@ -71,7 +71,7 @@ export default function buildM209(): MovementModel {
     leaderTo(tag('피동 타원 기어', v(1.75, 3.1, 0.55)), 'gearR'),
     leaderTo(tag('갈래 걸쇠', v(0.55, 3.15, 0.55)), 'forkR'),
     leaderTo(tag('안내 핀(먼 끝 이)', v(-0.45, 3.15, 0.55)), 'pinL'),
-    leaderTo(tag('매끈한 구름면', v(-1.6, 0.35, 0.55)), 'gearL'),
+    leaderTo(tag('매끈한 구름면', v(-1.6, 0.35, 0.55)), gearL.getObjectByName('smoothBand')!),
     leaderTo(tag('접점', v(0.0, 0.35, 0.55)), 'contact')
   );
 

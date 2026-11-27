@@ -34,7 +34,7 @@ export default function buildM205(): MovementModel {
   const glowB = pinion.getObjectByName('glowB')!;
 
   g.add(
-    leaderTo(tag('큰 바퀴', v(1.65, 3.05, 0.6)), 'wheel'),
+    leaderTo(tag('큰 바퀴', v(1.65, 3.05, 0.6)), 'wheelPlate'),
     leaderTo(tag('앞 줄 이(긴 막대)', v(1.75, 2.1, 0.6)), 'toothF3'),
     leaderTo(tag('뒤 줄 이(반 칸 엇갈림)', v(-1.75, 2.1, 0.6)), 'toothB9'),
     leaderTo(tag('앞 캠', v(0.95, 0.3, 0.6)), 'camF'),

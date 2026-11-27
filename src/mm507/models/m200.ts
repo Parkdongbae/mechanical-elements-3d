@@ -1,6 +1,6 @@
-// 200 한 바퀴로 두 속도 — 세로축에 크기가 다른 베벨 둘(위 24·아래 14 잇수)이 마주 보고 헐겁게 끼워져 있고,
-// 오른쪽 아래로 비스듬한 축의 구동 베벨 피니언이 두 베벨에 동시에 물린다(판화 200번 그대로).
-// 두 베벨 사이 클러치 슬리브가 위 또는 아래 베벨에 붙어 세로축을 느리게(14/24) 또는 빠르게(14/14) 돌린다 — 설계표 docs/mm507-sheets/200.md
+// 200 한 바퀴로 두 속도 — 세로축 자리에 속 빈 슬리브(위 큰 베벨 24잇수)와 그 속을 지나는 안쪽 축(아래 작은 베벨 14잇수)이 있고,
+// 오른쪽 아래로 비스듬한 축의 구동 베벨 하나가 두 베벨에 늘 동시에 물려 슬리브는 느리게, 안쪽 축은 빠르게 서로 반대로 돌린다(판화 200번 그대로).
+// 클러치 없음 — 설계표 docs/mm507-sheets/200.md
 import * as THREE from 'three';
 import { OMEGA, type MovementModel } from '../types';
 import { displayStand, leaderTo, rotArrow, tag } from '../kit';
@@ -14,15 +14,11 @@ import {
   GL200,
   GU200,
   K200,
-  PERIOD200,
   bevel200,
-  clutch200,
-  fork200,
-  forkGuide200,
   state200,
   type Frame200
 } from '../kit/k200';
-import { darkSteel, paint, steel } from '../../models/materials';
+import { aluminum, darkSteel, paint, steel } from '../../models/materials';
 import { lathe, mesh, rodProfile } from '../../models/parts/geom';
 
 const v = (x: number, y: number, z: number): THREE.Vector3 => new THREE.Vector3(x, y, z);
@@ -41,22 +37,70 @@ export default function buildM200(): MovementModel {
   let theta = 0;
   g.add(displayStand());
 
-  // 세로축(종동, +Y 둘레): 클러치 슬리브는 축에 키로 끼워 함께 돈다
-  const axis = new THREE.Group();
-  axis.name = 'axisY';
-  axis.position.set(K.XC, 0, K.ZC);
-  g.add(axis);
-  const shaft = mesh(lathe(rodProfile(K.shaftR, 0.8, 2.72, 0.006, 0.006), 28), steel());
-  axis.add(shaft);
-  // 노란 표지 막대: 위 끝 · 아래 끝(같은 쪽을 가리킨다) — 세로축이 어느 속도로 도는지 위아래에서 다 보인다
-  for (const fy of [2.62, 0.86]) {
-    const flag = mesh(new THREE.BoxGeometry(0.14, 0.024, 0.024), paint(0xf2b619));
-    flag.position.set(0.09, fy, 0);
-    axis.add(flag);
-  }
-  g.add(wallBearing(K.XC, 2.4, K.ZC, 'y', 0.046), wallBearing(K.XC, 1.05, K.ZC, 'y', 0.046));
+  // 안쪽 축(+Y 둘레): 아래 작은 베벨에 고정. 아래쪽은 굵게(베벨 구멍을 채움), 슬리브 안은 가늘게 올라가 슬리브 위로 나온다
+  const SR = 0.0505; // 베벨 구멍(0.05)을 채우는 굵기
+  const SI = 0.03; // 슬리브 안을 지나는 굵기
+  const Y_SB = 0.8; // 안쪽 축 아래 끝
+  const Y_ST = 2.5; // 안쪽 축 위 끝
+  const Y_SL0 = 1.757; // 슬리브 아래 끝 = 위 베벨 앞 허브 끝
+  const Y_SL1 = 2.3; // 슬리브 위 끝
+  const innerShaft = new THREE.Group();
+  innerShaft.name = 'innerShaft';
+  innerShaft.position.set(K.XC, 0, K.ZC);
+  g.add(innerShaft);
+  innerShaft.add(
+    mesh(
+      lathe(
+        [
+          [0, Y_SB],
+          [SR - 0.004, Y_SB],
+          [SR, Y_SB + 0.004],
+          [SR, Y_SL0 + 0.001],
+          [SI, Y_SL0 + 0.001],
+          [SI, Y_ST - 0.004],
+          [SI - 0.004, Y_ST],
+          [0, Y_ST]
+        ],
+        32
+      ),
+      steel()
+    )
+  );
+  // 안쪽 축 아래 끝 노란 표지(축에 박힌 막대)
+  const flagL = mesh(new THREE.BoxGeometry(0.14, 0.024, 0.024), paint(0xf2b619));
+  flagL.position.set(0.09, Y_SB + 0.06, 0);
+  innerShaft.add(flagL);
 
-  // 위 큰 베벨(이가 아래로, 꼭짓점 P 를 본다) · 아래 작은 베벨(이가 위로) — 헐거움
+  // 속 빈 슬리브(+Y 둘레): 위 큰 베벨에 고정. 베벨 구멍을 채우고 위 베벨 위로 굵게 올라가 위 받침에 걸린다
+  const sleeve = new THREE.Group();
+  sleeve.name = 'sleeve';
+  sleeve.position.set(K.XC, 0, K.ZC);
+  g.add(sleeve);
+  sleeve.add(
+    mesh(
+      lathe(
+        [
+          [SI, Y_SL0],
+          [SR, Y_SL0],
+          [SR, 1.985],
+          [0.07, 1.985],
+          [0.07, Y_SL1 - 0.004],
+          [0.066, Y_SL1],
+          [SI, Y_SL1],
+          [SI, Y_SL0]
+        ],
+        40
+      ),
+      aluminum()
+    )
+  );
+  // 슬리브 꼭대기 노란 표지(윗면 고리 위에 얹은 막대)
+  const flagU = mesh(new THREE.BoxGeometry(0.05, 0.024, 0.03), paint(0xf2b619));
+  flagU.position.set(0.05, Y_SL1 + 0.011, 0);
+  sleeve.add(flagU);
+  g.add(wallBearing(K.XC, 2.12, K.ZC, 'y', 0.076), wallBearing(K.XC, 1.05, K.ZC, 'y', 0.056));
+
+  // 위 큰 베벨(이가 아래로, 꼭짓점 P 를 본다, 슬리브에 고정) · 아래 작은 베벨(이가 위로, 안쪽 축에 고정)
   const wU = wrapAt(FR_U);
   const bevU = bevel200(K.Nu, K.m, GU200, { face: K.face, bore: 0.05, marker: 'web' });
   bevU.name = 'bevelU';
@@ -66,15 +110,6 @@ export default function buildM200(): MovementModel {
   bevL.name = 'bevelL';
   wL.add(bevL);
   g.add(wU, wL);
-
-  // 클러치 슬리브 + 포크(위아래) + 안내
-  const clutch = clutch200();
-  clutch.name = 'clutch';
-  g.add(clutch);
-  const fork = fork200();
-  fork.name = 'fork';
-  g.add(fork);
-  g.add(forkGuide200());
 
   // 구동 베벨 피니언(오른쪽 아래로 기운 축) + 축 + 받침 + 손잡이(구동 바퀴)
   const wP = wrapAt(FR_P);
@@ -99,44 +134,43 @@ export default function buildM200(): MovementModel {
   const bPos = FR_P.pos.clone().addScaledVector(A200, 0.7);
   g.add(wallBearing(bPos.x, bPos.y, K.ZC, A200, 0.034));
 
-  // 세로축 방향 화살표 둘(위에서 본 모양, 그때그때 하나만 보임)
-  const arrCcw = rotArrow(0.24, true);
-  const arrCw = rotArrow(0.24, false);
-  for (const a of [arrCcw, arrCw]) {
+  // 회전 화살표(위에서 본 모양): 슬리브 꼭대기 · 안쪽 축 아래 끝 — 서로 반대
+  const mkArrow = (ccw: boolean, y: number): THREE.Group => {
+    const a = rotArrow(0.24, ccw);
     a.rotation.x = -PI / 2;
-    a.position.set(K.XC, 2.75, K.ZC);
+    a.position.set(K.XC, y, K.ZC);
     g.add(a);
-  }
+    return a;
+  };
+  const stI = state200(0);
+  mkArrow(stI.dirU > 0, 2.4);
+  mkArrow(stI.dirL > 0, 0.93);
 
   g.add(
     leaderTo(tag('큰 베벨(위, 24)', v(-1.6, 2.35, 0.35)), 'bevelU'),
     leaderTo(tag('작은 베벨(아래, 14)', v(-1.6, 1.2, 0.35)), 'bevelL'),
     leaderTo(tag('구동 베벨 피니언(14)', v(0.9, 2.3, 0.35)), 'pinion'),
-    leaderTo(tag('클러치(위·아래 바꿈)', v(-1.6, 1.75, 0.35)), 'clutch')
+    leaderTo(tag('속 빈 슬리브(위 베벨)', v(-1.6, 2.75, 0.35)), 'sleeve'),
+    leaderTo(tag('안쪽 축(아래 베벨)', v(-1.6, 0.85, 0.35)), 'innerShaft')
   );
 
-  let st = state200(0);
   const apply = (): void => {
-    st = state200(theta);
-    axis.rotation.y = st.psi;
+    const st = state200(theta);
+    sleeve.rotation.y = -st.phiU; // 위 베벨 로컬 +Z = −Y
+    innerShaft.rotation.y = st.phiL;
     bevU.rotation.z = st.phiU;
     bevL.rotation.z = st.phiL;
     pin.rotation.z = theta;
-    clutch.position.set(K.XC, st.yc, K.ZC);
-    clutch.rotation.y = st.psi;
-    fork.position.set(K.XC, st.yc, K.ZC);
-    arrCcw.visible = st.dir > 0;
-    arrCw.visible = st.dir < 0;
   };
   apply();
 
   return {
     group: g,
     notes: () => [
-      { label: '클러치', value: st.mode === 'U' ? '큰 베벨(위, 24)에 붙음 — 느리게' : st.mode === 'L' ? '작은 베벨(아래, 14)에 붙음 — 빠르게' : '옮기는 중(세로축 멈춤)' },
-      { label: '속도비 (세로축 : 피니언)', value: st.mode === 'U' ? '14 : 24 = 0.58' : st.mode === 'L' ? '14 : 14 = 1.00' : '—' },
-      { label: '한 주기', value: `피니언 ${(PERIOD200 / (2 * PI)).toFixed(1)} 회전` },
-      { label: '원리', value: '피니언이 위·아래 베벨을 늘 함께 돌리고(서로 반대 방향), 클러치가 붙은 쪽의 속도가 세로축에 전해진다' }
+      { label: '구동', value: '구동 베벨 하나가 위 베벨과 아래 베벨을 늘 함께 돌린다' },
+      { label: '위 베벨 → 속 빈 슬리브', value: '14 : 24 = 0.58 — 느리게' },
+      { label: '아래 베벨 → 안쪽 축', value: '14 : 14 = 1.00 — 빠르게' },
+      { label: '방향', value: '슬리브와 안쪽 축은 같은 축선에서 서로 반대 방향으로 돈다' }
     ],
     update(dt: number, speed: number): void {
       theta += OMEGA * speed * dt;

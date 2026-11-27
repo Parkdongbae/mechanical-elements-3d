@@ -88,7 +88,7 @@ export default function buildM207(): MovementModel {
     leaderTo(tag('왼나사 웜', v(1.45, 0.85, 0.45)), 'wormR'),
     leaderTo(tag('왼쪽 웜 휠(시계)', v(-1.55, 3.05, 0.45)), 'wheelL'),
     leaderTo(tag('오른쪽 웜 휠(반시계)', v(1.55, 3.05, 0.45)), 'wheelR'),
-    leaderTo(tag('구동 축(웜 둘)', v(0, 0.75, 0.45)), 'shaft'),
+    leaderTo(tag('구동 축(웜 둘)', v(-0.42, 0.75, 0.45)), 'shaft'), // 가운데 축받이와 왼쪽 웜 사이의 드러난 축을 가리키게(2026-11-27 사용자 지적)
     leaderTo(tag('가운데 축받이', v(0, 2.75, 0.45)), 'bearingM')
   );
 

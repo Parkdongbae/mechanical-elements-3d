@@ -94,10 +94,11 @@ export function slotArm210(): THREE.Group {
 export function bar210(): THREE.Group {
   const g = new THREE.Group();
   g.add(mesh(lathe(rodProfile(K.barR, -1.55, 0.85, 0.01, 0.01), 28), steel()));
-  const pinGeo = new THREE.CylinderGeometry(K.pinR, K.pinR, 0.22, 28);
+  // 핀 앞끝을 와셔 속(0.21)에서 끝나게 — 와셔 앞면(0.22)과 같은 높이라 면이 겹쳐 깜빡이던 것(2026-11-27 사용자 지적)
+  const pinGeo = new THREE.CylinderGeometry(K.pinR, K.pinR, 0.21, 28);
   pinGeo.rotateX(Math.PI / 2);
   const pin = mesh(pinGeo, steel());
-  pin.position.z = 0.11;
+  pin.position.z = 0.105;
   pin.name = 'barPin';
   pin.userData.outline = circlePts(K.pinR, 32);
   g.add(pin);
