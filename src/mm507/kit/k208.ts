@@ -14,54 +14,70 @@ export const K208 = {
   pinRad: 0.03,
   slots: 10,
   rp: 0.375,
-  rOut: 0.435,
-  thick: 0.12,
+  rOut: 0.4,
+  thick: 0.2,
   zc: 0.345,
   X: [-0.9, -0.675, -0.45] as number[],
   omega: 0.6
 };
 
-export const PINION_SECTOR208: V2[] = [[0.4137,-0.1344],[0.4214,-0.1080],[0.4235,-0.0964],[0.4229,-0.0898],[0.4212,-0.0842],[0.4184,-0.0791],[0.4147,-0.0746],[0.4083,-0.0697],[0.4009,-0.0667],[0.3373,-0.0554],[0.3241,-0.0539],[0.3163,-0.0517],[0.3081,-0.0479],[0.2962,-0.0390],[0.2877,-0.0281],[0.2820,-0.0148],[0.2800,-0.0002],[0.2819,0.0145],[0.2877,0.0281],[0.2969,0.0397],[0.3081,0.0479],[0.3163,0.0517],[0.3241,0.0539],[0.3373,0.0554],[0.4009,0.0669],[0.4083,0.0699],[0.4147,0.0747],[0.4184,0.0792],[0.4214,0.0851],[0.4230,0.0907],[0.4235,0.0965],[0.4214,0.1080],[0.4137,0.1344]];
-
 const YELLOW = 0xffcc00;
 const GRAY = 0x6b7280;
 
-/** 홈 피니언 몸(원판 + 허브 + 칼라 + 노란 표지). 회전 0 에서 홈 0 번이 -z(휠 쪽) */
+/** 창(핀이 훑는 영역 + 여유 0.006)의 반호 길이를 반지름별로 적은 표 [반지름, 반호] */
+export const DRUM_SLOT208: V2[] = [[0.335, 0.015], [0.35, 0.024], [0.375, 0.04], [0.4, 0.07]];
+export const DRUM208 = { w: 0.2, rOut: 0.4, rIn: 0.335 };
+
+/** 드럼 바퀴의 틀 막대 하나(창 k 와 k+1 사이) 단면 점열 — (y, z) = (ρ sin a, -ρ cos a) */
+export function drumRungPts208(k: number): V2[] {
+  const step = TAU / K208.slots;
+  const at = (rho: number, a: number): V2 => [rho * Math.sin(a), -rho * Math.cos(a)];
+  const half = (j: number): number => DRUM_SLOT208[j]![1] / DRUM_SLOT208[j]![0];
+  const last = DRUM_SLOT208.length - 1;
+  const lo = k * step;
+  const hi = (k + 1) * step;
+  const pts: V2[] = [];
+  DRUM_SLOT208.forEach(([rho], j) => pts.push(at(rho, lo + half(j))));
+  const a0 = lo + half(last);
+  const a1 = hi - half(last);
+  for (let i = 1; i <= 5; i++) pts.push(at(DRUM208.rOut, a0 + ((a1 - a0) * i) / 6));
+  for (let j = last; j >= 0; j--) pts.push(at(DRUM_SLOT208[j]![0], hi - half(j)));
+  return pts;
+}
+
+/** 홈 피니언 = 북(드럼) 모양 바퀴: 옆판 둘 + 틀 막대 10 + 어두운 속 + 허브 + 칼라 + 노란 표지. 회전 0 에서 창 0 번이 -z(휠 쪽), 창은 같은 각 간격 */
 export function pinion208(): THREE.Group {
   const g = new THREE.Group();
-  const pts: V2[] = [];
-  for (let k = 0; k < K208.slots; k++) {
-    const a = (k * TAU) / K208.slots;
-    const c = Math.cos(a);
-    const s = Math.sin(a);
-    const n = PINION_SECTOR208.length - 1; // 마지막 점 = 다음 조각 첫 점
-    for (let i = 0; i < n; i++) {
-      const [x, y] = PINION_SECTOR208[i]!;
-      pts.push([x * c - y * s, x * s + y * c]);
-    }
-  }
-  const shape = shapeFrom(pts);
-  shape.holes.push(circlePath(0, 0, 0.042));
-  const body = extrude(shape, K208.thick, 0.004);
-  body.rotateY(Math.PI / 2);
-  g.add(mesh(body, brass()));
-
-  const seg = (r: number, x0: number, x1: number): void => {
-    const geo = lathe(tubeProfile(0.042, r, x0, x1, 0.008), 36);
+  const W = DRUM208.w;
+  const tube = (rIn: number, rOut: number, x0: number, x1: number, c: number, mat: THREE.Material): void => {
+    const geo = lathe(tubeProfile(rIn, rOut, x0, x1, c), 48);
     geo.rotateZ(-Math.PI / 2);
-    g.add(mesh(geo, brass()));
+    g.add(mesh(geo, mat));
   };
+  // 옆판 둘(반지름 0.34 = 핀 끝 아래라 핀이 옆으로 미끄러져 지나감) + 어두운 속
+  tube(0.042, 0.34, -W / 2, -W / 2 + 0.035, 0.004, brass());
+  tube(0.042, 0.34, W / 2 - 0.035, W / 2, 0.004, brass());
+  tube(0.085, 0.322, -W / 2 + 0.034, W / 2 - 0.034, 0, paint(0x1b1f27));
+  // 틀 막대 10 (막대 사이가 핀이 들어가는 창)
+  const basis = new THREE.Matrix4().makeBasis(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1), new THREE.Vector3(1, 0, 0));
+  const rungs: THREE.BufferGeometry[] = [];
+  for (let k = 0; k < K208.slots; k++) {
+    const geo = extrude(shapeFrom(drumRungPts208(k)), W, 0.002);
+    geo.applyMatrix4(basis);
+    rungs.push(geo);
+  }
+  g.add(mesh(merge(rungs), brass()));
+
+  const seg = (r: number, x0: number, x1: number): void => tube(0.042, r, x0, x1, 0.008, brass());
   seg(0.09, -0.17, 0.115);
   seg(0.07, 0.115, 0.145);
   seg(0.09, 0.145, 0.17);
-  const collar = lathe(tubeProfile(0.042, 0.11, -0.15, -0.13, 0.004), 36);
-  collar.rotateZ(-Math.PI / 2);
-  g.add(mesh(collar, brass()));
+  tube(0.042, 0.11, -0.15, -0.13, 0.004, brass());
 
-  // 홈 0 번과 1 번 사이 둔덕(18도)의 바깥면 표지
+  // 창 0 번과 1 번 사이 막대(18도)의 바깥면 표지
   const a = (18 * Math.PI) / 180;
-  const mk = mesh(new THREE.BoxGeometry(0.124, 0.02, 0.05), paint(YELLOW));
-  mk.position.set(0, 0.43 * Math.sin(a), -0.43 * Math.cos(a));
+  const mk = mesh(new THREE.BoxGeometry(W + 0.004, 0.03, 0.012), paint(YELLOW));
+  mk.position.set(0, 0.404 * Math.sin(a), -0.404 * Math.cos(a));
   mk.rotation.x = Math.PI + a;
   g.add(mk);
   return g;

@@ -1,5 +1,5 @@
 // 213 다른 종류의 멈추개 — 아래 톱니바퀴의 핀이 한 바퀴마다 B 원판의 홈 하나를 밀어 18° 돌리고,
-// 홈 줄이 끝나면 높은 테가 핀을 막아 약 6.84 바퀴에서 멈춘다 (판화 213번)
+// 홈 줄이 끝나면 높은 테가 핀을 막아 약 6.4 바퀴에서 멈춘다 (판화 213번)
 //  설계표 docs/mm507-sheets/213.md · 부품·운동식은 kit/k213 조립만 한다
 import * as THREE from 'three';
 import { type MovementModel } from '../types';
@@ -53,7 +53,7 @@ export default function buildM213(): MovementModel {
     shaftA.rotation.z = st.alpha * D2R;
     stop.rotation.z = st.beta * D2R;
     shaftB.rotation.z = st.beta * D2R;
-    setLit(Math.min(6, Math.floor(st.turns + 0.001)));
+    setLit(st.done);
     matF.emissive.setHex(st.stopped === 'F' ? 0xff2020 : 0x000000);
     matB.emissive.setHex(st.stopped === 'B' ? 0xff2020 : 0x000000);
     arrCcw.visible = st.phase === 'wind';
@@ -66,9 +66,9 @@ export default function buildM213(): MovementModel {
     view: { pos: [0.3, 1.7, 6.2], target: [0.1, 1.65, 0.1] },
     notes: () => [
       { label: '상태', value: PHASE_TEXT[st.phase] },
-      { label: '감은 바퀴 수', value: `${st.turns.toFixed(2)} 바퀴 (0.00 ~ 6.84)` },
+      { label: '감은 바퀴 수', value: `${st.turns.toFixed(2)} 바퀴 (0.00 ~ 6.42)` },
       { label: 'B 각', value: `${st.beta.toFixed(1)}°` },
-      { label: '핀 하나', value: '한 바퀴에 홈 한 칸(18°), 홈 6개 → 약 6.8바퀴' },
+      { label: '핀 하나', value: '한 바퀴에 홈 한 칸(18°, 핀이 홈 속에 있는 동안만 밂), 홈 6개 → 약 6.4바퀴' },
       { label: '원리', value: '212 는 볼록한 옆면이, 213 은 홈이 끝난 높은 테가 핀을 막는다' }
     ],
     update(dt: number, speed: number): void {
