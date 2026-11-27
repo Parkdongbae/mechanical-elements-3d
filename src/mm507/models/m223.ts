@@ -34,7 +34,7 @@ export default function buildM223(): MovementModel {
   const upper = mkGroup('upper', ux, uy);
   const lower = mkGroup('lower', lx, ly);
   for (const s of K.SECTORS) {
-    const sec = sector223(s.teeth, K.M, s.start, s.span, s.phase, s.keep, { width: K.WIDTH, color: s.color, driver: s.grp === 'lower' });
+    const sec = sector223(s.teeth, K.M, s.n, s.a0, s.trims, { width: K.WIDTH, color: s.color, driver: s.grp === 'lower' });
     sec.name = s.name;
     sec.position.z = s.z;
     (s.grp === 'upper' ? upper : lower).add(sec);
@@ -70,7 +70,7 @@ export default function buildM223(): MovementModel {
     notes: () => {
       const p = pairOf223(thU);
       const k = -(thetaL223(thU + 0.1) - thetaL223(thU - 0.1)) / 0.2;
-      const cur = p < 0 ? '바뀌는 중' : PAIR_NAMES223[p] ?? '';
+      const cur = PAIR_NAMES223[p] ?? '';
       return [
         { label: '위 축 각', value: (((thU % 360) + 360) % 360).toFixed(0) + '°' },
         { label: '지금 물린 짝', value: cur },
