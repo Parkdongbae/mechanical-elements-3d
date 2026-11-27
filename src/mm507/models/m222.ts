@@ -10,6 +10,16 @@ import { darkSteel, paint, steel } from '../../models/materials';
 const PI = Math.PI;
 const TAU = 2 * PI;
 const MOD = 0.05; // 모듈 (세 기어 공통)
+/** 기어 구멍(spurGear 의 bore = max(0.024, rp×0.14))과 그 속 축·핀 사이를 채우는 부싱 — 구멍이 비어 보이던 것(2026-11-27 사용자 지적) */
+function bushing(teeth: number, rIn: number): THREE.Mesh {
+  const bore = Math.max(0.024, ((teeth * MOD) / 2) * 0.14);
+  const h = 0.07; // 허브(±0.068)보다 0.002 길게 — 끝면이 허브 끝면과 겹쳐 깜빡이지 않게
+  const pts = [new THREE.Vector2(rIn, -h), new THREE.Vector2(bore + 0.001, -h), new THREE.Vector2(bore + 0.001, h), new THREE.Vector2(rIn, h), new THREE.Vector2(rIn, -h)];
+  const geo = new THREE.LatheGeometry(pts, 32).rotateX(Math.PI / 2);
+  const m = new THREE.Mesh(geo, steel({ roughness: 0.3 }));
+  m.castShadow = true;
+  return m;
+}
 const D: V2 = [0.45, 1.15]; // 편심 축 D
 const A: V2 = [-0.5935, 2.3892]; // 바퀴 A 중심 (D 에서 130.1° 방향 1.62)
 const E = 0.25; // 편심 거리 (기어 중심 Cc 가 D 둘레로 도는 반지름)
@@ -48,7 +58,7 @@ export default function buildM222(): MovementModel {
   const wheelA = new THREE.Group();
   wheelA.name = 'wheelA';
   wheelA.position.set(A[0], A[1], 0.05);
-  wheelA.add(spurGear(24, MOD, { width: 0.1, spokes: 5 }));
+  wheelA.add(spurGear(24, MOD, { width: 0.1, spokes: 5 }), bushing(24, 0.04));
   const bar = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.04, 0.008), paint(0xd8362f));
   bar.position.set(0.3, 0, 0.054);
   bar.castShadow = true;
@@ -62,7 +72,7 @@ export default function buildM222(): MovementModel {
   const gearC = new THREE.Group();
   gearC.name = 'gearC';
   gearC.position.set(D[0] + E, D[1], 0.05); // t=0: Cc 가 D 의 바로 오른쪽(판화 자세)
-  gearC.add(spurGear(24, MOD, { width: 0.1, spokes: 5, driver: true }));
+  gearC.add(spurGear(24, MOD, { width: 0.1, spokes: 5, driver: true }), bushing(24, 0.03));
   const boss = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.104, 32).rotateX(PI / 2), darkSteel());
   boss.position.set(-E, 0, 0); // 로컬 (−0.25, 0) 이 늘 D 에 온다
   boss.castShadow = true;
@@ -85,6 +95,7 @@ export default function buildM222(): MovementModel {
   // ── 피니언 B + B 축 핀 (핀은 팔 보스·링크 보스 둘 다를 지남) ──
   const pinionB = spurGear(18, MOD, { width: 0.1, spokes: 4 });
   pinionB.name = 'pinionB';
+  pinionB.add(bushing(18, 0.03));
   pinionB.position.set(B0[0], B0[1], 0.05);
   g.add(pinionB);
   const pinB = new THREE.Group();
