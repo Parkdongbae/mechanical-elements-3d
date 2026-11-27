@@ -222,13 +222,13 @@ function stripOutline(path: V2[], hw: number): V2[] {
   return out;
 }
 
-function ribbon(u0: number, u1: number, mat: THREE.Material): THREE.Mesh {
+function ribbon(u0: number, u1: number, mat: THREE.Material, dz = 0): THREE.Mesh {
   const us: number[] = [];
   const steps = Math.max(2, Math.ceil((u1 - u0) / 0.5));
   for (let i = 0; i <= steps; i++) us.push(u0 + ((u1 - u0) * i) / steps);
   const hw = 0.05;
-  const zt = 0.043;
-  const zb = 0.041;
+  const zt = 0.043 + dz; // 띠마다 높이를 조금씩 달리해 꺾인 모서리에서 겹친 색이 깜빡이지 않게(2026-11-27 사용자 지적)
+  const zb = 0.041 + dz;
   const pos: number[] = [];
   const idx: number[] = [];
   const P = us.map((u) => groovePoint217(u));
@@ -289,7 +289,7 @@ export function machine217(): Machine217 {
   const gray = paint(K.colStop);
   const red = paint(K.colBack);
   const green = paint(K.colFwd);
-  rib.add(ribbon(0, 90, gray), ribbon(90, 180, red), ribbon(180, K.UX, green), ribbon(K.UX, 360, gray));
+  rib.add(ribbon(0, 90, gray, 0), ribbon(90, 180, red, 0.0008), ribbon(180, K.UX, green, 0.0016), ribbon(K.UX, 360, gray, 0.0004));
   cam.add(rib);
 
   const landShape = disc(K.camR);
