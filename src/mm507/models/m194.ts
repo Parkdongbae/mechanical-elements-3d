@@ -70,7 +70,7 @@ export default function buildM194(): MovementModel {
   wheel.add(at(new THREE.BoxGeometry(0.1, 0.03, 0.012), paint(0xf2b619), 1.02, 0, Z194.zFace + 0.006));
   g.add(wheel, shaftZ(XC, YC, 0.4, 0.04));
 
-  // 피니언(사용자 지적 수정 — 걸리는 곳이 보이게): 핀 피니언(랜턴 피니언). 앞판(반지름 0.205) 둘레에 핀 12개가 박혀 판 밖으로 반쯤 드러나고,
+  // 피니언(사용자 지적 수정 — 걸리는 곳이 보이게): 핀 피니언(랜턴 피니언). 앞판(반지름 = 핀 원 반지름) 둘레에 핀 12개가 반쯤 박혀 판 밖으로 드러나고(2026-11-27 사용자 지적: 판이 작아 핀이 떨어져 있던 것 수정),
   // 핀이 뒤로 길게 나와 섬 위 이 자리 띠 높이(z 0.05~0.08)에서 막이 사이 이 자리(바닥 있는 구멍) 속에 들어가 막이를 밀어 휠을 돌린다. 핀 끝은 섬 앞면 위 0.007
   const pinion = new THREE.Group();
   pinion.name = 'pinion';
@@ -79,7 +79,7 @@ export default function buildM194(): MovementModel {
   const pegs = new THREE.Group();
   pegs.name = 'pegs';
   const gear = new THREE.Group();
-  gear.add(at(cylZ(RP194 - 0.04, zFront, zFront + 0.035, 48), bronze({ roughness: 0.34 }), 0, 0, 0));
+  gear.add(at(cylZ(RP194, zFront, zFront + 0.035, 48), bronze({ roughness: 0.34 }), 0, 0, 0));
   gear.add(at(new THREE.BoxGeometry(0.06, 0.016, 0.008), paint(0xf2b619), 0.1, 0, zFront + 0.038));
   setMM(gear, { kind: 'gear', fn: 'pinPinion194', teeth: K194.nz, module: K194.m, internal: false, rp: RP194, ra: RP194 + PIN_R, rf: RP194 - PIN_R, width: 0.035, axis: 'z' });
   pinion.add(gear);

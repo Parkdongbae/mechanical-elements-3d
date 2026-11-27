@@ -36,14 +36,19 @@ export default function buildM196(): MovementModel {
   // 고정 받침: 바닥 블록 + 위로 좁아지는 기둥 + 팔 축 보스
   const baseTop = 1.0;
   g.add(at(new THREE.BoxGeometry(1.5, 0.5, 0.36), castIron(), px + 0.1, baseTop - 0.25, 0.04));
+  // 기둥: 아래는 넓고 위로 좁아지다가 꼭대기에서 팔 축 둘레의 둥근 머리(베어링 하우징)로 한 몸이 되어 보스 전체를 품는다
+  const hy = py - baseTop; // 머리 중심 높이(받침 윗면 기준)
+  const HR = 0.18;
   const col = new THREE.Shape();
-  col.moveTo(-0.28, 0);
-  col.lineTo(0.28, 0);
-  col.lineTo(0.1, py - baseTop - 0.14);
-  col.lineTo(-0.1, py - baseTop - 0.14);
+  col.moveTo(-0.3, 0);
+  col.lineTo(0.3, 0);
+  col.lineTo(0.14, hy - 0.3);
+  col.lineTo(HR * Math.cos(-0.5), hy + HR * Math.sin(-0.5));
+  col.absarc(0, hy, HR, -0.5, Math.PI + 0.5, false);
+  col.lineTo(-0.14, hy - 0.3);
   col.closePath();
-  g.add(at(extrude(col, 0.12, 0.008), steel(), px, baseTop, 0.0));
-  g.add(at(cylZ(0.14, 0.0, 0.17), steel(), px, py, 0));
+  g.add(at(extrude(col, 0.16, 0.008), steel(), px, baseTop, 0.0));
+  g.add(at(cylZ(0.14, 0.0, 0.19), steel(), px, py, 0)); // 보스(하우징 앞으로 나온 칼라)
   g.add(at(cylZ(0.05, 0.0, 0.27), darkSteel(), px, py, 0)); // 팔 축(받침을 꿰고 팔 눈을 지나 머리가 나온다)
 
   // 바퀴 A: 두 덩이가 붙은 땅콩꼴 피치 곡선 + 이(30개). 축(팔 끝)은 왼쪽 덩이 중심
