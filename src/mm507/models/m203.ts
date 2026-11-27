@@ -77,7 +77,7 @@ export default function buildM203(): MovementModel {
     wDots.push(b);
     trail.add(a, b);
   }
-  g.add(trail);
+  // 흔적 점은 사용자 지적(2026-11-27: 뒤판에 이상한 흰·노란 구가 보임)으로 화면에서 뺌 — 계산 코드는 남겨 두되 장면에 넣지 않는다
   const ER = v(K.XR, K.YE, 0);
   let lastK = NaN;
   const ks: number[] = new Array(NT).fill(0);
