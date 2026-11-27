@@ -67,8 +67,12 @@ const pngSize = (f) => {
   return [s.width, s.height];
 };
 
-/** 아웃트로 버튼·손가락 overlay 사슬(세로·가로 공통) */
-function outroButtons(cards, cx, y0, inputs, last) {
+/** 구독·좋아요 버튼은 1~51번(전체의 약 10%)에만 — 52번부터는 넣지 않는다(사용자 지시 2026-11-27) */
+export const CTA_BUTTONS_LAST = 51;
+
+/** 아웃트로 버튼·손가락 overlay 사슬(세로·가로 공통). 버튼을 안 넣는 번호는 그대로 통과 */
+function outroButtons(n, cards, cx, y0, inputs, last) {
+  if (n > CTA_BUTTONS_LAST) return [`[${last}]null[obend]`];
   const [sw, sh] = pngSize(path.join(cards, 'sub-off.png'));
   const [sw2] = pngSize(path.join(cards, 'sub-on.png'));
   const [lw, lh] = pngSize(path.join(cards, 'like-off.png'));
@@ -139,7 +143,7 @@ function composeVertical(n, lang, mix, outFile) {
     `[s5]ass=${rel(path.join(dir, 'dub', 'sub.ass'))}:fontsdir=${fontsDir(lang)}[s6]`,
     `[6]format=rgba,fade=t=in:st=${T.pullEnd}:d=0.35:alpha=1[ot]`,
     `[s6][ot]overlay=0:0:enable='gte(t,${T.pullEnd})'[s7]`,
-    ...outroButtons(cards, W / 2, Math.round(H * 0.5 + 290), [7, 8, 9, 10, 11], 's7'),
+    ...outroButtons(n, cards, W / 2, Math.round(H * 0.5 + 290), [7, 8, 9, 10, 11], 's7'),
     // 인트로: 2배로 키운 뒤 zoompan(1.0→1.06), 끝 0.25초에 사라짐
     `[0]scale=${W * 2}:${H * 2},zoompan=z='1+0.06*on/${zoomFrames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${zoomFrames}:s=${W}x${H}:fps=${FPS},format=rgba,fade=t=out:st=${T.introEnd - 0.2}:d=0.25:alpha=1[intro]`,
     `[obend][intro]overlay=0:0:enable='lt(t,${T.introEnd + 0.1})',format=yuv420p[vout]`
@@ -175,7 +179,7 @@ function composeWide(n, lang, mix, outFile) {
     `[s4]ass=${rel(path.join(dir, 'dub', 'sub-wide.ass'))}:fontsdir=${fontsDir(lang)}[s5]`,
     `[5]format=rgba,fade=t=in:st=${T.pullEnd}:d=0.35:alpha=1[ot]`,
     `[s5][ot]overlay=${(WW - WH) / 2}:0:enable='gte(t,${T.pullEnd})'[s6]`,
-    ...outroButtons(cards, WW / 2, Math.round(WH * 0.5 + 250), [6, 7, 8, 9, 10], 's6'),
+    ...outroButtons(n, cards, WW / 2, Math.round(WH * 0.5 + 250), [6, 7, 8, 9, 10], 's6'),
     `[0]scale=${WW * 2}:${WH * 2},zoompan=z='1+0.05*on/${zoomFrames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${zoomFrames}:s=${WW}x${WH}:fps=${FPS},format=rgba,fade=t=out:st=${T.introEnd - 0.2}:d=0.25:alpha=1[intro]`,
     `[obend][intro]overlay=0:0:enable='lt(t,${T.introEnd + 0.1})',format=yuv420p[vout]`
   ].join(';');
