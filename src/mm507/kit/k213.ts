@@ -8,37 +8,57 @@ const TAU = Math.PI * 2;
 const D2R = Math.PI / 180;
 
 export const K213 = {
-  OA: [0, 0.95] as const, // 아래 톱니바퀴 중심
+  OA: [0, 1.35] as const, // 아래 톱니바퀴 중심(제네바 배치: 핀이 홈에 깊이 들어가도록 B 에 가깝게)
   OB: [0, 2.3] as const, // B 중심
-  d: 1.35,
-  Re: 0.855,
-  rf: 0.5229, // 핀 회전 반지름
-  aw: 14.82, // 물린 구간 ±(도)
-  alphaB: -1320.45,
-  alphaF: 1140.45,
+  d: 0.95,
+  rf: 0.148613, // 핀 회전 반지름 = d·sin9°
+  Re: 0.938304, // 핀이 홈에 수직으로 들어서는 거리 = d·cos9°
+  pinR: 0.05,
+  hw: 0.0555, // 홈 반폭 (핀과 틈 0.0055)
+  Rl: 0.877, // 홈 줄 호 반지름
+  Rh: 0.947, // 높은 테 반지름
+  bottom: 0.7424, // 홈 바닥 반지름
+  half: 81, // 핀이 홈 속에 있는 구간 ±(도)
+  beta0: 54,
+  alphaB: -166.0,
+  alphaF: 2146.0,
   omega: 3.0, // rad/s
   hold: 1.5,
   zA: [0.02, 0.08] as const,
   zB: [0.1, 0.16] as const,
-  zPin: [0.08, 0.18] as const
+  zPin: [0.08, 0.17] as const
 } as const;
 const K = K213;
 const WIND_DEG_S = K.omega / D2R; // 171.887°/s
 const TW = (K.alphaF - K.alphaB) / WIND_DEG_S; // 한 방향 시간
 const T_CYCLE = 2 * (TW + K.hold);
 
-/** B 윤곽 60 점(로컬, 반시계) — 설계표 그대로 */
-export const OUTLINE_B213: V2[] = [
-  [0.7841, -0.3995], [0.8369, -0.2719], [0.8692, -0.1377], [0.88, -0.0], [0.8692, 0.1377], [0.8369, 0.2719], [0.7841, 0.3995], [0.7119, 0.5173],
-  [0.6223, 0.6223], [0.5173, 0.7119], [0.3995, 0.7841], [0.2719, 0.8369], [0.1377, 0.8692], [0.0, 0.88], [-0.1377, 0.8692], [-0.2719, 0.8369],
-  [-0.3995, 0.7841], [-0.5173, 0.7119], [-0.6223, 0.6223], [-0.7119, 0.5173], [-0.7841, 0.3995], [-0.8369, 0.2719], [-0.8692, 0.1377], [-0.88, 0.0],
-  [-0.8692, -0.1377], [-0.8369, -0.2719], [-0.7841, -0.3995], [-0.7128, -0.3632], [-0.6633, -0.4473], [-0.6039, -0.5247], [-0.5275, -0.4483],
-  [-0.4483, -0.5275], [-0.5247, -0.6039], [-0.4702, -0.6472], [-0.4122, -0.6856], [-0.3631, -0.5894], [-0.2634, -0.6402], [-0.3124, -0.7365],
-  [-0.2472, -0.7608], [-0.1802, -0.7795], [-0.1633, -0.6727], [-0.0526, -0.6903], [-0.0695, -0.797], [-0.0, -0.8], [0.0695, -0.797],
-  [0.0526, -0.6903], [0.1633, -0.6727], [0.1802, -0.7795], [0.2472, -0.7608], [0.3124, -0.7365], [0.2634, -0.6402], [0.3631, -0.5894],
-  [0.4122, -0.6856], [0.4702, -0.6472], [0.5247, -0.6039], [0.4483, -0.5275], [0.5275, -0.4483], [0.6039, -0.5247], [0.6633, -0.4473],
-  [0.7128, -0.3632]
-];
+/** B 윤곽(로컬, 반시계): 높은 테 333°→207°, 낮은 호 207°→333° 에 홈 6개(가운데 225°+18°·i) */
+function outlineB213(): V2[] {
+  const pts: V2[] = [];
+  const at = (phi: number, a: number, l: number): V2 => {
+    const c = Math.cos(phi * D2R);
+    const s = Math.sin(phi * D2R);
+    return [a * c - l * s, a * s + l * c];
+  };
+  for (let a = 333; a <= 567.001; a += 3) pts.push([K.Rh * Math.cos(a * D2R), K.Rh * Math.sin(a * D2R)]);
+  const arcA = Math.asin(K.hw / K.Rl) / D2R;
+  const aa = Math.sqrt(K.Rl * K.Rl - K.hw * K.hw);
+  const lowArc = (from: number, to: number): void => {
+    for (let x = from; x < to - 1e-9; x += 3) pts.push([K.Rl * Math.cos(x * D2R), K.Rl * Math.sin(x * D2R)]);
+  };
+  let cur = 207;
+  for (let i = 0; i < 6; i++) {
+    const s = 225 + 18 * i;
+    lowArc(cur, s - arcA);
+    pts.push(at(s, aa, -K.hw), at(s, K.bottom, -K.hw), at(s, K.bottom, K.hw), at(s, aa, K.hw));
+    cur = s + arcA;
+  }
+  lowArc(cur, 333);
+  pts.push([K.Rl * Math.cos(333 * D2R), K.Rl * Math.sin(333 * D2R)]);
+  return pts;
+}
+export const OUTLINE_B213: V2[] = outlineB213();
 
 const shapeOf = (pts: V2[]): THREE.Shape => {
   const s = new THREE.Shape();
@@ -76,9 +96,9 @@ export function stopWheel213(): THREE.Group {
   const hub = mesh(extrude(hubShape, 0.015, 0.003, 48), paint(0xd9c27a));
   hub.position.z = 0.1675;
   g.add(hub);
-  // 새긴 줄(판화의 좁은 홈): 로컬 90° 방향 반지름 0.43~0.86, 폭 0.10, 두께 0.004
-  const line = mesh(new THREE.BoxGeometry(0.1, 0.43, 0.004), darkSteel());
-  line.position.set(0, 0.645, 0.162);
+  // 새긴 줄(판화의 좁은 홈): 로컬 90° 방향 반지름 0.43~0.90, 폭 0.10, 두께 0.004
+  const line = mesh(new THREE.BoxGeometry(0.1, 0.47, 0.004), darkSteel());
+  line.position.set(0, 0.665, 0.162);
   g.add(line);
   // 계단 표지 2개
   const mk = (name: string, deg: number): void => {
@@ -171,19 +191,26 @@ export interface State213 {
   alpha: number;
   beta: number;
   turns: number;
+  done: number; // 홈 속을 지나 B 를 민 횟수
   phase: 'wind' | 'holdF' | 'unwind' | 'holdB';
   stopped: 'F' | 'B' | null;
 }
 
-/** B 각(도) — 설계표의 닫힌 식 */
+/** 핀(A 로컬 α°)의 B 중심 기준 위치 */
+export function pinRel213(alpha: number): V2 {
+  return [K.rf * Math.cos(alpha * D2R), -K.d + K.rf * Math.sin(alpha * D2R)];
+}
+
+/** B 각(도) — 핀이 k 번째 홈(α = 90 + 360k ± 81°) 속에 있을 때만 핀 방향으로 홈을 풀고, 그 밖에서는 정지 */
 export function betaOf213(alpha: number): number {
-  const j = Math.floor((alpha - 90 + 180) / 360);
-  const ac = 90 + 360 * j;
-  const base = -18 * j;
-  if (alpha < ac - K.aw) return base;
-  if (alpha > ac + K.aw) return base - 18;
-  const x = K.rf * Math.cos(alpha * D2R);
-  const y = -K.d + K.rf * Math.sin(alpha * D2R);
+  const k = Math.round((alpha - 90) / 360);
+  const ac = 90 + 360 * k;
+  if (k < 0) return K.beta0;
+  if (k > 5) return K.beta0 - 108;
+  const base = K.beta0 - 18 * k;
+  if (alpha < ac - K.half) return base;
+  if (alpha > ac + K.half) return base - 18;
+  const [x, y] = pinRel213(alpha);
   return base + Math.atan2(y, x) / D2R + 81;
 }
 
@@ -207,5 +234,5 @@ export function state213(t: number): State213 {
     alpha = aB;
     phase = 'holdB';
   }
-  return { alpha, beta: betaOf213(alpha), turns: (alpha - aB) / 360, phase, stopped: phase === 'holdF' ? 'F' : phase === 'holdB' ? 'B' : null };
+  return { alpha, beta: betaOf213(alpha), turns: (alpha - aB) / 360, done: Math.max(0, Math.min(6, Math.floor((alpha - 90 - K.half) / 360) + 1)), phase, stopped: phase === 'holdF' ? 'F' : phase === 'holdB' ? 'B' : null };
 }

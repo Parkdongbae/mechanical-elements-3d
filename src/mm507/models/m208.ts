@@ -109,7 +109,7 @@ export default function buildM208(): MovementModel {
 
   return {
     group: g,
-    view: { pos: [2.3, 2.5, 5.0], target: [-0.2, 1.6, 0.1] },
+    view: { pos: [-0.5, 2.15, 5.4], target: [-0.2, 1.6, 0.1] }, // 판화처럼 정면에서 — 홈 피니언 드럼의 막대·창이 사다리로 보이게(2026-11-27)
     notes: () => [
       { label: '물린 핀 원', value: st.circle < 0 ? '옮기는 중' : ['바깥 24핀', '가운데 18핀', '안 12핀'][st.circle]! },
       { label: '피니언 / 휠 속도', value: st.circle < 0 ? '옮기는 중' : ['2.4배', '1.8배', '1.2배'][st.circle]! },
