@@ -39,6 +39,7 @@ export default function buildM226(): MovementModel {
   shaftF.position.set(0, K.YF, K.ZF);
   setMM(shaftF, { axis: 'x' });
   const fAxle = cylX(0.035, 3.8);
+  fAxle.name = 'fAxle'; // 이름표 'F 축'이 받침이 아니라 축 막대를 가리키게
   fAxle.position.x = -0.05;
   shaftF.add(fAxle);
   const gearF = new THREE.Group();
@@ -79,6 +80,7 @@ export default function buildM226(): MovementModel {
   sleeveC.position.set(0, K.YF, K.ZF);
   setMM(sleeveC, { axis: 'x' });
   const cTube = cylX(0.05, 0.89);
+  cTube.name = 'cTube'; // 이름표 'C 속 빈 축'이 베벨이 아니라 관을 가리키게
   cTube.position.x = -0.025;
   sleeveC.add(cTube);
   const gearC1 = new THREE.Group();
@@ -120,10 +122,10 @@ export default function buildM226(): MovementModel {
   g.add(
     leaderTo(tag('A 틀', v(-0.55, 2.5, 0.5)), 'frameA'),
     leaderTo(tag('B 입력', v(1.75, 2.8, 0.5)), 'gearB'),
-    leaderTo(tag('C 속 빈 축', v(0.6, 0.38, 0.5)), 'sleeveC'),
+    leaderTo(tag('C 속 빈 축', v(0.0, 0.38, 0.5)), 'cTube'),
     leaderTo(tag('D 유성 베벨', v(-1.7, 0.35, 0.5)), 'gearD'),
     leaderTo(tag('E 출력(3배)', v(-2.0, 1.85, 0.5)), 'outputE'),
-    leaderTo(tag('F 축', v(1.95, 0.75, 0.5)), 'shaftF')
+    leaderTo(tag('F 축', v(1.3, 0.75, 0.5)), 'fAxle')
   );
 
   let beta = 0;
@@ -142,7 +144,8 @@ export default function buildM226(): MovementModel {
     notes: () => [
       { label: 'B(입력) 바퀴 수', value: (beta / (2 * PI)).toFixed(2) },
       { label: 'E(출력) 바퀴 수', value: `${((3 * beta) / (2 * PI)).toFixed(2)} — 입력의 3배` },
-      { label: '원문과 다른 점', value: '원문은 2배라 했으나, C 가 F 와 반대로 돌아 D 가 제자리에서 2 바퀴 → E 는 3배' },
+      { label: '원문과 다른 점', value: '원문은 D 가 제자리에서 1바퀴 돈다고 셌지만, C 가 틀 A 와 반대로 돌아 틀에 대해 2바퀴 → D 자전도 2바퀴 → E = 1 + 2 = 3바퀴' },
+      { label: '원문의 2배는?', value: 'E 는 틀 A 에 대해서는 정확히 2바퀴 돈다 — 원문은 이 상대 회전을 센 것으로 보인다' },
       { label: '원리', value: 'E = 틀 A 한 바퀴 + D 자전으로 더해지는 바퀴' }
     ],
     update(dt: number, speed: number): void {

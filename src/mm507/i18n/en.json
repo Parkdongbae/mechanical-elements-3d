@@ -1574,7 +1574,8 @@
   "아래 베벨 → 안쪽 축": "Lower bevel → inner shaft",
   "피니언 속도 / 기어 속도 (1.11 ~ 3.43)": "Pinion speed / gear speed (1.11 ~ 3.43)",
   "팔 각 (±7.1°)": "Arm angle (±7.1°)",
-  "막대 A 높이 (0.864 ~ 1.136)": "Rod A height (0.864 ~ 1.136)"
+  "막대 A 높이 (0.864 ~ 1.136)": "Rod A height (0.864 ~ 1.136)",
+  "원문의 2배는?": "Where does the book's 2x come from?"
  },
  "phrases": {
   "바퀴": "turn(s)",
@@ -2555,6 +2556,8 @@
   "오른쪽 끝 반원 홈(틀이 들림)": "Right-end half-round groove (frame rises)",
   "아래 줄(틀이 오른쪽으로)": "Lower row (frame moves right)",
   "왼쪽 끝 반원 홈(틀이 내려옴)": "Left-end half-round groove (frame lowers)",
-  "왕복 ±": "stroke ±"
+  "왕복 ±": "stroke ±",
+  "원문은 D 가 제자리에서 1바퀴 돈다고 셌지만, C 가 틀 A 와 반대로 돌아 틀에 대해 2바퀴 → D 자전도 2바퀴 → E = 1 + 2 = 3바퀴": "The book counted D spinning once on its own axis, but C turns opposite to frame A, so relative to the frame it makes 2 turns → D also spins twice → E = 1 + 2 = 3 turns",
+  "E 는 틀 A 에 대해서는 정확히 2바퀴 돈다 — 원문은 이 상대 회전을 센 것으로 보인다": "Relative to frame A, E turns exactly 2 times — the book seems to have counted this relative rotation"
  }
 }
