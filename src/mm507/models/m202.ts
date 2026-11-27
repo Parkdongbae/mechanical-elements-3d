@@ -50,6 +50,11 @@ export default function buildM202(): MovementModel {
   const worm = globoidWorm(K202);
   worm.position.set(0, YA, Z0);
   worm.name = 'worm';
+  // 웜 몸통(나사산)만 따로 묶음 — 이름표 지시선이 웜 축 끝이 아니라 몸통을 가리키게(2026-11-27 사용자 지적)
+  const wormBody = new THREE.Group();
+  wormBody.name = 'wormBody';
+  wormBody.add(...worm.children);
+  worm.add(wormBody);
   const wormShaft = rod(v(-1.30, 0, 0), v(1.30, 0, 0), 0.05); // 그룹 로컬 좌표
   wormShaft.name = 'wormShaft';
   const wormMark = mesh(new THREE.BoxGeometry(0.012, 0.16, 0.012), paint(0xffcc00));
@@ -75,10 +80,10 @@ export default function buildM202(): MovementModel {
 
   // 이름표(이름표 표 그대로)
   g.add(
-    leaderTo(tag('장구형 웜(구동, 1줄)', v(-1.25, 0.42, 0.35)), 'worm'),
+    leaderTo(tag('장구형 웜(구동, 1줄)', v(-1.25, 0.42, 0.35)), 'wormBody'),
     leaderTo(tag('웜휠 50이', v(1.30, 2.75, 0.30)), 'wheel'),
     leaderTo(tag('축받이(고정)', v(1.55, 0.42, 0.30)), 'bearingR'),
-    leaderTo(tag('물린 이 약 10개', v(-1.40, 1.35, 0.35)), 'worm')
+    leaderTo(tag('물린 이 약 10개', v(-1.40, 1.35, 0.35)), 'wormBody')
   );
 
   return {

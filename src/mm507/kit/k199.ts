@@ -9,7 +9,7 @@ export const K199 = {
   YC: 1.7,
   rp: 0.3, // 핀 원 반지름
   pins: 5, // 핀 수(36° 간격 → 반 바퀴)
-  pinR: 0.03,
+  pinR: 0.04, // 핀 지름 0.08 ≈ 이골 폭 0.09 − 여유(판화에서도 핀이 이골을 거의 채움)
   zFrame0: 0.06,
   zFrame1: 0.14,
   frameHalf: 1.3,
@@ -17,7 +17,8 @@ export const K199 = {
   rollerR: 0.09,
   slotRoot: 0.345, // 이뿌리까지(가운데에서)
   slotTip: 0.255, // 이끝까지
-  gapW: 0.09
+  gapW: 0.09,
+  clr: 0.003 // 핀 훑는 영역 바깥 여유(틈)
 } as const;
 
 const RP = K199.rp;
@@ -44,6 +45,41 @@ export function gaps199(side: 'bottom' | 'top'): number[] {
     out.push(-frame199(th).X);
   }
   return out.sort((a, b) => a - b);
+}
+
+
+/** 한 줄(아래/위)의 이 높이 곡선: 핀이 한 주기 동안 틀 안에서 훑는 영역(핀 반지름+여유)을 이끝(0.255)에서 이뿌리까지 깎고 남은 자리.
+ *  [x(틀 로컬), 깊이(가운데에서 이 줄까지의 거리)] 목록 — 이 사이 홈은 핀 둘레에 꼭 맞고, 핀이 들고 나는 길도 깎여 모서리를 파고들지 않는다. */
+const rowCache: Record<string, V2[]> = {};
+export function rowTop199(side: 'bottom' | 'top'): V2[] {
+  if (rowCache[side]) return rowCache[side]!;
+  const K = K199;
+  const Rc = K.pinR + K.clr;
+  const g = gaps199(side);
+  const disks: V2[] = [];
+  const sg = side === 'bottom' ? -1 : 1;
+  for (let th = 0; th < TAU; th += 0.2 * D2R) {
+    const X = frame199(th).X;
+    for (let j = 0; j < K.pins; j++) {
+      const ph = th + j * TAU199;
+      disks.push([RP * Math.cos(ph) - X, sg * RP * Math.sin(ph)]);
+    }
+  }
+  const xl = g[0]! - P199 / 2 - 0.5 * (P199 - K.gapW);
+  const xr = g[g.length - 1]! + P199 / 2 + 0.5 * (P199 - K.gapW);
+  const out: V2[] = [];
+  const n = Math.round((xr - xl) / 0.002);
+  for (let i = 0; i <= n; i++) {
+    const x = xl + (i * (xr - xl)) / n;
+    let top: number = K.slotTip;
+    for (const [cx, cd] of disks) {
+      const dx = x - cx;
+      if (Math.abs(dx) < Rc) top = Math.max(top, cd + Math.sqrt(Rc * Rc - dx * dx));
+    }
+    out.push([x, Math.min(top, K.slotRoot)]);
+  }
+  rowCache[side] = out;
+  return out;
 }
 
 /** 틀 바깥 윤곽(양끝이 오목하게 파인 판) + 안쪽 홈(양쪽에 이 줄) */
@@ -74,28 +110,25 @@ export function frameBody199(): THREE.Group {
   pts.push([-W, -0.4], [-W, -H + 0.1]);
   // 안쪽 홈(양끝 둥근 홈 + 위·아래 이 줄)
   const gb = gaps199('bottom');
-  const gt = gaps199('top');
   const rr = K.slotRoot;
   const cL = -0.52;
   const cR = 0.52;
   const hole: V2[] = [];
-  const tooth = (c: number, tipY: number, rootY: number): V2[] => [
-    [c - 0.5 * (P199 - K.gapW), rootY],
-    [c - 0.5 * (P199 - K.gapW) + 0.01, tipY],
-    [c + 0.5 * (P199 - K.gapW) - 0.01, tipY],
-    [c + 0.5 * (P199 - K.gapW), rootY]
-  ];
-  // 아래 줄: 왼쪽 → 오른쪽 (이끝이 +y)
-  hole.push([cL, -rr]);
-  for (let k = 0; k <= gb.length; k++) hole.push(...tooth(gb[0]! - P199 / 2 + k * P199, -K.slotTip, -rr));
+  // 아래 줄: 왼쪽 → 오른쪽 (이끝이 +y). 이 높이는 핀이 훑는 영역대로 깎음
+  const rb = rowTop199('bottom');
+  hole.push([rb[0]![0], -rr]);
+  for (const [x, d] of rb) hole.push([x, -d]);
+  hole.push([rb[rb.length - 1]![0], -rr]);
   // 오른쪽 둥근 끝
   for (let i = 1; i < 12; i++) {
     const a = -Math.PI / 2 + (Math.PI * i) / 12;
     hole.push([cR + rr * Math.cos(a), rr * Math.sin(a)]);
   }
-  hole.push([cR, rr]);
   // 위 줄: 오른쪽 → 왼쪽 (이끝이 −y)
-  for (let k = gt.length; k >= 0; k--) hole.push(...tooth(gt[0]! - P199 / 2 + k * P199, K.slotTip, rr).reverse());
+  const rt = rowTop199('top');
+  hole.push([rt[rt.length - 1]![0], rr]);
+  for (let i = rt.length - 1; i >= 0; i--) hole.push([rt[i]![0], rt[i]![1]]);
+  hole.push([rt[0]![0], rr]);
   for (let i = 1; i < 12; i++) {
     const a = Math.PI / 2 + (Math.PI * i) / 12;
     hole.push([cL + rr * Math.cos(a), rr * Math.sin(a)]);
