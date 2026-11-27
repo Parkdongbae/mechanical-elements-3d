@@ -112,6 +112,7 @@ export function ellipseGear209(side: 'L' | 'R'): THREE.Group {
   const sm: Rng = side === 'L' ? [21 * PP, 39 * PP] : [20.5 * PP, 39.5 * PP];
   const band = mesh(smoothBand(sm[0], sm[1]), darkSteel());
   band.position.z = K209.wG / 2 + 0.001;
+  band.name = 'smoothBand'; // 이름표 '매끈한 구름면'이 이 짙은 띠를 가리키게(2026-11-27 사용자 지적)
   g.add(band);
   // 노란 표지 막대(φ = 0 방향, 반지름 0.12 ~ 0.42)
   const mk = mesh(new THREE.BoxGeometry(0.3, 0.035, 0.002), paint(0xf2b619));

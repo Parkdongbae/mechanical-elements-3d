@@ -111,7 +111,9 @@ export function wheel205(): THREE.Group {
     h.absarc(Math.cos(a) * 0.55, Math.sin(a) * 0.55, 0.16, 0, TAU, true);
     plate.holes.push(h);
   }
-  g.add(zMesh(extrude(plate, zp1 - zp0, 0.006, 48), steel(), zp0, zp1));
+  const plateMesh = zMesh(extrude(plate, zp1 - zp0, 0.006, 48), steel(), zp0, zp1);
+  plateMesh.name = 'wheelPlate'; // 이름표 '큰 바퀴'가 이(막대)가 아니라 회색 판을 가리키게(2026-11-27 사용자 지적)
+  g.add(plateMesh);
   g.add(mesh(tubeZ(0.91, K.R_PLATE, zp0, zp1, 0.008, 96), castIron()));
   // 허브: 반지름 0.12, z 0.04~0.30, 구멍(축 + 틈 0.005)
   g.add(mesh(tubeZ(K.WHEEL_BORE, K.HUB_R, 0.04, 0.3, 0.008, 40), darkSteel()));

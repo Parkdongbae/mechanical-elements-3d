@@ -112,7 +112,7 @@ export function driver215(): THREE.Group {
   const pin = new THREE.Group();
   pin.name = 'pinA';
   pin.position.set(K.rf, 0, 0);
-  pin.add(mesh(cylZ(K.pinR, K.zPin[0], K.zPin[1], 0.004, 28), brass()));
+  pin.add(mesh(cylZ(K.pinR, K.zPin[0], K.zPin[1], 0.004, 28), paint(0xc8352a))); // 핀만 빨강 — 별 바퀴(놋쇠)와 구분(2026-11-27 사용자 지적)
   pin.userData.outline = circleOutline(K.pinR, 28);
   g.add(pin);
 
