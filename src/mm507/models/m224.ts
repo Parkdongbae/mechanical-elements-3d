@@ -100,7 +100,7 @@ export default function buildM224(): MovementModel {
   const pinionAxle = new THREE.Group();
   pinionAxle.name = 'pinionAxle';
   pinionAxle.position.set(px, py, 0);
-  pinionAxle.add(cylZ(0.02, 0.04, 0.22, steel()), cylZ(0.035, 0.04, 0.1, steel()));
+  pinionAxle.add(cylZ(0.02, 0.04, 0.21, steel()), cylZ(0.035, 0.04, 0.1, steel()));
   g.add(pinionAxle);
 
   // 손잡이 원판 + 노란 표시

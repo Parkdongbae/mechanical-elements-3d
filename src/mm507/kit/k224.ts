@@ -160,6 +160,21 @@ export function arm224(k: number): THREE.Group {
   const barMesh = mesh(barGeo, steel());
   barMesh.name = `armBar${k}`;
   g.add(barMesh);
+  // 받침(브래킷): 팔 끝을 감싸 테 조각 안쪽 면에 파고든 블록 + 볼트 머리 2 — 팔·테가 한 몸
+  const boss = mesh(
+    extrude(shapeFrom([[0.585, -0.06], [0.69, -0.06], [0.69, 0.06], [0.585, 0.06]]), 0.07, 0.004).translate(0, 0, 0.065),
+    steel()
+  );
+  boss.name = `armBoss${k}`;
+  g.add(boss);
+  for (const sy of [-0.032, 0.032]) {
+    const bg = new THREE.CylinderGeometry(0.014, 0.014, 0.014, 16);
+    bg.rotateX(Math.PI / 2);
+    const bolt = mesh(bg, darkSteel());
+    bolt.name = `armBolt${k}`;
+    bolt.position.set(0.628, sy, 0.1 + 0.007 - 0.002);
+    g.add(bolt);
+  }
   // 스터드(빨강) — 몸통 + 머리 한 메시
   const studGeo = lathe(
     [
@@ -194,12 +209,14 @@ export function spider224(): THREE.Group {
   const T = 0.04;
   const c = 0.003;
   const geos: THREE.BufferGeometry[] = [];
-  const lay = (geo: THREE.BufferGeometry): THREE.BufferGeometry => geo.translate(0, 0, T / 2);
+  const lay = (geo: THREE.BufferGeometry, t = T): THREE.BufferGeometry => geo.translate(0, 0, t / 2);
+  // 같은 앞면(z 0.04) 겹침 깜빡임 방지: 원판은 0.036, 띠·받침판은 0.040 (띠가 원판 위로 0.004 솟음)
+  const TD = 0.036;
   // 원판 반지름 0.50, 축 구멍 0.05
   const disc = new THREE.Shape();
   disc.absarc(0, 0, 0.5, 0, TAU, false);
   disc.holes.push(circlePath(0, 0, 0.05));
-  geos.push(lay(extrude(disc, T, c)));
+  geos.push(lay(extrude(disc, TD, c), TD));
   // 안내 띠 6: r 0.45 ~ 0.72, 폭 0.10
   for (let k = 0; k < 6; k++) {
     const shape = shapeFrom([
